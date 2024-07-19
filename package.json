@@ -1,0 +1,19 @@
+{
+  "name": "web-cdf",
+  "version": "1.0.0",
+  "description": "Static website for Corazón de Fuego church. Project with love and one purpose Only",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "astro": "^4.12.2"
+  }
+}
