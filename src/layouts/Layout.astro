@@ -1,0 +1,32 @@
+---
+import Navbar from "../components/Navbar.astro";
+interface LayoutProps {
+  title: string;
+  description: string;
+}
+
+const { title = 'My Astro Site', description = 'A great Astro site'} = Astro.props as LayoutProps;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+  </head>
+  <body>
+    <Navbar/>
+    <main>
+      <slot />
+    </main>
+  </body>
+<style is:global>
+    html {
+      background-color: #f6f6f6;
+      color-scheme: light;
+    }
+</style>
+</html>
