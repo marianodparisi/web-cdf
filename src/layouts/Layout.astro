@@ -1,5 +1,6 @@
 ---
 import Navbar from "../components/Navbar.astro";
+import Footer from "../components/Footer.astro";
 interface LayoutProps {
   title: string;
   description: string;
@@ -21,11 +22,12 @@ const { title = 'My Astro Site', description = 'A great Astro site'} = Astro.pro
     <Navbar/>
     <main>
       <slot />
+      <Footer />
     </main>
   </body>
 <style is:global>
     html {
-      background-color: #f6f6f6;
+      background-color: beige;
       color-scheme: light;
     }
 </style>
