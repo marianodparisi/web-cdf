@@ -6,7 +6,7 @@ interface LayoutProps {
   description: string;
 }
 
-const { title = 'My Astro Site', description = 'A great Astro site'} = Astro.props as LayoutProps;
+const { title = 'Corazón de Fuego', description = 'Iglesia Corazón de Fuego'} = Astro.props as LayoutProps;
 ---
 
 <!DOCTYPE html>
@@ -25,10 +25,4 @@ const { title = 'My Astro Site', description = 'A great Astro site'} = Astro.pro
       <Footer />
     </main>
   </body>
-<style is:global>
-    html {
-      background-color: beige;
-      color-scheme: light;
-    }
-</style>
 </html>
