@@ -59,15 +59,6 @@ import Layout from "../layouts/Layout.astro";
             </div>
         </div>
     </div>
-    {isOpen && (
-            <div class="overlay" onclick={toggleModal}>
-                <div class="card" onclick={e => e.stopPropagation()}>
-                    <h2>Título de la Card</h2>
-                    <p>Este es el contenido de la card que cubre toda la pantalla.</p>
-                    <button onclick={toggleModal}>Cerrar</button>
-                </div>
-            </div>
-    )}
 </Layout>
 <style is:global>
   html{
