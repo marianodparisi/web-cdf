@@ -18,26 +18,36 @@ import Layout from "../layouts/Layout.astro";
     <div class="justify-center">
         <h1 class="text-center mb-4 text-4xl font-extrabold tracking-tight md:text-5xl lg:text-6xl pt-9">SERIES</h1>
     </div>
-    <div class="columns-3 w-full">
-        <div class="justify-center">
-            <h1 class="text-center mb-4 text-2xl font-extrabold tracking-tight md:text-3xl lg:text-4xl pt-9">
-                Previamente</h1>
+    <div class="grid grd-cols-1 sm:grid-cols-3 md:grid-cols-3 my-10">
+        <div class="hidden sm:flex md:flex lg:flex bg-gray-200 rounded-lg mx-24 relative group cursor-pointer">
+            <a class="group-hover:scale-105" style="transition: 0.3s" href="#">
+                <img class="group-hover:blur-sm object-cover w-full shadow-2xl rounded-lg h-full" alt="Serie" src="/Serie_Caminos.jpg">
+                <div class="opacity-0 group-hover:opacity-100 flex transition-opacity duration-300 absolute inset-0 items-center justify-center">
+                    <div class="p-4 bg-transparent text-black text-2xl font-bold">
+                        Pasada
+                    </div>
+                </div>
+            </a>
         </div>
-        <div class="bg-gray-50">
-            <img class="object-cover object-center sm:px-56" alt="" src="/Serie_Caminos.jpg">
+        <div class="flex h-96 mx-10 sm:mx-24 md:mx-24 bg-gray-200 rounded-lg  relative group cursor-pointer">
+            <a id="delayedRedirectButton" class="group-hover:scale-105" style="transition: 0.3s">
+                <img class="group-hover:blur-sm object-cover w-full shadow-2xl rounded-lg h-full" alt="Serie" src="/Serie_Caminos.jpg">
+                <div class="opacity-0 group-hover:opacity-100 flex transition-opacity duration-300 absolute inset-0 items-center justify-center">
+                    <div class="p-4 bg-transparent text-black text-2xl font-bold">
+                        Actual
+                    </div>
+                </div>
+            </a>
         </div>
-        <div class="justify-center">
-            <h1 class="text-center mb-4 text-2xl font-extrabold tracking-tight md:text-4xl sm:text-4xl pt-9">Ahora</h1>
-        </div>
-        <div class="bg-gray-50">
-            <img class="object-cover object-center sm:px-56" alt="" src="/Serie_Caminos.jpg">
-        </div>
-        <div class="justify-center">
-            <h1 class="text-center mb-4 text-2xl sm:text-2xl font-extrabold tracking-tight md:text-2xl lg:text-4xl pt-9">
-                Proximamente</h1>
-        </div>
-        <div class="bg-gray-50">
-            <img class="object-cover object-center sm:px-72" alt="" src="/Serie_Caminos.jpg">
+        <div class="hidden sm:flex md:flex lg:flex bg-gray-200 rounded-lg mx-24 relative group cursor-pointer">
+            <a class="group-hover:scale-105" style="transition: 0.3s">
+                <img class="group-hover:blur-sm object-cover w-full shadow-2xl rounded-lg h-full" alt="Serie" src="/Serie_Caminos.jpg">
+                <div class="opacity-0 group-hover:opacity-100 flex transition-opacity duration-300 absolute inset-0 items-center justify-center">
+                    <div class="p-4 bg-transparent text-gray-800 text-4xl font-bold">
+                        ¡Proximamente!
+                    </div>
+                </div>
+            </a>
         </div>
     </div>
     <div class="justify-center"></div>
@@ -58,3 +68,13 @@ import Layout from "../layouts/Layout.astro";
         padding-bottom: 4.5rem /* 64px */;
     }
 </style>
+<script>
+    const button = document.getElementById('delayedRedirectButton');
+
+    button.addEventListener('click', () => {
+        // Agrega un delay de 2 segundos (2000 ms) antes de redirigir
+        setTimeout(() => {
+            window.location.href = '#'; // Cambia por la URL a la que quieres redirigir
+        }, 1000); // 2000 ms = 2 segundos
+    });
+</script>
