@@ -16,9 +16,9 @@ import Layout from "../layouts/Layout.astro";
         </div>
     </div>
     <div class="justify-center">
-        <h1 class="text-center mb-4 text-4xl font-extrabold tracking-tight md:text-5xl lg:text-5xl pt-9">SERIES</h1>
+        <h1 class="text-center mb-4 text-4xl font-extrabold tracking-tight md:text-5xl lg:text-5xl pt-5">SERIES</h1>
     </div>
-    <div class="grid grd-cols-1 sm:grid-cols-3 md:grid-cols-3 my-10">
+    <div class="grid grd-cols-1 sm:grid-cols-3 md:grid-cols-3 my-5">
         <div class="hidden sm:flex md:flex lg:flex bg-gray-200 rounded-lg mx-24 relative group cursor-pointer">
             <a class="group-hover:scale-105" style="transition: 0.3s" href="#">
                 <img class="group-hover:blur-sm object-cover w-full shadow-2xl rounded-lg h-full" alt="Serie" src="/Serie_Caminos.jpg">
@@ -51,9 +51,9 @@ import Layout from "../layouts/Layout.astro";
         </div>
     </div>
     <div class="justify-center">
-        <h1 class="text-center mb-4 text-4xl font-extrabold tracking-tight md:text-5xl lg:text-5xl pt-9">CONOCENOS</h1>
+        <h1 class="text-center mb-4 text-4xl font-extrabold tracking-tight md:text-5xl lg:text-5xl pt-5">CONOCENOS</h1>
     </div>
-    <div class="cursor-pointer relative my-10 h-96 overflow-hidden rounded-2xl shadow-lg mx-4 lg:mx-20 group">
+    <div class="cursor-pointer relative my-5 h-96 overflow-hidden rounded-2xl shadow-lg mx-4 lg:mx-20 group">
         <!-- Contenedor del carousel -->
         <div id="slider" class="flex transition-transform duration-700 ease-out">
             <div class="relative w-full flex-shrink-0">
@@ -104,19 +104,33 @@ import Layout from "../layouts/Layout.astro";
     </div>
 
     <!-- Ventana modal -->
-    <div id="modal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex transition-opacity-300 items-center justify-center hidden">
-        <div class="relative bg-white rounded-lg shadow-lg w-11/12 max-w-lg p-6">
-            <!-- Botón para cerrar -->
-            <button id="closeModal" class="absolute top-3 right-3 text-gray-700 hover:text-gray-900">
-                ✖
-            </button>
-            <!-- Contenido del modal -->
-            <div class="text-center">
-                <img src="/img1.jpg" alt="Modal Image" class="w-3/4 mx-auto rounded-lg mb-4">
-                <h2 class="text-2xl font-bold mb-2">Título del Modal</h2>
-                <p class="text-gray-600">
-                    Este es un ejemplo de ventana modal. Puedes agregar cualquier contenido aquí, como texto, imágenes o botones.
+    <div id="modal" class="card-container fixed inset-0 bg-gray-800 bg-opacity-50 flex transition-opacity-300 items-center justify-center hidden">
+        <div class="relative flex items-center justify-center bg-gradient-to-r mt-10 from-orange-400 to-red-500 rounded-xl p-8 shadow-lg max-w-2xl mx-auto">
+            <!-- Cuadrado trasero -->
+            <div class="absolute top-24 left-0 w-40 h-40 bg-red-400 rounded-lg shadow-lg -translate-x-6 -translate-y-6"></div>
+            <!-- Contenido principal -->
+            <div class="relative bg-white p-6 ml-32 rounded-lg shadow-lg">
+                <p class="text-sm font-light text-gray-500 mb-2">26 December 2019</p>
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Lorem Ipsum Dolor2</h2>
+                <p class="text-base font-light text-gray-600 mb-4">
+                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae
+                    voluptate repellendus magni illo ea animi?
                 </p>
+                <p class="text-base font-light text-gray-600 mb-4">
+                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae
+                    voluptate repellendus magni illo ea animi?
+                </p>
+                <p class="text-base font-light text-gray-600 mb-4">
+                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae
+                    voluptate repellendus magni illo ea animi?
+                </p>
+                <p class="text-base font-light text-gray-600 mb-4">
+                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae
+                    voluptate repellendus magni illo ea animi?
+                </p>
+                <button class="bg-gradient-to-r from-orange-500 to-red-500 text-white py-2 px-4 rounded-md shadow-md hover:opacity-90">
+                    READ MORE
+                </button>
             </div>
         </div>
     </div>
@@ -177,6 +191,48 @@ import Layout from "../layouts/Layout.astro";
 
     // Inicializar el estado inicial
     updateSlider();
+
+    // Implementación de Swipe para móviles y Drag para mouse
+    let startX = 0; // Posición inicial de X al tocar o hacer clic
+    let isDragging = false;
+
+    // Manejadores para Touch y Mouse
+    const startDrag = (e) => {
+        isDragging = true;
+        startX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+    };
+
+    const endDrag = (e) => {
+        if (!isDragging) return;
+        isDragging = false;
+
+        const endX = e.type === 'touchend' ? e.changedTouches[0].clientX : e.clientX;
+        const deltaX = endX - startX;
+
+        // Detectar dirección del swipe/drag y navegar
+        if (deltaX > 50) {
+            // Swipe a la derecha
+            index = (index - 1 + slider.children.length) % slider.children.length;
+        } else if (deltaX < -50) {
+            // Swipe a la izquierda
+            index = (index + 1) % slider.children.length;
+        }
+
+        updateSlider();
+    };
+
+    const dragMove = (e) => {
+        if (!isDragging) return;
+        // (Opcional) Puedes usar esto para una funcionalidad adicional en scroll en vivo
+    };
+
+    // Agregar eventos touch y mouse al contenedor del slider
+    slider.addEventListener('touchstart', startDrag);
+    slider.addEventListener('touchmove', dragMove);
+    slider.addEventListener('touchend', endDrag);
+    slider.addEventListener('mousedown', startDrag);
+    window.addEventListener('mousemove', dragMove);
+    window.addEventListener('mouseup', endDrag);
 
     // Referencias
     const modal = document.getElementById('modal');
