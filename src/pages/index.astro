@@ -2,7 +2,7 @@
 import Layout from "../layouts/Layout.astro";
 ---
 <Layout>
-    <div class="h-80 md:height-background bg-[url('/Carousel_3.jpg')]">
+    <div class="h-80 md:height-background  bg-[url('/Carousel_3.jpg')]">
         <div class="content-center align-middle p-12">
             <div class="text-center ml-0 md:mt-5 sm:ml-32">
                 <h1 class="text-left md:mb-4 text-2xl font-extrabold tracking-tight md:text-5xl lg:text-6xl text-white">
@@ -110,8 +110,8 @@ import Layout from "../layouts/Layout.astro";
     </div>
 
     <!-- Ventana modal -->
-    <div id="modal" class="card-container fixed inset-0 bg-gray-800 bg-opacity-50 flex transition-opacity-300 items-center justify-center hidden">
-        <div class="relative flex items-center justify-center bg-gradient-to-r scale-75 lg:scale-100 mt-10  from-orange-400 to-red-500 rounded-xl p-8 shadow-lg max-w-2xl mx-auto">
+    <div id="modal" class="card-container z-50 fixed inset-0 bg-gray-800 bg-opacity-50 flex transition-opacity-300 items-center justify-center hidden">
+        <div class="relative flex items-center justify-center bg-gradient-to-r scale-90 lg:scale-100 mt-10  from-orange-400 to-red-500 rounded-xl p-8 shadow-lg max-w-2xl mx-auto">
             <!-- Cuadrado trasero -->
             <div class="hidden md:flex absolute top-24 left-0 w-40 h-40 p-5 bg-yellow-400 rounded-lg shadow-lg -translate-x-6 -translate-y-6">
                 <img src="./Arde_PNG.png" class="justify-center mt-2" alt="Arde_PNG"></img>
@@ -133,9 +133,14 @@ import Layout from "../layouts/Layout.astro";
                     Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae
                     voluptate repellendus magni illo ea animi?
                 </p>
-                <button class="bg-gradient-to-r from-orange-500 to-red-500 text-white py-2 px-4 rounded-md shadow-md hover:opacity-90">
-                    READ MORE
-                </button>
+                <div class="flex">
+                    <button onclick="showHiddenButton" class="hidden bg-gradient-to-r from-orange-500 to-red-500 text-white py-2 px-4 rounded-md shadow-md hover:opacity-90">
+                        Leer Mas
+                    </button>
+                    <div id="hiddenButton" class="ml-4 justify-end bg-gradient-to-r from-yellow-500 to-red-500 text-white py-2 px-10 text-center rounded-md shadow-md hover:opacity-90">
+                        ¡Proximamente!
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -173,7 +178,6 @@ import Layout from "../layouts/Layout.astro";
     .indicator:hover {
         background-color: #2d3748; /* Hover fondo más oscuro */
     }
-
 </style>
 <script>
 
@@ -276,4 +280,9 @@ import Layout from "../layouts/Layout.astro";
             window.location.href = '#'; // Cambia por la URL a la que quieres redirigir
         }, 1000); // 2000 ms = 2 segundos
     });
+
+    function showHiddenButton() {
+        const hiddenButton = document.getElementById('hiddenButton');
+        hiddenButton.style.display = 'inline-block'; // Cambia el estilo para mostrar el botón
+    }
 </script>
