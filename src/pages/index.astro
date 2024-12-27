@@ -16,7 +16,7 @@ import Layout from "../layouts/Layout.astro";
         </div>
     </div>
     <div class="justify-center mx-5 md:mx-40 my-5">
-        <h1 class="text-center text-xl md:text-2xl"><span class="font-bold">CORAZÓN DE FUEGO</span> es Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae
+        <h1 class="text-justify text-xl md:text-2xl"><span class="font-bold">CORAZÓN DE FUEGO</span> es Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae
             voluptate repellendus magni illo ea animi? Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae
             voluptate repellendus magni illo ea animi? Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae
             voluptate repellendus magni illo ea animi?</h1>
@@ -111,20 +111,16 @@ import Layout from "../layouts/Layout.astro";
 
     <!-- Ventana modal -->
     <div id="modal" class="card-container fixed inset-0 bg-gray-800 bg-opacity-50 flex transition-opacity-300 items-center justify-center hidden">
-        <div class="relative flex items-center justify-center bg-gradient-to-r mt-10  from-orange-400 to-red-500 rounded-xl p-8 shadow-lg max-w-2xl mx-auto">
+        <div class="relative flex items-center justify-center bg-gradient-to-r scale-75 lg:scale-100 mt-10  from-orange-400 to-red-500 rounded-xl p-8 shadow-lg max-w-2xl mx-auto">
             <!-- Cuadrado trasero -->
-            <div class="absolute top-24 left-0 w-40 h-40 p-5 bg-yellow-400 rounded-lg shadow-lg -translate-x-6 -translate-y-6">
+            <div class="hidden md:flex absolute top-24 left-0 w-40 h-40 p-5 bg-yellow-400 rounded-lg shadow-lg -translate-x-6 -translate-y-6">
                 <img src="./Arde_PNG.png" class="justify-center mt-2" alt="Arde_PNG"></img>
             </div>
             <!-- Contenido principal -->
-            <div class="relative bg-white p-6 ml-32 rounded-xl shadow-lg">
-                <button id="closeModal" class="top-0 right-0 px-4 py-2 m-3 rounded-xl text-white bg-orange-500 absolute">x</button>
-                <p class="text-sm font-light text-gray-500 mb-2">26 December 2019</p>
+            <div class="relative bg-white p-6 md:ml-32 rounded-xl shadow-lg">
+                <button id="closeModal" class="top-0 right-0 px-4 py-2 m-3 rounded-xl text-white font-bold bg-orange-500 absolute">X</button>
+                <p class="text-sm text-gray-500 mb-2">26 December 2019</p>
                 <h2 class="text-2xl font-bold text-gray-800 mb-4">ARDE Adolescentes</h2>
-                <p class="text-base font-light text-gray-600 mb-4">
-                    Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae
-                    voluptate repellendus magni illo ea animi?
-                </p>
                 <p class="text-base font-light text-gray-600 mb-4">
                     Lorem ipsum dolor sit amet consectetur, adipisicing elit. Recusandae
                     voluptate repellendus magni illo ea animi?
@@ -157,7 +153,7 @@ import Layout from "../layouts/Layout.astro";
 
     @layer utilities {
         .height-background {
-            height: 30rem;
+            height: 32rem;
         }
     }
 
