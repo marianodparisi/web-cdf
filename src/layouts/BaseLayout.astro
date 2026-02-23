@@ -1,0 +1,142 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title?: string;
+}
+
+const { title = 'Corazón de Fuego | Iglesia Cristiana' } = Astro.props;
+---
+
+<!doctype html>
+<html class="scroll-smooth" lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Lato:wght@300;400;700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    />
+  </head>
+  <body class="bg-white text-charcoal font-body antialiased selection:bg-primary selection:text-white">
+    <slot />
+    <script type="module" is:inline>
+      const initGsap = async () => {
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (reducedMotion) return;
+
+        try {
+          const [{ gsap }, { ScrollTrigger }] = await Promise.all([
+            import('https://cdn.jsdelivr.net/npm/gsap@3.12.5/index.js'),
+            import('https://cdn.jsdelivr.net/npm/gsap@3.12.5/ScrollTrigger.js'),
+          ]);
+
+          gsap.registerPlugin(ScrollTrigger);
+          gsap.defaults({ duration: 0.9, ease: 'power3.out' });
+
+          const nav = document.querySelector('[data-animate="nav"]');
+          if (nav) {
+            gsap.from(nav, { y: -24, opacity: 0, duration: 0.8, ease: 'power2.out' });
+          }
+
+          const navLinks = gsap.utils.toArray('[data-animate="nav-link"]');
+          if (navLinks.length > 0) {
+            gsap.from(navLinks, { y: -12, opacity: 0, duration: 0.6, stagger: 0.06, delay: 0.2 });
+          }
+
+          const heroItems = gsap.utils.toArray('[data-animate="hero-item"]');
+          if (heroItems.length > 0) {
+            gsap.from(heroItems, { y: 32, opacity: 0, stagger: 0.12, delay: 0.15 });
+          }
+
+          const heroMedia = document.querySelector('[data-animate="hero-media"]');
+          if (heroMedia) {
+            gsap.from(heroMedia, { y: 24, scale: 0.96, opacity: 0, duration: 1, delay: 0.25 });
+            gsap.to(heroMedia, {
+              yPercent: -4,
+              ease: 'none',
+              scrollTrigger: {
+                trigger: heroMedia,
+                start: 'top bottom',
+                end: 'bottom top',
+                scrub: true,
+              },
+            });
+          }
+
+          const sections = gsap.utils.toArray('[data-animate="reveal"]');
+          sections.forEach((section) => {
+            gsap.from(section, {
+              y: 36,
+              opacity: 0,
+              scrollTrigger: {
+                trigger: section,
+                start: 'top 82%',
+                toggleActions: 'play none none reverse',
+              },
+            });
+
+            const cards = section.querySelectorAll('[data-animate="card"]');
+            if (cards.length > 0) {
+              gsap.from(cards, {
+                y: 24,
+                opacity: 0,
+                stagger: 0.1,
+                duration: 0.8,
+                scrollTrigger: {
+                  trigger: section,
+                  start: 'top 75%',
+                },
+              });
+            }
+          });
+
+          const footer = document.querySelector('[data-animate="footer"]');
+          if (footer) {
+            gsap.from(footer, {
+              y: 28,
+              opacity: 0,
+              scrollTrigger: {
+                trigger: footer,
+                start: 'top 90%',
+              },
+            });
+          }
+
+          const socialIcons = gsap.utils.toArray('[data-animate="social"]');
+          if (socialIcons.length > 0) {
+            gsap.from(socialIcons, {
+              scale: 0.8,
+              opacity: 0,
+              stagger: 0.08,
+              duration: 0.5,
+              delay: 0.15,
+            });
+
+            socialIcons.forEach((icon) => {
+              icon.addEventListener('mouseenter', () => {
+                gsap.to(icon, { y: -4, duration: 0.2, ease: 'power2.out' });
+              });
+              icon.addEventListener('mouseleave', () => {
+                gsap.to(icon, { y: 0, duration: 0.25, ease: 'power2.out' });
+              });
+            });
+          }
+        } catch (error) {
+          console.warn('GSAP no se pudo cargar:', error);
+        }
+      };
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initGsap, { once: true });
+      } else {
+        initGsap();
+      }
+    </script>
+  </body>
+</html>

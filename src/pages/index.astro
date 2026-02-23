@@ -1,114 +1,210 @@
 ---
-import Layout from "../layouts/Layout.astro";
+import Footer from '../components/Footer.astro';
+import Hero from '../components/Hero.astro';
+import Navbar from '../components/Navbar.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
 ---
-<Layout>
-  <div class="height-background bg-[url('/Upperroom-Prayer-Room-Dallas-TX.jpg')]">
-    <div class="content-center align-middle p-12">
-      <div class="text-center ml-0 sm:ml-32">
-          <h1 class="text-left mb-4 text-4xl font-extrabold tracking-tight md:text-5xl lg:text-6xl text-white">Iglesia</h1>
-          <h1 class="text-left mb-4 text-4xl font-extrabold tracking-tight text-red-400 md:text-5xl lg:text-6xl">Corazón de Fuego</h1>
-          <p class="text-left text-lg font-bold text-white lg:text-xl">Horarios</p>
-          <p class="text-left text-lg font-normal text-white lg:text-xl">Miercoles, Viernes y Sabados 20:00hs.</p>
-          <p class="text-left text-lg font-normal text-white lg:text-xl">Domingos 9:30 y 11:00 AM</p>
+
+<BaseLayout>
+  <Navbar />
+  <Hero />
+
+  <section data-animate="reveal" class="min-h-[72svh] md:min-h-[calc(100svh-5rem)] md:h-screen bg-charcoal overflow-hidden flex items-center py-10 md:py-0">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-7 sm:gap-9 md:gap-12 lg:gap-16 items-center">
+        <div data-animate="card" class="order-2 lg:order-1 relative group max-w-xl lg:max-w-none">
+          <div class="absolute -inset-4 bg-primary/10 rounded-3xl blur-2xl group-hover:bg-primary/20 transition duration-700"></div>
+          <div class="relative rounded-2xl overflow-hidden aspect-video shadow-2xl">
+            <img alt="Serie Actual: Inquebrantable" class="w-full h-full object-cover transform group-hover:scale-105 transition duration-700" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqt-aObF-AnhXTv7XjqD6KvggMW2EEui1Ik8I-i2GiKoQ2CNr7_P24W4Fe3akxTSVQGxzef6d3GPCRk5oMeZuCmQDrlNPANGJ7kadC3yLNUl4aMZtQPG-YF1Eb0iKlypaG1eyUxsF_D8mWS6b2rU6t_aRBrCjI2qD39sRnNVIMkvNa8CbhLbIR4fssR_0uUHKuXkWfx2ykECnf_eoBeOdTr5OaP1rh-8itwkKCLbr5igTePke3IGdMKa-GghaL74dBJInwc_jW1OU" />
+          </div>
+        </div>
+        <div data-animate="card" class="order-1 lg:order-2 space-y-5 sm:space-y-6 md:space-y-8">
+          <div class="space-y-4">
+            <span class="text-primary text-xs font-bold tracking-[0.2em] uppercase">Prédica destacada</span>
+            <h2 class="font-display text-3xl sm:text-4xl md:text-6xl text-white leading-tight">Serie Actual: <br /><span class="italic">Inquebrantable</span></h2>
+            <p class="text-gray-400 text-sm sm:text-base md:text-lg font-light leading-relaxed max-w-lg">
+              Explora cómo la fe nos sostiene en medio de las tormentas más fuertes. Una travesía por el libro de Daniel que transformará tu perspectiva sobre la perseverancia y el propósito divino.
+            </p>
+          </div>
+          <div class="pt-4">
+            <a class="inline-flex items-center gap-4 group" href="#">
+              <span class="h-12 w-12 rounded-full border border-white/20 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-charcoal transition-all duration-300">
+                <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"></path></svg>
+              </span>
+              <span class="text-white text-sm font-bold tracking-widest uppercase border-b border-primary/30 pb-1 group-hover:border-primary transition-colors">Ver en YouTube</span>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="justify-center">
-      <h1 class="text-center mb-4 text-4xl font-extrabold tracking-tight md:text-5xl lg:text-6xl pt-9">Serie Actual</h1>
-  </div>
-  <div class="bg-gray-50">
-      <img class="object-cover object-center sm:px-56" alt="" src="/Serie_Caminos.jpg">
-  </div>
-  <div class="justify-center">
-      <h1 class="text-center mb-4 text-4xl font-extrabold tracking-tight md:text-5xl lg:text-6xl pt-9">Ministerios</h1>
-  </div>
-  <div class="p-1 flex-wrap mt-2 sm:bg-gray-50 items-center justify-center hidden sm:flex">
-    <div class="flex-shrink-0 m-6 h-80 w-56 overflow-hidden bg-yellow-400 rounded-lg max-w-xs shadow-lg">
-        <div class="pt-8 px-8 flex items-center justify-center">
-            <img class="w-44" src="/Arde_PNG.png" alt="">
+  </section>
+
+  <section data-animate="reveal" class="py-14 md:py-12 bg-white" id="novedades">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row justify-between items-end mb-8 md:mb-10">
+        <div>
+          <h2 class="font-display text-3xl sm:text-4xl text-charcoal mb-2">Comunidad / Novedades</h2>
+          <p class="text-gray-500 max-w-md">Entérate de lo que está sucediendo en nuestra casa.</p>
         </div>
-        <div class="text-white px-6 pb-6 mt-6">
-            <span class="block text-amber-100 mb-1">Adolescentes</span>
-            <span class="block text-sm text-amber-100 mb-2">Sabados 18 a 20 hs.</span>
-            <div class="flex justify-between">
-                <span class="block font-semibold text-xl">ARDE</span>
-                <button class="hover:bg-orange-500 hover:text-white transition delay-75 hover:scale-110 ease-in active:text-orange-500 bg-white rounded-full text-orange-500 text-xs font-bold px-3 py-2 leading-none flex items-center">Ver mas</button>
+        <div class="hidden md:flex gap-2">
+          <a class="text-xs font-bold uppercase tracking-widest text-charcoal border-b border-charcoal pb-1 hover:text-primary hover:border-primary transition-colors" href="#">Ver todo el calendario</a>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8">
+        <div data-animate="card" class="md:col-span-2 relative w-full h-[360px] sm:h-[420px] md:h-[450px] rounded-2xl md:rounded-3xl overflow-hidden shadow-lg group">
+          <img alt="Special Event" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqt-aObF-AnhXTv7XjqD6KvggMW2EEui1Ik8I-i2GiKoQ2CNr7_P24W4Fe3akxTSVQGxzef6d3GPCRk5oMeZuCmQDrlNPANGJ7kadC3yLNUl4aMZtQPG-YF1Eb0iKlypaG1eyUxsF_D8mWS6b2rU6t_aRBrCjI2qD39sRnNVIMkvNa8CbhLbIR4fssR_0uUHKuXkWfx2ykECnf_eoBeOdTr5OaP1rh-8itwkKCLbr5igTePke3IGdMKa-GghaL74dBJInwc_jW1OU" />
+          <div class="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-charcoal/20 to-transparent flex flex-col justify-end p-6 sm:p-8 md:p-10">
+            <span class="bg-primary text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider w-fit mb-3">Destacado</span>
+            <h3 class="font-display text-2xl sm:text-3xl md:text-4xl text-white leading-tight mb-2">
+              Congreso "Renovando el Entendimiento"
+            </h3>
+            <p class="text-gray-200 text-sm md:text-base max-w-lg mb-4 md:mb-6 font-light">
+              Tres días de conferencias, adoración y transformación con invitados especiales.
+            </p>
+            <div>
+              <a class="inline-flex items-center gap-2 text-white border-b border-white/50 pb-1 text-sm font-bold tracking-wider hover:border-primary hover:text-primary transition-colors" href="#">
+                INSCRÍBETE AHORA
+              </a>
             </div>
+          </div>
         </div>
+        <div class="flex flex-col gap-5 md:gap-8 h-auto md:h-[450px]">
+          <div data-animate="card" class="relative min-h-[205px] md:min-h-0 flex-1 rounded-2xl md:rounded-3xl overflow-hidden shadow-md group bg-light-gray">
+            <div class="absolute inset-0 p-6 flex flex-col justify-center items-start z-10">
+              <span class="text-xs font-bold text-primary uppercase tracking-widest mb-2">Miércoles</span>
+              <h3 class="font-display text-2xl text-charcoal mb-2">Estudio Bíblico</h3>
+              <p class="text-gray-600 text-sm mb-4">Profundizando en las escrituras cada semana.</p>
+              <a class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-charcoal hover:bg-charcoal hover:text-white transition-colors shadow-sm" href="#">
+                <span class="material-symbols-outlined text-sm">arrow_outward</span>
+              </a>
+            </div>
+            <img alt="Bible Study" class="absolute right-0 bottom-0 w-2/3 h-2/3 object-cover opacity-20 group-hover:opacity-30 transition-opacity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCt1G7t_8Q4dc8IolCJZLjvo0te82Mu7rReT0tKYkBzYGZqtFaWcZuAR3l9SGZ4EM_w6bT5QHkDDdqgBHPszl0rNahTy4tGrMKt4NJsqCdWBH7eIl7IZ9M-qfNGuYA7kZdrFcD5Tfv1NOf7rZI8Uj_wVCtUY8tzIGArMZi5zALlFBK3le6XB0kaQ00Ujq40ujoeS1S9J_mCjv2IumvVXSv4avRPdoj2B6MXNKkTWa4eXjFoEu-5tDZEOu06C2DWSMucH6XnAKSXxRc" />
+          </div>
+          <div data-animate="card" class="relative min-h-[205px] md:min-h-0 flex-1 rounded-2xl md:rounded-3xl overflow-hidden shadow-md group bg-charcoal text-white">
+            <div class="absolute inset-0 p-6 flex flex-col justify-center items-start z-10">
+              <span class="text-xs font-bold text-primary uppercase tracking-widest mb-2">Viernes</span>
+              <h3 class="font-display text-2xl text-white mb-2">Noche de Adoración</h3>
+              <p class="text-gray-300 text-sm mb-4">Un tiempo íntimo para conectar con Dios.</p>
+              <a class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-primary transition-colors backdrop-blur-sm" href="#">
+                <span class="material-symbols-outlined text-sm">arrow_outward</span>
+              </a>
+            </div>
+            <img alt="Worship" class="absolute right-0 top-0 w-full h-full object-cover opacity-30 mix-blend-overlay" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHZ33zm0Bs_C_OrpCQi9xRm6PBscs-Wxps3Cv0_KQGUbVgy52G5MRZgfOhN4zgt44-ml47ou4i38rhzMxJ9EM1UWlT3BkNdxAC6Mstlc1c5U51Vd1L7SuLtCeZyZL4jjoHhT2OpAA-Ag0I_gEq3OKNwDfPFf7HJ0nOx9rfFnZ06j1HL1Os7abB6JPzmwRsTbpsaDAA1G7u-hbg2mkmStCVpQ4rps5UcsaOszL1yQrbw70xavRVpTiqSajlJ8W5EI7zQaufTPS5mYI" />
+          </div>
+        </div>
+      </div>
     </div>
-      <div class="flex-shrink-0 m-6 h-80 w-56 overflow-hidden bg-violet-500 rounded-lg max-w-xs shadow-lg">
-        <div class="pt-8 px-10 flex items-center justify-center">
-            <img class="w-40" src="/Kids_PNG.png" alt="">
+  </section>
+
+  <section data-animate="reveal" class="py-16 md:py-24 bg-gray-50" id="ministerios">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row justify-between items-end mb-10 md:mb-16">
+        <div>
+          <h2 class="font-display text-3xl sm:text-4xl text-charcoal mb-4">Nuestro Liderazgo / Ministerios</h2>
+          <p class="text-gray-500 max-w-md">Áreas donde servimos y crecemos juntos como familia.</p>
         </div>
-        <div class="text-white px-6 pb-6 mt-6">
-            <span class="block text-amber-100 mb-1">Niños</span>
-            <span class="block text-sm text-amber-100 mb-2">Sabados 16 a 17 hs.</span>
-            <div class="flex justify-between">
-                <span class="block font-semibold text-xl">KIDS</span>
-                <button class="hover:bg-violet-400 hover:text-white transition delay-75 hover:scale-110 ease-in active:text-violet-400 bg-white rounded-full text-xs font-bold px-3 py-2 text-violet-600 leading-none flex items-center">Ver mas</button>
+        <div class="hidden md:flex gap-2">
+          <button class="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center hover:bg-charcoal hover:text-white transition-colors">
+            <span class="material-symbols-outlined text-sm">arrow_back</span>
+          </button>
+          <button class="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center hover:bg-charcoal hover:text-white transition-colors">
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </button>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 sm:gap-5 lg:gap-6">
+        <div data-animate="card" class="group cursor-pointer">
+          <div class="relative overflow-hidden rounded-2xl md:rounded-[1.5rem] mb-3 md:mb-4 aspect-[4/5] sm:aspect-[3/4]">
+            <img alt="Ministerio Life" class="w-full h-full object-cover transition duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGvlfxoZ2T0HVvzaJK4f6loCzk_BzLERbiD7SFld9M1VhIEDpk0XOmNtwpc52ne1l43m_NLjZa7xQ2DeGu77uNcdw70hFpyi02TsvaRA4pwHsGD1bVRbSRoa8mpvK0QN6UFkt37htyl9ZsJ4pZ74yVv3QEQ0V0kpaUvQ1AvtrNN11axWFfEy3Eqfb2RIi3mAV_hdrcbhiv9sV22LcNnJp2YcGOl4VpRWvG7F6jtwOEdH8lDpAlhLk9lhHMlmZbPx8S5KcJWm4J9fY" />
+            <div class="absolute inset-0 bg-gradient-to-t from-charcoal/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+              <span class="text-white text-xs font-bold uppercase tracking-wider">Ver más</span>
             </div>
+          </div>
+          <h3 class="font-display text-base sm:text-lg text-charcoal group-hover:text-primary transition-colors">Life</h3>
+          <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mt-1">Jóvenes</p>
         </div>
-      </div>
-      <div class="flex-shrink-0 m-6 h-80 w-56 bg-gray-600 rounded-lg shadow-lg">
-        <div class=" h-auto py-8 px-10 flex items-center justify-center">
-            <img class="w-40" src="/Star_PNG.png" alt="">
-        </div>
-        <div class="text-white px-6 pb-6 mt-6">
-            <span class="block text-gray-400 mb-1">Jovenes</span>
-            <div class="flex justify-between">
-                <span class="block font-semibold text-xl">STAR</span>
-                <p></p>
-                <button class="hover:bg-gray-400 hover:text-white transition delay-75 hover:scale-110 ease-in active:text-gray-400 bg-white rounded-full text-xs font-bold px-3 py-2 text-gray-800 leading-none flex items-center">Ver mas</button>
+        <div data-animate="card" class="group cursor-pointer">
+          <div class="relative overflow-hidden rounded-2xl md:rounded-[1.5rem] mb-3 md:mb-4 aspect-[4/5] sm:aspect-[3/4]">
+            <img alt="Ministerio Gold" class="w-full h-full object-cover transition duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpNL2tmCtO0fgqMv-ThU0CeTkY7n8EM7e4yAy843_RIYva4Qdw2NDukgUrme_WwFWBOb2ZiurJI7RZ9EKa6gYV1YovO3oYczp46jyLQaFE9FFqFIDatgqfu7igx6KifQYy4mD21ZBKnz7eVn6HbW-ERCXAJYfKWG3Berhvtw69pZX2GyR7ddQw0VmSyvqaowX16JrrmxxgC7Sgo6Ad3aGXJZHM-3EnAtiH5FOwU_MFDQXrUu2Ix4YOPREH_Yo8wUS2ascAxUn2WDA" />
+            <div class="absolute inset-0 bg-gradient-to-t from-charcoal/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+              <span class="text-white text-xs font-bold uppercase tracking-wider">Ver más</span>
             </div>
+          </div>
+          <h3 class="font-display text-base sm:text-lg text-charcoal group-hover:text-primary transition-colors">Gold</h3>
+          <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mt-1">Mujeres</p>
         </div>
-      </div>
-      <div class="flex-shrink-0 m-6 h-80 w-56 overflow-hidden bg-amber-50 rounded-lg max-w-xs shadow-lg">
-        <div class="py-18 px-10 flex items-center justify-center">
-            <img class="w-40 h-auto" src="/Gold%20Team_PNG.png" alt="">
-        </div>
-        <div class="text-white px-6 pb-6 mt-6">
-            <span class="block text-black mb-1">Matrimonios GOLD</span>
-            <div class="flex justify-between">
-            <span class="block text-black font-semibold text-xl">GOLD</span>
-            <button class="hover:bg-white hover:text-gray-800 transition delay-75 hover:scale-110 ease-in active:text-white rounded-full bg-white text-xs font-bold px-3 py-2 text-gray-800 leading-none flex items-center">Ver mas</button>
+        <div data-animate="card" class="group cursor-pointer">
+          <div class="relative overflow-hidden rounded-2xl md:rounded-[1.5rem] mb-3 md:mb-4 aspect-[4/5] sm:aspect-[3/4]">
+            <img alt="Ministerio Kids" class="w-full h-full object-cover transition duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRfSv6m8FjirUJBMo2HXZT0XFrcrGXzaU4gVHbzc5HAbawo5fA9ahCVsa_Y1fRldmYp89D7kcZGpdQoM1bx45LDFjN0IowZ_lCApR9y58JKSe__cgYyOZAgB4OuzFF8jVBtPMZPfS31DJPq57W2GKJ_TN4Zza9-X_tWphLYTVzmolmf5cNDVPMQ6VWeeHHJ7KC5DTDUanK40bigpRBuNXN0sgbyBem5fxyatl34ELRo3-BsCWo_soGZHa2XJ6dngZru3q_MQpX23s" />
+            <div class="absolute inset-0 bg-gradient-to-t from-charcoal/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+              <span class="text-white text-xs font-bold uppercase tracking-wider">Ver más</span>
             </div>
+          </div>
+          <h3 class="font-display text-base sm:text-lg text-charcoal group-hover:text-primary transition-colors">Kids</h3>
+          <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mt-1">Niños</p>
+        </div>
+        <div data-animate="card" class="group cursor-pointer">
+          <div class="relative overflow-hidden rounded-2xl md:rounded-[1.5rem] mb-3 md:mb-4 aspect-[4/5] sm:aspect-[3/4]">
+            <img alt="Ministerio Arde" class="w-full h-full object-cover transition duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGDXAOZgLxgPKEfzQE6qoegBpxFS8IPnGkgdr_XjP0e-_JcI-C2O0gK6yjggNlaBlbTh2z6nP8IR6MzccD5TSxwEMAwke1Vfv1CPYesu83TRAF9J_ag5LcvaGSo0xmkwboLBDvuUsjivdOAGnng9XHlHKXKD2u6iyr4zwUjzbidTLrL-uSqGOboCYAnaMHaI6ujF-X-dnk2aTvuZJKjON1lWvY4rZXMUnlvMXdek47SStjjmlzjYeo1zSv6_KiLWnFbWqJFL5b6Kg" />
+            <div class="absolute inset-0 bg-gradient-to-t from-charcoal/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+              <span class="text-white text-xs font-bold uppercase tracking-wider">Ver más</span>
+            </div>
+          </div>
+          <h3 class="font-display text-base sm:text-lg text-charcoal group-hover:text-primary transition-colors">Arde</h3>
+          <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mt-1">Evangelismo</p>
+        </div>
+        <div data-animate="card" class="group cursor-pointer">
+          <div class="relative overflow-hidden rounded-2xl md:rounded-[1.5rem] mb-3 md:mb-4 aspect-[4/5] sm:aspect-[3/4]">
+            <img alt="Ministerio Firmes" class="w-full h-full object-cover transition duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeBRG3ZZOh247H-gEOZFvzjIHB4Lw5aCuXHgEA0N-6qAJ5PRGNQ7b852erovJwkMMLFTJQ1s4QZFGiRpsyop_fzpXLMobVSw5oYv2W6UU1OfPh8sIBusDjfyQjzpSwteKc65fb8OeFkcl30S3LCrMQBGmcNvd57kBzbwTfAaoHZwYxfi3bcZF0f57kUhfmKRCResG6crO7M0tP5LHSKEI_Aul3yIc3mjPEerL9YkX72F-szmtElrRwnaSZlmAjZ97l0-q0NHwm9Pg" />
+            <div class="absolute inset-0 bg-gradient-to-t from-charcoal/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+              <span class="text-white text-xs font-bold uppercase tracking-wider">Ver más</span>
+            </div>
+          </div>
+          <h3 class="font-display text-base sm:text-lg text-charcoal group-hover:text-primary transition-colors">Firmes</h3>
+          <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mt-1">Hombres</p>
+        </div>
+        <div data-animate="card" class="group cursor-pointer">
+          <div class="relative overflow-hidden rounded-2xl md:rounded-[1.5rem] mb-3 md:mb-4 aspect-[4/5] sm:aspect-[3/4]">
+            <img alt="Ministerio Carcelario" class="w-full h-full object-cover transition duration-500 group-hover:scale-105 grayscale group-hover:grayscale-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHZ33zm0Bs_C_OrpCQi9xRm6PBscs-Wxps3Cv0_KQGUbVgy52G5MRZgfOhN4zgt44-ml47ou4i38rhzMxJ9EM1UWlT3BkNdxAC6Mstlc1c5U51Vd1L7SuLtCeZyZL4jjoHhT2OpAA-Ag0I_gEq3OKNwDfPFf7HJ0nOx9rfFnZ06j1HL1Os7abB6JPzmwRsTbpsaDAA1G7u-hbg2mkmStCVpQ4rps5UcsaOszL1yQrbw70xavRVpTiqSajlJ8W5EI7zQaufTPS5mYI" />
+            <div class="absolute inset-0 bg-gradient-to-t from-charcoal/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+              <span class="text-white text-xs font-bold uppercase tracking-wider">Ver más</span>
+            </div>
+          </div>
+          <h3 class="font-display text-base sm:text-lg text-charcoal group-hover:text-primary transition-colors">Carcelario</h3>
+          <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mt-1">Misiones</p>
         </div>
       </div>
-  </div>
-  <div class="bg-gray-50 p-3 grid-cols-1 justify-items-center grid sm:hidden">
-      <div class="p-2 bg-yellow-400 mb-3 content-center flex rounded-lg h-14 w-11/12 justify-between">
-          <img class="object-fill" src="/Arde_PNG.png" alt="">
-          <span class="align-middle text-xs pl-1.5 mt-3 text-amber-100">Adolescentes | Sabados 18 a 20hs</span>
-          <button class="hover:bg-orange-500 hover:text-white transition delay-75 hover:scale-110 ease-in active:text-orange-500 bg-white rounded-2xl text-orange-500 text-xs font-bold px-3 h-9 leading-none justify-end items-center">Ver mas</button>
+    </div>
+  </section>
+
+  <section data-animate="reveal" class="py-14 md:py-12 bg-white" id="radio">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+      <div class="bg-charcoal rounded-2xl md:rounded-3xl p-6 sm:p-8 md:p-16 flex flex-col md:flex-row items-center justify-between relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
+        <div class="flex items-center gap-4 sm:gap-6 relative z-10">
+          <div class="h-20 w-20 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-md">
+            <span class="material-symbols-outlined text-white text-4xl">mic</span>
+          </div>
+          <div>
+            <h2 class="font-display text-2xl sm:text-3xl md:text-4xl text-white mb-2">Radio Corazón</h2>
+            <div class="flex items-center gap-3">
+              <span class="text-gray-400 text-xs tracking-widest uppercase">La frecuencia del cielo</span>
+              <div class="flex items-end gap-1 h-4 audio-wave">
+                <span></span><span></span><span></span><span></span><span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="mt-6 md:mt-0 relative z-10 flex flex-col md:flex-row items-center gap-4 md:gap-6">
+          <span class="px-4 py-1.5 bg-primary text-charcoal text-xs font-bold uppercase tracking-wider rounded-full">Próximamente</span>
+          <p class="text-white/60 text-sm font-light italic text-center md:text-right">"24/7 conectados contigo."</p>
+          <a class="inline-flex items-center justify-center px-5 py-2.5 border border-white/30 rounded-full text-white text-xs font-bold tracking-widest uppercase transition-all hover:border-primary hover:text-primary" href="/contact">
+            Ir a contacto
+          </a>
+        </div>
       </div>
-      <div class="p-2 bg-violet-500 mb-3 content-center flex rounded-lg h-14 w-11/12 justify-between">
-          <img class="object-fill" src="/Kids_PNG.png" alt="">
-          <span class="align-middle text-xs pl-1.5 mt-3 text-amber-100">Niños | Sabados 16 a 17.30hs</span>
-          <button class="hover:bg-violet-400 hover:text-white transition delay-75 hover:scale-110 ease-in active:text-violet-400 bg-white rounded-2xl text-xs font-bold px-3 h-9 text-violet-600 leading-none flex items-center">Ver mas</button>
-      </div>
-      <div class="p-2 bg-gray-600 mb-3 content-center flex rounded-lg h-14 w-11/12 justify-between">
-          <img class="object-fill" src="/Star_PNG.png" alt="">
-          <span class="align-middle text-xs pl-1.5 mt-3 text-gray-400">Jovenes STAR</span>
-          <button class="hover:bg-gray-400 hover:text-white transition delay-75 hover:scale-110 ease-in active:text-gray-400 bg-white rounded-2xl text-xs font-bold px-3 h-9 text-gray-800 leading-none flex items-center">Ver mas</button>
-      </div>
-      <div class="p-2 bg-amber-50 mb-3 content-center flex rounded-lg h-14 w-11/12 justify-between">
-          <img class="object-fill" src="/Gold%20Team_PNG.png" alt="">
-          <span class="align-middle text-xs pl-1.5 mt-3 text-black">Matrimonios GOLD</span>
-          <button class="hover:bg-white hover:text-gray-800 transition delay-75 hover:scale-110 ease-in active:text-white bg-white rounded-2xl text-xs font-bold px-3 h-9 text-gray-800 leading-none flex items-center">Ver mas</button>
-      </div>
-  </div>
-</Layout>
-<style>
-  html{
-    font-family: "Poppins", sans-serif;
-    font-weight: 400;
-    font-style: normal;
-  }
-  .height-background{
-      	height: 26rem;
-  }
-  .py-18{
-      padding-top: 4.5rem/* 64px */;
-      padding-bottom: 4.5rem/* 64px */;
-  }
-</style>
+    </div>
+  </section>
+
+  <Footer />
+</BaseLayout>

@@ -1,0 +1,81 @@
+---
+import Footer from '../components/Footer.astro';
+import Navbar from '../components/Navbar.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Contacto | Corazón de Fuego">
+  <Navbar />
+
+  <section data-animate="reveal" class="relative overflow-hidden bg-white pt-14 md:pt-20 pb-10 md:pb-14">
+    <div class="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top_right,_rgba(212,175,55,0.14),transparent_42%)]"></div>
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
+      <span class="inline-block text-xs font-bold tracking-[0.22em] uppercase text-primary mb-5">Estamos para ayudarte</span>
+      <h1 class="font-display text-4xl sm:text-5xl md:text-6xl text-charcoal leading-tight">Contacto</h1>
+      <p class="mt-4 text-gray-500 text-base sm:text-lg max-w-2xl font-light leading-relaxed">
+        Escríbenos y te respondemos pronto. Si quieres una visita o más información sobre reuniones y ministerios, este es el lugar correcto.
+      </p>
+    </div>
+  </section>
+
+  <section data-animate="reveal" class="bg-gray-50 pb-16 md:pb-24 pt-2 md:pt-4">
+    <div class="max-w-5xl mx-auto px-5 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 gap-6 md:gap-8 items-stretch">
+        <div data-animate="card" class="rounded-2xl md:rounded-3xl bg-white border border-gray-100 shadow-sm p-6 sm:p-8 md:p-10">
+          <h2 class="font-display text-2xl sm:text-3xl text-charcoal mb-1">Formulario</h2>
+          <p class="text-gray-500 text-sm mb-6 md:mb-8">Completa tus datos y nos contactamos contigo.</p>
+
+          <form class="space-y-4 md:space-y-5" action="#" method="post">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <label class="block text-xs font-bold tracking-widest uppercase text-charcoal mb-2" for="nombre">Nombre</label>
+                <input id="nombre" name="nombre" type="text" required class="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-charcoal outline-none transition-all hover:border-primary/50 focus:border-primary focus:ring-2 focus:ring-primary/20" placeholder="Tu nombre" />
+              </div>
+              <div>
+                <label class="block text-xs font-bold tracking-widest uppercase text-charcoal mb-2" for="telefono">Teléfono</label>
+                <input id="telefono" name="telefono" type="tel" class="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-charcoal outline-none transition-all hover:border-primary/50 focus:border-primary focus:ring-2 focus:ring-primary/20" placeholder="+1 (555) 000-0000" />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold tracking-widest uppercase text-charcoal mb-2" for="email">Correo electrónico</label>
+              <input id="email" name="email" type="email" required class="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-charcoal outline-none transition-all hover:border-primary/50 focus:border-primary focus:ring-2 focus:ring-primary/20" placeholder="tuemail@ejemplo.com" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-bold tracking-widest uppercase text-charcoal mb-2" for="mensaje">Mensaje</label>
+              <textarea id="mensaje" name="mensaje" rows="5" required class="w-full rounded-xl border border-gray-200 bg-white px-4 py-3 text-sm text-charcoal outline-none transition-all hover:border-primary/50 focus:border-primary focus:ring-2 focus:ring-primary/20" placeholder="Cuéntanos cómo podemos ayudarte"></textarea>
+            </div>
+
+            <button type="submit" class="inline-flex w-full sm:w-auto items-center justify-center rounded-full bg-charcoal px-8 py-3 text-xs font-bold tracking-[0.16em] uppercase text-white transition-all hover:-translate-y-0.5 hover:bg-primary hover:text-charcoal focus:outline-none focus:ring-2 focus:ring-primary/40">
+              Enviar mensaje
+            </button>
+          </form>
+        </div>
+
+        <aside data-animate="card" class="bg-charcoal rounded-2xl md:rounded-3xl p-6 sm:p-8 md:p-10 text-white shadow-xl">
+          <h2 class="hidden md:block font-display text-2xl sm:text-3xl mb-4">Hablemos</h2>
+          <p class="hidden md:block text-gray-300 text-sm leading-relaxed mb-8">
+            También puedes escribirnos por redes o llamarnos directamente. Queremos servirte de la mejor manera.
+          </p>
+          <div class="space-y-4">
+            <div class="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 transition-colors hover:border-primary/60 hover:bg-white/10">
+              <span class="material-symbols-outlined text-primary">call</span>
+              <span class="text-sm text-gray-200">+1 (555) 123-4567</span>
+            </div>
+            <div class="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 transition-colors hover:border-primary/60 hover:bg-white/10">
+              <span class="material-symbols-outlined text-primary">mail</span>
+              <span class="text-sm text-gray-200">info@corazondefuego.org</span>
+            </div>
+            <div class="flex items-start gap-3 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 transition-colors hover:border-primary/60 hover:bg-white/10">
+              <span class="material-symbols-outlined text-primary mt-0.5">location_on</span>
+              <span class="text-sm text-gray-200">Av. Principal 123, Ciudad, País 00000</span>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</BaseLayout>
