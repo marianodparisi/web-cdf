@@ -58,7 +58,9 @@ const { title = 'Corazón de Fuego | Iglesia Cristiana' } = Astro.props;
           if (heroMedia) {
             gsap.from(heroMedia, { y: 24, scale: 0.96, opacity: 0, duration: 1, delay: 0.25 });
             gsap.to(heroMedia, {
-              yPercent: -4,
+              yPercent: -2,
+              scale: 1.04,
+              transformOrigin: 'center center',
               ease: 'none',
               scrollTrigger: {
                 trigger: heroMedia,
