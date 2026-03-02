@@ -10,8 +10,8 @@ export default {
         'light-gray': '#F3F4F6',
       },
       fontFamily: {
-        display: ['Playfair Display', 'serif'],
-        body: ['Lato', 'sans-serif'],
+        display: ['Poppins', 'sans-serif'],
+        body: ['Poppins', 'sans-serif'],
       },
       borderRadius: {
         DEFAULT: '4px',
