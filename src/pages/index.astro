@@ -2,6 +2,7 @@
 import Footer from '../components/Footer.astro';
 import Hero from '../components/Hero.astro';
 import Navbar from '../components/Navbar.astro';
+import { ministries } from '../data/ministries';
 import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
@@ -243,76 +244,26 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           <h2 class="font-display text-3xl sm:text-4xl text-charcoal mb-4">Nuestro Liderazgo / Ministerios</h2>
           <p class="text-gray-500 max-w-md">Áreas donde servimos y crecemos juntos como familia.</p>
         </div>
-        <div class="hidden md:flex gap-2">
-          <button class="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center hover:bg-charcoal hover:text-white transition-colors">
-            <span class="material-symbols-outlined text-sm">arrow_back</span>
-          </button>
-          <button class="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center hover:bg-charcoal hover:text-white transition-colors">
-            <span class="material-symbols-outlined text-sm">arrow_forward</span>
-          </button>
-        </div>
+        <a class="hidden md:inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-charcoal border-b border-charcoal pb-1 hover:text-primary hover:border-primary transition-colors" href="/ministerios">
+          Ver seccion
+          <span class="material-symbols-outlined text-sm">arrow_outward</span>
+        </a>
       </div>
       <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 sm:gap-5 lg:gap-6">
-        <div data-animate="card" class="group cursor-pointer">
-          <div class="relative overflow-hidden rounded-2xl md:rounded-[1.5rem] mb-3 md:mb-4 aspect-[4/5] sm:aspect-[3/4]">
-            <img alt="Ministerio Life" class="w-full h-full object-cover transition duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGvlfxoZ2T0HVvzaJK4f6loCzk_BzLERbiD7SFld9M1VhIEDpk0XOmNtwpc52ne1l43m_NLjZa7xQ2DeGu77uNcdw70hFpyi02TsvaRA4pwHsGD1bVRbSRoa8mpvK0QN6UFkt37htyl9ZsJ4pZ74yVv3QEQ0V0kpaUvQ1AvtrNN11axWFfEy3Eqfb2RIi3mAV_hdrcbhiv9sV22LcNnJp2YcGOl4VpRWvG7F6jtwOEdH8lDpAlhLk9lhHMlmZbPx8S5KcJWm4J9fY" />
-            <div class="absolute inset-0 bg-gradient-to-t from-charcoal/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-              <span class="text-white text-xs font-bold uppercase tracking-wider">Ver más</span>
-            </div>
-          </div>
-          <h3 class="font-display text-base sm:text-lg text-charcoal group-hover:text-primary transition-colors">Life</h3>
-          <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mt-1">Jóvenes</p>
-        </div>
-        <div data-animate="card" class="group cursor-pointer">
-          <div class="relative overflow-hidden rounded-2xl md:rounded-[1.5rem] mb-3 md:mb-4 aspect-[4/5] sm:aspect-[3/4]">
-            <img alt="Ministerio Gold" class="w-full h-full object-cover transition duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpNL2tmCtO0fgqMv-ThU0CeTkY7n8EM7e4yAy843_RIYva4Qdw2NDukgUrme_WwFWBOb2ZiurJI7RZ9EKa6gYV1YovO3oYczp46jyLQaFE9FFqFIDatgqfu7igx6KifQYy4mD21ZBKnz7eVn6HbW-ERCXAJYfKWG3Berhvtw69pZX2GyR7ddQw0VmSyvqaowX16JrrmxxgC7Sgo6Ad3aGXJZHM-3EnAtiH5FOwU_MFDQXrUu2Ix4YOPREH_Yo8wUS2ascAxUn2WDA" />
-            <div class="absolute inset-0 bg-gradient-to-t from-charcoal/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-              <span class="text-white text-xs font-bold uppercase tracking-wider">Ver más</span>
-            </div>
-          </div>
-          <h3 class="font-display text-base sm:text-lg text-charcoal group-hover:text-primary transition-colors">Gold</h3>
-          <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mt-1">Mujeres</p>
-        </div>
-        <div data-animate="card" class="group cursor-pointer">
-          <div class="relative overflow-hidden rounded-2xl md:rounded-[1.5rem] mb-3 md:mb-4 aspect-[4/5] sm:aspect-[3/4]">
-            <img alt="Ministerio Kids" class="w-full h-full object-cover transition duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRfSv6m8FjirUJBMo2HXZT0XFrcrGXzaU4gVHbzc5HAbawo5fA9ahCVsa_Y1fRldmYp89D7kcZGpdQoM1bx45LDFjN0IowZ_lCApR9y58JKSe__cgYyOZAgB4OuzFF8jVBtPMZPfS31DJPq57W2GKJ_TN4Zza9-X_tWphLYTVzmolmf5cNDVPMQ6VWeeHHJ7KC5DTDUanK40bigpRBuNXN0sgbyBem5fxyatl34ELRo3-BsCWo_soGZHa2XJ6dngZru3q_MQpX23s" />
-            <div class="absolute inset-0 bg-gradient-to-t from-charcoal/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-              <span class="text-white text-xs font-bold uppercase tracking-wider">Ver más</span>
-            </div>
-          </div>
-          <h3 class="font-display text-base sm:text-lg text-charcoal group-hover:text-primary transition-colors">Kids</h3>
-          <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mt-1">Niños</p>
-        </div>
-        <div data-animate="card" class="group cursor-pointer">
-          <div class="relative overflow-hidden rounded-2xl md:rounded-[1.5rem] mb-3 md:mb-4 aspect-[4/5] sm:aspect-[3/4]">
-            <img alt="Ministerio Arde" class="w-full h-full object-cover transition duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCGDXAOZgLxgPKEfzQE6qoegBpxFS8IPnGkgdr_XjP0e-_JcI-C2O0gK6yjggNlaBlbTh2z6nP8IR6MzccD5TSxwEMAwke1Vfv1CPYesu83TRAF9J_ag5LcvaGSo0xmkwboLBDvuUsjivdOAGnng9XHlHKXKD2u6iyr4zwUjzbidTLrL-uSqGOboCYAnaMHaI6ujF-X-dnk2aTvuZJKjON1lWvY4rZXMUnlvMXdek47SStjjmlzjYeo1zSv6_KiLWnFbWqJFL5b6Kg" />
-            <div class="absolute inset-0 bg-gradient-to-t from-charcoal/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-              <span class="text-white text-xs font-bold uppercase tracking-wider">Ver más</span>
-            </div>
-          </div>
-          <h3 class="font-display text-base sm:text-lg text-charcoal group-hover:text-primary transition-colors">Arde</h3>
-          <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mt-1">Evangelismo</p>
-        </div>
-        <div data-animate="card" class="group cursor-pointer">
-          <div class="relative overflow-hidden rounded-2xl md:rounded-[1.5rem] mb-3 md:mb-4 aspect-[4/5] sm:aspect-[3/4]">
-            <img alt="Ministerio Firmes" class="w-full h-full object-cover transition duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDeBRG3ZZOh247H-gEOZFvzjIHB4Lw5aCuXHgEA0N-6qAJ5PRGNQ7b852erovJwkMMLFTJQ1s4QZFGiRpsyop_fzpXLMobVSw5oYv2W6UU1OfPh8sIBusDjfyQjzpSwteKc65fb8OeFkcl30S3LCrMQBGmcNvd57kBzbwTfAaoHZwYxfi3bcZF0f57kUhfmKRCResG6crO7M0tP5LHSKEI_Aul3yIc3mjPEerL9YkX72F-szmtElrRwnaSZlmAjZ97l0-q0NHwm9Pg" />
-            <div class="absolute inset-0 bg-gradient-to-t from-charcoal/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-              <span class="text-white text-xs font-bold uppercase tracking-wider">Ver más</span>
-            </div>
-          </div>
-          <h3 class="font-display text-base sm:text-lg text-charcoal group-hover:text-primary transition-colors">Firmes</h3>
-          <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mt-1">Hombres</p>
-        </div>
-        <div data-animate="card" class="group cursor-pointer">
-          <div class="relative overflow-hidden rounded-2xl md:rounded-[1.5rem] mb-3 md:mb-4 aspect-[4/5] sm:aspect-[3/4]">
-            <img alt="Ministerio Carcelario" class="w-full h-full object-cover transition duration-500 group-hover:scale-105 grayscale group-hover:grayscale-0" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHZ33zm0Bs_C_OrpCQi9xRm6PBscs-Wxps3Cv0_KQGUbVgy52G5MRZgfOhN4zgt44-ml47ou4i38rhzMxJ9EM1UWlT3BkNdxAC6Mstlc1c5U51Vd1L7SuLtCeZyZL4jjoHhT2OpAA-Ag0I_gEq3OKNwDfPFf7HJ0nOx9rfFnZ06j1HL1Os7abB6JPzmwRsTbpsaDAA1G7u-hbg2mkmStCVpQ4rps5UcsaOszL1yQrbw70xavRVpTiqSajlJ8W5EI7zQaufTPS5mYI" />
-            <div class="absolute inset-0 bg-gradient-to-t from-charcoal/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
-              <span class="text-white text-xs font-bold uppercase tracking-wider">Ver más</span>
-            </div>
-          </div>
-          <h3 class="font-display text-base sm:text-lg text-charcoal group-hover:text-primary transition-colors">Carcelario</h3>
-          <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mt-1">Misiones</p>
-        </div>
+        {
+          ministries.map((ministry) => (
+            <a data-animate="card" class="group block" href={`/ministerios/${ministry.slug}`}>
+              <div class="relative overflow-hidden rounded-2xl md:rounded-[1.5rem] mb-3 md:mb-4 aspect-[4/5] sm:aspect-[3/4]">
+                <img alt={`Ministerio ${ministry.name}`} class="w-full h-full object-cover transition duration-500 group-hover:scale-105" src={ministry.image} />
+                <div class="absolute inset-0 bg-gradient-to-t from-charcoal/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+                  <span class="text-white text-xs font-bold uppercase tracking-wider">Ver ministerio</span>
+                </div>
+              </div>
+              <h3 class="font-display text-base sm:text-lg text-charcoal group-hover:text-primary transition-colors">{ministry.name}</h3>
+              <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mt-1">{ministry.area}</p>
+            </a>
+          ))
+        }
       </div>
     </div>
   </section>

@@ -1,0 +1,47 @@
+---
+import Footer from '../../components/Footer.astro';
+import Navbar from '../../components/Navbar.astro';
+import { ministries } from '../../data/ministries';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Ministerios | Iglesia Corazon de Fuego">
+  <Navbar />
+
+  <section data-animate="reveal" class="pt-14 md:pt-20 pb-8 md:pb-10 bg-white">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+      <span class="text-primary text-xs uppercase tracking-[0.22em] font-semibold">Seccion ministerios</span>
+      <h1 class="font-display text-4xl sm:text-5xl text-charcoal mt-2">Nuestro Liderazgo / Ministerios</h1>
+      <p class="text-gray-500 mt-4 max-w-2xl">
+        Conoce cada area de servicio y encuentra el lugar donde podes crecer, servir y conectar con la familia de la fe.
+      </p>
+    </div>
+  </section>
+
+  <section data-animate="reveal" class="pb-14 md:pb-16 bg-white">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+        {
+          ministries.map((ministry) => (
+            <a data-animate="card" href={`/ministerios/${ministry.slug}`} class="group rounded-3xl overflow-hidden border border-gray-200 bg-gray-50 hover:border-primary/60 transition-colors">
+              <div class="relative h-56 sm:h-60">
+                <img src={ministry.image} alt={`Ministerio ${ministry.name}`} class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/55 to-transparent"></div>
+                <div class="absolute left-4 bottom-4">
+                  <span class="inline-flex rounded-full bg-primary px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-charcoal font-semibold">{ministry.area}</span>
+                </div>
+              </div>
+              <div class="p-5">
+                <h2 class="font-display text-2xl text-charcoal group-hover:text-primary transition-colors lowercase">{ministry.name}</h2>
+                <p class="text-gray-600 text-sm mt-2 leading-relaxed">{ministry.excerpt}</p>
+                <span class="mt-4 inline-flex text-xs uppercase tracking-[0.18em] text-charcoal group-hover:text-primary transition-colors">Ver detalle</span>
+              </div>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</BaseLayout>
