@@ -2,8 +2,12 @@
 import Footer from '../components/Footer.astro';
 import Hero from '../components/Hero.astro';
 import Navbar from '../components/Navbar.astro';
+import { devotionalPosts } from '../data/devotionals';
 import { ministries } from '../data/ministries';
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const logoSlugs = new Set(['gold', 'kids', 'arde']);
+const featuredDevotionalPosts = devotionalPosts.slice(0, 3);
 ---
 
 <BaseLayout>
@@ -237,6 +241,55 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     </div>
   </section>
 
+  <section data-animate="reveal" class="py-14 md:py-16 bg-white" id="devocional">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row justify-between items-end mb-8 md:mb-10">
+        <div>
+          <h2 class="font-display text-3xl sm:text-4xl text-charcoal mb-2">Devocional Diario / Testimonio</h2>
+          <p class="text-gray-500 max-w-2xl">Resumen semanal de palabras, testimonios y videos para seguir creciendo durante la semana.</p>
+        </div>
+        <a class="hidden md:inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-charcoal border-b border-charcoal pb-1 hover:text-primary hover:border-primary transition-colors" href="/devocional">
+          Ver completo
+          <span class="material-symbols-outlined text-sm">arrow_outward</span>
+        </a>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
+        {
+          featuredDevotionalPosts.map((post) => (
+            <article data-animate="card" class="rounded-3xl overflow-hidden border border-gray-200 bg-white">
+              <a href={`/devocional/${post.slug}`} class="group block">
+                <div class="relative h-48">
+                  <img src={post.image} alt={post.title} class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/55 to-transparent"></div>
+                  <div class="absolute left-4 bottom-4 flex items-center gap-2">
+                    <span class="inline-flex rounded-full bg-primary px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-charcoal font-semibold">{post.type}</span>
+                    {post.videoUrl && (
+                      <span class="inline-flex rounded-full bg-white/90 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-charcoal font-semibold">Video</span>
+                    )}
+                  </div>
+                </div>
+              </a>
+              <div class="p-5">
+                <p class="text-[11px] uppercase tracking-[0.18em] text-gray-500">{post.weekLabel}</p>
+                <h3 class="font-display text-2xl text-charcoal mt-2">{post.title}</h3>
+                <p class="text-gray-600 text-sm mt-2 leading-relaxed">{post.excerpt}</p>
+                <a href={`/devocional/${post.slug}`} class="mt-4 inline-flex text-xs uppercase tracking-[0.18em] text-charcoal hover:text-primary transition-colors">
+                  Leer mas
+                </a>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+      <div class="md:hidden mt-6">
+        <a class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-charcoal border-b border-charcoal pb-1 hover:text-primary hover:border-primary transition-colors" href="/devocional">
+          Ver completo
+          <span class="material-symbols-outlined text-sm">arrow_outward</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
   <section data-animate="reveal" class="py-16 md:py-24 bg-gray-50" id="ministerios">
     <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
       <div class="flex flex-col md:flex-row justify-between items-end mb-10 md:mb-16">
@@ -253,9 +306,13 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         {
           ministries.map((ministry) => (
             <a data-animate="card" class="group block" href={`/ministerios/${ministry.slug}`}>
-              <div class="relative overflow-hidden rounded-2xl md:rounded-[1.5rem] mb-3 md:mb-4 aspect-[4/5] sm:aspect-[3/4]">
-                <img alt={`Ministerio ${ministry.name}`} class="w-full h-full object-cover transition duration-500 group-hover:scale-105" src={ministry.image} />
-                <div class="absolute inset-0 bg-gradient-to-t from-charcoal/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4">
+              <div class={`relative overflow-hidden rounded-2xl md:rounded-[1.5rem] mb-3 md:mb-4 aspect-[4/5] sm:aspect-[3/4] ${logoSlugs.has(ministry.slug) ? 'bg-white border border-gray-300 p-3' : ''}`}>
+                <img
+                  alt={`Ministerio ${ministry.name}`}
+                  class={`w-full h-full transition duration-500 ${logoSlugs.has(ministry.slug) ? 'object-contain' : 'object-cover group-hover:scale-105'}`}
+                  src={ministry.image}
+                />
+                <div class={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4 ${logoSlugs.has(ministry.slug) ? 'bg-gradient-to-t from-charcoal/45 to-transparent' : 'bg-gradient-to-t from-charcoal/80 to-transparent'}`}>
                   <span class="text-white text-xs font-bold uppercase tracking-wider">Ver ministerio</span>
                 </div>
               </div>

@@ -27,8 +27,7 @@ export const ministries: Ministry[] = [
     slug: 'gold',
     name: 'Gold',
     area: 'Mujeres',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuBpNL2tmCtO0fgqMv-ThU0CeTkY7n8EM7e4yAy843_RIYva4Qdw2NDukgUrme_WwFWBOb2ZiurJI7RZ9EKa6gYV1YovO3oYczp46jyLQaFE9FFqFIDatgqfu7igx6KifQYy4mD21ZBKnz7eVn6HbW-ERCXAJYfKWG3Berhvtw69pZX2GyR7ddQw0VmSyvqaowX16JrrmxxgC7Sgo6Ad3aGXJZHM-3EnAtiH5FOwU_MFDQXrUu2Ix4YOPREH_Yo8wUS2ascAxUn2WDA',
+    image: '/gold.png',
     excerpt: 'Mujeres que se fortalecen en la Palabra, oracion y comunion.',
     description:
       'Gold es un ministerio enfocado en afirmar la identidad de la mujer en Cristo. Promovemos sanidad interior, crecimiento espiritual y liderazgo en cada temporada de vida.',
@@ -40,8 +39,7 @@ export const ministries: Ministry[] = [
     slug: 'kids',
     name: 'Kids',
     area: 'Ninos',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuDRfSv6m8FjirUJBMo2HXZT0XFrcrGXzaU4gVHbzc5HAbawo5fA9ahCVsa_Y1fRldmYp89D7kcZGpdQoM1bx45LDFjN0IowZ_lCApR9y58JKSe__cgYyOZAgB4OuzFF8jVBtPMZPfS31DJPq57W2GKJ_TN4Zza9-X_tWphLYTVzmolmf5cNDVPMQ6VWeeHHJ7KC5DTDUanK40bigpRBuNXN0sgbyBem5fxyatl34ELRo3-BsCWo_soGZHa2XJ6dngZru3q_MQpX23s',
+    image: '/kids.png',
     excerpt: 'Formacion biblica para ninos en un ambiente seguro y alegre.',
     description:
       'Kids acompana a los mas pequenos para que conozcan a Jesus desde temprana edad. Ensenamos con dinamicas, musica, juegos y lecciones adaptadas por edades.',
@@ -53,8 +51,7 @@ export const ministries: Ministry[] = [
     slug: 'arde',
     name: 'Arde',
     area: 'Evangelismo',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuCGDXAOZgLxgPKEfzQE6qoegBpxFS8IPnGkgdr_XjP0e-_JcI-C2O0gK6yjggNlaBlbTh2z6nP8IR6MzccD5TSxwEMAwke1Vfv1CPYesu83TRAF9J_ag5LcvaGSo0xmkwboLBDvuUsjivdOAGnng9XHlHKXKD2u6iyr4zwUjzbidTLrL-uSqGOboCYAnaMHaI6ujF-X-dnk2aTvuZJKjON1lWvY4rZXMUnlvMXdek47SStjjmlzjYeo1zSv6_KiLWnFbWqJFL5b6Kg',
+    image: '/arde.png',
     excerpt: 'Un equipo activo para llevar el Evangelio a la ciudad.',
     description:
       'Arde impulsa la mision de salir, anunciar y servir. Nos movemos en acciones de evangelismo, ayuda comunitaria y alcance territorial con el mensaje de Cristo.',
