@@ -5,14 +5,18 @@
 @layer base {
   html,
   body {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Inter', sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Newsreader', serif;
   }
 }
 
 .audio-wave span {
   display: block;
   width: 4px;
-  background: #d4af37;
+  background: #C5A059;
   animation: audio-wave 1s infinite ease-in-out alternate;
   border-radius: 3px;
 }

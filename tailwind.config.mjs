@@ -4,14 +4,16 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#D4AF37',
-        'primary-dark': '#B5952F',
+        primary: '#C5A059',
+        'primary-dark': '#A8893D',
+        secondary: '#E8E8E8',
+        tertiary: '#2B2B2B',
         charcoal: '#3A3A3A',
         'light-gray': '#F3F4F6',
       },
       fontFamily: {
-        display: ['Poppins', 'sans-serif'],
-        body: ['Poppins', 'sans-serif'],
+        display: ['Newsreader', 'serif'],
+        body: ['Inter', 'sans-serif'],
       },
       borderRadius: {
         DEFAULT: '4px',
