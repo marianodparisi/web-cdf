@@ -1,0 +1,20 @@
+---
+import AnexoTemplate from '../../components/AnexoTemplate.astro';
+import Footer from '../../components/Footer.astro';
+import Navbar from '../../components/Navbar.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Anexo Rojas | Iglesia Corazon de Fuego">
+  <Navbar />
+  <AnexoTemplate
+    title="Rojas"
+    subtitle="Plantilla inicial del anexo para comenzar a cargar informacion detallada."
+    intro="Este anexo forma parte de la vision de expansion y cuidado pastoral en la region."
+    locationText="Seccion placeholder para direccion exacta y referencias."
+    meetingsText="Seccion placeholder para dias, horarios y actividades semanales."
+    teamText="Seccion placeholder para responsables, lideres y datos de contacto."
+    themeClass="bg-[#18202a]"
+  />
+  <Footer />
+</BaseLayout>

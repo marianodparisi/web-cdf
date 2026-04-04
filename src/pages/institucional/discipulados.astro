@@ -1,0 +1,23 @@
+---
+import Footer from '../../components/Footer.astro';
+import InstitutionalTemplate from '../../components/InstitutionalTemplate.astro';
+import Navbar from '../../components/Navbar.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Discipulados | Iglesia Corazon de Fuego">
+  <Navbar />
+  <InstitutionalTemplate
+    title="Discipulados"
+    subtitle="Plantilla base para el proceso de acompanamiento y crecimiento espiritual."
+    intro="Esta pagina queda lista para documentar etapas de discipulado, mentoreo y seguimiento."
+    approachTitle="Enfoque"
+    approachText="Formar discipulos firmes, saludables y comprometidos con Jesus."
+    pathTitle="Camino"
+    pathText="Seccion placeholder para niveles, grupos y procesos de acompanamiento."
+    resourcesTitle="Recursos"
+    resourcesText="Seccion placeholder para guias, materiales y plan semanal."
+    themeClass="bg-[#18202a]"
+  />
+  <Footer />
+</BaseLayout>

@@ -1,0 +1,58 @@
+---
+import Footer from '../../components/Footer.astro';
+import Navbar from '../../components/Navbar.astro';
+import { missions } from '../../data/missions';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const missionsChronological = [...missions].sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime());
+
+const dateFormatter = new Intl.DateTimeFormat('es-AR', {
+  month: 'long',
+  year: 'numeric',
+});
+---
+
+<BaseLayout title="Misiones | Iglesia Corazon de Fuego">
+  <Navbar />
+
+  <section data-animate="reveal" class="pt-14 md:pt-20 pb-8 md:pb-10 bg-white">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+      <span class="text-primary text-xs uppercase tracking-[0.22em] font-semibold">Seccion misiones</span>
+      <h1 class="font-display text-4xl sm:text-5xl text-charcoal mt-2">Misiones</h1>
+      <p class="text-gray-500 mt-4 max-w-2xl">
+        Conoce nuestras salidas misioneras ordenadas cronologicamente para seguir cada etapa de la vision.
+      </p>
+    </div>
+  </section>
+
+  <section data-animate="reveal" class="pb-14 md:pb-16 bg-white">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+        {
+          missionsChronological.map((mission) => (
+            <article data-animate="card" class="group rounded-3xl overflow-hidden border border-gray-200 bg-gray-50 hover:border-primary/60 transition-colors">
+              <div class="relative h-56 sm:h-64">
+                <img src={mission.image} alt={`Mision ${mission.place}`} class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
+                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div class="absolute left-4 bottom-4 flex items-center gap-2">
+                  <span class="inline-flex rounded-full bg-primary px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-charcoal font-semibold">{mission.stage}</span>
+                  <span class="inline-flex rounded-full bg-white/90 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-charcoal font-semibold">
+                    {dateFormatter.format(new Date(mission.startDate))}
+                  </span>
+                </div>
+              </div>
+              <div class="p-5">
+                <p class="text-[11px] uppercase tracking-[0.18em] text-gray-500">{mission.country}</p>
+                <h2 class="font-display text-3xl text-charcoal mt-2">{mission.place}</h2>
+                <p class="text-gray-600 text-sm mt-2 leading-relaxed">{mission.summary}</p>
+                <p class="mt-4 text-xs uppercase tracking-[0.18em] text-charcoal">{mission.focus}</p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</BaseLayout>

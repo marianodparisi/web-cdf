@@ -1,0 +1,25 @@
+---
+import Footer from '../../components/Footer.astro';
+import MinistryTemplate from '../../components/MinistryTemplate.astro';
+import Navbar from '../../components/Navbar.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Gold | Iglesia Corazon de Fuego">
+  <Navbar sticky={false} />
+  <MinistryTemplate
+    title="Gold"
+    tagline="Template inicial para mujeres"
+    heroImage="/gold.png"
+    badge="Mujeres"
+    themeClass="bg-[#2a2214]"
+    intro="Pagina base para Gold. Lista para sumar contenido propio, recursos y actividades."
+    focusTitle="Enfoque"
+    focusText="Sanidad, identidad, comunion y liderazgo de mujeres en la fe."
+    participationTitle="Como sumarte"
+    participationText="Espacio abierto para mujeres de todas las edades de la iglesia."
+    scheduleTitle="Encuentros"
+    scheduleText="Seccion placeholder para reuniones, talleres y jornadas."
+  />
+  <Footer />
+</BaseLayout>

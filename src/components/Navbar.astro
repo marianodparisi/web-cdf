@@ -1,45 +1,107 @@
 ---
 import { ministries } from '../data/ministries';
+
+interface Props {
+  sticky?: boolean;
+}
+
+const { sticky = true } = Astro.props as Props;
+const navbarMinistries = ministries.filter((ministry) => ministry.slug !== 'evangelismo' && ministry.slug !== 'carcelario');
 ---
 
-<nav data-animate="nav" class="sticky top-0 w-full z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
+<nav data-animate="nav" class:list={['top-0 w-full z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100', sticky ? 'sticky' : 'relative']}>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between items-center h-20">
       <div class="flex-shrink-0 flex items-center gap-3">
         <a href="/" class="flex items-center gap-3">
-          <div class="bg-charcoal text-white p-2 flex flex-col justify-center items-center h-10 w-10 rounded-full">
-            <span class="font-display font-bold text-lg leading-none">Cf</span>
+          <div class="bg-charcoal p-1.5 flex items-center justify-center h-12 w-12 rounded-full overflow-hidden">
+            <img src="/logowhite.png" alt="Logo Corazon de Fuego" class="h-full w-full object-contain" />
           </div>
-          <span class="font-display text-lg font-bold tracking-tight text-charcoal">Corazón de Fuego</span>
         </a>
       </div>
       <div class="hidden md:flex items-center space-x-8">
-        <a data-animate="nav-link" class="text-xs font-bold tracking-widest uppercase hover:text-primary transition-colors text-charcoal" href="/">Inicio</a>
-        <a data-animate="nav-link" class="text-xs font-bold tracking-widest uppercase hover:text-primary transition-colors text-charcoal" href="/#novedades">Novedades</a>
-        <a data-animate="nav-link" class="text-xs font-bold tracking-widest uppercase hover:text-primary transition-colors text-charcoal" href="/devocional">Devocional</a>
-        <details class="relative group [&_summary::-webkit-details-marker]:hidden">
-          <summary data-animate="nav-link" class="list-none cursor-pointer text-xs font-bold tracking-widest uppercase hover:text-primary transition-colors text-charcoal inline-flex items-center gap-1">
-            Ministerios
-            <span class="material-symbols-outlined text-base transition-transform group-open:rotate-180">expand_more</span>
-          </summary>
-          <div class="absolute left-1/2 -translate-x-1/2 mt-4 w-60 rounded-2xl border border-gray-200 bg-white shadow-xl p-2">
-            <a class="block rounded-xl px-3 py-2 text-[11px] font-bold tracking-widest uppercase text-charcoal hover:bg-gray-100 hover:text-primary transition-colors" href="/ministerios">
-              Ver todos
+        <a data-animate="nav-link" class="text-xs font-bold tracking-widest uppercase hover:text-primary transition-colors text-charcoal" href="/misiones">Misiones</a>
+        <a data-animate="nav-link" class="text-xs font-bold tracking-widest uppercase hover:text-primary transition-colors text-charcoal" href="/evangelismo">Evangelismo</a>
+        <div class="relative group">
+          <button
+            data-animate="nav-link"
+            type="button"
+            class="text-xs font-bold tracking-widest uppercase hover:text-primary transition-colors text-charcoal inline-flex items-center gap-1"
+            aria-haspopup="true"
+          >
+            Anexos
+            <span class="material-symbols-outlined text-base transition-transform duration-200 group-hover:rotate-180">expand_more</span>
+          </button>
+          <div class="absolute left-1/2 top-full -translate-x-1/2 pt-2 w-60 opacity-0 translate-y-2 pointer-events-none transition-all duration-200 ease-out group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto">
+            <div class="rounded-2xl border border-gray-200 bg-white shadow-xl p-2">
+            <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-[11px] font-bold tracking-widest uppercase text-charcoal hover:bg-gray-100 hover:text-primary transition-colors" href="/anexos/rojas">
+              <span class="material-symbols-outlined text-base">church</span>
+              <span>Rojas</span>
             </a>
+            <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-[11px] font-bold tracking-widest uppercase text-charcoal hover:bg-gray-100 hover:text-primary transition-colors" href="/anexos/villa-minetti">
+              <span class="material-symbols-outlined text-base">location_city</span>
+              <span>Villa Minetti</span>
+            </a>
+            <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-[11px] font-bold tracking-widest uppercase text-charcoal hover:bg-gray-100 hover:text-primary transition-colors" href="/anexos/palito">
+              <span class="material-symbols-outlined text-base">place</span>
+              <span>Palito</span>
+            </a>
+            <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-[11px] font-bold tracking-widest uppercase text-charcoal hover:bg-gray-100 hover:text-primary transition-colors" href="/anexos/santos-vega">
+              <span class="material-symbols-outlined text-base">public</span>
+              <span>Santos Vega</span>
+            </a>
+            </div>
+          </div>
+        </div>
+        <div class="relative group">
+          <button
+            data-animate="nav-link"
+            type="button"
+            class="text-xs font-bold tracking-widest uppercase hover:text-primary transition-colors text-charcoal inline-flex items-center gap-1"
+            aria-haspopup="true"
+          >
+            Institucional
+            <span class="material-symbols-outlined text-base transition-transform duration-200 group-hover:rotate-180">expand_more</span>
+          </button>
+          <div class="absolute left-1/2 top-full -translate-x-1/2 pt-2 w-60 opacity-0 translate-y-2 pointer-events-none transition-all duration-200 ease-out group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto">
+            <div class="rounded-2xl border border-gray-200 bg-white shadow-xl p-2">
+            <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-[11px] font-bold tracking-widest uppercase text-charcoal hover:bg-gray-100 hover:text-primary transition-colors" href="/institucional/iete">
+              <span class="material-symbols-outlined text-base">school</span>
+              <span>IETE</span>
+            </a>
+            <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-[11px] font-bold tracking-widest uppercase text-charcoal hover:bg-gray-100 hover:text-primary transition-colors" href="/institucional/discipulados">
+              <span class="material-symbols-outlined text-base">groups</span>
+              <span>Discipulados</span>
+            </a>
+            </div>
+          </div>
+        </div>
+        <div class="relative group">
+          <button
+            data-animate="nav-link"
+            type="button"
+            class="text-xs font-bold tracking-widest uppercase hover:text-primary transition-colors text-charcoal inline-flex items-center gap-1"
+            aria-haspopup="true"
+          >
+            Ministerios
+            <span class="material-symbols-outlined text-base transition-transform duration-200 group-hover:rotate-180">expand_more</span>
+          </button>
+          <div class="absolute left-1/2 top-full -translate-x-1/2 pt-2 w-60 opacity-0 translate-y-2 pointer-events-none transition-all duration-200 ease-out group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto">
+            <div class="rounded-2xl border border-gray-200 bg-white shadow-xl p-2">
             {
-              ministries.map((ministry) => (
+              navbarMinistries.map((ministry) => (
                 <a
-                  class="block rounded-xl px-3 py-2 text-[11px] font-bold tracking-widest uppercase text-charcoal hover:bg-gray-100 hover:text-primary transition-colors"
+                  class="flex items-center gap-2 rounded-xl px-3 py-2 text-[11px] font-bold tracking-widest uppercase text-charcoal hover:bg-gray-100 hover:text-primary transition-colors"
                   href={`/ministerios/${ministry.slug}`}
                 >
-                  {ministry.name}
+                  <img src={ministry.image} alt={ministry.name} class="h-5 w-5 rounded-full object-cover bg-white border border-gray-200" />
+                  <span>{ministry.name}</span>
                 </a>
               ))
             }
+            </div>
           </div>
-        </details>
-        <a data-animate="nav-link" class="text-xs font-bold tracking-widest uppercase hover:text-primary transition-colors text-charcoal" href="/#radio">Radio</a>
-        <a data-animate="nav-link" class="px-5 py-2 bg-primary text-white text-xs font-bold tracking-wider uppercase rounded-full hover:bg-primary-dark transition-colors" href="/contact">Contacto</a>
+        </div>
       </div>
       <div class="md:hidden">
         <button
@@ -58,30 +120,49 @@ import { ministries } from '../data/ministries';
       class="md:hidden overflow-hidden max-h-0 opacity-0 pointer-events-none transition-all duration-300 ease-out"
     >
       <div class="flex flex-col gap-1 border-t border-gray-100 pt-4">
-        <a class="mobile-link px-2 py-2 text-xs font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors" href="/">Inicio</a>
-        <a class="mobile-link px-2 py-2 text-xs font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors" href="/#novedades">Novedades</a>
-        <a class="mobile-link px-2 py-2 text-xs font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors" href="/devocional">Devocional</a>
-        <details id="mobile-ministerios-menu" class="group [&_summary::-webkit-details-marker]:hidden">
+        <a class="mobile-link px-2 py-2 text-xs font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors" href="/misiones">Misiones</a>
+        <a class="mobile-link px-2 py-2 text-xs font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors" href="/evangelismo">Evangelismo</a>
+        <details id="mobile-anexos-menu" data-nav-accordion="mobile" class="group [&_summary::-webkit-details-marker]:hidden">
+          <summary class="list-none px-2 py-2 text-xs font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors inline-flex items-center gap-1 cursor-pointer">
+            Anexos
+            <span class="material-symbols-outlined text-base transition-transform group-open:rotate-180">expand_more</span>
+          </summary>
+          <div class="pl-4 pb-1 flex flex-col gap-1">
+            <a class="mobile-link px-2 py-1.5 text-[11px] font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors inline-flex items-center gap-2" href="/anexos/rojas"><span class="material-symbols-outlined text-base">church</span><span>Rojas</span></a>
+            <a class="mobile-link px-2 py-1.5 text-[11px] font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors inline-flex items-center gap-2" href="/anexos/villa-minetti"><span class="material-symbols-outlined text-base">location_city</span><span>Villa Minetti</span></a>
+            <a class="mobile-link px-2 py-1.5 text-[11px] font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors inline-flex items-center gap-2" href="/anexos/palito"><span class="material-symbols-outlined text-base">place</span><span>Palito</span></a>
+            <a class="mobile-link px-2 py-1.5 text-[11px] font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors inline-flex items-center gap-2" href="/anexos/santos-vega"><span class="material-symbols-outlined text-base">public</span><span>Santos Vega</span></a>
+          </div>
+        </details>
+        <details id="mobile-institucional-menu" data-nav-accordion="mobile" class="group [&_summary::-webkit-details-marker]:hidden">
+          <summary class="list-none px-2 py-2 text-xs font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors inline-flex items-center gap-1 cursor-pointer">
+            Institucional
+            <span class="material-symbols-outlined text-base transition-transform group-open:rotate-180">expand_more</span>
+          </summary>
+          <div class="pl-4 pb-1 flex flex-col gap-1">
+            <a class="mobile-link px-2 py-1.5 text-[11px] font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors inline-flex items-center gap-2" href="/institucional/iete"><span class="material-symbols-outlined text-base">school</span><span>IETE</span></a>
+            <a class="mobile-link px-2 py-1.5 text-[11px] font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors inline-flex items-center gap-2" href="/institucional/discipulados"><span class="material-symbols-outlined text-base">groups</span><span>Discipulados</span></a>
+          </div>
+        </details>
+        <details id="mobile-ministerios-menu" data-nav-accordion="mobile" class="group [&_summary::-webkit-details-marker]:hidden">
           <summary class="list-none px-2 py-2 text-xs font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors inline-flex items-center gap-1 cursor-pointer">
             Ministerios
             <span class="material-symbols-outlined text-base transition-transform group-open:rotate-180">expand_more</span>
           </summary>
           <div class="pl-4 pb-1 flex flex-col gap-1">
-            <a class="mobile-link px-2 py-1.5 text-[11px] font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors" href="/ministerios">Ver todos</a>
             {
-              ministries.map((ministry) => (
+              navbarMinistries.map((ministry) => (
                 <a
-                  class="mobile-link px-2 py-1.5 text-[11px] font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors"
+                  class="mobile-link px-2 py-1.5 text-[11px] font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors inline-flex items-center gap-2"
                   href={`/ministerios/${ministry.slug}`}
                 >
-                  {ministry.name}
+                  <img src={ministry.image} alt={ministry.name} class="h-5 w-5 rounded-full object-cover bg-white border border-gray-200" />
+                  <span>{ministry.name}</span>
                 </a>
               ))
             }
           </div>
         </details>
-        <a class="mobile-link px-2 py-2 text-xs font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors" href="/#radio">Radio</a>
-        <a class="mobile-link mt-2 inline-flex w-fit px-5 py-2 bg-charcoal text-white text-xs font-bold tracking-wider uppercase rounded-full hover:bg-primary transition-colors" href="/contact">Contacto</a>
       </div>
     </div>
   </div>
@@ -90,11 +171,27 @@ import { ministries } from '../data/ministries';
 <script>
   const button = document.getElementById('mobile-menu-button');
   const menu = document.getElementById('mobile-menu');
+  const mobileAnexosMenu = document.getElementById('mobile-anexos-menu') as HTMLDetailsElement | null;
   const mobileMinistriesMenu = document.getElementById('mobile-ministerios-menu') as HTMLDetailsElement | null;
+  const mobileInstitucionalMenu = document.getElementById('mobile-institucional-menu') as HTMLDetailsElement | null;
+  const mobileAccordions = [...document.querySelectorAll('details[data-nav-accordion="mobile"]')] as HTMLDetailsElement[];
+
+  const setupAccordion = (items: HTMLDetailsElement[]) => {
+    items.forEach((item) => {
+      item.addEventListener('toggle', () => {
+        if (!item.open) return;
+        items.forEach((other) => {
+          if (other !== item) other.open = false;
+        });
+      });
+    });
+  };
+
+  setupAccordion(mobileAccordions);
 
   if (button && menu) {
     const closedClasses = ['max-h-0', 'opacity-0', 'pointer-events-none'];
-    const openClasses = ['max-h-80', 'opacity-100', 'pointer-events-auto', 'pb-5'];
+    const openClasses = ['max-h-[32rem]', 'opacity-100', 'pointer-events-auto', 'pb-5'];
 
     const toggleMenu = () => {
       const isExpanded = button.getAttribute('aria-expanded') === 'true';
@@ -102,7 +199,9 @@ import { ministries } from '../data/ministries';
       if (isExpanded) {
         menu.classList.remove(...openClasses);
         menu.classList.add(...closedClasses);
+        if (mobileAnexosMenu) mobileAnexosMenu.open = false;
         if (mobileMinistriesMenu) mobileMinistriesMenu.open = false;
+        if (mobileInstitucionalMenu) mobileInstitucionalMenu.open = false;
       } else {
         menu.classList.remove(...closedClasses);
         menu.classList.add(...openClasses);
@@ -115,7 +214,9 @@ import { ministries } from '../data/ministries';
         button.setAttribute('aria-expanded', 'false');
         menu.classList.remove(...openClasses);
         menu.classList.add(...closedClasses);
+        if (mobileAnexosMenu) mobileAnexosMenu.open = false;
         if (mobileMinistriesMenu) mobileMinistriesMenu.open = false;
+        if (mobileInstitucionalMenu) mobileInstitucionalMenu.open = false;
       });
     });
   }

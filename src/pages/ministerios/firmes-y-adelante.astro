@@ -1,0 +1,25 @@
+---
+import Footer from '../../components/Footer.astro';
+import MinistryTemplate from '../../components/MinistryTemplate.astro';
+import Navbar from '../../components/Navbar.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Firmes y Adelante | Iglesia Corazon de Fuego">
+  <Navbar sticky={false} />
+  <MinistryTemplate
+    title="Firmes y Adelante"
+    tagline="Template inicial para hombres y matrimonios"
+    heroImage="https://lh3.googleusercontent.com/aida-public/AB6AXuDeBRG3ZZOh247H-gEOZFvzjIHB4Lw5aCuXHgEA0N-6qAJ5PRGNQ7b852erovJwkMMLFTJQ1s4QZFGiRpsyop_fzpXLMobVSw5oYv2W6UU1OfPh8sIBusDjfyQjzpSwteKc65fb8OeFkcl30S3LCrMQBGmcNvd57kBzbwTfAaoHZwYxfi3bcZF0f57kUhfmKRCResG6crO7M0tP5LHSKEI_Aul3yIc3mjPEerL9YkX72F-szmtElrRwnaSZlmAjZ97l0-q0NHwm9Pg"
+    badge="Hombres y matrimonios"
+    themeClass="bg-[#18202a]"
+    intro="Pagina base para Firmes y Adelante. Podemos dividir luego por subprogramas y etapas."
+    focusTitle="Enfoque"
+    focusText="Madurez espiritual, familia saludable y liderazgo en el hogar."
+    participationTitle="Como sumarte"
+    participationText="Abierto a varones y matrimonios que quieran crecer en comunidad."
+    scheduleTitle="Encuentros"
+    scheduleText="Seccion placeholder para reuniones, mentoreo y retiros."
+  />
+  <Footer />
+</BaseLayout>

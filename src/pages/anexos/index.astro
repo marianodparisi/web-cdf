@@ -1,0 +1,52 @@
+---
+import Footer from '../../components/Footer.astro';
+import Navbar from '../../components/Navbar.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Anexos | Iglesia Corazon de Fuego">
+  <Navbar />
+
+  <section data-animate="reveal" class="pt-14 md:pt-20 pb-8 md:pb-10 bg-white">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+      <span class="text-primary text-xs uppercase tracking-[0.22em] font-semibold">Seccion anexos</span>
+      <h1 class="font-display text-4xl sm:text-5xl text-charcoal mt-2">Anexos</h1>
+      <p class="text-gray-500 mt-4 max-w-2xl">
+        Espacios donde la vision se expande y servimos en diferentes localidades.
+      </p>
+    </div>
+  </section>
+
+  <section data-animate="reveal" class="pb-14 md:pb-16 bg-white">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+        <a data-animate="card" href="/anexos/rojas" class="group rounded-3xl border border-gray-200 bg-gray-50 p-6 sm:p-8 hover:border-primary/60 transition-colors">
+          <p class="text-xs font-bold tracking-[0.2em] uppercase text-primary mb-3">Anexo</p>
+          <h2 class="font-display text-3xl text-charcoal mb-2">Rojas</h2>
+          <p class="text-gray-600 text-sm leading-relaxed">Seccion base para cargar direccion, horarios y actividades del anexo de Rojas.</p>
+          <span class="mt-4 inline-flex text-xs uppercase tracking-[0.18em] text-charcoal group-hover:text-primary transition-colors">Ver anexo</span>
+        </a>
+        <a data-animate="card" href="/anexos/villa-minetti" class="group rounded-3xl border border-gray-200 bg-gray-50 p-6 sm:p-8 hover:border-primary/60 transition-colors">
+          <p class="text-xs font-bold tracking-[0.2em] uppercase text-primary mb-3">Anexo</p>
+          <h2 class="font-display text-3xl text-charcoal mb-2">Villa Minetti</h2>
+          <p class="text-gray-600 text-sm leading-relaxed">Seccion base para presentar informacion del anexo y su equipo local.</p>
+          <span class="mt-4 inline-flex text-xs uppercase tracking-[0.18em] text-charcoal group-hover:text-primary transition-colors">Ver anexo</span>
+        </a>
+        <a data-animate="card" href="/anexos/palito" class="group rounded-3xl border border-gray-200 bg-gray-50 p-6 sm:p-8 hover:border-primary/60 transition-colors">
+          <p class="text-xs font-bold tracking-[0.2em] uppercase text-primary mb-3">Anexo</p>
+          <h2 class="font-display text-3xl text-charcoal mb-2">Palito</h2>
+          <p class="text-gray-600 text-sm leading-relaxed">Seccion base para sumar novedades, reuniones y contactos del anexo.</p>
+          <span class="mt-4 inline-flex text-xs uppercase tracking-[0.18em] text-charcoal group-hover:text-primary transition-colors">Ver anexo</span>
+        </a>
+        <a data-animate="card" href="/anexos/santos-vega" class="group rounded-3xl border border-gray-200 bg-gray-50 p-6 sm:p-8 hover:border-primary/60 transition-colors">
+          <p class="text-xs font-bold tracking-[0.2em] uppercase text-primary mb-3">Anexo</p>
+          <h2 class="font-display text-3xl text-charcoal mb-2">Santos Vega</h2>
+          <p class="text-gray-600 text-sm leading-relaxed">Seccion base para documentar vision, reuniones y recursos del anexo.</p>
+          <span class="mt-4 inline-flex text-xs uppercase tracking-[0.18em] text-charcoal group-hover:text-primary transition-colors">Ver anexo</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</BaseLayout>

@@ -1,0 +1,25 @@
+---
+import Footer from '../../components/Footer.astro';
+import MinistryTemplate from '../../components/MinistryTemplate.astro';
+import Navbar from '../../components/Navbar.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Kids | Iglesia Corazon de Fuego">
+  <Navbar sticky={false} />
+  <MinistryTemplate
+    title="Kids"
+    tagline="Template inicial para ninos"
+    heroImage="/kids.png"
+    badge="Ninos"
+    themeClass="bg-[#1f2937]"
+    intro="Pagina base para Kids. Podemos personalizar esta pagina con una estetica mas ludica cuando quieras."
+    focusTitle="Enfoque"
+    focusText="Formacion biblica para ninos en un entorno seguro, alegre y pastoral."
+    participationTitle="Como sumarte"
+    participationText="Ninos y familias pueden participar en actividades y encuentros planificados."
+    scheduleTitle="Encuentros"
+    scheduleText="Seccion placeholder para horarios por edades y eventos familiares."
+  />
+  <Footer />
+</BaseLayout>

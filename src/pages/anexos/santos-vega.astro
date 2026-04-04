@@ -1,0 +1,20 @@
+---
+import AnexoTemplate from '../../components/AnexoTemplate.astro';
+import Footer from '../../components/Footer.astro';
+import Navbar from '../../components/Navbar.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Anexo Santos Vega | Iglesia Corazon de Fuego">
+  <Navbar />
+  <AnexoTemplate
+    title="Santos Vega"
+    subtitle="Plantilla inicial del anexo para detallar su identidad y actividades."
+    intro="Espacio de presentacion para contar el trabajo pastoral y comunitario del anexo."
+    locationText="Seccion placeholder para direccion y ubicacion del anexo."
+    meetingsText="Seccion placeholder para cronograma semanal y eventos."
+    teamText="Seccion placeholder para equipo pastoral, lideres y contacto."
+    themeClass="bg-[#111827]"
+  />
+  <Footer />
+</BaseLayout>

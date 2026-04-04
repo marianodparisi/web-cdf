@@ -1,0 +1,23 @@
+---
+import Footer from '../../components/Footer.astro';
+import InstitutionalTemplate from '../../components/InstitutionalTemplate.astro';
+import Navbar from '../../components/Navbar.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="IETE | Iglesia Corazon de Fuego">
+  <Navbar />
+  <InstitutionalTemplate
+    title="IETE"
+    subtitle="Plantilla base del instituto para desarrollar toda su informacion academica."
+    intro="Esta pagina queda preparada para sumar plan de estudios, niveles y proceso de inscripcion."
+    approachTitle="Enfoque"
+    approachText="Formacion biblica y ministerial con base en la Palabra."
+    pathTitle="Trayecto"
+    pathText="Seccion placeholder para modulos, etapas y requisitos de cursada."
+    resourcesTitle="Recursos"
+    resourcesText="Seccion placeholder para materiales, calendario y equipo docente."
+    themeClass="bg-[#1f2937]"
+  />
+  <Footer />
+</BaseLayout>

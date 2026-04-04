@@ -1,0 +1,58 @@
+---
+interface Props {
+  title: string;
+  subtitle: string;
+  intro: string;
+  locationText: string;
+  meetingsText: string;
+  teamText: string;
+  themeClass?: string;
+}
+
+const {
+  title,
+  subtitle,
+  intro,
+  locationText,
+  meetingsText,
+  teamText,
+  themeClass = 'bg-charcoal',
+} = Astro.props as Props;
+---
+
+<section data-animate="reveal" class={`text-white pt-14 md:pt-20 pb-10 md:pb-14 ${themeClass}`}>
+  <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+    <a href="/anexos" class="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-white/75 hover:text-primary transition-colors">
+      <span class="material-symbols-outlined text-sm">arrow_back</span>
+      Volver a anexos
+    </a>
+    <div class="mt-6 md:mt-8">
+      <span class="inline-flex rounded-full bg-primary px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-charcoal font-semibold">Anexo</span>
+      <h1 class="font-display text-4xl sm:text-5xl md:text-6xl mt-4">{title}</h1>
+      <p class="text-white/80 mt-3 max-w-3xl">{subtitle}</p>
+    </div>
+  </div>
+</section>
+
+<section data-animate="reveal" class="py-14 md:py-16 bg-white">
+  <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8">
+      <article data-animate="card" class="rounded-3xl border border-gray-200 bg-gray-50 p-6 sm:p-8">
+        <p class="text-primary text-xs uppercase tracking-[0.2em] font-semibold mb-2">Presentacion</p>
+        <p class="text-charcoal text-sm sm:text-base leading-relaxed">{intro}</p>
+      </article>
+      <article data-animate="card" class="rounded-3xl border border-gray-200 bg-gray-50 p-6 sm:p-8">
+        <p class="text-primary text-xs uppercase tracking-[0.2em] font-semibold mb-2">Ubicacion</p>
+        <p class="text-charcoal text-sm sm:text-base leading-relaxed">{locationText}</p>
+      </article>
+      <article data-animate="card" class="rounded-3xl border border-gray-200 bg-gray-50 p-6 sm:p-8">
+        <p class="text-primary text-xs uppercase tracking-[0.2em] font-semibold mb-2">Reuniones</p>
+        <p class="text-charcoal text-sm sm:text-base leading-relaxed">{meetingsText}</p>
+      </article>
+    </div>
+    <article data-animate="card" class="mt-5 rounded-3xl border border-gray-200 bg-gray-50 p-6 sm:p-8">
+      <p class="text-primary text-xs uppercase tracking-[0.2em] font-semibold mb-2">Equipo local</p>
+      <p class="text-charcoal text-sm sm:text-base leading-relaxed">{teamText}</p>
+    </article>
+  </div>
+</section>

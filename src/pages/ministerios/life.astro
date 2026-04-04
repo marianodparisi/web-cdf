@@ -1,0 +1,25 @@
+---
+import Footer from '../../components/Footer.astro';
+import MinistryTemplate from '../../components/MinistryTemplate.astro';
+import Navbar from '../../components/Navbar.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Life School | Iglesia Corazon de Fuego">
+  <Navbar sticky={false} />
+  <MinistryTemplate
+    title="Life School"
+    tagline="Template inicial para ministerio de jovenes"
+    heroImage="/life.png"
+    badge="Jovenes"
+    themeClass="bg-[#111827]"
+    intro="Pagina base para Life School. Luego podemos sumar bloques propios, testimonios, calendario y materiales."
+    focusTitle="Enfoque"
+    focusText="Discipulado juvenil, identidad en Cristo y crecimiento integral."
+    participationTitle="Como sumarte"
+    participationText="Abierto para jovenes y para quienes quieran servir en equipos de apoyo."
+    scheduleTitle="Encuentros"
+    scheduleText="Seccion placeholder para dias, horarios y actividades especiales."
+  />
+  <Footer />
+</BaseLayout>

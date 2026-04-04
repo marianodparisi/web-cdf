@@ -1,0 +1,82 @@
+---
+interface Props {
+  title: string;
+  tagline: string;
+  heroImage: string;
+  badge: string;
+  themeClass?: string;
+  intro: string;
+  focusTitle: string;
+  focusText: string;
+  participationTitle: string;
+  participationText: string;
+  scheduleTitle: string;
+  scheduleText: string;
+}
+
+const {
+  title,
+  tagline,
+  heroImage,
+  badge,
+  themeClass = 'bg-charcoal',
+  intro,
+  focusTitle,
+  focusText,
+  participationTitle,
+  participationText,
+  scheduleTitle,
+  scheduleText,
+} = Astro.props as Props;
+---
+
+<section data-animate="reveal" class={`text-white pt-14 md:pt-20 pb-10 md:pb-14 ${themeClass}`}>
+  <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+    <a href="/ministerios" class="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-white/75 hover:text-primary transition-colors">
+      <span class="material-symbols-outlined text-sm">arrow_back</span>
+      Volver a ministerios
+    </a>
+
+    <div class="mt-6 md:mt-8 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 items-stretch">
+      <div data-animate="card" class="relative rounded-3xl overflow-hidden min-h-[320px] sm:min-h-[380px] md:min-h-[460px]">
+        <img src={heroImage} alt={`Ministerio ${title}`} class="absolute inset-0 h-full w-full object-cover" />
+        <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/50 to-transparent"></div>
+        <div class="absolute inset-x-0 bottom-0 p-6 sm:p-8">
+          <span class="inline-flex rounded-full bg-primary px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-charcoal font-semibold">{badge}</span>
+          <h1 class="font-display text-4xl sm:text-5xl md:text-6xl mt-3 leading-tight">{title}</h1>
+          <p class="text-white/80 mt-2 text-sm">{tagline}</p>
+        </div>
+      </div>
+
+      <div data-animate="card" class="rounded-3xl bg-white/5 border border-white/10 backdrop-blur-sm p-6 sm:p-8 md:p-10 flex flex-col justify-between">
+        <div>
+          <p class="text-primary text-xs uppercase tracking-[0.2em] font-semibold mb-3">Template base</p>
+          <p class="text-white/90 text-sm sm:text-base leading-relaxed">{intro}</p>
+        </div>
+        <a href="/contact" class="mt-8 inline-flex w-fit items-center gap-2 rounded-full bg-primary px-6 py-3 text-[11px] uppercase tracking-[0.18em] text-charcoal font-semibold hover:bg-white transition-colors">
+          Quiero sumarme
+          <span class="material-symbols-outlined text-base">arrow_outward</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section data-animate="reveal" class="py-14 md:py-16 bg-white">
+  <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8">
+      <article data-animate="card" class="rounded-3xl border border-gray-200 bg-gray-50 p-6 sm:p-8">
+        <p class="text-primary text-xs uppercase tracking-[0.2em] font-semibold mb-2">{focusTitle}</p>
+        <p class="text-charcoal text-sm sm:text-base leading-relaxed">{focusText}</p>
+      </article>
+      <article data-animate="card" class="rounded-3xl border border-gray-200 bg-gray-50 p-6 sm:p-8">
+        <p class="text-primary text-xs uppercase tracking-[0.2em] font-semibold mb-2">{participationTitle}</p>
+        <p class="text-charcoal text-sm sm:text-base leading-relaxed">{participationText}</p>
+      </article>
+      <article data-animate="card" class="rounded-3xl border border-gray-200 bg-gray-50 p-6 sm:p-8">
+        <p class="text-primary text-xs uppercase tracking-[0.2em] font-semibold mb-2">{scheduleTitle}</p>
+        <p class="text-charcoal text-sm sm:text-base leading-relaxed">{scheduleText}</p>
+      </article>
+    </div>
+  </div>
+</section>

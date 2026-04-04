@@ -1,0 +1,38 @@
+---
+import Footer from '../components/Footer.astro';
+import Navbar from '../components/Navbar.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Calendario | Iglesia Corazon de Fuego">
+  <Navbar />
+
+  <section data-animate="reveal" class="pt-14 md:pt-20 pb-8 md:pb-10 bg-white">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+      <span class="text-primary text-xs uppercase tracking-[0.22em] font-semibold">Agenda general</span>
+      <h1 class="font-display text-4xl sm:text-5xl text-charcoal mt-2">Calendario</h1>
+      <p class="text-gray-500 mt-4 max-w-2xl">
+        Aqui vas a encontrar reuniones, actividades y eventos especiales de la iglesia.
+      </p>
+    </div>
+  </section>
+
+  <section data-animate="reveal" class="pb-14 md:pb-16 bg-white">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+        <article data-animate="card" class="rounded-3xl border border-gray-200 bg-gray-50 p-6 sm:p-8">
+          <p class="text-primary text-xs uppercase tracking-[0.2em] font-semibold mb-3">Semanal</p>
+          <h2 class="font-display text-3xl text-charcoal mb-3">Reuniones generales</h2>
+          <p class="text-gray-600 text-sm leading-relaxed">Viernes 20 hs, sabados 20 hs y domingos 9:30 y 11:00 hs.</p>
+        </article>
+        <article data-animate="card" class="rounded-3xl border border-gray-200 bg-gray-50 p-6 sm:p-8">
+          <p class="text-primary text-xs uppercase tracking-[0.2em] font-semibold mb-3">Proximamente</p>
+          <h2 class="font-display text-3xl text-charcoal mb-3">Eventos especiales</h2>
+          <p class="text-gray-600 text-sm leading-relaxed">Seccion base para congresos, campamentos, jornadas y encuentros especiales.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <Footer />
+</BaseLayout>

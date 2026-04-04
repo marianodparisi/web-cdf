@@ -1,0 +1,20 @@
+---
+import AnexoTemplate from '../../components/AnexoTemplate.astro';
+import Footer from '../../components/Footer.astro';
+import Navbar from '../../components/Navbar.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Anexo Villa Minetti | Iglesia Corazon de Fuego">
+  <Navbar />
+  <AnexoTemplate
+    title="Villa Minetti"
+    subtitle="Plantilla inicial del anexo para ampliar con contenido propio."
+    intro="Espacio preparado para presentar la vision y el trabajo local del anexo."
+    locationText="Seccion placeholder para direccion, mapa y puntos de referencia."
+    meetingsText="Seccion placeholder para reuniones, grupos y actividades."
+    teamText="Seccion placeholder para equipo local y formas de contacto."
+    themeClass="bg-[#1f2937]"
+  />
+  <Footer />
+</BaseLayout>

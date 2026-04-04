@@ -3,6 +3,24 @@ import Footer from '../../components/Footer.astro';
 import Navbar from '../../components/Navbar.astro';
 import { devotionalPosts } from '../../data/devotionals';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const currentPost = devotionalPosts[0];
+const previousPosts = devotionalPosts.slice(1);
+
+const getYouTubeEmbedUrl = (videoUrl?: string) => {
+  if (!videoUrl) return null;
+  try {
+    const url = new URL(videoUrl);
+    const idFromPath = url.pathname.startsWith('/live/') ? url.pathname.split('/live/')[1] : null;
+    const idFromQuery = url.searchParams.get('v');
+    const videoId = idFromQuery || idFromPath;
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : videoUrl;
+  } catch {
+    return videoUrl;
+  }
+};
+
+const currentEmbedUrl = getYouTubeEmbedUrl(currentPost?.videoUrl);
 ---
 
 <BaseLayout title="Devocional y Testimonios | Iglesia Corazon de Fuego">
@@ -11,18 +29,63 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   <section data-animate="reveal" class="pt-14 md:pt-20 pb-8 md:pb-10 bg-white">
     <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
       <span class="text-primary text-xs uppercase tracking-[0.22em] font-semibold">Contenido semanal</span>
-      <h1 class="font-display text-4xl sm:text-5xl text-charcoal mt-2">Devocional Diario / Testimonios</h1>
+      <h1 class="font-display text-4xl sm:text-5xl text-charcoal mt-2">Devocional Actual</h1>
       <p class="text-gray-500 mt-4 max-w-2xl">
-        Palabras breves, testimonios y videos para fortalecer tu semana. Aqui vas a encontrar todo el contenido completo.
+        Video y palabra escrita de esta semana para caminar el devocional diario.
       </p>
     </div>
   </section>
 
+  {currentPost && (
+    <section data-animate="reveal" class="pb-12 md:pb-14 bg-white">
+      <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8 items-stretch">
+          <article data-animate="card" class="rounded-3xl overflow-hidden border border-gray-200 bg-white">
+            <div class="relative bg-charcoal">
+              {currentEmbedUrl ? (
+                <iframe
+                  class="w-full aspect-video"
+                  src={currentEmbedUrl}
+                  title={currentPost.title}
+                  loading="lazy"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowfullscreen
+                ></iframe>
+              ) : (
+                <img src={currentPost.image} alt={currentPost.title} class="w-full aspect-video object-cover" />
+              )}
+            </div>
+            <div class="p-5 sm:p-6">
+              <div class="flex items-center gap-2 mb-3">
+                <span class="inline-flex rounded-full bg-primary px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-charcoal font-semibold">Actual</span>
+                <span class="inline-flex rounded-full bg-gray-100 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-charcoal font-semibold">{currentPost.weekLabel}</span>
+              </div>
+              <h2 class="font-display text-3xl text-charcoal">{currentPost.title}</h2>
+              <p class="text-gray-600 text-sm mt-3 leading-relaxed">{currentPost.excerpt}</p>
+            </div>
+          </article>
+
+          <article data-animate="card" class="rounded-3xl border border-gray-200 bg-gray-50 p-6 sm:p-8">
+            <p class="text-primary text-xs uppercase tracking-[0.2em] font-semibold mb-3">Devocional escrito</p>
+            <div class="space-y-4">
+              {currentPost.content.map((paragraph) => (
+                <p class="text-charcoal text-sm sm:text-base leading-relaxed">{paragraph}</p>
+              ))}
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  )}
+
   <section data-animate="reveal" class="pb-14 md:pb-16 bg-white">
     <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="font-display text-2xl sm:text-3xl text-charcoal">Devocionales anteriores</h2>
+      </div>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
         {
-          devotionalPosts.map((post) => (
+          previousPosts.map((post) => (
             <article data-animate="card" class="rounded-3xl overflow-hidden border border-gray-200 bg-white">
               <a href={`/devocional/${post.slug}`} class="group block">
                 <div class="relative h-56 sm:h-64">
@@ -41,7 +104,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                 <h2 class="font-display text-2xl text-charcoal mt-2">{post.title}</h2>
                 <p class="text-gray-600 text-sm mt-3 leading-relaxed">{post.excerpt}</p>
                 <a href={`/devocional/${post.slug}`} class="mt-5 inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-charcoal hover:text-primary transition-colors">
-                  Ver completo
+                  Ver historia
                   <span class="material-symbols-outlined text-sm">arrow_outward</span>
                 </a>
               </div>
