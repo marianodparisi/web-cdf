@@ -9,6 +9,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 const logoSlugs = new Set(['gold', 'kids', 'arde']);
 const currentDevotionalPost = devotionalPosts[0];
+const exodoYoutubeUrl = 'https://www.youtube.com/@Coraz%C3%B3ndeFuego';
 const featuredMissions = [...missions]
   .sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime())
   .slice(0, 2);
@@ -44,55 +45,35 @@ const featuredMissions = [...missions]
 
         <div class="relative overflow-hidden rounded-3xl md:rounded-[2rem] h-[520px] sm:h-[560px] md:h-[620px] bg-[#0a0f14]">
           <article data-series-slide class="absolute inset-0 opacity-100 transition-opacity duration-500">
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_78%_88%,rgba(255,149,0,0.42),rgba(255,149,0,0.06)_26%,transparent_52%)]"></div>
-            <div class="absolute inset-0 bg-[radial-gradient(circle_at_80%_95%,rgba(40,177,255,0.45),transparent_28%)]"></div>
-            <div class="absolute inset-0 opacity-30 bg-[linear-gradient(180deg,rgba(255,255,255,0.08)_0%,transparent_28%,transparent_72%,rgba(0,0,0,0.28)_100%)]"></div>
-            <div class="absolute inset-0 opacity-25 bg-[url('data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2260%22 height=%2260%22 viewBox=%220 0 60 60%22%3E%3Cg fill=%22none%22 fill-rule=%22evenodd%22%3E%3Cg fill=%22%23ffffff%22 fill-opacity=%220.12%22%3E%3Ccircle cx=%223%22 cy=%223%22 r=%221%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')]"></div>
+            <picture class="absolute inset-0 block h-full w-full">
+              <source media="(min-width: 768px)" srcset="/exododesktop.jpg" />
+              <img
+                src="/exodomobile.jpg"
+                alt="Nueva serie Exodo"
+                class="h-full w-full object-cover object-center"
+              />
+            </picture>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-black/20"></div>
 
-            <div class="relative z-10 h-full w-full px-6 sm:px-10 lg:px-14 py-10">
-              <div class="absolute left-6 top-10 sm:left-10 lg:left-14 max-w-[210px] text-xs sm:text-sm text-white/65 leading-relaxed">
-                Mas el herido fue por nuestras rebeliones, molido por nuestros pecados; y por su llaga fuimos nosotros curados.
-              </div>
-              <div class="hidden sm:block absolute right-6 bottom-5 sm:right-10 sm:bottom-6 lg:right-14 lg:bottom-7 max-w-[220px] text-xs sm:text-sm text-white/60 leading-relaxed text-right">
-                Les aseguro que, si tienen confianza y no dudan, del poder de Dios, todo lo que pidan en sus oraciones sucedera.
-              </div>
+            <div class="relative z-10 flex h-full w-full items-start justify-end px-6 py-6 sm:px-10 sm:py-8 lg:px-14 lg:py-10">
+              <span
+                data-animate="card"
+                class="inline-flex rounded-full border border-white/25 bg-black/20 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.28em] text-white/90 backdrop-blur-sm sm:text-xs"
+              >
+                Nueva serie
+              </span>
+            </div>
 
-              <div class="absolute inset-x-0 top-6 sm:top-8 md:top-10 text-center flex flex-col items-center">
-                <h2 data-animate="card" class="font-display font-semibold text-[#f6f4ee] text-6xl sm:text-7xl lg:text-9xl leading-none tracking-tight lowercase">
-                  sanados
-                </h2>
-                <p data-animate="card" class="mt-4 text-xs sm:text-sm tracking-[0.42em] uppercase text-white/85">
-                  serie marzo
-                </p>
-              </div>
-
-              <div class="absolute inset-0 flex items-center justify-center pt-8 sm:pt-10">
-                <a
-                  data-animate="card"
-                  href="https://www.youtube.com/live/t2G5MA5EWQc?si=4qoAU6x8huFRb5L_"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="group relative block h-[130px] sm:h-[168px] w-[285px] sm:w-[380px] overflow-hidden rounded-xl border border-white/20 bg-black/30 backdrop-blur-sm"
-                >
-                  <img
-                    src="https://i.ytimg.com/vi/t2G5MA5EWQc/maxresdefault.jpg"
-                    alt="Serie Sanados"
-                    class="h-full w-full object-cover object-center opacity-90 transition duration-500 group-hover:scale-105 group-hover:opacity-100"
-                  />
-                  <span class="absolute inset-0 flex items-center justify-center">
-                    <span class="flex h-12 w-12 items-center justify-center rounded-full bg-black/60 text-white text-xl">▶</span>
-                  </span>
-                </a>
-              </div>
-
-              <p data-animate="card" class="absolute left-1/2 -translate-x-1/2 bottom-5 sm:bottom-6 text-xs sm:text-sm tracking-[0.3em] uppercase text-white/80 whitespace-nowrap">
-                iglesia corazon de fuego
-              </p>
-
-              <span class="absolute left-8 bottom-14 text-white/85 text-5xl font-bold rotate-6">+</span>
-              <span class="absolute left-28 top-14 text-white/85 text-5xl font-bold -rotate-12">+</span>
-              <span class="hidden sm:block absolute right-10 bottom-36 text-white/80 text-5xl font-bold rotate-[32deg]">-</span>
-              <span class="hidden sm:block absolute right-[30%] top-[52%] text-[#ffbe8a] text-7xl font-bold rotate-[22deg]">+</span>
+            <div class="absolute inset-x-0 bottom-0 z-10 hidden px-10 pb-10 lg:flex">
+              <a
+                href={exodoYoutubeUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex items-center gap-3 rounded-full border border-white/20 bg-black/35 px-5 py-3 text-sm font-semibold uppercase tracking-[0.22em] text-white backdrop-blur-sm transition hover:border-white/40 hover:bg-black/50"
+              >
+                <span class="flex h-9 w-9 items-center justify-center rounded-full bg-[#ff0000] text-base leading-none text-white">▶</span>
+                Ver en YouTube
+              </a>
             </div>
           </article>
 
@@ -389,11 +370,11 @@ const featuredMissions = [...missions]
           <span class="material-symbols-outlined text-sm">arrow_outward</span>
         </a>
       </div>
-      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 sm:gap-5 lg:gap-6">
+      <div class="flex flex-wrap justify-center gap-4 sm:gap-5 lg:gap-6">
         {
           ministries.map((ministry) => (
-            <a data-animate="card" class="group block" href={`/ministerios/${ministry.slug}`}>
-              <div class={`relative overflow-hidden rounded-2xl md:rounded-[1.5rem] mb-3 md:mb-4 aspect-[4/5] sm:aspect-[3/4] ${logoSlugs.has(ministry.slug) ? 'bg-white border border-gray-300 p-3' : ''}`}>
+            <a data-animate="card" class="group flex w-[calc(50%-0.5rem)] min-w-0 max-w-[220px] flex-col items-center text-center md:w-[calc(33.333%-0.85rem)] lg:w-[calc(25%-1rem)] xl:w-[calc(16.666%-1rem)]" href={`/ministerios/${ministry.slug}`}>
+              <div class={`relative overflow-hidden rounded-2xl md:rounded-[1.5rem] mb-3 md:mb-4 aspect-[4/5] sm:aspect-[3/4] w-full ${logoSlugs.has(ministry.slug) ? 'bg-white border border-gray-300 p-3' : ''}`}>
                 <img
                   alt={`Ministerio ${ministry.name}`}
                   class={`w-full h-full transition duration-500 ${logoSlugs.has(ministry.slug) ? 'object-contain' : 'object-cover group-hover:scale-105'}`}

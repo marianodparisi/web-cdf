@@ -88,61 +88,52 @@ const { title = 'Iglesia Corazón de Fuego' } = Astro.props;
           }
 
           const sections = gsap.utils.toArray('[data-animate="reveal"]');
-          if (sections.length > 0) {
-            gsap.set(sections, { autoAlpha: 0, y: 52 });
-          }
-
           sections.forEach((section) => {
-            gsap.to(section, {
-              y: 0,
-              autoAlpha: 1,
+            gsap.from(section, {
+              y: 52,
+              autoAlpha: 0,
               duration: 1,
               ease: 'power3.out',
+              immediateRender: false,
               scrollTrigger: {
                 trigger: section,
-                start: 'top 64%',
-                toggleActions: 'play none none reverse',
+                start: 'top 82%',
+                once: true,
               },
             });
 
             const cards = section.querySelectorAll('[data-animate="card"]');
             cards.forEach((card) => {
-              gsap.fromTo(
-                card,
-                { y: 44, autoAlpha: 0, scale: 0.98 },
-                {
-                  y: 0,
-                  autoAlpha: 1,
-                  scale: 1,
-                  ease: 'power2.out',
-                  scrollTrigger: {
-                    trigger: card,
-                    start: 'top 88%',
-                    end: 'top 58%',
-                    scrub: 0.9,
-                  },
+              gsap.from(card, {
+                y: 44,
+                autoAlpha: 0,
+                scale: 0.98,
+                duration: 0.8,
+                ease: 'power2.out',
+                immediateRender: false,
+                scrollTrigger: {
+                  trigger: card,
+                  start: 'top 92%',
+                  once: true,
                 },
-              );
+              });
             });
           });
 
           const seriesCarousel = document.querySelector('[data-series-carousel]');
           if (seriesCarousel) {
-            gsap.fromTo(
-              seriesCarousel,
-              { y: 70, autoAlpha: 0 },
-              {
-                y: 0,
-                autoAlpha: 1,
-                ease: 'power3.out',
-                scrollTrigger: {
-                  trigger: seriesCarousel,
-                  start: 'top 72%',
-                  end: 'top 48%',
-                  scrub: 0.8,
-                },
+            gsap.from(seriesCarousel, {
+              y: 70,
+              autoAlpha: 0,
+              duration: 0.9,
+              ease: 'power3.out',
+              immediateRender: false,
+              scrollTrigger: {
+                trigger: seriesCarousel,
+                start: 'top 90%',
+                once: true,
               },
-            );
+            });
 
             gsap.to(seriesCarousel, {
               yPercent: -4,
