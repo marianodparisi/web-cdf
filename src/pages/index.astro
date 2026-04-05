@@ -9,7 +9,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 const logoSlugs = new Set(['gold', 'kids', 'arde']);
 const currentDevotionalPost = devotionalPosts[0];
-const exodoYoutubeUrl = 'https://www.youtube.com/@Coraz%C3%B3ndeFuego';
+const exodoYoutubeUrl = 'https://www.youtube.com/playlist?list=PLbq3XgHcmjEtwhYdGCqO8PqbFY7EMFI5p';
 const featuredMissions = [...missions]
   .sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime())
   .slice(0, 2);
@@ -54,6 +54,13 @@ const featuredMissions = [...missions]
               />
             </picture>
             <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-black/10 to-black/20"></div>
+            <a
+              href={exodoYoutubeUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Abrir playlist de Exodo en YouTube"
+              class="absolute inset-0 z-10 block lg:hidden"
+            ></a>
 
             <div class="relative z-10 flex h-full w-full items-start justify-end px-6 py-6 sm:px-10 sm:py-8 lg:px-14 lg:py-10">
               <span
