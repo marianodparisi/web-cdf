@@ -1,23 +1,338 @@
 ---
 import Footer from '../../components/Footer.astro';
-import InstitutionalTemplate from '../../components/InstitutionalTemplate.astro';
 import Navbar from '../../components/Navbar.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout title="Discipulados | Iglesia Corazon de Fuego">
   <Navbar />
-  <InstitutionalTemplate
-    title="Discipulados"
-    subtitle="Plantilla base para el proceso de acompanamiento y crecimiento espiritual."
-    intro="Esta pagina queda lista para documentar etapas de discipulado, mentoreo y seguimiento."
-    approachTitle="Enfoque"
-    approachText="Formar discipulos firmes, saludables y comprometidos con Jesus."
-    pathTitle="Camino"
-    pathText="Seccion placeholder para niveles, grupos y procesos de acompanamiento."
-    resourcesTitle="Recursos"
-    resourcesText="Seccion placeholder para guias, materiales y plan semanal."
-    themeClass="bg-[#18202a]"
-  />
+
+  <main class="discip-page">
+    <section class="discip-hero border-b border-[#e7e1d4]">
+      <div class="mx-auto max-w-7xl px-5 py-16 sm:px-6 lg:px-8 lg:py-24">
+        <a href="/#institucional" class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.24em] text-charcoal/70 transition-colors hover:text-primary-dark">
+          <span class="material-symbols-outlined text-sm">arrow_back</span>
+          Volver a institucional
+        </a>
+
+        <div class="mt-8 grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+          <div>
+            <span class="inline-flex rounded-full bg-primary/15 px-4 py-2 text-[11px] font-bold uppercase tracking-[0.24em] text-primary-dark">
+              Discipulados
+            </span>
+            <h1 class="mt-6 font-['Poppins'] text-4xl font-extrabold leading-tight text-charcoal sm:text-5xl lg:text-6xl">
+              Un espacio para dar tus primeros pasos firmes en el Evangelio.
+            </h1>
+            <p class="mt-6 max-w-3xl text-lg leading-relaxed text-charcoal/75">
+              Discipulados está pensado especialmente para personas recién convertidas que quieren conocer mejor la
+              Biblia, crecer en su fe y empezar a construir fundamentos sólidos para su vida cristiana.
+            </p>
+
+            <div class="mt-8 flex flex-wrap gap-4">
+              <a href="#como-funciona" class="inline-flex items-center justify-center rounded-full bg-primary px-7 py-4 font-bold text-white transition-colors hover:bg-primary-dark">
+                Cómo funciona
+              </a>
+              <a href="#clases" class="inline-flex items-center justify-center rounded-full border border-charcoal/20 px-7 py-4 font-bold text-charcoal transition-colors hover:border-charcoal hover:bg-charcoal hover:text-white">
+                Ver clases
+              </a>
+            </div>
+          </div>
+
+          <div class="discip-hero-card rounded-[2rem] border p-8">
+            <p class="text-xs font-bold uppercase tracking-[0.24em] text-primary-dark">¿Qué es Discipulados?</p>
+            <p class="mt-5 text-base leading-relaxed text-charcoal/75">
+              Es un estudio pensado para acompañar a quienes están comenzando en la fe. Buscamos que cada persona pueda
+              entender las bases del Evangelio, afirmar su relación con Jesús y aprender a caminar con la Biblia como guía.
+            </p>
+            <p class="mt-4 text-base leading-relaxed text-charcoal/75">
+              No es un espacio académico como IETE, sino una instancia de formación inicial, cercana y práctica para
+              crecer paso a paso dentro de la vida cristiana.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="como-funciona" class="discip-section py-16 sm:py-20">
+      <div class="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+        <div class="grid gap-6 lg:grid-cols-3">
+          <article class="discip-card discip-card-purple">
+            <p class="discip-label">Enfoque</p>
+            <h2>Fundamentos de la fe</h2>
+            <p>
+              Estudiamos la Biblia desde una base clara y pastoral para que cada nuevo creyente entienda el mensaje del
+              Evangelio y pueda afirmarse en su nueva vida en Cristo.
+            </p>
+          </article>
+
+          <article class="discip-card discip-card-blue">
+            <p class="discip-label">Modalidad</p>
+            <h2>Clases los sábados</h2>
+            <p>
+              Las clases se desarrollan los sábados, en un formato simple y accesible, para avanzar semana a semana en
+              temas centrales de la vida cristiana.
+            </p>
+          </article>
+
+          <article class="discip-card discip-card-pink">
+            <p class="discip-label">Acompañamiento</p>
+            <h2>Profesores diferentes</h2>
+            <p>
+              Cada etapa cuenta con distintos profesores, aportando perspectivas complementarias y ayudando a que el
+              proceso sea más dinámico y enriquecedor.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="clases" class="discip-section-alt border-y py-16 sm:py-20">
+      <div class="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+        <div class="max-w-3xl">
+          <p class="discip-label">Clases y contenido</p>
+          <h2 class="font-['Poppins'] text-3xl font-extrabold text-charcoal sm:text-4xl">
+            ¿Qué se trabaja en Discipulados?
+          </h2>
+          <p class="mt-5 text-base leading-relaxed text-charcoal/75">
+            El objetivo es que cada persona pueda conocer, entender y practicar principios esenciales de la vida
+            cristiana.
+          </p>
+        </div>
+
+        <div class="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+          <article class="discip-topic discip-topic-purple">
+            <h3>La Biblia</h3>
+            <p>Cómo leerla, entenderla y tomarla como base para la vida diaria.</p>
+          </article>
+          <article class="discip-topic discip-topic-blue">
+            <h3>El Evangelio</h3>
+            <p>La obra de Jesús, la salvación y el significado de una nueva vida en Cristo.</p>
+          </article>
+          <article class="discip-topic discip-topic-pink">
+            <h3>Vida cristiana</h3>
+            <p>Oración, obediencia, comunión y crecimiento personal en la fe.</p>
+          </article>
+          <article class="discip-topic discip-topic-gold">
+            <h3>Iglesia y servicio</h3>
+            <p>Cómo integrarse a la comunidad y comenzar a caminar con propósito.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="discip-section py-16 sm:py-20">
+      <div class="mx-auto grid max-w-7xl gap-8 px-5 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8">
+        <div class="rounded-[2rem] bg-charcoal p-8 text-white">
+          <p class="text-xs font-bold uppercase tracking-[0.24em] text-primary">¿Para quién es?</p>
+          <h2 class="mt-4 font-['Poppins'] text-3xl font-extrabold">Para quienes están comenzando</h2>
+          <p class="mt-5 text-base leading-relaxed text-white/80">
+            Si recibiste a Jesús hace poco, si estás empezando a conocer la Biblia o si necesitas ordenar tus bases en la
+            fe, este espacio es para ti.
+          </p>
+        </div>
+
+        <div class="rounded-[2rem] border border-[#e6dfd0] bg-white p-8 shadow-[0_24px_60px_-36px_rgba(58,58,58,0.12)]">
+          <p class="discip-label">Resumen</p>
+          <ul class="mt-5 space-y-4 text-charcoal/85">
+            <li class="discip-bullet">Estudio para personas recién convertidas en el Evangelio</li>
+            <li class="discip-bullet">Clases bíblicas los sábados</li>
+            <li class="discip-bullet">Profesores diferentes durante el proceso</li>
+            <li class="discip-bullet">Un enfoque simple, pastoral y formativo</li>
+            <li class="discip-bullet">Diferente de IETE, que tiene un perfil más institucional</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="contacto-discipulados" class="discip-section border-t border-[#e6dfd0] py-16 sm:py-20">
+      <div class="mx-auto grid max-w-7xl gap-8 px-5 sm:px-6 lg:grid-cols-[0.85fr_1.15fr] lg:px-8">
+        <div class="rounded-[2rem] bg-charcoal p-8 text-white shadow-[0_24px_60px_-32px_rgba(58,58,58,0.28)]">
+          <p class="text-xs font-bold uppercase tracking-[0.24em] text-primary">Contacto</p>
+          <h2 class="mt-4 font-['Poppins'] text-3xl font-extrabold text-white">Quiero sumarme a Discipulados</h2>
+          <p class="mt-5 text-base leading-relaxed text-white/78">
+            Si quieres comenzar, conocer los horarios o recibir más información sobre las clases de los sábados,
+            déjanos tus datos y nos comunicamos contigo.
+          </p>
+        </div>
+
+        <form class="rounded-[2rem] border border-[#e6dfd0] bg-white p-8 shadow-[0_24px_60px_-36px_rgba(58,58,58,0.12)]">
+          <div class="grid gap-5 sm:grid-cols-2">
+            <label class="discip-field sm:col-span-2">
+              <span>WhatsApp *</span>
+              <input type="text" placeholder="10 dígitos" />
+            </label>
+
+            <label class="discip-field sm:col-span-2">
+              <span>Correo electrónico *</span>
+              <input type="email" placeholder="tu@correo.com" />
+            </label>
+
+            <label class="discip-field sm:col-span-2">
+              <span>Nombre(s) *</span>
+              <input type="text" placeholder="Tus nombres" />
+            </label>
+
+            <label class="discip-field">
+              <span>Primer apellido *</span>
+              <input type="text" placeholder="Primer apellido" />
+            </label>
+
+            <label class="discip-field">
+              <span>Segundo apellido</span>
+              <input type="text" placeholder="Segundo apellido" />
+            </label>
+          </div>
+
+          <label class="mt-6 flex items-start gap-3 text-sm leading-relaxed text-charcoal/75">
+            <input type="checkbox" class="mt-1 h-4 w-4 rounded border-[#d5ccb8]" />
+            <span>Acepto el aviso de privacidad y protección de datos personales de la iglesia</span>
+          </label>
+
+          <button type="button" class="mt-8 inline-flex items-center justify-center rounded-full bg-primary px-8 py-4 font-bold text-white transition-colors hover:bg-primary-dark">
+            Enviar solicitud
+          </button>
+        </form>
+      </div>
+    </section>
+  </main>
+
   <Footer />
+
+  <style>
+    .discip-page {
+      font-family: 'Inter', sans-serif;
+      background: #ffffff;
+      color: #3a3a3a;
+    }
+
+    .discip-hero {
+      background: #f7f4ee;
+    }
+
+    .discip-hero-card {
+      border-color: #e6dfd0;
+      background: #fffdfa;
+      box-shadow: 0 24px 60px -36px rgba(58, 58, 58, 0.12);
+    }
+
+    .discip-section {
+      background: #ffffff;
+    }
+
+    .discip-section-alt {
+      background: #f7f4ee;
+      border-color: #e6dfd0;
+    }
+
+    .discip-card,
+    .discip-topic {
+      border-radius: 1.5rem;
+      border: 1px solid #ebe3d4;
+      background: white;
+      padding: 1.5rem;
+      box-shadow: 0 18px 42px -30px rgba(58, 58, 58, 0.1);
+    }
+
+    .discip-card-purple {
+      background: #fcfaf5;
+      border-color: #eee4cf;
+    }
+
+    .discip-card-blue {
+      background: #f8f7f2;
+      border-color: #e9dfcd;
+    }
+
+    .discip-card-pink {
+      background: #fffaf4;
+      border-color: #efe2cb;
+    }
+
+    .discip-topic-purple {
+      border-color: #eee4cf;
+      background: #fffdfa;
+    }
+
+    .discip-topic-blue {
+      border-color: #eadfca;
+      background: #fcfbf7;
+    }
+
+    .discip-topic-pink {
+      border-color: #efe1cb;
+      background: #fffaf5;
+    }
+
+    .discip-topic-gold {
+      border-color: #e5d0a7;
+      background: #f8f1e3;
+    }
+
+    .discip-card h2,
+    .discip-topic h3 {
+      margin-top: 0.75rem;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 700;
+      color: #3a3a3a;
+    }
+
+    .discip-card p:last-child,
+    .discip-topic p {
+      margin-top: 0.9rem;
+      line-height: 1.65;
+      color: rgba(58, 58, 58, 0.78);
+    }
+
+    .discip-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.24em;
+      color: #a8893d;
+    }
+
+    .discip-bullet {
+      position: relative;
+      padding-left: 1.3rem;
+      line-height: 1.65;
+    }
+
+    .discip-bullet::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.62rem;
+      width: 0.45rem;
+      height: 0.45rem;
+      border-radius: 9999px;
+      background: #c5a059;
+    }
+
+    .discip-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .discip-field span {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #3a3a3a;
+    }
+
+    .discip-field input {
+      border-radius: 1rem;
+      border: 1px solid #e6dfd0;
+      background: #fffdfa;
+      padding: 0.95rem 1rem;
+      color: #3a3a3a;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .discip-field input:focus {
+      border-color: #c5a059;
+      box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.16);
+    }
+  </style>
 </BaseLayout>

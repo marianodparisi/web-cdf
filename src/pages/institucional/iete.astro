@@ -1,23 +1,315 @@
 ---
 import Footer from '../../components/Footer.astro';
-import InstitutionalTemplate from '../../components/InstitutionalTemplate.astro';
 import Navbar from '../../components/Navbar.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout title="IETE | Iglesia Corazon de Fuego">
   <Navbar />
-  <InstitutionalTemplate
-    title="IETE"
-    subtitle="Plantilla base del instituto para desarrollar toda su informacion academica."
-    intro="Esta pagina queda preparada para sumar plan de estudios, niveles y proceso de inscripcion."
-    approachTitle="Enfoque"
-    approachText="Formacion biblica y ministerial con base en la Palabra."
-    pathTitle="Trayecto"
-    pathText="Seccion placeholder para modulos, etapas y requisitos de cursada."
-    resourcesTitle="Recursos"
-    resourcesText="Seccion placeholder para materiales, calendario y equipo docente."
-    themeClass="bg-[#1f2937]"
-  />
+
+  <main class="ibl-page bg-[#f5f0e6] text-[#1b2230]">
+    <section class="border-b border-[#d8cfbf] bg-[linear-gradient(135deg,#f9f5ec_0%,#e7dcc8_100%)]">
+      <div class="mx-auto max-w-7xl px-5 py-16 sm:px-6 lg:px-8 lg:py-24">
+        <a href="/#institucional" class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.24em] text-[#8e6a2f] transition-colors hover:text-[#b99146]">
+          <span class="material-symbols-outlined text-sm">arrow_back</span>
+          Volver a institucional
+        </a>
+
+        <div class="mt-8 grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+          <div>
+            <img src="/ietelogo" alt="Logo IETE" class="mb-6 h-14 w-auto sm:h-16" />
+            <span class="inline-flex rounded-full bg-[#d6b36a] px-4 py-2 text-[11px] font-bold uppercase tracking-[0.24em] text-[#2d2412]">
+              IETE
+            </span>
+            <h1 class="mt-6 font-['Poppins'] text-4xl font-extrabold leading-tight text-[#1b2230] sm:text-5xl lg:text-6xl">
+              Si tu sueño es servir en la iglesia, este lugar también es para ti.
+            </h1>
+            <p class="mt-6 max-w-3xl text-lg leading-relaxed text-[#4f5867]">
+              Si sientes un llamado a ser pastor o misionero, si deseas plantar iglesias, o si simplemente quieres
+              crecer para mejorar el mundo que te rodea, este espacio fue diseñado para ayudarte a dar ese siguiente paso.
+            </p>
+
+            <div class="mt-8 flex flex-wrap gap-4">
+              <a href="#que-es-ibl" class="inline-flex items-center justify-center rounded-full bg-[#233048] px-7 py-4 font-bold text-white transition-colors hover:bg-[#1b2436]">
+                ¿Qué es IETE?
+              </a>
+              <a href="#solicitar-informacion" class="inline-flex items-center justify-center rounded-full border border-[#233048] px-7 py-4 font-bold text-[#233048] transition-colors hover:bg-[#233048] hover:text-white">
+                Solicitar información
+              </a>
+            </div>
+          </div>
+
+          <div class="rounded-[2rem] border border-[#d8cfbf] bg-white p-8 shadow-[0_24px_60px_-36px_rgba(35,48,72,0.22)]">
+            <p class="text-xs font-bold uppercase tracking-[0.24em] text-[#8e6a2f]">¿Qué es IETE?</p>
+            <p class="mt-5 text-base leading-relaxed text-[#4f5867]">
+              IETE es un programa de certificación diseñado para personas que están
+              considerando integrarse al ministerio como pastores, misioneros o líderes dentro de su iglesia local.
+            </p>
+            <p class="mt-4 text-base leading-relaxed text-[#4f5867]">
+              También es una certificación ideal para quienes ya están activos en el ministerio y desean fortalecer su
+              formación bíblica y su liderazgo.
+            </p>
+            <p class="mt-4 text-base leading-relaxed text-[#4f5867]">
+              De igual manera, el programa está abierto a personas que no necesariamente estarán en el ministerio, pero
+              que desean crecer en su liderazgo, profundizar en su conocimiento bíblico y desarrollar herramientas para
+              impactar positivamente su entorno.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="que-es-ibl" class="py-16 sm:py-20">
+      <div class="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+        <div class="grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
+          <article class="rounded-[2rem] border border-[#d8cfbf] bg-white p-8 shadow-[0_24px_60px_-36px_rgba(35,48,72,0.16)]">
+            <p class="text-xs font-bold uppercase tracking-[0.24em] text-[#8e6a2f]">Enfoque del programa</p>
+            <h2 class="mt-4 font-['Poppins'] text-3xl font-extrabold text-[#1b2230] sm:text-4xl">
+              Formación integral para líderes cristianos en el mundo actual.
+            </h2>
+            <p class="mt-5 text-base leading-relaxed text-[#4f5867]">
+              IETE es un programa integral que aborda áreas fundamentales para la formación de líderes cristianos para el
+              mundo actual, incluyendo:
+            </p>
+            <ul class="mt-6 grid gap-3 text-base text-[#243042] sm:grid-cols-2">
+              <li class="ibl-bullet">Teología sistemática</li>
+              <li class="ibl-bullet">Liderazgo de iglesia para la actualidad</li>
+              <li class="ibl-bullet">Cultura del Reino</li>
+              <li class="ibl-bullet">Plantación de iglesias</li>
+              <li class="ibl-bullet">Misiones</li>
+              <li class="ibl-bullet">Salud integral del ministro</li>
+            </ul>
+            <p class="mt-6 text-base leading-relaxed text-[#4f5867]">
+              Nuestro enfoque busca formar líderes con carácter, convicción y empatía, capaces de proclamar la verdad
+              con argumentos sólidos y tener conversaciones reales con el mundo actual.
+            </p>
+          </article>
+
+          <article class="rounded-[2rem] border border-[#d6b36a] bg-[#efe5cf] p-8">
+            <p class="text-xs font-bold uppercase tracking-[0.24em] text-[#8e6a2f]">Maestros</p>
+            <h3 class="mt-4 font-['Poppins'] text-2xl font-extrabold text-[#1b2230]">Equipo docente</h3>
+            <p class="mt-4 text-base leading-relaxed text-[#4f5867]">
+              Los maestros son principalmente pastores y líderes de la comunidad Más Vida, así como maestros invitados
+              con experiencia ministerial y académica.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="py-4 pb-16 sm:pb-20">
+      <div class="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+        <div class="rounded-[2rem] border border-[#d8cfbf] bg-white p-8">
+          <p class="text-xs font-bold uppercase tracking-[0.24em] text-[#8e6a2f]">Nuestra visión de formación</p>
+          <h2 class="mt-4 font-['Poppins'] text-3xl font-extrabold text-[#1b2230] sm:text-4xl">
+            En IETE formamos líderes para vivir la verdad con profundidad y cercanía.
+          </h2>
+          <div class="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+            <article class="ibl-vision-card">
+              <h4>Con empatía</h4>
+              <p>Capaces de escuchar, comprender y acompañar a las personas con sensibilidad pastoral.</p>
+            </article>
+            <article class="ibl-vision-card">
+              <h4>Con sentido de pertenencia</h4>
+              <p>Arraigados en la vida de la iglesia local y comprometidos con servir junto a su comunidad.</p>
+            </article>
+            <article class="ibl-vision-card">
+              <h4>Con convicciones profundas</h4>
+              <p>Firmes en la verdad bíblica, con argumentos sólidos y una fe bien fundamentada.</p>
+            </article>
+            <article class="ibl-vision-card">
+              <h4>Capaces de dialogar con la cultura contemporánea</h4>
+              <p>Preparados para tener conversaciones reales con el mundo actual sin perder la esencia del Evangelio.</p>
+            </article>
+          </div>
+          <p class="mt-8 text-base leading-relaxed text-[#4f5867]">
+            Creemos que el liderazgo cristiano no solo se trata de proclamar la verdad, sino también de vivirla y
+            encarnarla en la vida cotidiana.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="border-y border-[#d8cfbf] bg-[#ece3d1] py-16 sm:py-20">
+      <div class="mx-auto max-w-7xl px-5 sm:px-6 lg:px-8">
+        <div class="max-w-3xl">
+          <p class="text-xs font-bold uppercase tracking-[0.24em] text-[#8e6a2f]">Información general</p>
+          <h2 class="mt-4 font-['Poppins'] text-3xl font-extrabold text-[#1b2230] sm:text-4xl">
+            ¿Para quién es este programa?
+          </h2>
+          <p class="mt-5 text-base leading-relaxed text-[#4f5867]">
+            Este programa es para:
+          </p>
+        </div>
+
+        <div class="mt-8 grid gap-5 lg:grid-cols-[1fr_1fr_0.8fr]">
+          <article class="ibl-info-card">
+            <ul class="space-y-3 text-[#243042]">
+              <li class="ibl-bullet">Personas que sienten un llamado al ministerio</li>
+              <li class="ibl-bullet">Personas activas en el ministerio</li>
+              <li class="ibl-bullet">Líderes de equipos dentro de su iglesia local</li>
+              <li class="ibl-bullet">Personas que desean plantar iglesias</li>
+              <li class="ibl-bullet">Personas que desean crecer en su liderazgo</li>
+              <li class="ibl-bullet">Líderes en diferentes ámbitos de la sociedad que desean expandir su conocimiento bíblico</li>
+            </ul>
+            <p class="mt-6 text-sm leading-relaxed text-[#4f5867]">
+              La certificación tiene una duración aproximada de un año y medio.
+            </p>
+          </article>
+
+          <article class="ibl-info-card">
+            <p class="text-xs font-bold uppercase tracking-[0.24em] text-[#8e6a2f]">Modalidad</p>
+            <p class="mt-4 text-base leading-relaxed text-[#4f5867]">
+              El programa es 100% en línea, con experiencias presenciales permitiendo que cada estudiante avance con un
+              ritmo semanal.
+            </p>
+            <p class="mt-5 font-semibold text-[#1b2230]">Incluye:</p>
+            <ul class="mt-3 space-y-3 text-[#243042]">
+              <li class="ibl-bullet">Clases en línea</li>
+              <li class="ibl-bullet">Asesorías en tiempo real</li>
+              <li class="ibl-bullet">Contenido formativo semanal</li>
+            </ul>
+            <p class="mt-5 font-semibold text-[#1b2230]">Experiencias presenciales:</p>
+            <ul class="mt-3 space-y-3 text-[#243042]">
+              <li class="ibl-bullet">Retiro de sanidad</li>
+              <li class="ibl-bullet">Viaje misionero</li>
+              <li class="ibl-bullet">Conferencia presencial</li>
+              <li class="ibl-bullet">Masterclass especial</li>
+            </ul>
+          </article>
+
+          <article class="ibl-info-card">
+            <p class="text-xs font-bold uppercase tracking-[0.24em] text-[#8e6a2f]">Edad sugerida</p>
+            <p class="mt-4 text-base leading-relaxed text-[#4f5867]">
+              La edad recomendada para ingresar al programa es a partir de los 18 años, principalmente debido a las
+              experiencias presenciales como viajes misioneros y retiros.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="solicitar-informacion" class="py-16 sm:py-20">
+      <div class="mx-auto grid max-w-7xl gap-8 px-5 sm:px-6 lg:grid-cols-[0.85fr_1.15fr] lg:px-8">
+        <div class="rounded-[2rem] bg-[#233048] p-8 text-white">
+          <p class="text-xs font-bold uppercase tracking-[0.24em] text-[#d6b36a]">Solicitar información</p>
+          <h2 class="mt-4 font-['Poppins'] text-3xl font-extrabold">Quiero conocer más sobre IETE</h2>
+          <p class="mt-5 text-base leading-relaxed text-white/80">
+            Déjanos tus datos y te compartimos información sobre el programa, la modalidad y el proceso de inscripción.
+          </p>
+        </div>
+
+        <form class="rounded-[2rem] border border-[#d8cfbf] bg-white p-8 shadow-[0_24px_60px_-36px_rgba(35,48,72,0.16)]">
+          <div class="grid gap-5 sm:grid-cols-2">
+            <label class="ibl-field sm:col-span-2">
+              <span>WhatsApp *</span>
+              <input type="text" placeholder="10 dígitos" />
+            </label>
+
+            <label class="ibl-field sm:col-span-2">
+              <span>Correo electrónico *</span>
+              <input type="email" placeholder="tu@correo.com" />
+            </label>
+
+            <label class="ibl-field sm:col-span-2">
+              <span>Nombre(s) *</span>
+              <input type="text" placeholder="Tus nombres" />
+            </label>
+
+            <label class="ibl-field">
+              <span>Primer apellido *</span>
+              <input type="text" placeholder="Primer apellido" />
+            </label>
+
+            <label class="ibl-field">
+              <span>Segundo apellido</span>
+              <input type="text" placeholder="Segundo apellido" />
+            </label>
+          </div>
+
+            <label class="mt-6 flex items-start gap-3 text-sm leading-relaxed text-[#4f5867]">
+            <input type="checkbox" class="mt-1 h-4 w-4 rounded border-[#cdbf9f]" />
+            <span>Acepto el aviso de privacidad y protección de datos personales de la Universidad MásVida</span>
+          </label>
+
+          <button type="button" class="mt-8 inline-flex items-center justify-center rounded-full bg-[#d6b36a] px-8 py-4 font-bold text-[#2d2412] transition-colors hover:bg-[#c7a052]">
+            Enviar solicitud
+          </button>
+        </form>
+      </div>
+    </section>
+  </main>
+
   <Footer />
+
+  <style>
+    .ibl-page {
+      font-family: 'Inter', sans-serif;
+    }
+
+    .ibl-bullet {
+      position: relative;
+      padding-left: 1.3rem;
+      line-height: 1.6;
+    }
+
+    .ibl-bullet::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.65rem;
+      width: 0.45rem;
+      height: 0.45rem;
+      border-radius: 9999px;
+      background: #d6b36a;
+    }
+
+    .ibl-vision-card,
+    .ibl-info-card {
+      border-radius: 1.5rem;
+      border: 1px solid #d8cfbf;
+      background: #fff;
+      padding: 1.5rem;
+    }
+
+    .ibl-vision-card h4 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #1b2230;
+    }
+
+    .ibl-vision-card p {
+      margin-top: 0.75rem;
+      color: #4f5867;
+      line-height: 1.65;
+    }
+
+    .ibl-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .ibl-field span {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #243042;
+    }
+
+    .ibl-field input {
+      border-radius: 1rem;
+      border: 1px solid #d8cfbf;
+      background: #faf7f0;
+      padding: 0.95rem 1rem;
+      color: #1b2230;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .ibl-field input:focus {
+      border-color: #b68b3e;
+      box-shadow: 0 0 0 3px rgba(214, 179, 106, 0.2);
+    }
+  </style>
 </BaseLayout>

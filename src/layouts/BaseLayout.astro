@@ -25,6 +25,7 @@ const { title = 'Iglesia Corazón de Fuego' } = Astro.props;
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
     />
+    <slot name="head" />
   </head>
   <body class="bg-white text-charcoal font-body antialiased selection:bg-primary selection:text-white">
     <slot />
