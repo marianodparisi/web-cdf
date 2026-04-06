@@ -2,57 +2,179 @@
 interface Props {
   title: string;
   subtitle: string;
-  intro: string;
-  locationText: string;
-  meetingsText: string;
-  teamText: string;
-  themeClass?: string;
+  heroImage: string;
+  storyImage: string;
+  mapImage: string;
+  storyTitle: string;
+  storyParagraphs: string[];
+  yearsValue: string;
+  yearsLabel: string;
+  localValue: string;
+  localLabel: string;
+  locationTitle: string;
+  addressLines: string[];
+  meetingsLines: string[];
+  ctaTitle: string;
+  ctaText: string;
+  primaryColor?: string;
+  primaryDarkColor?: string;
+  surfaceColor?: string;
+  surfaceAltColor?: string;
+  outlineColor?: string;
 }
 
 const {
   title,
   subtitle,
-  intro,
-  locationText,
-  meetingsText,
-  teamText,
-  themeClass = 'bg-charcoal',
+  heroImage,
+  storyImage,
+  mapImage,
+  storyTitle,
+  storyParagraphs,
+  yearsValue,
+  yearsLabel,
+  localValue,
+  localLabel,
+  locationTitle,
+  addressLines,
+  meetingsLines,
+  ctaTitle,
+  ctaText,
+  primaryColor = '#775a19',
+  primaryDarkColor = '#6a4e0d',
+  surfaceColor = '#f9f9f7',
+  surfaceAltColor = '#f2f4f2',
+  outlineColor = '#adb3b0',
 } = Astro.props as Props;
 ---
 
-<section data-animate="reveal" class={`text-white pt-14 md:pt-20 pb-10 md:pb-14 ${themeClass}`}>
-  <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
-    <a href="/anexos" class="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-white/75 hover:text-primary transition-colors">
-      <span class="material-symbols-outlined text-sm">arrow_back</span>
-      Volver a anexos
-    </a>
-    <div class="mt-6 md:mt-8">
-      <span class="inline-flex rounded-full bg-primary px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-charcoal font-semibold">Anexo</span>
-      <h1 class="font-display text-4xl sm:text-5xl md:text-6xl mt-4">{title}</h1>
-      <p class="text-white/80 mt-3 max-w-3xl">{subtitle}</p>
-    </div>
-  </div>
-</section>
+<div
+  class="[font-family:'Plus_Jakarta_Sans',sans-serif]"
+  style={`--annex-primary:${primaryColor};--annex-primary-dark:${primaryDarkColor};--annex-surface:${surfaceColor};--annex-surface-alt:${surfaceAltColor};--annex-outline:${outlineColor};`}
+>
+  <section class="grid min-h-[82vh] grid-cols-1 bg-[var(--annex-surface)] lg:grid-cols-2">
+    <div class="flex items-center justify-center bg-[var(--annex-surface)] px-8 py-10 lg:px-16 lg:py-16">
+      <div class="max-w-xl">
+        <div class="mb-8 inline-flex items-center space-x-2 rounded-full border border-[color:var(--annex-outline)]/25 bg-white/70 px-4 py-2 backdrop-blur-md">
+          <span class="h-2 w-2 rounded-full bg-[var(--annex-primary)]"></span>
+          <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-[#5a605e]">Bienvenido a casa</span>
+        </div>
 
-<section data-animate="reveal" class="py-14 md:py-16 bg-white">
-  <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8">
-      <article data-animate="card" class="rounded-3xl border border-gray-200 bg-gray-50 p-6 sm:p-8">
-        <p class="text-primary text-xs uppercase tracking-[0.2em] font-semibold mb-2">Presentacion</p>
-        <p class="text-charcoal text-sm sm:text-base leading-relaxed">{intro}</p>
-      </article>
-      <article data-animate="card" class="rounded-3xl border border-gray-200 bg-gray-50 p-6 sm:p-8">
-        <p class="text-primary text-xs uppercase tracking-[0.2em] font-semibold mb-2">Ubicacion</p>
-        <p class="text-charcoal text-sm sm:text-base leading-relaxed">{locationText}</p>
-      </article>
-      <article data-animate="card" class="rounded-3xl border border-gray-200 bg-gray-50 p-6 sm:p-8">
-        <p class="text-primary text-xs uppercase tracking-[0.2em] font-semibold mb-2">Reuniones</p>
-        <p class="text-charcoal text-sm sm:text-base leading-relaxed">{meetingsText}</p>
-      </article>
+        <h1 class="mb-6 text-5xl font-extrabold tracking-tighter text-[#2d3432] md:text-7xl">
+          Anexo <span class="font-medium italic text-[var(--annex-primary)]">{title}</span>
+        </h1>
+
+        <p class="mb-12 text-xl font-light tracking-wide text-[#5a605e] md:text-2xl">
+          {subtitle}
+        </p>
+
+        <a
+          href="#historia"
+          class="inline-flex rounded-lg bg-gradient-to-br from-[var(--annex-primary)] to-[var(--annex-primary-dark)] px-8 py-4 font-bold text-[#fff6ed] shadow-lg shadow-[color:var(--annex-primary)]/10 transition-all hover:-translate-y-0.5"
+        >
+          Descubre nuestra historia
+        </a>
+      </div>
     </div>
-    <article data-animate="card" class="mt-5 rounded-3xl border border-gray-200 bg-gray-50 p-6 sm:p-8">
-      <p class="text-primary text-xs uppercase tracking-[0.2em] font-semibold mb-2">Equipo local</p>
-      <p class="text-charcoal text-sm sm:text-base leading-relaxed">{teamText}</p>
-    </article>
-  </div>
-</section>
+
+    <div class="relative flex h-full items-center justify-center bg-[var(--annex-surface)] px-8 py-10 lg:px-10 lg:py-12">
+      <div class="relative aspect-[4/4.2] w-full max-w-[36rem] overflow-hidden rounded-[3rem] shadow-[0_0_80px_-20px_rgba(119,90,25,0.25)]">
+        <img src={heroImage} alt={`Interior de Anexo ${title}`} class="h-full w-full object-cover" />
+      </div>
+    </div>
+  </section>
+
+  <section id="historia" class="overflow-hidden bg-[var(--annex-surface-alt)] py-24 md:py-32">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="grid grid-cols-1 items-center gap-16 md:grid-cols-12">
+        <div class="order-2 md:order-1 md:col-span-7">
+          <div class="space-y-8">
+            <label class="text-[11px] font-extrabold uppercase tracking-[0.25em] text-[var(--annex-primary)]">Nuestra historia</label>
+            <h2 class="text-4xl font-bold leading-[1.1] tracking-tight text-[#2d3432] md:text-6xl">
+              {storyTitle}
+            </h2>
+            <div class="space-y-6 text-lg leading-relaxed text-[#5a605e]">
+              {storyParagraphs.map((paragraph) => <p>{paragraph}</p>)}
+            </div>
+            <div class="grid grid-cols-2 gap-8 border-t border-[color:var(--annex-outline)]/20 pt-8">
+              <div>
+                <span class="block text-4xl font-black tracking-tighter text-[var(--annex-primary)]">{yearsValue}</span>
+                <span class="text-[10px] font-bold uppercase text-[#5a605e]">{yearsLabel}</span>
+              </div>
+              <div>
+                <span class="block text-4xl font-black tracking-tighter text-[var(--annex-primary)]">{localValue}</span>
+                <span class="text-[10px] font-bold uppercase text-[#5a605e]">{localLabel}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative order-1 md:order-2 md:col-span-5">
+          <div class="relative aspect-[4/5] w-full overflow-hidden rounded-t-[2rem] rounded-bl-[2rem] rounded-br-none shadow-2xl">
+            <img src={storyImage} alt={`Comunidad de ${title}`} class="h-full w-full object-cover" />
+          </div>
+          <div class="absolute -bottom-6 -left-6 -z-10 h-32 w-32 rounded-lg bg-[var(--annex-primary)] opacity-25"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-[var(--annex-surface)] py-24 md:py-32">
+    <div class="mx-auto max-w-7xl px-6">
+      <div class="grid overflow-hidden rounded-[2rem] border border-[color:var(--annex-outline)]/15 bg-[var(--annex-surface-alt)] shadow-sm lg:grid-cols-2">
+        <div class="flex flex-col justify-center p-12 md:p-20">
+          <label class="mb-8 block text-[11px] font-extrabold uppercase tracking-[0.25em] text-[var(--annex-primary)]">Ubicación</label>
+          <h2 class="mb-8 text-4xl font-bold leading-tight tracking-tight text-[#2d3432] md:text-5xl">{locationTitle}</h2>
+
+          <div class="space-y-6">
+            <div class="flex items-start gap-4">
+              <span class="material-symbols-outlined mt-1 text-[var(--annex-primary)]">location_on</span>
+              <div>
+                <h4 class="font-bold text-[#2d3432]">Nuestra Dirección</h4>
+                <div class="text-[#5a605e]">
+                  {addressLines.map((line) => (
+                    <p>{line}</p>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            <div class="flex items-start gap-4">
+              <span class="material-symbols-outlined mt-1 text-[var(--annex-primary)]">schedule</span>
+              <div>
+                <h4 class="font-bold text-[#2d3432]">Horarios de Reunión</h4>
+                <div class="text-[#5a605e]">
+                  {meetingsLines.map((line) => (
+                    <p>{line}</p>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative min-h-[400px]">
+          <img src={mapImage} alt={`Mapa de ${title}`} class="h-full w-full object-cover grayscale opacity-60" />
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="relative">
+              <div class="absolute -inset-4 animate-ping rounded-full bg-[var(--annex-primary)]/20"></div>
+              <div class="relative rounded-full bg-[var(--annex-primary)] p-3 text-[#fff6ed] shadow-xl">
+                <span class="material-symbols-outlined">church</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-[var(--annex-surface-alt)] py-20">
+    <div class="mx-auto max-w-4xl px-6">
+      <div class="rounded-[2rem] border border-[color:var(--annex-outline)]/15 bg-white/70 p-10 text-center shadow-sm backdrop-blur-sm md:p-14">
+        <p class="mb-3 text-[11px] font-extrabold uppercase tracking-[0.25em] text-[var(--annex-primary)]">Llamado a la acción</p>
+        <h3 class="mb-4 text-3xl font-bold tracking-tight text-[#2d3432] md:text-4xl">{ctaTitle}</h3>
+        <p class="mx-auto max-w-2xl text-lg text-[#5a605e]">{ctaText}</p>
+      </div>
+    </div>
+  </section>
+</div>

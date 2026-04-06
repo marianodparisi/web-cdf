@@ -5,16 +5,33 @@ import Navbar from '../../components/Navbar.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="Anexo Rojas | Iglesia Corazon de Fuego">
+<BaseLayout title="Anexo Rojas | Iglesia Corazón de Fuego">
   <Navbar />
   <AnexoTemplate
     title="Rojas"
-    subtitle="Plantilla inicial del anexo para comenzar a cargar informacion detallada."
-    intro="Este anexo forma parte de la vision de expansion y cuidado pastoral en la region."
-    locationText="Seccion placeholder para direccion exacta y referencias."
-    meetingsText="Seccion placeholder para dias, horarios y actividades semanales."
-    teamText="Seccion placeholder para responsables, lideres y datos de contacto."
-    themeClass="bg-[#18202a]"
+    subtitle="Un lugar de encuentro y esperanza en el corazón de nuestra ciudad."
+    heroImage="https://lh3.googleusercontent.com/aida-public/AB6AXuB908V11_FIakv8e3l1tLYBeF1KgdFnipoOlkTF4ZFjgUq8rK_M9YlMQOrMeAfguPkfGt5MsHrqbCw1mtQmyugn_5HdLrPOgNM8l9YD7ddMmngIK49UOQP0x-6GjzrrMs7nS7rgHHAzc9mj-gb6f8hy110_5sEeHyRw_Tbj0CWVduSOHLWF3A6a_NM_q_ox89Yc96BN3cTKwByl1tyTZPPqK75l55gpKUMl6AnBripRHTH-KzTd_TOrgv60fIBv9nJEivbWkIOURzA"
+    storyImage="https://lh3.googleusercontent.com/aida-public/AB6AXuBfUq8CHRcb6ZNX-xKFKh6QvOXKkK7fACA_SPrcINKk5w5yDa460qCtqP76drLxLO5XwI5olAiSXY7_9gPsyvpVI-2IVer2mQhyWUnZg3Tb66GTtnGwZWWXx-_RKV92tT8KmMvjA4KY8cA2FCgU7hlpmWKyOJuW_iFPuOuZjNIKs1DVGT8lRiVQG3jm5AtzZevAatB62YC4Il1SN8wkNpRGzyH0WFkOkPhMAHR5haFSHy51B9z6OY1VJuS3rvXJ5uYMaJbfUuF5vz4"
+    mapImage="https://lh3.googleusercontent.com/aida-public/AB6AXuAsgO3JzFqEm2fuG5XNZCAVrALSSkeb608la5Ox5YdcZa3Qn9vd0t9vSxIFT-IAIPnJK52i9f8mSEgdjMMpgdz8vuP-Lgsfz2PckhV1NlyafifkjajBatFyt6pnFTPWc4FEAzM1jS_b4ebyRJKwo0cigaLKWwxPcW2O6Np69O-8M4_JTQBJlXCO4ksi7GKXuiLzekxYaouzB9lKEyUr2JdQQaHvBr7tYKAbleXQtemnrQLLiXILdcw8JNp0NM5B4gpvFOFTl_I0re8"
+    storyTitle="Cinco años siendo luz para nuestra ciudad."
+    storyParagraphs={[
+      'Lo que comenzó como un pequeño grupo de vecinos con el deseo de compartir fe y compañerismo, se ha transformado en una comunidad vibrante que late al ritmo de Rojas.',
+      'A lo largo de estos más de 5 años de crecimiento, hemos visto cómo las pequeñas semillas de bondad se convierten en raíces profundas. Hoy, el Anexo Rojas no es solo un edificio, es un faro local que acompaña, sostiene y celebra la vida de cada familia que cruza nuestras puertas.',
+    ]}
+    yearsValue="5+"
+    yearsLabel="Años creciendo"
+    localValue="100%"
+    localLabel="Corazón local"
+    locationTitle="Te esperamos en el corazón de Rojas."
+    addressLines={['Calle Principal 1234', 'Ciudad de Rojas, CP 2705']}
+    meetingsLines={['Domingos — 10:00 AM y 19:00 PM']}
+    ctaTitle="Una mesa abierta para cada familia."
+    ctaText="Anexo Rojas sigue creciendo con una visión sencilla: crear un lugar cercano donde cada persona pueda encontrar fe, comunidad y esperanza."
+    primaryColor="#775a19"
+    primaryDarkColor="#6a4e0d"
+    surfaceColor="#f9f9f7"
+    surfaceAltColor="#f2f4f2"
+    outlineColor="#adb3b0"
   />
   <Footer />
 </BaseLayout>

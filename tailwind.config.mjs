@@ -12,8 +12,8 @@ export default {
         'light-gray': '#F3F4F6',
       },
       fontFamily: {
-        display: ['Newsreader', 'serif'],
-        body: ['Inter', 'sans-serif'],
+        display: ['Inter', 'sans-serif'],
+        body: ['DM Sans', 'sans-serif'],
       },
       borderRadius: {
         DEFAULT: '4px',

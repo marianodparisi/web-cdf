@@ -1,25 +1,245 @@
 ---
 import Footer from '../../components/Footer.astro';
-import MinistryTemplate from '../../components/MinistryTemplate.astro';
 import Navbar from '../../components/Navbar.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="Gold | Iglesia Corazon de Fuego">
-  <Navbar sticky={false} />
-  <MinistryTemplate
-    title="Gold"
-    tagline="Template inicial para mujeres"
-    heroImage="/gold.png"
-    badge="Mujeres"
-    themeClass="bg-[#2a2214]"
-    intro="Pagina base para Gold. Lista para sumar contenido propio, recursos y actividades."
-    focusTitle="Enfoque"
-    focusText="Sanidad, identidad, comunion y liderazgo de mujeres en la fe."
-    participationTitle="Como sumarte"
-    participationText="Espacio abierto para mujeres de todas las edades de la iglesia."
-    scheduleTitle="Encuentros"
-    scheduleText="Seccion placeholder para reuniones, talleres y jornadas."
-  />
-  <Footer />
+<BaseLayout title="Gold | Iglesia Corazón de Fuego">
+  <Fragment slot="head">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap"
+    />
+  </Fragment>
+
+  <div class="bg-[#faf9f6] text-[#1a1c1a]">
+    <Navbar sticky={false} />
+
+    <main>
+      <section class="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 pt-24 md:px-12">
+        <div class="absolute inset-0 z-0 opacity-40">
+          <div class="absolute inset-0 bg-gradient-to-b from-white/20 to-[#faf9f6]"></div>
+          <img
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3-dFK5TKKZ4WqUu_bPF3Qy2R212a9NIcneCeoT1HSq17leVVlZMIB8xIKk0CIy_oNVROFOjR3mN1j-k5HyJKu9rGJHe6INHTl6aKylHRTB57Tq4vgWo5wTRpS0PcJWHjFXYRuOu_ZIRK-b8mvLvJZKg3O07GC1w4yoHA1oJoqq0OFKqGUn0ZQLJBpy74VTLVR1X2ufgOCXJnDawcdt5aR8EbE1KxoysK3LBJITN37pOlaOph8YlNWI4rBfC8bxFHzyd4PPEfVRan6"
+            alt="Fondo luminoso editorial"
+            class="h-full w-full object-cover"
+          />
+        </div>
+
+        <div class="relative z-10 mx-auto w-full max-w-7xl text-center">
+          <span class="mb-8 block [font-family:'Plus_Jakarta_Sans',sans-serif] text-xs font-medium uppercase tracking-[0.3em] text-[#7b5800]">
+            Ministerio para parejas
+          </span>
+          <h1 class="[font-family:'Noto_Serif',serif] mb-6 text-5xl font-bold uppercase leading-none tracking-tight text-[#1a1c1a] sm:text-6xl md:text-7xl lg:text-8xl xl:text-[7rem]">
+            Matrimonios Gold
+          </h1>
+          <p class="[font-family:'Noto_Serif',serif] mx-auto mb-12 max-w-2xl text-2xl italic text-[#4d4635] md:text-3xl">
+            Un legado de luz fundado en el pacto eterno.
+          </p>
+          <div class="flex flex-col items-center justify-center gap-6 md:flex-row">
+            <a
+              href="#cta-gold"
+              class="rounded-xl bg-gradient-to-br from-[#7b5800] to-[#e1aa36] px-10 py-5 [font-family:'Plus_Jakarta_Sans',sans-serif] text-sm font-bold uppercase tracking-widest text-white shadow-[0_20px_40px_-15px_rgba(123,88,0,0.3)] transition-transform hover:scale-105"
+            >
+              Unirme al ministerio
+            </a>
+            <a
+              href="#vision-gold"
+              class="group flex items-center gap-2 [font-family:'Plus_Jakarta_Sans',sans-serif] text-sm font-bold uppercase tracking-widest text-[#7b5800]"
+            >
+              Descubrir visión
+              <span class="material-symbols-outlined transition-transform group-hover:translate-x-1">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section id="vision-gold" class="bg-[#f4f3f1] px-6 py-32 md:px-12">
+        <div class="mx-auto max-w-7xl">
+          <div class="grid grid-cols-1 items-center gap-12 md:grid-cols-12">
+            <div class="relative md:col-span-7">
+              <div class="aspect-[4/5] overflow-hidden rounded-md">
+                <img
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJ98cxUOdqHHhsyY4cJ3Vl5x0oFCNVb-6PLtbdNVofxmeay-CiZSrRl6jUBLfXYdKtkL2eWK7foE27ktEhRH-lRRwGFzEZLlYsF1uY3N0B6tgm95WaFg7h7p4ITapBfp3Hgr5F3KA_O0hlTArASVQ9M3E4a2ldP3oOSJ2er02iPwJ4AMVpjARnBN4kxpy2fDqc0c4fUjruckhtvVs3_-vVAbpY8j_izr56oXrIVyyMYpH0vGGTLGEr7WYZ9nIGq-2uXeThHiV6GZ1C"
+                  alt="Pareja caminando"
+                  class="h-full w-full object-cover"
+                />
+              </div>
+              <div class="absolute -bottom-12 -right-6 max-w-sm rounded-md bg-[#faf9f6] p-8 shadow-[0_40px_80px_-20px_rgba(0,0,0,0.08)] md:-right-12 md:p-12">
+                <h3 class="[font-family:'Noto_Serif',serif] mb-4 text-3xl font-bold text-[#7b5800]">Nuestra Esencia</h3>
+                <p class="leading-relaxed text-[#4d4635]">
+                  GOLD Team no es solo un grupo, es un santuario para el crecimiento conyugal, donde cada pareja es
+                  una joya siendo pulida por el Creador.
+                </p>
+              </div>
+            </div>
+
+            <div class="pt-12 md:col-span-5 md:pt-0">
+              <h2 class="[font-family:'Noto_Serif',serif] mb-8 text-5xl font-bold leading-tight text-[#1a1c1a] md:text-6xl">
+                Encuentros Sagrados
+              </h2>
+              <div class="space-y-12">
+                <div class="flex gap-6">
+                  <span class="[font-family:'Noto_Serif',serif] text-4xl italic text-[#7b5800]/40">01</span>
+                  <div>
+                    <h4 class="[font-family:'Noto_Serif',serif] mb-2 text-xl font-bold">Cenas de Pacto</h4>
+                    <p class="text-[#4d4635]">Espacios íntimos de renovación y diálogo profundo bajo la luz de la palabra.</p>
+                  </div>
+                </div>
+                <div class="flex gap-6">
+                  <span class="[font-family:'Noto_Serif',serif] text-4xl italic text-[#7b5800]/40">02</span>
+                  <div>
+                    <h4 class="[font-family:'Noto_Serif',serif] mb-2 text-xl font-bold">Retiros de Vida</h4>
+                    <p class="text-[#4d4635]">Desconexión del ruido para reconectar con el propósito eterno de su unión.</p>
+                  </div>
+                </div>
+                <div class="flex gap-6">
+                  <span class="[font-family:'Noto_Serif',serif] text-4xl italic text-[#7b5800]/40">03</span>
+                  <div>
+                    <h4 class="[font-family:'Noto_Serif',serif] mb-2 text-xl font-bold">Talleres de Forja</h4>
+                    <p class="text-[#4d4635]">Herramientas prácticas y espirituales para construir una herencia inquebrantable.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="bg-[#faf9f6] px-6 py-32 md:px-12">
+        <div class="mx-auto max-w-7xl">
+          <div class="mb-20 text-center">
+            <span class="mb-4 block [font-family:'Plus_Jakarta_Sans',sans-serif] text-xs font-medium uppercase tracking-[0.3em] text-[#7b5800]">Comunidad</span>
+            <h2 class="[font-family:'Noto_Serif',serif] text-4xl font-bold md:text-5xl">Para quién es GOLD Team</h2>
+          </div>
+
+          <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+            <div class="group overflow-hidden rounded-md bg-[#efeeeb] md:col-span-2">
+              <div class="relative min-h-[400px]">
+                <img
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuADuu-9P54lFJbzmobSoEV_SnrMx2uev5d_yZolv-L8JQnCqb68ISrseBgcNsnC5neWb4Y6jzb_TnId9s1K_TsKjooZqQ1UAKHAQmFTSAoPdn6Hz7DSMTe-xfv4lVOnmHxaBYswbDK5n2pPJWc8SeXlFt9MSiI2miGDpbYbWc_PvY-zIOhpPmdv0QSufPyX9AaQj78wboqasG19CqrZBztY_hXljfEbFBBLcdTVYqCjyFRVkt80HJiDMLzfsmij1FW00olGhxy7BKRf"
+                  alt="Parejas en crecimiento"
+                  class="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+                <div class="absolute inset-0 bg-gradient-to-t from-[#efeeeb] via-transparent to-transparent"></div>
+                <div class="absolute bottom-0 left-0 p-10">
+                  <h3 class="[font-family:'Noto_Serif',serif] mb-4 text-3xl font-bold">Parejas en Crecimiento</h3>
+                  <p class="max-w-md text-[#4d4635]">
+                    Para aquellos que entienden que el amor es un jardín que se cultiva diariamente con intención y luz.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="flex flex-col justify-between rounded-md bg-[#f4f3f1] p-10">
+              <div>
+                <span class="material-symbols-outlined mb-6 text-4xl text-[#7b5800]">auto_awesome</span>
+                <h3 class="[font-family:'Noto_Serif',serif] mb-4 text-2xl font-bold">Recién Casados</h3>
+                <p class="mb-8 leading-relaxed text-[#4d4635]">
+                  Establezcan cimientos sólidos desde el primer día, caminando bajo la guía de quienes ya han recorrido el sendero.
+                </p>
+              </div>
+              <div class="h-48 overflow-hidden rounded-md">
+                <img
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqgZHOjLyZs_A65iUis_smWqnLShbBIuXDM1zwDSsPZnfgrdBkwe1GNQ4RZe5vHeCnNGzWDoAPAFUT6tnWV92UqYPX5tfB41RTB06gUmL8b_hRkLPUCPmHZmmdW1MVkKpZFL-VqJQ7FAkY1LBG2SoX0WhVoZxKYwzhPXC4QlXGxzmMkoUcnx-kw2cJnd8Eq2o3c3TJS6gfmIwG2J3GYnE_zQ5Mkp7hDVqFrYyprumQvPWBr2q-VjzeswRa45f2bjTLf3qz2IyHoXgF"
+                  alt="Anillos"
+                  class="h-full w-full object-cover"
+                />
+              </div>
+            </div>
+
+            <div class="rounded-md bg-[#7b5800] p-10 text-white md:col-span-1">
+              <h3 class="[font-family:'Noto_Serif',serif] mb-4 text-2xl font-bold">Legado Familiar</h3>
+              <p class="leading-relaxed text-white/90">
+                No solo construimos para el hoy, sino para las generaciones que vendrán. Su matrimonio es el epicentro de un futuro radiante.
+              </p>
+              <div class="mt-8 flex items-center gap-4 border-t border-white/20 pt-8">
+                <div class="h-12 w-12 overflow-hidden rounded-full border-2 border-white/30">
+                  <img
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAUA-juorD_UdOt7BrowaVW48FSJnGn3hNQAsKnCer421gudznWPGYyVA-ZyKjmG-IXm7GyjEd5RmL8VxSLRviT8Zq_Fajy1kQejH78ydmSZX3HmcPlE10UzcQpfZZeRN9Ep5qooztpVL_WuAz3b3W109zqfo5F_kR_XUpktr6IlubTTPxQSzMxdIm9kldP6wuUlTSZSkk9-vmZnKUVGtd6ANPFZExGqmN4o-iuwh6SPufHSenTUxm93AcqqISsvRnTcM2p-gzuhe7Q"
+                    alt="Liderazgo Gold"
+                    class="h-full w-full object-cover"
+                  />
+                </div>
+                <span class="[font-family:'Plus_Jakarta_Sans',sans-serif] text-xs font-bold uppercase tracking-widest italic">Liderazgo Gold</span>
+              </div>
+            </div>
+
+            <div class="flex flex-col items-center gap-10 rounded-md bg-[#e9e8e5] p-10 md:col-span-2 md:flex-row">
+              <div class="flex-1">
+                <h3 class="[font-family:'Noto_Serif',serif] mb-4 text-2xl font-bold">Matrimonios Veteranos</h3>
+                <p class="text-[#4d4635]">
+                  La sabiduría no se guarda, se comparte. Únete para mentorear a nuevas generaciones mientras sigues nutriendo tu propio pacto.
+                </p>
+              </div>
+              <div class="h-40 w-full flex-shrink-0 overflow-hidden rounded-md md:w-64">
+                <img
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBi0tCqRJ8h0OuHnaVi_kJf51rxXCeC0vtyaDRP6s2mSGq8fLf4BZDQ7EXsjbeDsZKX5mJVXTbcI3hZw9M5O2oRYh4LjARK-vYJVBD4G9d7ZQR0tvryGErfNnSxLeeuY2NaG2aMjIHThno0K1AMJ5QKxuAnmaDL0_2ElAzPmtjQpJJXQ2QmNBJcxLx-wUq2trOvEBybXxRYsat-XSZW1F4X5x1wpa5u_62W4r3VwROwHx2Irx92idmueaod6sOBVtDe8A7SnounstDv"
+                  alt="Matrimonios veteranos"
+                  class="h-full w-full object-cover"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="relative overflow-hidden bg-[#f4f3f1] px-6 py-40 md:px-12">
+        <div class="absolute right-0 top-0 h-full w-1/3 bg-[#efeeeb]"></div>
+        <div class="relative z-10 mx-auto max-w-7xl">
+          <div class="grid grid-cols-1 items-center gap-20 md:grid-cols-2">
+            <div class="order-2 md:order-1">
+              <span class="material-symbols-outlined mb-10 text-6xl text-[#7b5800]/30">format_quote</span>
+              <p class="[font-family:'Noto_Serif',serif] mb-12 text-4xl italic leading-tight text-[#1a1c1a] md:text-5xl">
+                "En GOLD Team aprendimos que un matrimonio fuerte no es la ausencia de tormentas, sino la presencia de una luz que nunca se apaga."
+              </p>
+              <div class="flex items-center gap-4">
+                <div class="h-0.5 w-12 bg-[#7b5800]"></div>
+                <span class="[font-family:'Plus_Jakarta_Sans',sans-serif] text-xs font-bold uppercase tracking-[0.2em]">
+                  Familia Rodríguez • Miembros desde 2021
+                </span>
+              </div>
+            </div>
+
+            <div class="order-1 md:order-2">
+              <div class="group relative">
+                <div class="absolute inset-0 -z-10 translate-x-4 translate-y-4 rounded-md border border-[#7b5800]/20"></div>
+                <img
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwzMk3jZwO521WMmVt_VLV23PSf5TvZlSBYLR17mVeeXlNRNJysl_f6XEthSKRGhcT1p3BSzz0QpVR4KQcqj9lherz6Qn_b3HUESeE3ZSDE3KCtI-WvD6gWdg6rIoeeK9AxlTAWVqmZUC46HlSOxpGOBI1mWkSc35EnOF5xkw_6kI48q9MD67XZTx5hSLBaNbsnPnG0UQAJZn4jE-dDQ_nbnyUQEldslJjiphq13886JrN2MJaa2oGIlU_Nf_UucsQP11crCmJJYug"
+                  alt="Ambiente íntimo con velas"
+                  class="w-full rounded-md shadow-2xl transition-transform duration-500 group-hover:-translate-x-2 group-hover:-translate-y-2"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="cta-gold" class="bg-[#faf9f6] px-6 py-32 text-center md:px-12">
+        <div class="mx-auto max-w-3xl">
+          <h2 class="[font-family:'Noto_Serif',serif] mb-8 text-5xl font-bold">Comienza tu viaje hoy.</h2>
+          <p class="mb-12 text-lg leading-relaxed text-[#4d4635]">
+            Estamos listos para caminar junto a ustedes en la construcción de un matrimonio que brille con luz propia. El pacto es eterno, la jornada es gloriosa.
+          </p>
+          <div class="inline-flex flex-col items-center gap-4 sm:flex-row">
+            <a
+              href="https://wa.me/"
+              class="rounded-xl bg-gradient-to-br from-[#7b5800] to-[#e1aa36] px-12 py-5 [font-family:'Plus_Jakarta_Sans',sans-serif] text-sm font-bold uppercase tracking-widest text-white shadow-[0_20px_40px_-15px_rgba(123,88,0,0.3)] transition-all hover:shadow-[0_25px_50px_-12px_rgba(123,88,0,0.4)]"
+            >
+              Inscribirse ahora
+            </a>
+            <div class="[font-family:'Plus_Jakarta_Sans',sans-serif] px-8 py-5 text-sm font-bold uppercase tracking-widest text-[#4d4635]">
+              Próximo encuentro: Octubre 24
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="h-1 w-full bg-gradient-to-r from-transparent via-[#7b5800]/20 to-transparent"></div>
+    </main>
+
+    <Footer />
+  </div>
 </BaseLayout>

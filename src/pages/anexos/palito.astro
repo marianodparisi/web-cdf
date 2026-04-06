@@ -5,16 +5,33 @@ import Navbar from '../../components/Navbar.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="Anexo Palito | Iglesia Corazon de Fuego">
+<BaseLayout title="Anexo Palito | Iglesia Corazón de Fuego">
   <Navbar />
   <AnexoTemplate
     title="Palito"
-    subtitle="Plantilla inicial del anexo para ir sumando informacion de la sede."
-    intro="Base para presentar actividades, comunidad y avance de la obra en Palito."
-    locationText="Seccion placeholder para direccion y referencias de llegada."
-    meetingsText="Seccion placeholder para horarios de reuniones y encuentros."
-    teamText="Seccion placeholder para responsables y canales de comunicacion."
-    themeClass="bg-[#2a2214]"
+    subtitle="Un espacio donde la vida cotidiana y la esperanza se encuentran para caminar en comunidad."
+    heroImage="https://lh3.googleusercontent.com/aida-public/AB6AXuB908V11_FIakv8e3l1tLYBeF1KgdFnipoOlkTF4ZFjgUq8rK_M9YlMQOrMeAfguPkfGt5MsHrqbCw1mtQmyugn_5HdLrPOgNM8l9YD7ddMmngIK49UOQP0x-6GjzrrMs7nS7rgHHAzc9mj-gb6f8hy110_5sEeHyRw_Tbj0CWVduSOHLWF3A6a_NM_q_ox89Yc96BN3cTKwByl1tyTZPPqK75l55gpKUMl6AnBripRHTH-KzTd_TOrgv60fIBv9nJEivbWkIOURzA"
+    storyImage="https://lh3.googleusercontent.com/aida-public/AB6AXuBfUq8CHRcb6ZNX-xKFKh6QvOXKkK7fACA_SPrcINKk5w5yDa460qCtqP76drLxLO5XwI5olAiSXY7_9gPsyvpVI-2IVer2mQhyWUnZg3Tb66GTtnGwZWWXx-_RKV92tT8KmMvjA4KY8cA2FCgU7hlpmWKyOJuW_iFPuOuZjNIKs1DVGT8lRiVQG3jm5AtzZevAatB62YC4Il1SN8wkNpRGzyH0WFkOkPhMAHR5haFSHy51B9z6OY1VJuS3rvXJ5uYMaJbfUuF5vz4"
+    mapImage="https://lh3.googleusercontent.com/aida-public/AB6AXuAsgO3JzFqEm2fuG5XNZCAVrALSSkeb608la5Ox5YdcZa3Qn9vd0t9vSxIFT-IAIPnJK52i9f8mSEgdjMMpgdz8vuP-Lgsfz2PckhV1NlyafifkjajBatFyt6pnFTPWc4FEAzM1jS_b4ebyRJKwo0cigaLKWwxPcW2O6Np69O-8M4_JTQBJlXCO4ksi7GKXuiLzekxYaouzB9lKEyUr2JdQQaHvBr7tYKAbleXQtemnrQLLiXILdcw8JNp0NM5B4gpvFOFTl_I0re8"
+    storyTitle="Una obra que avanza con cercanía y perseverancia."
+    storyParagraphs={[
+      'Palito es una sede que sigue creciendo con pasos firmes, sosteniendo una vida comunitaria simple pero profundamente significativa. Aquí, cada encuentro fortalece vínculos y abre nuevas puertas para servir.',
+      'El anexo se fue consolidando como un espacio de referencia para quienes buscan una iglesia cercana, una palabra oportuna y una comunidad que acompaña con constancia en cada temporada.',
+    ]}
+    yearsValue="3+"
+    yearsLabel="Años avanzando"
+    localValue="100%"
+    localLabel="Presencia barrial"
+    locationTitle="Una casa abierta para Palito."
+    addressLines={['Pasaje Esperanza 87', 'Palito, Santa Fe']}
+    meetingsLines={['Sábados — 19:30 PM', 'Reuniones especiales durante el mes']}
+    ctaTitle="Un anexo que crece con su gente."
+    ctaText="Palito sigue afirmando su identidad con una comunidad servicial, hospitalaria y lista para recibir a quienes desean conectar con Dios y con otros."
+    primaryColor="#b87a3c"
+    primaryDarkColor="#96622d"
+    surfaceColor="#fbf7f1"
+    surfaceAltColor="#f4ece1"
+    outlineColor="#d6c1aa"
   />
   <Footer />
 </BaseLayout>

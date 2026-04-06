@@ -5,16 +5,33 @@ import Navbar from '../../components/Navbar.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="Anexo Santos Vega | Iglesia Corazon de Fuego">
+<BaseLayout title="Anexo Santos Vega | Iglesia Corazón de Fuego">
   <Navbar />
   <AnexoTemplate
     title="Santos Vega"
-    subtitle="Plantilla inicial del anexo para detallar su identidad y actividades."
-    intro="Espacio de presentacion para contar el trabajo pastoral y comunitario del anexo."
-    locationText="Seccion placeholder para direccion y ubicacion del anexo."
-    meetingsText="Seccion placeholder para cronograma semanal y eventos."
-    teamText="Seccion placeholder para equipo pastoral, lideres y contacto."
-    themeClass="bg-[#111827]"
+    subtitle="Un espacio de calma, fe y comunidad para seguir construyendo esperanza en la ciudad."
+    heroImage="https://lh3.googleusercontent.com/aida-public/AB6AXuB908V11_FIakv8e3l1tLYBeF1KgdFnipoOlkTF4ZFjgUq8rK_M9YlMQOrMeAfguPkfGt5MsHrqbCw1mtQmyugn_5HdLrPOgNM8l9YD7ddMmngIK49UOQP0x-6GjzrrMs7nS7rgHHAzc9mj-gb6f8hy110_5sEeHyRw_Tbj0CWVduSOHLWF3A6a_NM_q_ox89Yc96BN3cTKwByl1tyTZPPqK75l55gpKUMl6AnBripRHTH-KzTd_TOrgv60fIBv9nJEivbWkIOURzA"
+    storyImage="https://lh3.googleusercontent.com/aida-public/AB6AXuBfUq8CHRcb6ZNX-xKFKh6QvOXKkK7fACA_SPrcINKk5w5yDa460qCtqP76drLxLO5XwI5olAiSXY7_9gPsyvpVI-2IVer2mQhyWUnZg3Tb66GTtnGwZWWXx-_RKV92tT8KmMvjA4KY8cA2FCgU7hlpmWKyOJuW_iFPuOuZjNIKs1DVGT8lRiVQG3jm5AtzZevAatB62YC4Il1SN8wkNpRGzyH0WFkOkPhMAHR5haFSHy51B9z6OY1VJuS3rvXJ5uYMaJbfUuF5vz4"
+    mapImage="https://lh3.googleusercontent.com/aida-public/AB6AXuAsgO3JzFqEm2fuG5XNZCAVrALSSkeb608la5Ox5YdcZa3Qn9vd0t9vSxIFT-IAIPnJK52i9f8mSEgdjMMpgdz8vuP-Lgsfz2PckhV1NlyafifkjajBatFyt6pnFTPWc4FEAzM1jS_b4ebyRJKwo0cigaLKWwxPcW2O6Np69O-8M4_JTQBJlXCO4ksi7GKXuiLzekxYaouzB9lKEyUr2JdQQaHvBr7tYKAbleXQtemnrQLLiXILdcw8JNp0NM5B4gpvFOFTl_I0re8"
+    storyTitle="Esperanza firme para servir y acompañar."
+    storyParagraphs={[
+      'Santos Vega nació con el deseo de levantar una comunidad cercana, sensible y disponible para acompañar a cada persona en su caminar. Su crecimiento refleja constancia, servicio y una profunda vocación pastoral.',
+      'Cada reunión fortalece el sentido de pertenencia y abre nuevas oportunidades para compartir la fe en el barrio, creando una identidad serena pero firme que sigue impactando la vida de muchas familias.',
+    ]}
+    yearsValue="2+"
+    yearsLabel="Años sirviendo"
+    localValue="100%"
+    localLabel="Comunidad presente"
+    locationTitle="Un lugar de paz para Santos Vega."
+    addressLines={['Ruta de la Fe 56', 'Santos Vega, Santa Fe']}
+    meetingsLines={['Domingos — 18:30 PM', 'Encuentros comunitarios durante la semana']}
+    ctaTitle="Una comunidad que acompaña con calma y verdad."
+    ctaText="Santos Vega sigue afirmando una presencia cercana y confiable, siendo un espacio donde la fe se comparte con profundidad, ternura y visión."
+    primaryColor="#7d9aa0"
+    primaryDarkColor="#61797e"
+    surfaceColor="#f7faf9"
+    surfaceAltColor="#edf3f2"
+    outlineColor="#c4d1d0"
   />
   <Footer />
 </BaseLayout>

@@ -3,23 +3,69 @@ import { ministries } from '../data/ministries';
 
 interface Props {
   sticky?: boolean;
+  logoImageSrc?: string;
+  logoLabel?: string;
+  logoMode?: 'image' | 'annex';
+  logoPanelClass?: string;
+  logoRingClass?: string;
+  logoTextClass?: string;
+  logoAccentClass?: string;
 }
 
-const { sticky = true } = Astro.props as Props;
+const {
+  sticky = true,
+  logoImageSrc = '/logo.png',
+  logoLabel = 'Corazon de Fuego',
+  logoMode = 'image',
+  logoPanelClass = 'bg-transparent',
+  logoRingClass = 'border-primary/20',
+  logoTextClass = 'text-charcoal',
+  logoAccentClass = 'text-primary',
+} = Astro.props as Props;
 const navbarMinistries = ministries.filter((ministry) => ministry.slug !== 'evangelismo' && ministry.slug !== 'carcelario');
+const annexLinks = [
+  {
+    href: '/anexos/rojas',
+    label: 'Rojas',
+    badgeClass: 'text-[#c5a059]',
+  },
+  {
+    href: '/anexos/villa-minetti',
+    label: 'Villa Minetti',
+    badgeClass: 'text-[#8f6b4f]',
+  },
+  {
+    href: '/anexos/palito',
+    label: 'Palito',
+    badgeClass: 'text-[#b87a3c]',
+  },
+  {
+    href: '/anexos/santos-vega',
+    label: 'Santos Vega',
+    badgeClass: 'text-[#87a2a6]',
+  },
+];
 ---
 
 <nav data-animate="nav" class:list={['top-0 w-full z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100', sticky ? 'sticky' : 'relative']}>
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between items-center h-20">
       <div class="flex-shrink-0 flex items-center gap-3">
-        <a href="/" class="flex items-center gap-3">
-          <div class="bg-charcoal p-1.5 flex items-center justify-center h-12 w-12 rounded-full overflow-hidden">
-            <img src="/logowhite.png" alt="Logo Corazon de Fuego" class="h-full w-full object-contain" />
-          </div>
+        <a href="/" class="inline-flex items-center gap-3">
+          {
+            logoMode === 'annex' ? (
+              <div class={`rounded-[1.4rem] border px-4 py-3 shadow-sm ${logoPanelClass} ${logoRingClass}`}>
+                <p class={`text-[0.55rem] font-semibold uppercase tracking-[0.28em] ${logoAccentClass}`}>Corazón de Fuego</p>
+                <p class={`font-display text-2xl leading-none tracking-tight sm:text-[2rem] ${logoTextClass}`}>{logoLabel}</p>
+              </div>
+            ) : (
+              <img src={logoImageSrc} alt="Logo Corazon de Fuego" class="h-[5.5rem] w-auto object-contain sm:h-24" />
+            )
+          }
         </a>
       </div>
       <div class="hidden md:flex items-center space-x-8">
+        <a data-animate="nav-link" class="text-xs font-bold tracking-widest uppercase hover:text-primary transition-colors text-charcoal" href="/institucional/iete">Nosotros</a>
         <a data-animate="nav-link" class="text-xs font-bold tracking-widest uppercase hover:text-primary transition-colors text-charcoal" href="/misiones">Misiones</a>
         <a data-animate="nav-link" class="text-xs font-bold tracking-widest uppercase hover:text-primary transition-colors text-charcoal" href="/evangelismo">Evangelismo</a>
         <div class="relative group">
@@ -34,22 +80,19 @@ const navbarMinistries = ministries.filter((ministry) => ministry.slug !== 'evan
           </button>
           <div class="absolute left-1/2 top-full -translate-x-1/2 pt-2 w-60 opacity-0 translate-y-2 pointer-events-none transition-all duration-200 ease-out group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto">
             <div class="rounded-2xl border border-gray-200 bg-white shadow-xl p-2">
-            <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-[11px] font-bold tracking-widest uppercase text-charcoal hover:bg-gray-100 hover:text-primary transition-colors" href="/anexos/rojas">
-              <span class="material-symbols-outlined text-base">church</span>
-              <span>Rojas</span>
-            </a>
-            <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-[11px] font-bold tracking-widest uppercase text-charcoal hover:bg-gray-100 hover:text-primary transition-colors" href="/anexos/villa-minetti">
-              <span class="material-symbols-outlined text-base">location_city</span>
-              <span>Villa Minetti</span>
-            </a>
-            <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-[11px] font-bold tracking-widest uppercase text-charcoal hover:bg-gray-100 hover:text-primary transition-colors" href="/anexos/palito">
-              <span class="material-symbols-outlined text-base">place</span>
-              <span>Palito</span>
-            </a>
-            <a class="flex items-center gap-2 rounded-xl px-3 py-2 text-[11px] font-bold tracking-widest uppercase text-charcoal hover:bg-gray-100 hover:text-primary transition-colors" href="/anexos/santos-vega">
-              <span class="material-symbols-outlined text-base">public</span>
-              <span>Santos Vega</span>
-            </a>
+            {
+              annexLinks.map((annex) => (
+                <a
+                  class="flex items-center gap-3 rounded-xl px-3 py-2 text-[11px] font-bold tracking-widest uppercase text-charcoal hover:bg-gray-100 hover:text-primary transition-colors"
+                  href={annex.href}
+                >
+                  <span class={`inline-flex h-7 w-7 items-center justify-center ${annex.badgeClass}`}>
+                    <span class="material-symbols-outlined text-[0.95rem] leading-none">church</span>
+                  </span>
+                  <span>{annex.label}</span>
+                </a>
+              ))
+            }
             </div>
           </div>
         </div>
@@ -120,6 +163,7 @@ const navbarMinistries = ministries.filter((ministry) => ministry.slug !== 'evan
       class="md:hidden overflow-hidden max-h-0 opacity-0 pointer-events-none transition-all duration-300 ease-out"
     >
       <div class="flex flex-col gap-1 border-t border-gray-100 pt-4">
+        <a class="mobile-link px-2 py-2 text-xs font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors" href="/institucional/iete">Nosotros</a>
         <a class="mobile-link px-2 py-2 text-xs font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors" href="/misiones">Misiones</a>
         <a class="mobile-link px-2 py-2 text-xs font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors" href="/evangelismo">Evangelismo</a>
         <details id="mobile-anexos-menu" data-nav-accordion="mobile" class="group [&_summary::-webkit-details-marker]:hidden">
@@ -128,10 +172,19 @@ const navbarMinistries = ministries.filter((ministry) => ministry.slug !== 'evan
             <span class="material-symbols-outlined text-base transition-transform group-open:rotate-180">expand_more</span>
           </summary>
           <div class="pl-4 pb-1 flex flex-col gap-1">
-            <a class="mobile-link px-2 py-1.5 text-[11px] font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors inline-flex items-center gap-2" href="/anexos/rojas"><span class="material-symbols-outlined text-base">church</span><span>Rojas</span></a>
-            <a class="mobile-link px-2 py-1.5 text-[11px] font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors inline-flex items-center gap-2" href="/anexos/villa-minetti"><span class="material-symbols-outlined text-base">location_city</span><span>Villa Minetti</span></a>
-            <a class="mobile-link px-2 py-1.5 text-[11px] font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors inline-flex items-center gap-2" href="/anexos/palito"><span class="material-symbols-outlined text-base">place</span><span>Palito</span></a>
-            <a class="mobile-link px-2 py-1.5 text-[11px] font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors inline-flex items-center gap-2" href="/anexos/santos-vega"><span class="material-symbols-outlined text-base">public</span><span>Santos Vega</span></a>
+            {
+              annexLinks.map((annex) => (
+                <a
+                  class="mobile-link px-2 py-1.5 text-[11px] font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors inline-flex items-center gap-3"
+                  href={annex.href}
+                >
+                  <span class={`inline-flex h-7 w-7 items-center justify-center ${annex.badgeClass}`}>
+                    <span class="material-symbols-outlined text-[0.95rem] leading-none">church</span>
+                  </span>
+                  <span>{annex.label}</span>
+                </a>
+              ))
+            }
           </div>
         </details>
         <details id="mobile-institucional-menu" data-nav-accordion="mobile" class="group [&_summary::-webkit-details-marker]:hidden">

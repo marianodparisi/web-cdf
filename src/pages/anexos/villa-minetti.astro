@@ -5,16 +5,33 @@ import Navbar from '../../components/Navbar.astro';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 ---
 
-<BaseLayout title="Anexo Villa Minetti | Iglesia Corazon de Fuego">
+<BaseLayout title="Anexo Villa Minetti | Iglesia Corazón de Fuego">
   <Navbar />
   <AnexoTemplate
     title="Villa Minetti"
-    subtitle="Plantilla inicial del anexo para ampliar con contenido propio."
-    intro="Espacio preparado para presentar la vision y el trabajo local del anexo."
-    locationText="Seccion placeholder para direccion, mapa y puntos de referencia."
-    meetingsText="Seccion placeholder para reuniones, grupos y actividades."
-    teamText="Seccion placeholder para equipo local y formas de contacto."
-    themeClass="bg-[#1f2937]"
+    subtitle="Una comunidad cercana que abraza la fe, la amistad y el servicio en cada encuentro."
+    heroImage="https://lh3.googleusercontent.com/aida-public/AB6AXuB908V11_FIakv8e3l1tLYBeF1KgdFnipoOlkTF4ZFjgUq8rK_M9YlMQOrMeAfguPkfGt5MsHrqbCw1mtQmyugn_5HdLrPOgNM8l9YD7ddMmngIK49UOQP0x-6GjzrrMs7nS7rgHHAzc9mj-gb6f8hy110_5sEeHyRw_Tbj0CWVduSOHLWF3A6a_NM_q_ox89Yc96BN3cTKwByl1tyTZPPqK75l55gpKUMl6AnBripRHTH-KzTd_TOrgv60fIBv9nJEivbWkIOURzA"
+    storyImage="https://lh3.googleusercontent.com/aida-public/AB6AXuBfUq8CHRcb6ZNX-xKFKh6QvOXKkK7fACA_SPrcINKk5w5yDa460qCtqP76drLxLO5XwI5olAiSXY7_9gPsyvpVI-2IVer2mQhyWUnZg3Tb66GTtnGwZWWXx-_RKV92tT8KmMvjA4KY8cA2FCgU7hlpmWKyOJuW_iFPuOuZjNIKs1DVGT8lRiVQG3jm5AtzZevAatB62YC4Il1SN8wkNpRGzyH0WFkOkPhMAHR5haFSHy51B9z6OY1VJuS3rvXJ5uYMaJbfUuF5vz4"
+    mapImage="https://lh3.googleusercontent.com/aida-public/AB6AXuAsgO3JzFqEm2fuG5XNZCAVrALSSkeb608la5Ox5YdcZa3Qn9vd0t9vSxIFT-IAIPnJK52i9f8mSEgdjMMpgdz8vuP-Lgsfz2PckhV1NlyafifkjajBatFyt6pnFTPWc4FEAzM1jS_b4ebyRJKwo0cigaLKWwxPcW2O6Np69O-8M4_JTQBJlXCO4ksi7GKXuiLzekxYaouzB9lKEyUr2JdQQaHvBr7tYKAbleXQtemnrQLLiXILdcw8JNp0NM5B4gpvFOFTl_I0re8"
+    storyTitle="Una comunidad que crece con constancia y ternura."
+    storyParagraphs={[
+      'En Villa Minetti venimos construyendo un espacio donde la fe se vive de forma sencilla, cercana y real. Cada reunión abre la puerta a nuevas amistades, nuevas historias y nuevas oportunidades para acompañarnos.',
+      'Con el paso del tiempo, este anexo se convirtió en un punto de referencia para familias, jóvenes y vecinos que buscan una comunidad con raíces profundas, visión clara y una presencia amorosa en la ciudad.',
+    ]}
+    yearsValue="4+"
+    yearsLabel="Años sembrando"
+    localValue="100%"
+    localLabel="Compromiso local"
+    locationTitle="Un punto de encuentro para Villa Minetti."
+    addressLines={['Av. del Encuentro 245', 'Villa Minetti, Santa Fe']}
+    meetingsLines={['Domingos — 10:30 AM', 'Miércoles — 20:00 PM']}
+    ctaTitle="Fe sencilla, comunidad real."
+    ctaText="Villa Minetti sigue creciendo con una identidad cálida y servicial, ofreciendo un espacio donde todos pueden sentirse parte desde el primer día."
+    primaryColor="#8f6b4f"
+    primaryDarkColor="#75563f"
+    surfaceColor="#faf8f4"
+    surfaceAltColor="#f3eee6"
+    outlineColor="#cbb9ab"
   />
   <Footer />
 </BaseLayout>
