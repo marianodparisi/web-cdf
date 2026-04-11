@@ -15,7 +15,7 @@
 
 .audio-wave span {
   display: block;
-  width: 4px;
+  width: 3px;
   background: #C5A059;
   animation: audio-wave 1s infinite ease-in-out alternate;
   border-radius: 3px;
@@ -23,22 +23,22 @@
 
 .audio-wave span:nth-child(2) {
   animation-delay: 0.2s;
-  height: 16px;
+  height: 12px;
 }
 
 .audio-wave span:nth-child(3) {
   animation-delay: 0.4s;
-  height: 24px;
+  height: 18px;
 }
 
 .audio-wave span:nth-child(4) {
   animation-delay: 0.6s;
-  height: 18px;
+  height: 14px;
 }
 
 .audio-wave span:nth-child(1),
 .audio-wave span:nth-child(5) {
-  height: 8px;
+  height: 6px;
 }
 
 @keyframes audio-wave {
@@ -47,6 +47,6 @@
   }
 
   100% {
-    transform: scaleY(2);
+    transform: scaleY(1.45);
   }
 }

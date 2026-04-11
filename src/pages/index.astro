@@ -3,26 +3,56 @@ import Footer from '../components/Footer.astro';
 import Hero from '../components/Hero.astro';
 import Navbar from '../components/Navbar.astro';
 import { devotionalPosts } from '../data/devotionals';
-import { missions } from '../data/missions';
 import { ministries } from '../data/ministries';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const logoSlugs = new Set(['gold', 'kids', 'arde']);
 const currentDevotionalPost = devotionalPosts[0];
 const exodoYoutubeUrl = 'https://www.youtube.com/playlist?list=PLbq3XgHcmjEtwhYdGCqO8PqbFY7EMFI5p';
-const featuredMissions = [...missions]
-  .sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime())
-  .slice(0, 2);
+const getYouTubeEmbedUrl = (videoUrl?: string) => {
+  if (!videoUrl) return null;
+  try {
+    const url = new URL(videoUrl);
+    const idFromPath = url.pathname.startsWith('/live/') ? url.pathname.split('/live/')[1] : null;
+    const idFromQuery = url.searchParams.get('v');
+    const videoId = idFromQuery || idFromPath;
+    return videoId ? `https://www.youtube.com/embed/${videoId}` : videoUrl;
+  } catch {
+    return videoUrl;
+  }
+};
+const currentDevotionalEmbedUrl = getYouTubeEmbedUrl(currentDevotionalPost?.videoUrl);
 ---
 
 <BaseLayout>
   <Navbar />
   <Hero />
 
+  <section data-animate="reveal" class="bg-white py-16 md:py-24">
+    <div class="mx-auto max-w-[90rem] px-5 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 gap-8 md:grid-cols-[1.05fr_0.95fr] md:items-center md:gap-14">
+        <div>
+          <p class="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-primary">Quiénes somos</p>
+          <h2 class="font-display text-4xl font-semibold leading-[1.05] tracking-tight text-charcoal sm:text-5xl lg:text-6xl">
+            Existimos para ministrar al Señor y encender una generación.
+          </h2>
+        </div>
+        <div>
+          <p class="max-w-2xl text-base leading-relaxed text-gray-600 sm:text-lg">
+            Iglesia Corazón de Fuego es una casa de adoración, oración y formación. Nos reunimos para darle a Dios gratitud y alabanza, afirmar quién es Él, interceder por lo que desea hacer y caminar como familia en el propósito que nos confió.
+          </p>
+          <a class="mt-8 inline-flex items-center gap-2 border-b border-charcoal pb-1 text-xs font-bold uppercase tracking-widest text-charcoal transition-colors hover:border-primary hover:text-primary" href="/nosotros">
+            Conocé más de nosotros
+            <span class="material-symbols-outlined text-sm">arrow_outward</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section data-animate="reveal" class="py-14 md:py-16 bg-white text-white">
     <div class="mx-auto max-w-[90rem] px-5 sm:px-6 lg:px-8">
       <div class="mb-6 md:mb-8">
-        <p class="text-primary text-xs font-bold tracking-[0.22em] uppercase mb-2">Predica destacada</p>
         <h2 data-series-heading class="font-display text-charcoal text-3xl sm:text-4xl font-semibold tracking-tight">Serie actual</h2>
       </div>
       <div class="relative" data-series-carousel>
@@ -78,7 +108,14 @@ const featuredMissions = [...missions]
                 rel="noopener noreferrer"
                 class="inline-flex items-center gap-3 rounded-full border border-white/20 bg-black/35 px-5 py-3 text-sm font-semibold uppercase tracking-[0.22em] text-white backdrop-blur-sm transition hover:border-white/40 hover:bg-black/50"
               >
-                <span class="flex h-9 w-9 items-center justify-center rounded-full bg-[#ff0000] text-base leading-none text-white">▶</span>
+                <span class="flex h-9 w-9 items-center justify-center rounded-full bg-[#ff0000] text-white">
+                  <svg class="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
+                    <path
+                      fill="currentColor"
+                      d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.8ZM9.6 15.6V8.4L15.8 12l-6.2 3.6Z"
+                    />
+                  </svg>
+                </span>
                 Ver en YouTube
               </a>
             </div>
@@ -122,7 +159,14 @@ const featuredMissions = [...missions]
                     class="h-full w-full object-cover object-center opacity-90 transition duration-500 group-hover:scale-105 group-hover:opacity-100"
                   />
                   <span class="absolute inset-0 flex items-center justify-center">
-                    <span class="flex h-12 w-12 items-center justify-center rounded-full bg-black/60 text-white text-xl">▶</span>
+                    <span class="flex h-12 w-12 items-center justify-center rounded-full bg-[#ff0000] text-white">
+                      <svg class="h-5 w-5" viewBox="0 0 24 24" aria-hidden="true">
+                        <path
+                          fill="currentColor"
+                          d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31.4 31.4 0 0 0 0 12a31.4 31.4 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31.4 31.4 0 0 0 24 12a31.4 31.4 0 0 0-.5-5.8ZM9.6 15.6V8.4L15.8 12l-6.2 3.6Z"
+                        />
+                      </svg>
+                    </span>
                   </span>
                 </a>
               </div>
@@ -183,51 +227,44 @@ const featuredMissions = [...missions]
           <h2 class="font-display text-3xl sm:text-4xl text-charcoal mb-2">Anuncio / Novedades</h2>
           <p class="text-gray-500 max-w-md">Entérate de lo que está sucediendo en nuestra casa.</p>
         </div>
-        <div class="hidden md:flex gap-2">
-          <a class="text-xs font-bold uppercase tracking-widest text-charcoal border-b border-charcoal pb-1 hover:text-primary hover:border-primary transition-colors" href="/calendario">Ver todo el calendario</a>
-        </div>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8">
         <div data-animate="card" class="md:col-span-2 relative w-full h-[360px] sm:h-[420px] md:h-[450px] rounded-2xl md:rounded-3xl overflow-hidden shadow-lg group">
-          <img alt="Special Event" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqt-aObF-AnhXTv7XjqD6KvggMW2EEui1Ik8I-i2GiKoQ2CNr7_P24W4Fe3akxTSVQGxzef6d3GPCRk5oMeZuCmQDrlNPANGJ7kadC3yLNUl4aMZtQPG-YF1Eb0iKlypaG1eyUxsF_D8mWS6b2rU6t_aRBrCjI2qD39sRnNVIMkvNa8CbhLbIR4fssR_0uUHKuXkWfx2ykECnf_eoBeOdTr5OaP1rh-8itwkKCLbr5igTePke3IGdMKa-GghaL74dBJInwc_jW1OU" />
+          <img alt="Anuncio GOLD" class="absolute left-0 top-[-0.5rem] w-full h-auto max-w-none transition-transform duration-700 group-hover:scale-[1.02]" src="/goldanuncio.jpg" />
           <div class="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-charcoal/20 to-transparent flex flex-col justify-end p-6 sm:p-8 md:p-10">
             <span class="bg-primary text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider w-fit mb-3">Destacado</span>
             <h3 class="font-display text-2xl sm:text-3xl md:text-4xl text-white leading-tight mb-2">
-              Congreso "Renovando el Entendimiento"
+              Encuentro GOLD
             </h3>
             <p class="text-gray-200 text-sm md:text-base max-w-lg mb-4 md:mb-6 font-light">
-              Tres días de conferencias, adoración y transformación con invitados especiales.
+              Un tiempo especial para compartir palabra, compañerismo y crecimiento.
             </p>
             <div>
-              <a class="inline-flex items-center gap-2 text-white border-b border-white/50 pb-1 text-sm font-bold tracking-wider hover:border-primary hover:text-primary transition-colors" href="#">
-                INSCRÍBETE AHORA
+              <a class="inline-flex items-center gap-2 text-white border-b border-white/50 pb-1 text-sm font-bold tracking-wider hover:border-primary hover:text-primary transition-colors" href="/ministerios/gold">
+                Ver más
               </a>
             </div>
           </div>
         </div>
         <div class="flex flex-col gap-5 md:gap-8 h-auto md:h-[450px]">
-          <div data-animate="card" class="relative min-h-[205px] md:min-h-0 flex-1 rounded-2xl md:rounded-3xl overflow-hidden shadow-md group bg-light-gray">
-            <div class="absolute inset-0 p-6 flex flex-col justify-center items-start z-10">
-              <span class="text-xs font-bold text-primary uppercase tracking-widest mb-2">Miércoles</span>
-              <h3 class="font-display text-2xl text-charcoal mb-2">Estudio Bíblico</h3>
-              <p class="text-gray-600 text-sm mb-4">Profundizando en las escrituras cada semana.</p>
-              <a class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-charcoal hover:bg-charcoal hover:text-white transition-colors shadow-sm" href="#">
-                <span class="material-symbols-outlined text-sm">arrow_outward</span>
-              </a>
+          <a data-animate="card" href="/ministerios/arde" class="relative min-h-[205px] md:min-h-0 flex-1 rounded-2xl md:rounded-3xl overflow-hidden shadow-md group bg-charcoal">
+            <img alt="Campamento ARDE" class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" src="/campaarde.jpg" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+            <div class="absolute inset-x-0 bottom-0 p-5 sm:p-6 z-10">
+              <span class="inline-flex rounded-full bg-primary px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-charcoal font-semibold mb-3">Campa ARDE</span>
+              <h3 class="font-display text-2xl text-white mb-2">Campamento ARDE</h3>
+              <p class="text-white/80 text-sm">Una experiencia para adolescentes con amigos, palabra y dias que no se olvidan facil.</p>
             </div>
-            <img alt="Bible Study" class="absolute right-0 bottom-0 w-2/3 h-2/3 object-cover opacity-20 group-hover:opacity-30 transition-opacity" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCt1G7t_8Q4dc8IolCJZLjvo0te82Mu7rReT0tKYkBzYGZqtFaWcZuAR3l9SGZ4EM_w6bT5QHkDDdqgBHPszl0rNahTy4tGrMKt4NJsqCdWBH7eIl7IZ9M-qfNGuYA7kZdrFcD5Tfv1NOf7rZI8Uj_wVCtUY8tzIGArMZi5zALlFBK3le6XB0kaQ00Ujq40ujoeS1S9J_mCjv2IumvVXSv4avRPdoj2B6MXNKkTWa4eXjFoEu-5tDZEOu06C2DWSMucH6XnAKSXxRc" />
-          </div>
-          <div data-animate="card" class="relative min-h-[205px] md:min-h-0 flex-1 rounded-2xl md:rounded-3xl overflow-hidden shadow-md group bg-charcoal text-white">
-            <div class="absolute inset-0 p-6 flex flex-col justify-center items-start z-10">
-              <span class="text-xs font-bold text-primary uppercase tracking-widest mb-2">Viernes</span>
-              <h3 class="font-display text-2xl text-white mb-2">Noche de Adoración</h3>
-              <p class="text-gray-300 text-sm mb-4">Un tiempo íntimo para conectar con Dios.</p>
-              <a class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white hover:bg-primary transition-colors backdrop-blur-sm" href="#">
-                <span class="material-symbols-outlined text-sm">arrow_outward</span>
-              </a>
+          </a>
+          <a data-animate="card" href="/ministerios/kids" class="relative min-h-[205px] md:min-h-0 flex-1 rounded-2xl md:rounded-3xl overflow-hidden shadow-md group bg-charcoal text-white">
+            <img alt="Campa Kids" class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" src="/campakids.jpg" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent"></div>
+            <div class="absolute inset-x-0 bottom-0 p-5 sm:p-6 z-10">
+              <span class="inline-flex rounded-full bg-primary px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-charcoal font-semibold mb-3">Campa Kids</span>
+              <h3 class="font-display text-2xl text-white mb-2">Campamento Kids</h3>
+              <p class="text-white/80 text-sm">Una aventura para que los chicos aprendan, jueguen y vivan la fe con alegria.</p>
             </div>
-            <img alt="Worship" class="absolute right-0 top-0 w-full h-full object-cover opacity-30 mix-blend-overlay" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHZ33zm0Bs_C_OrpCQi9xRm6PBscs-Wxps3Cv0_KQGUbVgy52G5MRZgfOhN4zgt44-ml47ou4i38rhzMxJ9EM1UWlT3BkNdxAC6Mstlc1c5U51Vd1L7SuLtCeZyZL4jjoHhT2OpAA-Ag0I_gEq3OKNwDfPFf7HJ0nOx9rfFnZ06j1HL1Os7abB6JPzmwRsTbpsaDAA1G7u-hbg2mkmStCVpQ4rps5UcsaOszL1yQrbw70xavRVpTiqSajlJ8W5EI7zQaufTPS5mYI" />
-          </div>
+          </a>
         </div>
       </div>
     </div>
@@ -246,119 +283,45 @@ const featuredMissions = [...missions]
         </a>
       </div>
       {currentDevotionalPost && (
-        <article data-animate="card" class="rounded-3xl overflow-hidden border border-gray-200 bg-white">
-          <a href="/devocional" class="group block">
-            <div class="relative h-56 md:h-72">
-              <img
-                src={currentDevotionalPost.image}
-                alt={currentDevotionalPost.title}
-                class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-              <div class="absolute left-4 bottom-4 flex items-center gap-2">
-                <span class="inline-flex rounded-full bg-primary px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-charcoal font-semibold">Actual</span>
-                {currentDevotionalPost.videoUrl && (
-                  <span class="inline-flex rounded-full bg-white/90 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-charcoal font-semibold">Video</span>
-                )}
-              </div>
+        <article data-animate="card" class="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-6 md:gap-8 items-stretch rounded-3xl border border-gray-200 bg-gray-50 p-5 sm:p-6 md:p-8">
+          <div class="flex flex-col justify-center">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="inline-flex rounded-full bg-gray-100 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-charcoal font-semibold">{currentDevotionalPost.weekLabel}</span>
+              <span class="inline-flex rounded-full bg-primary px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-charcoal font-semibold">Actual</span>
             </div>
-          </a>
-          <div class="p-5 md:p-6">
-            <p class="text-[11px] uppercase tracking-[0.18em] text-gray-500">{currentDevotionalPost.weekLabel}</p>
-            <h3 class="font-display text-2xl md:text-3xl text-charcoal mt-2">{currentDevotionalPost.title}</h3>
-            <p class="text-gray-600 text-sm mt-3 leading-relaxed">{currentDevotionalPost.excerpt}</p>
-            <a href="/devocional" class="mt-5 inline-flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-charcoal hover:text-primary transition-colors">
-              Ver video y devocional escrito
+            <h3 class="font-display text-3xl md:text-4xl text-charcoal mt-4">{currentDevotionalPost.title}</h3>
+            <p class="text-gray-600 text-sm sm:text-base mt-4 leading-relaxed">{currentDevotionalPost.excerpt}</p>
+            <a href="/devocional" class="mt-6 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-charcoal hover:text-primary transition-colors">
+              Ir al devocional
               <span class="material-symbols-outlined text-sm">arrow_outward</span>
             </a>
+          </div>
+
+          <div class="relative overflow-hidden rounded-2xl bg-charcoal shadow-sm lg:max-h-[320px]">
+            {currentDevotionalEmbedUrl ? (
+              <iframe
+                class="min-h-[230px] w-full aspect-video lg:h-full lg:aspect-auto"
+                src={currentDevotionalEmbedUrl}
+                title={currentDevotionalPost.title}
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+              ></iframe>
+            ) : (
+              <a href="/devocional" class="group block h-full min-h-[210px]">
+                <img
+                  src={currentDevotionalPost.image}
+                  alt={currentDevotionalPost.title}
+                  class="h-full w-full object-cover translate-y-2 scale-105 transition-transform duration-500 group-hover:translate-y-2 group-hover:scale-110"
+                />
+              </a>
+            )}
           </div>
         </article>
       )}
       <div class="md:hidden mt-6">
         <a class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-charcoal border-b border-charcoal pb-1 hover:text-primary hover:border-primary transition-colors" href="/devocional">
           Ver devocional
-          <span class="material-symbols-outlined text-sm">arrow_outward</span>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <section data-animate="reveal" class="py-14 md:py-16 bg-white" id="institucional">
-    <div class="mx-auto max-w-[90rem] px-5 sm:px-6 lg:px-8">
-      <div class="flex flex-col md:flex-row justify-between items-end mb-8 md:mb-10">
-        <div>
-          <h2 class="font-display text-3xl sm:text-4xl text-charcoal mb-2">Institucional</h2>
-          <p class="text-gray-500 max-w-2xl">Espacio para presentar la formacion, vision y procesos de crecimiento de la casa.</p>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
-        <a data-animate="card" href="/institucional/iete" class="group rounded-3xl border border-gray-200 bg-gray-50 p-6 sm:p-8 hover:border-primary/60 transition-colors">
-          <p class="text-xs font-bold tracking-[0.2em] uppercase text-primary mb-3">Institucional</p>
-          <h3 class="font-display text-3xl text-charcoal mb-3">IETE</h3>
-          <p class="text-gray-600 text-sm leading-relaxed mb-6">
-            Este bloque queda listo para sumar descripcion del instituto, niveles, modalidad, requisitos y calendario.
-          </p>
-          <div class="space-y-3 text-xs uppercase tracking-[0.16em] text-gray-500 font-semibold">
-            <p>Programa academico</p>
-            <p>Inscripciones</p>
-            <p>Equipo docente</p>
-          </div>
-          <span class="mt-5 inline-flex text-xs uppercase tracking-[0.18em] text-charcoal group-hover:text-primary transition-colors">Ver seccion</span>
-        </a>
-
-        <a data-animate="card" href="/institucional/discipulados" class="group rounded-3xl border border-gray-200 bg-charcoal p-6 sm:p-8 text-white hover:border-primary/60 transition-colors">
-          <p class="text-xs font-bold tracking-[0.2em] uppercase text-primary mb-3">Institucional</p>
-          <h3 class="font-display text-3xl mb-3">Discipulados</h3>
-          <p class="text-white/80 text-sm leading-relaxed mb-6">
-            Seccion maquetada para agregar etapas de discipulado, mentoreo, seguimiento y materiales de acompanamiento.
-          </p>
-          <div class="space-y-3 text-xs uppercase tracking-[0.16em] text-white/60 font-semibold">
-            <p>Camino de crecimiento</p>
-            <p>Grupos y lideres</p>
-            <p>Recursos semanales</p>
-          </div>
-          <span class="mt-5 inline-flex text-xs uppercase tracking-[0.18em] text-white/90 group-hover:text-primary transition-colors">Ver seccion</span>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <section data-animate="reveal" class="py-14 md:py-16 bg-gray-50" id="misiones">
-    <div class="mx-auto max-w-[90rem] px-5 sm:px-6 lg:px-8">
-      <div class="flex flex-col md:flex-row justify-between items-end mb-8 md:mb-10">
-        <div>
-          <h2 class="font-display text-3xl sm:text-4xl text-charcoal mb-2">Misiones</h2>
-          <p class="text-gray-500 max-w-2xl">Nuestras salidas misioneras activas y recientes.</p>
-        </div>
-        <a class="hidden md:inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-charcoal border-b border-charcoal pb-1 hover:text-primary hover:border-primary transition-colors" href="/misiones">
-          Ver todas
-          <span class="material-symbols-outlined text-sm">arrow_outward</span>
-        </a>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
-        {
-          featuredMissions.map((mission) => (
-            <article data-animate="card" class="rounded-3xl overflow-hidden border border-gray-200 bg-white">
-              <div class="relative h-52 sm:h-56">
-                <img src={mission.image} alt={`Mision ${mission.place}`} class="h-full w-full object-cover" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                <div class="absolute left-4 bottom-4 flex items-center gap-2">
-                  <span class="inline-flex rounded-full bg-primary px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-charcoal font-semibold">{mission.stage}</span>
-                  <span class="inline-flex rounded-full bg-white/90 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-charcoal font-semibold">{mission.country}</span>
-                </div>
-              </div>
-              <div class="p-5">
-                <h3 class="font-display text-2xl text-charcoal">{mission.place}</h3>
-                <p class="text-gray-600 text-sm mt-2 leading-relaxed">{mission.summary}</p>
-              </div>
-            </article>
-          ))
-        }
-      </div>
-      <div class="md:hidden mt-6">
-        <a class="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-charcoal border-b border-charcoal pb-1 hover:text-primary hover:border-primary transition-colors" href="/misiones">
-          Ver todas
           <span class="material-symbols-outlined text-sm">arrow_outward</span>
         </a>
       </div>
@@ -412,7 +375,7 @@ const featuredMissions = [...missions]
             <h2 class="font-display text-2xl sm:text-3xl md:text-4xl text-white mb-2">Radio Corazón</h2>
             <div class="flex items-center gap-3">
               <span class="text-gray-400 text-xs tracking-widest uppercase">La frecuencia del cielo</span>
-              <div class="flex items-end gap-1 h-4 audio-wave">
+              <div class="flex items-end gap-[3px] h-3 audio-wave">
                 <span></span><span></span><span></span><span></span><span></span>
               </div>
             </div>
@@ -421,9 +384,6 @@ const featuredMissions = [...missions]
         <div class="mt-6 md:mt-0 relative z-10 flex flex-col md:flex-row items-center gap-4 md:gap-6">
           <span class="px-4 py-1.5 bg-primary text-charcoal text-xs font-bold uppercase tracking-wider rounded-full">Próximamente</span>
           <p class="text-white/60 text-sm font-light italic text-center md:text-right">"24/7 conectados contigo."</p>
-          <a class="inline-flex items-center justify-center px-5 py-2.5 border border-white/30 rounded-full text-white text-xs font-bold tracking-widest uppercase transition-all hover:border-primary hover:text-primary" href="/contact">
-            Ir a contacto
-          </a>
         </div>
       </div>
     </div>

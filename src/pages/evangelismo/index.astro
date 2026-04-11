@@ -8,32 +8,80 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 <BaseLayout title="Evangelismo | Iglesia Corazon de Fuego">
   <Navbar />
 
-  <section data-animate="reveal" class="pt-14 md:pt-20 pb-8 md:pb-10 bg-white">
+  <section data-animate="reveal" class="pt-16 md:pt-24 pb-12 md:pb-16 bg-white">
     <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
-      <span class="text-primary text-xs uppercase tracking-[0.22em] font-semibold">Seccion evangelismo</span>
-      <h1 class="font-display text-4xl sm:text-5xl text-charcoal mt-2">Evangelismo</h1>
-      <p class="text-gray-500 mt-4 max-w-2xl">
-        Servimos y anunciamos el Evangelio en carceles, hospitales, calles y plazas.
-      </p>
+      <div class="grid grid-cols-1 gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-end">
+        <div>
+          <span class="text-primary text-xs uppercase tracking-[0.22em] font-semibold">Evangelismo</span>
+          <h1 class="font-display text-5xl sm:text-6xl lg:text-7xl text-charcoal mt-3 leading-[1.02]">
+            Anunciar a Jesús donde la gente está.
+          </h1>
+        </div>
+        <div class="space-y-5 text-base leading-relaxed text-gray-600 sm:text-lg">
+          <p>
+            Evangelismo es la respuesta de la iglesia al mandato de compartir las buenas noticias de salvación con amor, claridad y cercanía.
+          </p>
+          <p>
+            Salimos a cárceles, hospitales, plazas y espacios abiertos para orar, acompañar, servir y presentar a Cristo en medio de realidades concretas.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section data-animate="reveal" class="pb-10 md:pb-14 bg-white">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
+        <article data-animate="card" class="rounded-3xl border border-gray-200 bg-gray-50 p-6 sm:p-8">
+          <p class="text-primary text-xs uppercase tracking-[0.2em] font-semibold">Propósito</p>
+          <h2 class="font-display text-3xl text-charcoal mt-4">Llevar esperanza real.</h2>
+          <p class="text-gray-600 text-sm mt-4 leading-relaxed">
+            Creemos que el evangelio no se guarda puertas adentro. La iglesia sale para anunciar salvación, consuelo y restauración.
+          </p>
+        </article>
+        <article data-animate="card" class="rounded-3xl border border-gray-200 bg-white p-6 sm:p-8">
+          <p class="text-primary text-xs uppercase tracking-[0.2em] font-semibold">Presencia</p>
+          <h2 class="font-display text-3xl text-charcoal mt-4">Estar cerca de las personas.</h2>
+          <p class="text-gray-600 text-sm mt-4 leading-relaxed">
+            Cada frente busca escuchar, orar y acompañar con sensibilidad, entendiendo que muchas veces una presencia fiel abre camino al mensaje.
+          </p>
+        </article>
+        <article data-animate="card" class="rounded-3xl border border-gray-200 bg-gray-50 p-6 sm:p-8">
+          <p class="text-primary text-xs uppercase tracking-[0.2em] font-semibold">Servicio</p>
+          <h2 class="font-display text-3xl text-charcoal mt-4">Predicar también con acciones.</h2>
+          <p class="text-gray-600 text-sm mt-4 leading-relaxed">
+            Evangelizamos sirviendo. Cada oración, visita, actividad y conversación apunta a revelar el amor de Jesús.
+          </p>
+        </article>
+      </div>
     </div>
   </section>
 
   <section data-animate="reveal" class="pb-14 md:pb-16 bg-white">
     <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+      <div class="mb-8 md:mb-10">
+        <span class="text-primary text-xs uppercase tracking-[0.22em] font-semibold">Frentes</span>
+        <h2 class="font-display text-3xl sm:text-4xl text-charcoal mt-2">Dónde servimos</h2>
+      </div>
+      <div class="divide-y divide-gray-200 border-y border-gray-200">
         {
           evangelismFronts.map((front) => (
-            <article data-animate="card" class="group rounded-3xl overflow-hidden border border-gray-200 bg-gray-50 hover:border-primary/60 transition-colors">
-              <div class="relative h-56 sm:h-64">
-                <img src={front.image} alt={`Evangelismo ${front.title}`} class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                <div class="absolute left-4 bottom-4">
-                  <span class="inline-flex rounded-full bg-primary px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-charcoal font-semibold">{front.subtitle}</span>
-                </div>
+            <article data-animate="card" class="grid grid-cols-1 gap-6 py-8 md:grid-cols-[0.75fr_1.25fr] md:gap-10 md:py-10">
+              <div>
+                <span class="inline-flex rounded-full bg-primary px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-charcoal font-semibold">{front.subtitle}</span>
+                <h3 class="font-display text-4xl text-charcoal mt-4">{front.title}</h3>
               </div>
-              <div class="p-5">
-                <h2 class="font-display text-3xl text-charcoal">{front.title}</h2>
-                <p class="text-gray-600 text-sm mt-2 leading-relaxed">{front.description}</p>
+              <div class="grid grid-cols-1 gap-5 sm:grid-cols-[0.85fr_1.15fr] sm:items-start">
+                <div class="overflow-hidden rounded-2xl">
+                  <img src={front.image} alt={`Evangelismo ${front.title}`} class="h-56 w-full object-cover sm:h-64" />
+                </div>
+                <div>
+                  <p class="text-gray-600 text-base leading-relaxed">{front.description}</p>
+                  <p class="mt-4 text-sm leading-relaxed text-gray-600">
+                    Este frente nos permite acercarnos con una palabra de fe, oración y acompañamiento, respondiendo a necesidades concretas con el amor de Cristo.
+                  </p>
+                  <p class="mt-5 text-xs uppercase tracking-[0.18em] text-charcoal">{front.subtitle}</p>
+                </div>
               </div>
             </article>
           ))

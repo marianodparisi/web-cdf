@@ -15,37 +15,86 @@ const dateFormatter = new Intl.DateTimeFormat('es-AR', {
 <BaseLayout title="Misiones | Iglesia Corazon de Fuego">
   <Navbar />
 
-  <section data-animate="reveal" class="pt-14 md:pt-20 pb-8 md:pb-10 bg-white">
+  <section data-animate="reveal" class="pt-16 md:pt-24 pb-12 md:pb-16 bg-white">
     <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
-      <span class="text-primary text-xs uppercase tracking-[0.22em] font-semibold">Seccion misiones</span>
-      <h1 class="font-display text-4xl sm:text-5xl text-charcoal mt-2">Misiones</h1>
-      <p class="text-gray-500 mt-4 max-w-2xl">
-        Conoce nuestras salidas misioneras ordenadas cronologicamente para seguir cada etapa de la vision.
-      </p>
+      <div class="grid grid-cols-1 gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-end">
+        <div>
+          <span class="text-primary text-xs uppercase tracking-[0.22em] font-semibold">Misiones</span>
+          <h1 class="font-display text-5xl sm:text-6xl lg:text-7xl text-charcoal mt-3 leading-[1.02]">
+            Alcanzar, servir y llevar el mensaje de Jesús.
+          </h1>
+        </div>
+        <div class="space-y-5 text-base leading-relaxed text-gray-600 sm:text-lg">
+          <p>
+            Misiones expresa el corazón evangelístico de la iglesia: salir de nuestra comodidad para acompañar, predicar, servir y fortalecer personas, familias y comunidades.
+          </p>
+          <p>
+            Cada destino representa una respuesta concreta al llamado de Dios. Oramos, preparamos equipos y caminamos con iglesias locales para que el amor de Cristo llegue a más lugares.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section data-animate="reveal" class="pb-10 md:pb-14 bg-white">
+    <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
+        <article data-animate="card" class="rounded-3xl border border-gray-200 bg-gray-50 p-6 sm:p-8">
+          <p class="text-primary text-xs uppercase tracking-[0.2em] font-semibold">Propósito</p>
+          <h2 class="font-display text-3xl text-charcoal mt-4">Una iglesia en movimiento.</h2>
+          <p class="text-gray-600 text-sm mt-4 leading-relaxed">
+            Creemos que la misión nace en la adoración y se expresa en servicio. Por eso formamos equipos que anuncian el evangelio, acompañan procesos y responden a necesidades reales.
+          </p>
+        </article>
+        <article data-animate="card" class="rounded-3xl border border-gray-200 bg-white p-6 sm:p-8">
+          <p class="text-primary text-xs uppercase tracking-[0.2em] font-semibold">Equipo</p>
+          <h2 class="font-display text-3xl text-charcoal mt-4">Servimos juntos.</h2>
+          <p class="text-gray-600 text-sm mt-4 leading-relaxed">
+            Cada salida se sostiene con oración, preparación, generosidad y personas dispuestas a poner sus dones al servicio de otros.
+          </p>
+        </article>
+        <article data-animate="card" class="rounded-3xl border border-gray-200 bg-gray-50 p-6 sm:p-8">
+          <p class="text-primary text-xs uppercase tracking-[0.2em] font-semibold">Alcance</p>
+          <h2 class="font-display text-3xl text-charcoal mt-4">Cerca y lejos.</h2>
+          <p class="text-gray-600 text-sm mt-4 leading-relaxed">
+            La visión alcanza barrios, provincias y naciones. Donde Dios abre una puerta, buscamos responder con obediencia y amor.
+          </p>
+        </article>
+      </div>
     </div>
   </section>
 
   <section data-animate="reveal" class="pb-14 md:pb-16 bg-white">
     <div class="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+      <div class="mb-8 md:mb-10">
+        <span class="text-primary text-xs uppercase tracking-[0.22em] font-semibold">Lugares</span>
+        <h2 class="font-display text-3xl sm:text-4xl text-charcoal mt-2">Destinos misioneros</h2>
+      </div>
+      <div class="divide-y divide-gray-200 border-y border-gray-200">
         {
           missionsChronological.map((mission) => (
-            <article data-animate="card" class="group rounded-3xl overflow-hidden border border-gray-200 bg-gray-50 hover:border-primary/60 transition-colors">
-              <div class="relative h-56 sm:h-64">
-                <img src={mission.image} alt={`Mision ${mission.place}`} class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                <div class="absolute left-4 bottom-4 flex items-center gap-2">
+            <article data-animate="card" class="grid grid-cols-1 gap-6 py-8 md:grid-cols-[0.75fr_1.25fr] md:gap-10 md:py-10">
+              <div>
+                <div class="mb-3 flex flex-wrap items-center gap-2">
                   <span class="inline-flex rounded-full bg-primary px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-charcoal font-semibold">{mission.stage}</span>
-                  <span class="inline-flex rounded-full bg-white/90 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-charcoal font-semibold">
+                  <span class="inline-flex rounded-full bg-gray-100 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-charcoal font-semibold">
                     {dateFormatter.format(new Date(mission.startDate))}
                   </span>
                 </div>
-              </div>
-              <div class="p-5">
                 <p class="text-[11px] uppercase tracking-[0.18em] text-gray-500">{mission.country}</p>
-                <h2 class="font-display text-3xl text-charcoal mt-2">{mission.place}</h2>
-                <p class="text-gray-600 text-sm mt-2 leading-relaxed">{mission.summary}</p>
-                <p class="mt-4 text-xs uppercase tracking-[0.18em] text-charcoal">{mission.focus}</p>
+                <h3 class="font-display text-4xl text-charcoal mt-2">{mission.place}</h3>
+              </div>
+              <div class="grid grid-cols-1 gap-5 sm:grid-cols-[0.85fr_1.15fr] sm:items-start">
+                <div class="overflow-hidden rounded-2xl">
+                  <img src={mission.image} alt={`Mision ${mission.place}`} class="h-56 w-full object-cover sm:h-64" />
+                </div>
+                <div>
+                  <p class="text-gray-600 text-base leading-relaxed">{mission.summary}</p>
+                  <p class="mt-4 text-sm leading-relaxed text-gray-600">
+                    En este destino enfocamos los esfuerzos en {mission.focus.toLowerCase()}, acompañando lo que Dios ya está haciendo y fortaleciendo el trabajo local.
+                  </p>
+                  <p class="mt-5 text-xs uppercase tracking-[0.18em] text-charcoal">{mission.focus}</p>
+                </div>
               </div>
             </article>
           ))

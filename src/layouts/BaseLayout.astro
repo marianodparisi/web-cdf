@@ -15,6 +15,23 @@ const { title = 'Iglesia Corazón de Fuego' } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <link rel="icon" type="image/png" href="/favico.png" />
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
+    <style is:inline>
+      html.js [data-animate='nav'],
+      html.js [data-animate='nav-link'],
+      html.js [data-animate='hero-item'],
+      html.js [data-animate='hero-late'],
+      html.js [data-animate='hero-media'],
+      html.js [data-animate='reveal'],
+      html.js [data-animate='card'],
+      html.js [data-animate='footer'],
+      html.js [data-animate='social'] {
+        opacity: 0;
+        visibility: hidden;
+      }
+    </style>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -32,7 +49,10 @@ const { title = 'Iglesia Corazón de Fuego' } = Astro.props;
     <script type="module" is:inline>
       const initGsap = async () => {
         const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (reducedMotion) return;
+        if (reducedMotion) {
+          document.documentElement.classList.remove('js');
+          return;
+        }
 
         try {
           const [{ gsap }, { ScrollTrigger }] = await Promise.all([
@@ -45,34 +65,38 @@ const { title = 'Iglesia Corazón de Fuego' } = Astro.props;
 
           const nav = document.querySelector('[data-animate="nav"]');
           if (nav) {
-            gsap.from(nav, { y: -24, opacity: 0, duration: 0.8, ease: 'power2.out' });
+            gsap.fromTo(nav, { y: -24, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.8, ease: 'power2.out' });
           }
 
           const navLinks = gsap.utils.toArray('[data-animate="nav-link"]');
           if (navLinks.length > 0) {
-            gsap.from(navLinks, { y: -12, opacity: 0, duration: 0.6, stagger: 0.06, delay: 0.2 });
+            gsap.fromTo(navLinks, { y: -12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.6, stagger: 0.06, delay: 0.2 });
           }
 
           const heroItems = gsap.utils.toArray('[data-animate="hero-item"]');
           if (heroItems.length > 0) {
-            gsap.from(heroItems, { y: 32, opacity: 0, stagger: 0.12, delay: 0.15 });
+            gsap.fromTo(heroItems, { y: 32, autoAlpha: 0 }, { y: 0, autoAlpha: 1, stagger: 0.12, delay: 0.15 });
           }
 
           const heroLate = gsap.utils.toArray('[data-animate="hero-late"]');
           if (heroLate.length > 0) {
-            gsap.from(heroLate, {
-              y: 14,
-              opacity: 0,
-              duration: 1,
-              stagger: 0.25,
-              delay: 2,
-              ease: 'power2.out',
-            });
+            gsap.fromTo(
+              heroLate,
+              { y: 14, autoAlpha: 0 },
+              {
+                y: 0,
+                autoAlpha: 1,
+                duration: 1,
+                stagger: 0.25,
+                delay: 2,
+                ease: 'power2.out',
+              }
+            );
           }
 
           const heroMedia = document.querySelector('[data-animate="hero-media"]');
           if (heroMedia) {
-            gsap.from(heroMedia, { y: 24, scale: 0.96, opacity: 0, duration: 1, delay: 0.25 });
+            gsap.fromTo(heroMedia, { y: 24, scale: 0.96, autoAlpha: 0 }, { y: 0, scale: 1, autoAlpha: 1, duration: 1, delay: 0.25 });
             gsap.to(heroMedia, {
               yPercent: -2,
               scale: 1.04,
@@ -89,51 +113,63 @@ const { title = 'Iglesia Corazón de Fuego' } = Astro.props;
 
           const sections = gsap.utils.toArray('[data-animate="reveal"]');
           sections.forEach((section) => {
-            gsap.from(section, {
-              y: 52,
-              autoAlpha: 0,
-              duration: 1,
-              ease: 'power3.out',
-              immediateRender: false,
-              scrollTrigger: {
-                trigger: section,
-                start: 'top 82%',
-                once: true,
-              },
-            });
+            gsap.fromTo(
+              section,
+              { y: 52, autoAlpha: 0 },
+              {
+                y: 0,
+                autoAlpha: 1,
+                duration: 1,
+                ease: 'power3.out',
+                immediateRender: false,
+                scrollTrigger: {
+                  trigger: section,
+                  start: 'top 82%',
+                  once: true,
+                },
+              }
+            );
 
             const cards = section.querySelectorAll('[data-animate="card"]');
             cards.forEach((card) => {
-              gsap.from(card, {
-                y: 44,
-                autoAlpha: 0,
-                scale: 0.98,
-                duration: 0.8,
-                ease: 'power2.out',
-                immediateRender: false,
-                scrollTrigger: {
-                  trigger: card,
-                  start: 'top 92%',
-                  once: true,
-                },
-              });
+              gsap.fromTo(
+                card,
+                { y: 44, autoAlpha: 0, scale: 0.98 },
+                {
+                  y: 0,
+                  autoAlpha: 1,
+                  scale: 1,
+                  duration: 0.8,
+                  ease: 'power2.out',
+                  immediateRender: false,
+                  scrollTrigger: {
+                    trigger: card,
+                    start: 'top 92%',
+                    once: true,
+                  },
+                }
+              );
             });
           });
 
           const seriesCarousel = document.querySelector('[data-series-carousel]');
           if (seriesCarousel) {
-            gsap.from(seriesCarousel, {
-              y: 70,
-              autoAlpha: 0,
-              duration: 0.9,
-              ease: 'power3.out',
-              immediateRender: false,
-              scrollTrigger: {
-                trigger: seriesCarousel,
-                start: 'top 90%',
-                once: true,
-              },
-            });
+            gsap.fromTo(
+              seriesCarousel,
+              { y: 70, autoAlpha: 0 },
+              {
+                y: 0,
+                autoAlpha: 1,
+                duration: 0.9,
+                ease: 'power3.out',
+                immediateRender: false,
+                scrollTrigger: {
+                  trigger: seriesCarousel,
+                  start: 'top 90%',
+                  once: true,
+                },
+              }
+            );
 
             gsap.to(seriesCarousel, {
               yPercent: -4,
@@ -149,25 +185,23 @@ const { title = 'Iglesia Corazón de Fuego' } = Astro.props;
 
           const footer = document.querySelector('[data-animate="footer"]');
           if (footer) {
-            gsap.from(footer, {
-              y: 28,
-              opacity: 0,
-              scrollTrigger: {
-                trigger: footer,
-                start: 'top 90%',
-              },
-            });
+            gsap.fromTo(
+              footer,
+              { y: 28, autoAlpha: 0 },
+              {
+                y: 0,
+                autoAlpha: 1,
+                scrollTrigger: {
+                  trigger: footer,
+                  start: 'top 90%',
+                },
+              }
+            );
           }
 
           const socialIcons = gsap.utils.toArray('[data-animate="social"]');
           if (socialIcons.length > 0) {
-            gsap.from(socialIcons, {
-              scale: 0.8,
-              opacity: 0,
-              stagger: 0.08,
-              duration: 0.5,
-              delay: 0.15,
-            });
+            gsap.fromTo(socialIcons, { scale: 0.8, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, stagger: 0.08, duration: 0.5, delay: 0.15 });
 
             socialIcons.forEach((icon) => {
               icon.addEventListener('mouseenter', () => {
@@ -180,6 +214,7 @@ const { title = 'Iglesia Corazón de Fuego' } = Astro.props;
           }
         } catch (error) {
           console.warn('GSAP no se pudo cargar:', error);
+          document.documentElement.classList.remove('js');
         }
       };
 

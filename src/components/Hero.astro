@@ -1,5 +1,5 @@
-<header data-animate="hero" class="relative h-[calc(100svh-5rem)] overflow-hidden bg-charcoal lg:h-[calc(100vh-5rem)]">
-  <div data-animate="hero-media" class="absolute -inset-[2px]">
+<header data-animate="hero" class="relative isolate h-[calc(100svh-5rem)] overflow-hidden bg-charcoal lg:h-[calc(100vh-5rem)]">
+  <div class="absolute -inset-[2px] z-0">
     <video
       class="block h-full w-full object-cover object-center"
       autoplay
@@ -11,6 +11,7 @@
     >
       <source src="/hero-v1-compressed.mp4" type="video/mp4" />
     </video>
+    <div class="absolute inset-0 bg-black/30"></div>
   </div>
 
   <div class="relative z-10 mx-auto flex h-[calc(100svh-5rem)] max-w-7xl items-center justify-center px-5 py-0 text-center sm:px-6 lg:h-[calc(100vh-5rem)] lg:px-8">

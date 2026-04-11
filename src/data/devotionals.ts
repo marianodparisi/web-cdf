@@ -11,17 +11,20 @@ export interface DevotionalPost {
 
 export const devotionalPosts: DevotionalPost[] = [
   {
-    slug: 'permanecer-en-la-palabra',
-    title: 'Permanecer en la Palabra en medio de la semana',
+    slug: 'el-tiempo-del-padre',
+    title: 'El tiempo del Padre',
     type: 'Devocional',
-    weekLabel: 'Semana 1 - Marzo 2026',
-    image: '/descanso.jpeg',
-    excerpt: 'Una palabra corta para sostener el corazon en dias de ritmo intenso.',
+    weekLabel: 'Malaquías 1:6-7',
+    image: '/devocionalejemplo.jpg',
+    excerpt: 'Dios no busca lo que sobra de nuestra vida. Como Padre y Señor, merece honra, temor reverente y lo más valioso de nuestro tiempo.',
     content: [
-      'Cuando la semana se acelera, Dios sigue hablando con claridad. Este devocional nos recuerda volver a la Palabra antes de reaccionar por cansancio o presion.',
-      'Tomate unos minutos para leer, orar y anotar una verdad que puedas aplicar hoy. La constancia en lo pequeno fortalece la fe para decisiones grandes.',
+      'El hijo honra al padre, y él siervo a su señor. Si, pues, soy yo padre, ¿dónde está mi honra? y si soy señor, ¿dónde está mi temor? dice Jehová de los ejércitos a vosotros, oh sacerdotes, que menospreciais mi nombre. Y decís: ¿En qué hemos menospreciado tu nombre? En que ofrecéis sobre mi altar pan inmundo. Y dijisteis: ¿En qué te hemos deshonrado? En que pensáis que la mesa de Jehová es despreciable.',
+      'Qué simpleza hay en lo que Dios demanda de nosotros, tan simple como honrarlo como Padre, en temerle como Señor nuestro. Él, que nos dió la vida que nos da aliento todos los días, ¿no puede recibir honra y temor de nuestra parte?',
+      'Los sacerdotes en ese tiempo estaban apagados espiritualmente, no veían el templo de Jehová como algo santo, todo lo contrario, lo utilizaban para comerciar, y solo daban a Jehová lo que sobraba, animales defectuosos, ciegos, cojos.',
+      'Lo importante es entender que a Dios no se le puede honrar dándole nuestro tiempo de sobra, o nuestro dinero que nos sobra. Él merece ser honrado y glorificado porque es nuestro Padre.',
+      'Nuestra verdadera actitud frente a nuestro Padre eterno debe ser la de darle y entregarle lo valioso de nuestra vida. Él se lo merece y está esperando eso de nosotros como sus hijos.',
+      'No desperdicies más tiempo, no dejes pasar un segundo más. Comienza a leer su palabra, a hablarle, presentarle tus cargas, y a adorarle. Comenzá un tiempo de padre e hijo.',
     ],
-    videoUrl: 'https://www.youtube.com/live/t2G5MA5EWQc?si=4qoAU6x8huFRb5L_',
   },
   {
     slug: 'testimonio-restauracion-familiar',

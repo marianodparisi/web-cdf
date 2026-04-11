@@ -1,0 +1,179 @@
+---
+import Footer from '../components/Footer.astro';
+import Navbar from '../components/Navbar.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Nosotros | Iglesia Corazon de Fuego">
+  <Navbar />
+
+  <main class="bg-white">
+    <section data-animate="reveal" class="relative overflow-hidden bg-charcoal text-white">
+      <div class="mx-auto grid max-w-[90rem] grid-cols-1 gap-10 px-5 py-20 sm:px-6 md:py-28 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:px-8">
+        <div class="max-w-5xl">
+          <p class="mb-5 text-xs font-bold uppercase tracking-[0.28em] text-primary">Iglesia Corazon de Fuego</p>
+          <h1 class="font-display text-5xl font-semibold leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl">
+            Existimos para ministrar al Señor y encender una generación.
+          </h1>
+          <p class="mt-8 max-w-3xl text-lg leading-relaxed text-white/75 sm:text-xl">
+            Somos una casa de adoración, oración y formación. Nos reunimos para darle a Dios gratitud y alabanza, afirmar quién es Él, interceder por lo que desea hacer y caminar como familia en el propósito que nos confió.
+          </p>
+        </div>
+        <div data-animate="card" class="relative min-h-[340px] overflow-hidden rounded-2xl border border-white/10 bg-white/5 sm:min-h-[460px]">
+          <img src="/nosotros1.JPG" alt="Iglesia Corazon de Fuego" class="absolute inset-0 h-full w-full object-cover" />
+          <div class="absolute inset-0 bg-gradient-to-t from-charcoal/45 to-transparent"></div>
+        </div>
+      </div>
+    </section>
+
+    <section data-animate="reveal" class="py-16 md:py-24">
+      <div class="mx-auto grid max-w-[90rem] grid-cols-1 gap-8 px-5 sm:px-6 md:grid-cols-3 lg:px-8">
+        <article data-animate="card" class="rounded-2xl border border-gray-200 bg-gray-50 p-6 sm:p-8">
+          <p class="text-xs font-bold uppercase tracking-[0.22em] text-primary">Adoración</p>
+          <h2 class="mt-4 font-display text-3xl text-charcoal">Darle a Dios el lugar central.</h2>
+          <p class="mt-4 text-sm leading-relaxed text-gray-600">
+            Nuestra primera respuesta es ministrar al Señor con gratitud, reverencia y alabanza.
+          </p>
+        </article>
+
+        <article data-animate="card" class="rounded-2xl border border-gray-200 bg-white p-6 sm:p-8">
+          <p class="text-xs font-bold uppercase tracking-[0.22em] text-primary">Oración</p>
+          <h2 class="mt-4 font-display text-3xl text-charcoal">Ponernos de acuerdo con su voluntad.</h2>
+          <p class="mt-4 text-sm leading-relaxed text-gray-600">
+            Intercedemos por nuestras familias, la ciudad y todo lo que Dios desea transformar.
+          </p>
+        </article>
+
+        <article data-animate="card" class="rounded-2xl border border-gray-200 bg-gray-50 p-6 sm:p-8">
+          <p class="text-xs font-bold uppercase tracking-[0.22em] text-primary">Formación</p>
+          <h2 class="mt-4 font-display text-3xl text-charcoal">Caminar como discípulos de Jesús.</h2>
+          <p class="mt-4 text-sm leading-relaxed text-gray-600">
+            Crecemos en comunidad para vivir la fe con carácter, convicción y servicio.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <section data-animate="reveal" class="bg-gray-50 py-16 md:py-24">
+      <div class="mx-auto grid max-w-[90rem] grid-cols-1 gap-10 px-5 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:px-8">
+        <div>
+          <p class="mb-4 text-xs font-bold uppercase tracking-[0.22em] text-primary">Nuestra casa</p>
+          <h2 class="font-display text-4xl font-semibold leading-tight text-charcoal sm:text-5xl">
+            Una comunidad para encontrarte con Dios, crecer y servir.
+          </h2>
+        </div>
+        <div class="space-y-5 text-base leading-relaxed text-gray-600 sm:text-lg">
+          <p>
+            Creemos que la iglesia es una familia espiritual llamada a revelar a Cristo con palabras, obras y una vida rendida a Dios.
+          </p>
+          <p>
+            Por eso hacemos lugar para la adoración, la enseñanza bíblica, el discipulado, la misión y el cuidado pastoral. Cada reunión y cada área existen para formar personas que amen a Dios y sirvan con fidelidad.
+          </p>
+          <a class="inline-flex items-center gap-2 border-b border-charcoal pb-1 text-xs font-bold uppercase tracking-widest text-charcoal transition-colors hover:border-primary hover:text-primary" href="/contact">
+            Contactanos
+            <span class="material-symbols-outlined text-sm">arrow_outward</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section data-animate="reveal" class="py-16 md:py-24">
+      <div class="mx-auto max-w-[90rem] px-5 sm:px-6 lg:px-8">
+        <div class="mb-10 max-w-4xl">
+          <p class="mb-4 text-xs font-bold uppercase tracking-[0.22em] text-primary">Nuestra historia</p>
+          <h2 class="font-display text-4xl font-semibold leading-tight text-charcoal sm:text-5xl">
+            Dios abrió camino para levantar una casa en Ramos Mejía.
+          </h2>
+        </div>
+
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-[0.85fr_1.15fr] lg:gap-10">
+          <aside class="rounded-2xl bg-charcoal p-6 text-white sm:p-8">
+            <p class="text-xs font-bold uppercase tracking-[0.22em] text-primary">Fundación</p>
+            <h3 class="mt-4 font-display text-3xl leading-tight">Una obra nacida en oración, espera y obediencia.</h3>
+            <p class="mt-5 text-sm leading-relaxed text-white/70">
+              Desde el primer llamado hasta el terreno en una avenida visible, cada paso confirmó que Dios estaba preparando algo nuevo.
+            </p>
+            <div class="mt-8 overflow-hidden rounded-2xl">
+              <img src="/nosotros2.JPG" alt="Historia de Iglesia Corazon de Fuego" class="h-72 w-full object-cover" />
+            </div>
+          </aside>
+
+          <div class="space-y-5 text-base leading-relaxed text-gray-600">
+            <p>
+              Allá por el año 2006 comenzó a sentirse el llamado de Dios hacia algo nuevo. Ese sentir fue guardado en oración, esperando que el Señor mostrara con mayor claridad el camino.
+            </p>
+            <p>
+              En aquel tiempo comenzamos a asistir a la iglesia del Pastor Enrique Strohschein, en Villa Ballester. Dios estaba preparando cosas para lo que iba a venir. En el año 2008, un encuentro circunstancial con un amigo abrió una puerta concreta: la posibilidad de alquilar un terreno baldío en Ramos Mejía.
+            </p>
+            <p>
+              El deseo era poner a Dios en un lugar visible de Ramos, en una avenida, donde pudiera ser visto por muchos. Al compartir la visión con el propietario, la respuesta fue inmediata: el lugar estaba disponible. Luego, al hablar con el Pastor Strohschein, nos contó que durante años había orado para que una iglesia se abriera y se estableciera en Ramos Mejía. Nos bendijo, dio cobertura espiritual y el aval de la Unión de las Asambleas de Dios para comenzar.
+            </p>
+            <p>
+              Después vino el desafío de levantar el templo con sacrificio y esfuerzo, sin contar aún con una congregación formada, buscando que fuera agradable, austero y preparado para congregar a la iglesia que Dios iba a añadir.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section data-animate="reveal" class="bg-gray-50 py-16 md:py-24">
+      <div class="mx-auto grid max-w-[90rem] grid-cols-1 gap-6 px-5 sm:px-6 lg:grid-cols-2 lg:px-8">
+        <article data-animate="card" class="rounded-2xl border border-gray-200 bg-white p-6 sm:p-8">
+          <p class="text-xs font-bold uppercase tracking-[0.22em] text-primary">El nombre</p>
+          <h2 class="mt-4 font-display text-4xl leading-tight text-charcoal">¿Por qué Corazón de Fuego?</h2>
+          <div class="mt-6 space-y-5 text-base leading-relaxed text-gray-600">
+            <p>
+              El nombre nació en un momento de oración, recordando el camino a Emaús en Lucas 24:13-35. Los discípulos estaban tristes y desanimados, pero cuando Jesús se acercó, les habló y les abrió las Escrituras, algo volvió a arder dentro de ellos.
+            </p>
+            <p>
+              Al apartarse Jesús, ellos dijeron: “¿No ardía nuestro corazón cuando nos hablaba y nos abría las Escrituras?”. De ahí nació el nombre Corazón de Fuego: eso es lo que produce el Señor cuando nos habla y cuando está cerca.
+            </p>
+          </div>
+        </article>
+
+        <article data-animate="card" class="rounded-2xl border border-gray-200 bg-white p-6 sm:p-8">
+          <p class="text-xs font-bold uppercase tracking-[0.22em] text-primary">La visión</p>
+          <h2 class="mt-4 font-display text-4xl leading-tight text-charcoal">Una iglesia que alcanza, forma y envía.</h2>
+          <div class="mt-6 space-y-5 text-base leading-relaxed text-gray-600">
+            <p>
+              La visión de Corazón de Fuego es generar una iglesia evangelística: una comunidad que alcance con el mensaje de salvación de nuestro Señor Jesucristo de muchas maneras y en muchos lugares.
+            </p>
+            <p>
+              Primero sentimos formar una iglesia donde nos conocemos, crecemos y somos formados. Desde esa vida de comunidad se van forjando equipos para evangelizar, abrir anexos, realizar tareas misioneras y servir a niños, adolescentes, jóvenes y familias.
+            </p>
+            <p>
+              La visión es dinámica. Dios sigue proponiendo cosas, poniendo personas y abriendo estrategias. Caminamos día a día con Él, entendiendo que como cuerpo debemos crecer parejo y responder juntos al llamado.
+            </p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section data-animate="reveal" class="py-16 md:py-24">
+      <div class="mx-auto grid max-w-[90rem] grid-cols-1 gap-10 px-5 sm:px-6 lg:grid-cols-[1fr_0.9fr] lg:items-center lg:px-8">
+        <div class="space-y-5 text-base leading-relaxed text-gray-600 sm:text-lg">
+          <p class="text-xs font-bold uppercase tracking-[0.22em] text-primary">La iglesia responde</p>
+          <h2 class="font-display text-4xl font-semibold leading-tight text-charcoal sm:text-5xl">
+            Un equipo disponible para servir y soñar por más.
+          </h2>
+          <p>
+            Sentimos el respaldo de los hermanos de la iglesia. Hay disponibilidad para ayudar y servir. Una de las cosas que las personas perciben al llegar es el amor con que son recibidas, la fraternidad y una iglesia abierta a la familia.
+          </p>
+          <p>
+            Cada desafío se camina en equipo: viajes misioneros, campañas, anexos, jóvenes, adolescentes y cada tarea que Dios propone. Es un privilegio servir con quienes llevan años en la congregación y con quienes se van sumando día a día.
+          </p>
+        </div>
+        <div class="overflow-hidden rounded-2xl border border-gray-200 bg-gray-50">
+          <img src="/nosotros3.JPG" alt="Equipo de Iglesia Corazon de Fuego" class="h-72 w-full object-cover sm:h-80" />
+          <div class="p-6 sm:p-8">
+          <p class="font-display text-3xl leading-tight text-charcoal">
+            “Todo se puede, todo está al alcance, podemos soñar y seguir por más.”
+          </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</BaseLayout>
