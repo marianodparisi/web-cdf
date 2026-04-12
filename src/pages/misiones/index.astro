@@ -10,6 +10,8 @@ const dateFormatter = new Intl.DateTimeFormat('es-AR', {
   month: 'long',
   year: 'numeric',
 });
+
+const getLocalMissionDate = (date: string) => new Date(`${date}T12:00:00`);
 ---
 
 <BaseLayout title="Misiones | Iglesia Corazon de Fuego">
@@ -73,27 +75,42 @@ const dateFormatter = new Intl.DateTimeFormat('es-AR', {
       <div class="divide-y divide-gray-200 border-y border-gray-200">
         {
           missionsChronological.map((mission) => (
-            <article data-animate="card" class="grid grid-cols-1 gap-6 py-8 md:grid-cols-[0.75fr_1.25fr] md:gap-10 md:py-10">
+            <article
+              data-animate="card"
+              class="mission-card grid grid-cols-1 gap-6 py-8 md:grid-cols-[0.68fr_1.32fr] md:gap-10 md:py-10"
+            >
               <div>
                 <div class="mb-3 flex flex-wrap items-center gap-2">
-                  <span class="inline-flex rounded-full bg-primary px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-charcoal font-semibold">{mission.stage}</span>
                   <span class="inline-flex rounded-full bg-gray-100 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-charcoal font-semibold">
-                    {dateFormatter.format(new Date(mission.startDate))}
+                    {dateFormatter.format(getLocalMissionDate(mission.startDate))}
                   </span>
                 </div>
                 <p class="text-[11px] uppercase tracking-[0.18em] text-gray-500">{mission.country}</p>
                 <h3 class="font-display text-4xl text-charcoal mt-2">{mission.place}</h3>
+                <p class="mt-5 text-gray-600 text-base leading-relaxed">{mission.summary}</p>
+                <p class="mt-4 text-sm leading-relaxed text-gray-600">
+                  En este destino enfocamos los esfuerzos en {mission.focus.toLowerCase()}, acompañando lo que Dios ya está haciendo y fortaleciendo el trabajo local.
+                </p>
+                <p class="mt-5 text-xs uppercase tracking-[0.18em] text-charcoal">{mission.focus}</p>
               </div>
-              <div class="grid grid-cols-1 gap-5 sm:grid-cols-[0.85fr_1.15fr] sm:items-start">
-                <div class="overflow-hidden rounded-2xl">
-                  <img src={mission.image} alt={`Mision ${mission.place}`} class="h-56 w-full object-cover sm:h-64" />
-                </div>
-                <div>
-                  <p class="text-gray-600 text-base leading-relaxed">{mission.summary}</p>
-                  <p class="mt-4 text-sm leading-relaxed text-gray-600">
-                    En este destino enfocamos los esfuerzos en {mission.focus.toLowerCase()}, acompañando lo que Dios ya está haciendo y fortaleciendo el trabajo local.
-                  </p>
-                  <p class="mt-5 text-xs uppercase tracking-[0.18em] text-charcoal">{mission.focus}</p>
+              <div>
+                <div class="overflow-hidden rounded-2xl bg-charcoal">
+                  {
+                    mission.video ? (
+                      <video
+                        class="mission-video aspect-video w-full object-cover"
+                        data-src={mission.video}
+                        poster={mission.image}
+                        muted
+                        loop
+                        playsinline
+                        preload="none"
+                        aria-label={`Video mision ${mission.place}`}
+                      />
+                    ) : (
+                      <img src={mission.image} alt={`Mision ${mission.place}`} class="aspect-video w-full object-cover" />
+                    )
+                  }
                 </div>
               </div>
             </article>
@@ -104,4 +121,106 @@ const dateFormatter = new Intl.DateTimeFormat('es-AR', {
   </section>
 
   <Footer />
+
+  <script>
+    const missionVideos = [...document.querySelectorAll('.mission-video')];
+    const videoStates = new WeakMap();
+    let pointerPosition = null;
+
+    const loadMissionVideo = (video) => {
+      if (!video.dataset.src || video.dataset.loaded === 'true') return;
+
+      const source = document.createElement('source');
+      source.src = video.dataset.src;
+      source.type = 'video/mp4';
+      video.append(source);
+      video.dataset.loaded = 'true';
+      video.load();
+    };
+
+    const playMissionVideo = (video) => {
+      loadMissionVideo(video);
+      video.play().catch(() => {});
+    };
+
+    const pauseMissionVideo = (video) => {
+      video.pause();
+    };
+
+    const updateMissionVideo = (video) => {
+      const state = videoStates.get(video);
+      if (!state) return;
+
+      if (state.hovered || state.focused || state.pinned) {
+        playMissionVideo(video);
+        return;
+      }
+
+      pauseMissionVideo(video);
+    };
+
+    const refreshHoverFromPointer = () => {
+      if (!pointerPosition) return;
+
+      const hoveredElement = document.elementFromPoint(pointerPosition.x, pointerPosition.y);
+      missionVideos.forEach((video) => {
+        const state = videoStates.get(video);
+        if (!state) return;
+
+        state.hovered = hoveredElement ? state.card.contains(hoveredElement) : false;
+        updateMissionVideo(video);
+      });
+    };
+
+    missionVideos.forEach((video) => {
+      const card = video.closest('.mission-card');
+      if (!card) return;
+      videoStates.set(video, { card, hovered: false, focused: false, pinned: false });
+
+      card.addEventListener('mouseenter', () => {
+        videoStates.get(video).hovered = true;
+        updateMissionVideo(video);
+      });
+      card.addEventListener('mouseleave', () => {
+        videoStates.get(video).hovered = false;
+        updateMissionVideo(video);
+      });
+      card.addEventListener('focusin', () => {
+        videoStates.get(video).focused = true;
+        updateMissionVideo(video);
+      });
+      card.addEventListener('focusout', () => {
+        videoStates.get(video).focused = false;
+        updateMissionVideo(video);
+      });
+    });
+
+    window.addEventListener(
+      'pointermove',
+      (event) => {
+        pointerPosition = { x: event.clientX, y: event.clientY };
+      },
+      { passive: true }
+    );
+    window.addEventListener('scroll', refreshHoverFromPointer, { passive: true });
+
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const video = entry.target.querySelector('.mission-video');
+            if (!video) return;
+            const state = videoStates.get(video);
+            if (!state) return;
+
+            state.pinned = entry.isIntersecting && entry.intersectionRatio >= 0.72;
+            updateMissionVideo(video);
+          });
+        },
+        { threshold: [0, 0.72] }
+      );
+
+      document.querySelectorAll('.mission-card').forEach((card) => observer.observe(card));
+    }
+  </script>
 </BaseLayout>
