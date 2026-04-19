@@ -71,35 +71,6 @@
 
 No volver a asumir assets en la raiz de `public/`; revisar rutas nuevas antes de referenciar.
 
-## Diseño — Sección Series (index.astro)
-
-Trabajo hecho en rama `dev`. Decisiones de diseño consolidadas:
-
-- **Fondo sección**: `bg-[#f3f3f3]` con `shadow-[inset_0_6px_32px_rgba(0,0,0,0.07),inset_0_-6px_32px_rgba(0,0,0,0.04)]`
-- **Borde cards**: `border-[12px] border-[#f5f5f5]` (no blanco puro, se integra al fondo)
-- **Shadow cards**: `shadow-[0_20px_40px_rgba(0,0,0,0.05),0_2px_6px_rgba(0,0,0,0.03)]`
-- **Hover cards**: `transition-all duration-200 hover:-translate-y-[3px]`
-- **Card principal ("Éxodo")**:
-  - Imagen: top `68%`, `rounded-b-[1.75rem]`, gradient `from-black/[0.12] to-transparent`
-  - Sección inferior: `bg-white`, `h-[32%]`, padding `pl-5..8`
-  - Badge: `bg-[#2b2b2b]`, `px-[14px] py-[6px]`, `text-[11px]`, `tracking-[0.08em]`, `opacity-90`
-  - Título de la serie (`currentSeries.title`) mostrado prominentemente: `text-2xl/3xl/4xl font-bold`
-  - Descripción: `text-gray-500`
-- **Heading sección**: `text-3xl font-medium text-[#6b7280]` (recede, no compite con la card)
-- **Series anteriores**:
-  - Layout alternado: card 0 imagen izq, card 1 imagen der, card 2 imagen izq
-  - Ancho imagen variado: card 0 → 48%, card 1 → 52%, card 2 → 44%
-  - Gradient leve en imagen: `from-black/15 to-transparent`
-  - Label: `text-[11px] tracking-[0.12em] text-[#9ca3af]`
-  - Gap: `gap-5`
-
-## Diseño — Sección Anuncios (index.astro)
-
-- **Fondo sección**: `bg-[#F8F5F0]` con mismo inset shadow que series
-- **Cards mobile**: layout horizontal imagen izq + texto der (igual que series anteriores), `h-[130px]`
-- **Cards desktop**: layout original con imagen completa + overlay gradient + texto
-- Borde y shadow consistentes con sección series
-
 ## Cambios funcionales recientes
 
 - `dev` tiene workflow propio para Hostinger dev.
