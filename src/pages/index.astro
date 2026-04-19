@@ -182,46 +182,56 @@ const currentDevotionalEmbedUrl = getYouTubeEmbedUrl(currentDevotionalPost?.vide
         </div>
       </div>
       <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8">
+        <!-- GOLD: mobile horizontal, desktop igual que serie actual -->
         <a
           data-animate="card"
           href="/ministerios/gold"
           aria-label="Ver más sobre Encuentro GOLD"
           class="md:col-span-2 group relative flex h-[130px] overflow-hidden rounded-2xl border-[12px] border-white bg-white shadow-[0_20px_40px_rgba(0,0,0,0.05),0_2px_6px_rgba(0,0,0,0.03)] transition-all duration-200 hover:-translate-y-[3px] md:flex-col md:h-[450px] md:rounded-3xl"
         >
+          <!-- Imagen -->
           <div class="relative w-[48%] flex-shrink-0 overflow-hidden rounded-r-[1.25rem] md:w-full md:flex-1 md:rounded-none md:rounded-b-[1.75rem]">
             <img alt="Anuncio GOLD" class="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.02]" src="/ministries/gold/goldanuncio.jpg" />
             <div class="absolute inset-0 bg-gradient-to-t from-black/[0.12] to-transparent"></div>
           </div>
-          <div class="flex flex-1 flex-col justify-center bg-white px-4 md:flex-shrink-0 md:px-8 md:py-7">
+          <!-- Mobile text -->
+          <div class="flex flex-1 flex-col justify-center bg-white px-4 md:hidden">
             <span class="text-[11px] font-bold uppercase tracking-[0.12em] text-[#9ca3af]">Destacado</span>
-            <h3 class="font-display text-sm font-semibold text-charcoal leading-tight transition-colors group-hover:text-primary md:mt-1 md:text-2xl md:font-bold">Encuentro GOLD</h3>
-            <p class="text-charcoal/55 text-[11px] mt-0.5 line-clamp-2 md:text-sm md:text-gray-500 md:mt-1.5">Un tiempo especial para compartir palabra, compañerismo y crecimiento.</p>
-            <span class="hidden md:inline-flex mt-4 items-center gap-2 text-charcoal border-b border-charcoal/30 pb-1 text-xs font-bold tracking-wider w-fit transition-colors group-hover:border-primary group-hover:text-primary">Ver más</span>
+            <h3 class="font-display text-sm font-semibold text-charcoal leading-tight">Encuentro GOLD</h3>
+            <p class="text-charcoal/55 text-[11px] mt-0.5 line-clamp-2">Un tiempo especial para compartir palabra, compañerismo y crecimiento.</p>
+          </div>
+          <!-- Desktop text: igual que serie actual -->
+          <div class="hidden md:flex flex-col justify-center bg-white flex-shrink-0 py-8 pl-8 pr-10 gap-2">
+            <span class="inline-flex w-fit rounded-full bg-[#2b2b2b] px-[14px] py-[6px] text-[11px] font-bold uppercase tracking-[0.08em] text-white opacity-90">Destacado</span>
+            <h3 class="font-display text-2xl font-bold text-charcoal md:text-3xl">Encuentro GOLD</h3>
+            <p class="text-sm text-gray-500 line-clamp-1">Un tiempo especial para compartir palabra, compañerismo y crecimiento.</p>
           </div>
         </a>
-        <div class="flex flex-col gap-4 md:gap-8 md:h-[450px]">
+
+        <!-- ARDE + Kids: horizontal siempre (como series anteriores) -->
+        <div class="flex flex-col gap-4 md:gap-5 md:h-[450px]">
           <a data-animate="card" href="/ministerios/arde"
-            class="group relative flex h-[130px] overflow-hidden rounded-2xl border-[12px] border-white bg-white shadow-[0_20px_40px_rgba(0,0,0,0.05),0_2px_6px_rgba(0,0,0,0.03)] transition-all duration-200 hover:-translate-y-[3px] md:flex-col md:min-h-0 md:flex-1 md:rounded-3xl">
-            <div class="relative w-[48%] flex-shrink-0 overflow-hidden rounded-r-[1.25rem] md:w-full md:flex-1 md:rounded-none md:rounded-b-[1.5rem]">
+            class="group flex min-h-0 flex-1 overflow-hidden rounded-2xl border-[12px] border-white bg-white shadow-[0_20px_40px_rgba(0,0,0,0.05),0_2px_6px_rgba(0,0,0,0.03)] transition-all duration-200 hover:-translate-y-[3px] md:rounded-3xl">
+            <div class="relative w-[48%] flex-shrink-0 overflow-hidden rounded-r-[1.25rem]">
               <img alt="Campamento ARDE" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" src="/ministries/arde/campaarde.jpg" />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/[0.12] to-transparent"></div>
+              <div class="absolute inset-0 bg-gradient-to-t from-black/15 to-transparent"></div>
             </div>
-            <div class="flex flex-1 flex-col justify-center bg-white px-4 md:flex-shrink-0 md:px-5 md:py-5">
+            <div class="flex flex-1 flex-col justify-center bg-white px-4">
               <span class="text-[11px] font-bold uppercase tracking-[0.12em] text-[#9ca3af]">Campa ARDE</span>
-              <h3 class="font-display text-sm font-semibold text-charcoal leading-tight transition-colors group-hover:text-primary md:mt-0.5 md:text-base md:font-bold">Campamento ARDE</h3>
-              <p class="text-charcoal/55 text-[11px] mt-0.5 line-clamp-2 md:hidden">Una experiencia para adolescentes con amigos, palabra y dias que no se olvidan facil.</p>
+              <h4 class="font-display text-sm font-semibold leading-tight text-charcoal transition-colors group-hover:text-primary">Campamento ARDE</h4>
+              <p class="mt-0.5 line-clamp-2 text-[11px] leading-relaxed text-gray-500">Una experiencia para adolescentes con amigos, palabra y dias que no se olvidan facil.</p>
             </div>
           </a>
           <a data-animate="card" href="/ministerios/kids"
-            class="group relative flex h-[130px] overflow-hidden rounded-2xl border-[12px] border-white bg-white shadow-[0_20px_40px_rgba(0,0,0,0.05),0_2px_6px_rgba(0,0,0,0.03)] transition-all duration-200 hover:-translate-y-[3px] md:flex-col md:min-h-0 md:flex-1 md:rounded-3xl">
-            <div class="relative w-[48%] flex-shrink-0 overflow-hidden rounded-r-[1.25rem] md:w-full md:flex-1 md:rounded-none md:rounded-b-[1.5rem]">
+            class="group flex min-h-0 flex-1 overflow-hidden rounded-2xl border-[12px] border-white bg-white shadow-[0_20px_40px_rgba(0,0,0,0.05),0_2px_6px_rgba(0,0,0,0.03)] transition-all duration-200 hover:-translate-y-[3px] md:rounded-3xl">
+            <div class="relative w-[48%] flex-shrink-0 overflow-hidden rounded-r-[1.25rem]">
               <img alt="Campa Kids" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" src="/ministries/kids/campakids.jpg" />
-              <div class="absolute inset-0 bg-gradient-to-t from-black/[0.12] to-transparent"></div>
+              <div class="absolute inset-0 bg-gradient-to-t from-black/15 to-transparent"></div>
             </div>
-            <div class="flex flex-1 flex-col justify-center bg-white px-4 md:flex-shrink-0 md:px-5 md:py-5">
+            <div class="flex flex-1 flex-col justify-center bg-white px-4">
               <span class="text-[11px] font-bold uppercase tracking-[0.12em] text-[#9ca3af]">Campa Kids</span>
-              <h3 class="font-display text-sm font-semibold text-charcoal leading-tight transition-colors group-hover:text-primary md:mt-0.5 md:text-base md:font-bold">Campamento Kids</h3>
-              <p class="text-charcoal/55 text-[11px] mt-0.5 line-clamp-2 md:hidden">Una aventura para que los chicos aprendan, jueguen y vivan la fe con alegria.</p>
+              <h4 class="font-display text-sm font-semibold leading-tight text-charcoal transition-colors group-hover:text-primary">Campamento Kids</h4>
+              <p class="mt-0.5 line-clamp-2 text-[11px] leading-relaxed text-gray-500">Una aventura para que los chicos aprendan, jueguen y vivan la fe con alegria.</p>
             </div>
           </a>
         </div>
