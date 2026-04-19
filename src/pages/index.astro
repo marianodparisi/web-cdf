@@ -89,10 +89,10 @@ const currentDevotionalEmbedUrl = getYouTubeEmbedUrl(currentDevotionalPost?.vide
 
   <section data-animate="reveal" class="min-h-screen bg-[#f3f3f3] py-14 shadow-[inset_0_6px_32px_rgba(0,0,0,0.07),inset_0_-6px_32px_rgba(0,0,0,0.04)] md:py-16">
     <div class="mx-auto max-w-[90rem] px-5 sm:px-6 lg:px-8">
-      <div class="mb-8 md:mb-10">
+      <div class="mb-12 md:mb-14">
         <div>
           <p class="mb-3 text-xs font-bold uppercase tracking-[0.24em] text-primary">Series</p>
-          <h2 class="font-display text-3xl font-medium tracking-tight text-charcoal/70 sm:text-4xl">Serie actual</h2>
+          <h2 class="font-display text-3xl font-medium tracking-tight text-[#6b7280] sm:text-4xl">Serie actual</h2>
         </div>
       </div>
 
@@ -103,7 +103,7 @@ const currentDevotionalEmbedUrl = getYouTubeEmbedUrl(currentDevotionalPost?.vide
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`Ver serie ${currentSeries.title}`}
-          class="group relative block h-[460px] overflow-hidden rounded-[2.5rem] border-[12px] border-white bg-white shadow-[0_25px_50px_rgba(0,0,0,0.06)] transition-all duration-200 hover:-translate-y-[3px] md:h-[540px] lg:col-span-2"
+          class="group relative block h-[460px] overflow-hidden rounded-[2.5rem] border-[12px] border-[#f5f5f5] bg-white shadow-[0_20px_40px_rgba(0,0,0,0.05),0_2px_6px_rgba(0,0,0,0.03)] transition-all duration-200 hover:-translate-y-[3px] md:h-[540px] lg:col-span-2"
         >
           <picture class="absolute inset-x-0 top-0 flex h-[68%] w-full items-center justify-center overflow-hidden rounded-b-[1.75rem]">
             {currentSeries.mobileImage && <source media="(max-width: 767px)" srcset={currentSeries.mobileImage} />}
@@ -113,10 +113,10 @@ const currentDevotionalEmbedUrl = getYouTubeEmbedUrl(currentDevotionalPost?.vide
               class="h-full w-full object-cover object-center opacity-85 transition-transform duration-700 group-hover:scale-105"
             />
           </picture>
-          <div class="absolute inset-x-0 top-0 h-[68%] rounded-b-[1.75rem] bg-gradient-to-t from-black/15 to-transparent"></div>
+          <div class="absolute inset-x-0 top-0 h-[68%] rounded-b-[1.75rem] bg-gradient-to-t from-black/[0.12] to-transparent"></div>
           <div class="absolute inset-x-0 bottom-0 z-10 flex h-[32%] flex-col justify-center bg-white py-6 pl-5 pr-6 sm:py-8 sm:pl-7 sm:pr-8 md:py-10 md:pl-8 md:pr-10">
             <div class="flex max-w-2xl flex-col gap-2">
-              <span class="inline-flex w-fit rounded-full bg-[#2b2b2b] px-[14px] py-[6px] text-[12px] font-bold uppercase tracking-[0.05em] text-white opacity-90">
+              <span class="inline-flex w-fit rounded-full bg-[#2b2b2b] px-[14px] py-[6px] text-[11px] font-bold uppercase tracking-[0.08em] text-white opacity-90">
                 {currentSeries.label}
               </span>
               <h3 class="font-display text-2xl font-bold text-charcoal sm:text-3xl md:text-4xl">{currentSeries.title}</h3>
@@ -139,7 +139,7 @@ const currentDevotionalEmbedUrl = getYouTubeEmbedUrl(currentDevotionalPost?.vide
                     href={series.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    class={`group flex h-[130px] overflow-hidden rounded-[1.75rem] border-[12px] border-white bg-white shadow-[0_25px_50px_rgba(0,0,0,0.06)] transition-all duration-200 hover:-translate-y-[3px] ${index % 2 === 1 ? 'flex-row-reverse' : ''}`}
+                    class={`group flex h-[130px] overflow-hidden rounded-[1.75rem] border-[12px] border-[#f5f5f5] bg-white shadow-[0_20px_40px_rgba(0,0,0,0.05),0_2px_6px_rgba(0,0,0,0.03)] transition-all duration-200 hover:-translate-y-[3px] ${index % 2 === 1 ? 'flex-row-reverse' : ''}`}
                   >
                     <div class={`relative flex-shrink-0 overflow-hidden ${imgWidth} ${imgRound}`}>
                       <img
@@ -186,7 +186,7 @@ const currentDevotionalEmbedUrl = getYouTubeEmbedUrl(currentDevotionalPost?.vide
           data-animate="card"
           href="/ministerios/gold"
           aria-label="Ver más sobre Encuentro GOLD"
-          class="md:col-span-2 group relative flex h-[130px] overflow-hidden rounded-2xl border-[12px] border-white bg-white shadow-[0_20px_40px_rgba(0,0,0,0.05),0_2px_8px_rgba(0,0,0,0.03)] md:block md:h-[450px] md:rounded-3xl"
+          class="md:col-span-2 group relative flex h-[130px] overflow-hidden rounded-2xl border-[12px] border-[#f5f5f5] bg-white shadow-[0_20px_40px_rgba(0,0,0,0.05),0_2px_8px_rgba(0,0,0,0.03)] md:block md:h-[450px] md:rounded-3xl"
         >
           <div class="relative w-[48%] flex-shrink-0 overflow-hidden rounded-r-[1.25rem] md:absolute md:inset-0 md:w-auto md:rounded-none">
             <img alt="Anuncio GOLD" class="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.02]" src="/ministries/gold/goldanuncio.jpg" />
@@ -205,7 +205,7 @@ const currentDevotionalEmbedUrl = getYouTubeEmbedUrl(currentDevotionalPost?.vide
         </a>
         <div class="flex flex-col gap-4 md:gap-8 md:h-[450px]">
           <a data-animate="card" href="/ministerios/arde"
-            class="group relative flex h-[130px] overflow-hidden rounded-2xl border-[12px] border-white bg-white shadow-[0_20px_40px_rgba(0,0,0,0.05),0_2px_8px_rgba(0,0,0,0.03)] md:block md:min-h-0 md:flex-1 md:rounded-3xl">
+            class="group relative flex h-[130px] overflow-hidden rounded-2xl border-[12px] border-[#f5f5f5] bg-white shadow-[0_20px_40px_rgba(0,0,0,0.05),0_2px_8px_rgba(0,0,0,0.03)] md:block md:min-h-0 md:flex-1 md:rounded-3xl">
             <div class="relative w-[48%] flex-shrink-0 overflow-hidden rounded-r-[1.25rem] md:absolute md:inset-0 md:w-auto md:rounded-none">
               <img alt="Campamento ARDE" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" src="/ministries/arde/campaarde.jpg" />
             </div>
@@ -222,7 +222,7 @@ const currentDevotionalEmbedUrl = getYouTubeEmbedUrl(currentDevotionalPost?.vide
             </div>
           </a>
           <a data-animate="card" href="/ministerios/kids"
-            class="group relative flex h-[130px] overflow-hidden rounded-2xl border-[12px] border-white bg-white shadow-[0_20px_40px_rgba(0,0,0,0.05),0_2px_8px_rgba(0,0,0,0.03)] md:block md:min-h-0 md:flex-1 md:rounded-3xl">
+            class="group relative flex h-[130px] overflow-hidden rounded-2xl border-[12px] border-[#f5f5f5] bg-white shadow-[0_20px_40px_rgba(0,0,0,0.05),0_2px_8px_rgba(0,0,0,0.03)] md:block md:min-h-0 md:flex-1 md:rounded-3xl">
             <div class="relative w-[48%] flex-shrink-0 overflow-hidden rounded-r-[1.25rem] md:absolute md:inset-0 md:w-auto md:rounded-none">
               <img alt="Campa Kids" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" src="/ministries/kids/campakids.jpg" />
             </div>
