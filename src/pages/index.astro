@@ -180,38 +180,53 @@ const currentDevotionalEmbedUrl = getYouTubeEmbedUrl(currentDevotionalPost?.vide
           data-animate="card"
           href="/ministerios/gold"
           aria-label="Ver más sobre Encuentro GOLD"
-          class="md:col-span-2 relative block w-full h-[300px] sm:h-[360px] md:h-[450px] rounded-2xl md:rounded-3xl overflow-hidden border-[12px] border-white shadow-[0_20px_40px_rgba(0,0,0,0.05),0_2px_8px_rgba(0,0,0,0.03)] group"
+          class="md:col-span-2 group relative flex h-[130px] overflow-hidden rounded-2xl border-[12px] border-white bg-white shadow-[0_20px_40px_rgba(0,0,0,0.05),0_2px_8px_rgba(0,0,0,0.03)] md:block md:h-[450px] md:rounded-3xl"
         >
-          <img alt="Anuncio GOLD" class="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.02]" src="/ministries/gold/goldanuncio.jpg" />
-          <div class="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-charcoal/20 to-transparent flex flex-col justify-end p-6 sm:p-8 md:p-10">
+          <div class="relative w-[48%] flex-shrink-0 overflow-hidden rounded-r-[1.25rem] md:absolute md:inset-0 md:w-auto md:rounded-none">
+            <img alt="Anuncio GOLD" class="h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.02]" src="/ministries/gold/goldanuncio.jpg" />
+          </div>
+          <div class="flex flex-1 flex-col justify-center bg-white px-4 md:hidden">
+            <span class="bg-primary text-charcoal text-[9px] font-bold px-2 py-1 rounded-full uppercase tracking-wider w-fit mb-1.5">Destacado</span>
+            <h3 class="font-display text-sm font-semibold text-charcoal leading-tight">Encuentro GOLD</h3>
+            <p class="text-charcoal/55 text-[11px] mt-0.5 line-clamp-2">Un tiempo especial para compartir palabra, compañerismo y crecimiento.</p>
+          </div>
+          <div class="hidden md:flex absolute inset-0 flex-col justify-end bg-gradient-to-t from-charcoal/90 via-charcoal/20 to-transparent p-6 sm:p-8 md:p-10">
             <span class="bg-primary text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider w-fit mb-3">Destacado</span>
-            <h3 class="font-display text-2xl sm:text-3xl md:text-4xl text-white leading-tight mb-2">
-              Encuentro GOLD
-            </h3>
-            <p class="text-gray-200 text-sm md:text-base max-w-lg mb-4 md:mb-6 font-light">
-              Un tiempo especial para compartir palabra, compañerismo y crecimiento.
-            </p>
-            <div>
-              <span class="hidden md:inline-flex items-center gap-2 text-white border-b border-white/50 pb-1 text-sm font-bold tracking-wider transition-colors group-hover:border-primary group-hover:text-primary">
-                Ver más
-              </span>
-            </div>
+            <h3 class="font-display text-2xl sm:text-3xl md:text-4xl text-white leading-tight mb-2">Encuentro GOLD</h3>
+            <p class="text-gray-200 text-sm md:text-base max-w-lg mb-4 md:mb-6 font-light">Un tiempo especial para compartir palabra, compañerismo y crecimiento.</p>
+            <span class="inline-flex items-center gap-2 text-white border-b border-white/50 pb-1 text-sm font-bold tracking-wider transition-colors group-hover:border-primary group-hover:text-primary">Ver más</span>
           </div>
         </a>
-        <div class="flex flex-col gap-5 md:gap-8 h-auto md:h-[450px]">
-          <a data-animate="card" href="/ministerios/arde" class="relative min-h-[205px] md:min-h-0 flex-1 rounded-2xl md:rounded-3xl overflow-hidden border-[12px] border-white shadow-[0_20px_40px_rgba(0,0,0,0.05),0_2px_8px_rgba(0,0,0,0.03)] group bg-charcoal">
-            <img alt="Campamento ARDE" class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" src="/ministries/arde/campaarde.jpg" />
-            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-            <div class="absolute inset-x-0 bottom-0 p-5 sm:p-6 z-10">
+        <div class="flex flex-col gap-4 md:gap-8 md:h-[450px]">
+          <a data-animate="card" href="/ministerios/arde"
+            class="group relative flex h-[130px] overflow-hidden rounded-2xl border-[12px] border-white bg-white shadow-[0_20px_40px_rgba(0,0,0,0.05),0_2px_8px_rgba(0,0,0,0.03)] md:block md:min-h-0 md:flex-1 md:rounded-3xl">
+            <div class="relative w-[48%] flex-shrink-0 overflow-hidden rounded-r-[1.25rem] md:absolute md:inset-0 md:w-auto md:rounded-none">
+              <img alt="Campamento ARDE" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" src="/ministries/arde/campaarde.jpg" />
+            </div>
+            <div class="flex flex-1 flex-col justify-center bg-white px-4 md:hidden">
+              <span class="inline-flex rounded-full bg-primary px-2 py-1 text-[9px] uppercase tracking-[0.2em] text-charcoal font-semibold mb-1.5">Campa ARDE</span>
+              <h3 class="font-display text-sm font-semibold text-charcoal leading-tight">Campamento ARDE</h3>
+              <p class="text-charcoal/55 text-[11px] mt-0.5 line-clamp-2">Una experiencia para adolescentes con amigos, palabra y dias que no se olvidan facil.</p>
+            </div>
+            <div class="hidden md:block absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+            <div class="hidden md:block absolute inset-x-0 bottom-0 p-5 sm:p-6 z-10">
               <span class="inline-flex rounded-full bg-primary px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-charcoal font-semibold mb-3">Campa ARDE</span>
               <h3 class="font-display text-2xl text-white mb-2">Campamento ARDE</h3>
               <p class="text-white/80 text-sm">Una experiencia para adolescentes con amigos, palabra y dias que no se olvidan facil.</p>
             </div>
           </a>
-          <a data-animate="card" href="/ministerios/kids" class="relative min-h-[205px] md:min-h-0 flex-1 rounded-2xl md:rounded-3xl overflow-hidden border-[12px] border-white shadow-[0_20px_40px_rgba(0,0,0,0.05),0_2px_8px_rgba(0,0,0,0.03)] group bg-charcoal text-white">
-            <img alt="Campa Kids" class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" src="/ministries/kids/campakids.jpg" />
-            <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent"></div>
-            <div class="absolute inset-x-0 bottom-0 p-5 sm:p-6 z-10">
+          <a data-animate="card" href="/ministerios/kids"
+            class="group relative flex h-[130px] overflow-hidden rounded-2xl border-[12px] border-white bg-white shadow-[0_20px_40px_rgba(0,0,0,0.05),0_2px_8px_rgba(0,0,0,0.03)] md:block md:min-h-0 md:flex-1 md:rounded-3xl">
+            <div class="relative w-[48%] flex-shrink-0 overflow-hidden rounded-r-[1.25rem] md:absolute md:inset-0 md:w-auto md:rounded-none">
+              <img alt="Campa Kids" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" src="/ministries/kids/campakids.jpg" />
+            </div>
+            <div class="flex flex-1 flex-col justify-center bg-white px-4 md:hidden">
+              <span class="inline-flex rounded-full bg-primary px-2 py-1 text-[9px] uppercase tracking-[0.2em] text-charcoal font-semibold mb-1.5">Campa Kids</span>
+              <h3 class="font-display text-sm font-semibold text-charcoal leading-tight">Campamento Kids</h3>
+              <p class="text-charcoal/55 text-[11px] mt-0.5 line-clamp-2">Una aventura para que los chicos aprendan, jueguen y vivan la fe con alegria.</p>
+            </div>
+            <div class="hidden md:block absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent"></div>
+            <div class="hidden md:block absolute inset-x-0 bottom-0 p-5 sm:p-6 z-10">
               <span class="inline-flex rounded-full bg-primary px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-charcoal font-semibold mb-3">Campa Kids</span>
               <h3 class="font-display text-2xl text-white mb-2">Campamento Kids</h3>
               <p class="text-white/80 text-sm">Una aventura para que los chicos aprendan, jueguen y vivan la fe con alegria.</p>
