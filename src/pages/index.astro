@@ -25,7 +25,7 @@ const sermonSeries = [
     subtitle: 'Restauración para el corazón',
     label: 'Serie anterior',
     image: '/series/seriesanados.jpg',
-    href: seriesPlaylistUrl,
+    href: 'https://www.youtube.com/playlist?list=PLbq3XgHcmjEv4unRsnKoJVVnt9yLDdv4T',
     description: 'Una serie para recibir sanidad, libertad y restauración en Jesús.',
   },
   {
@@ -33,7 +33,7 @@ const sermonSeries = [
     subtitle: 'Serie febrero 2026',
     label: 'Serie anterior',
     image: '/series/seriedescanso.jpg',
-    href: 'https://www.youtube.com/live/4Vc9WsM4SlY?si=T83Ax_e5yMpvljs-',
+    href: 'https://www.youtube.com/playlist?list=PLbq3XgHcmjEuy20aDEPjbTu6MUZhOCUqG',
     description: 'Una serie para volver al ritmo de Dios y aprender a descansar en su presencia.',
   },
   {
@@ -103,7 +103,7 @@ const currentDevotionalEmbedUrl = getYouTubeEmbedUrl(currentDevotionalPost?.vide
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`Ver serie ${currentSeries.title}`}
-          class="group relative block h-[440px] overflow-hidden rounded-lg bg-black md:h-[520px] lg:col-span-2"
+          class="group relative block h-[440px] overflow-hidden rounded-[2.5rem] border-4 border-white bg-black md:h-[520px] lg:col-span-2"
         >
           <picture class="absolute inset-0 block h-full w-full">
             {currentSeries.mobileImage && <source media="(max-width: 767px)" srcset={currentSeries.mobileImage} />}
@@ -116,11 +116,10 @@ const currentDevotionalEmbedUrl = getYouTubeEmbedUrl(currentDevotionalPost?.vide
           <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/25 to-black/10"></div>
           <div class="absolute inset-x-0 bottom-0 z-10 flex flex-col gap-6 p-6 sm:p-8 md:p-10 lg:flex-row lg:items-end lg:justify-between">
             <div class="max-w-2xl">
-              <span class="mb-4 inline-flex rounded bg-primary px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-charcoal">
+              <span class="mb-4 inline-flex rounded-full bg-white px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-charcoal">
                 {currentSeries.label}
               </span>
               <h3 class="font-display text-4xl font-semibold uppercase tracking-tight text-white sm:text-5xl md:text-6xl">{currentSeries.title}</h3>
-              <p class="mt-2 text-xl font-medium text-primary sm:text-2xl">{currentSeries.subtitle}</p>
               <p class="mt-4 max-w-xl text-sm leading-relaxed text-white/75 sm:text-base">{currentSeries.description}</p>
             </div>
             <span class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/30 text-white transition duration-300 group-hover:-translate-y-1 group-hover:rotate-[-30deg] group-hover:border-primary group-hover:text-primary">
@@ -280,10 +279,6 @@ const currentDevotionalEmbedUrl = getYouTubeEmbedUrl(currentDevotionalPost?.vide
           <h2 class="font-display text-4xl sm:text-5xl md:text-6xl text-charcoal mb-4">Nuestro Liderazgo / Ministerios</h2>
           <p class="text-gray-500 max-w-md">Áreas donde servimos y crecemos juntos como familia.</p>
         </div>
-        <a class="hidden md:inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-charcoal border-b border-charcoal pb-1 hover:text-primary hover:border-primary transition-colors" href="/ministerios">
-          Ver seccion
-          <span class="material-symbols-outlined text-sm">arrow_outward</span>
-        </a>
       </div>
       <div class="flex flex-wrap justify-center gap-4 sm:gap-5 lg:gap-6">
         {
