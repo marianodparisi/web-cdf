@@ -135,20 +135,19 @@ const currentDevotionalEmbedUrl = getYouTubeEmbedUrl(currentDevotionalPost?.vide
                   href={series.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="group relative block h-[150px] overflow-hidden rounded-[1.75rem] border-4 border-white bg-white shadow-[6px_6px_24px_rgba(0,0,0,0.8),-3px_-3px_12px_rgba(60,60,60,0.2)] transition duration-300 hover:-translate-y-1"
+                  class="group flex h-[130px] overflow-hidden rounded-[1.75rem] border-4 border-white bg-white shadow-[6px_6px_24px_rgba(0,0,0,0.8),-3px_-3px_12px_rgba(60,60,60,0.2)] transition duration-300 hover:-translate-y-1"
                 >
-                  <div class="absolute inset-x-0 top-0 h-[58%] overflow-hidden">
+                  <div class="relative w-[48%] flex-shrink-0 overflow-hidden rounded-r-[1.25rem]">
                     <img
                       src={series.image}
                       alt={`Serie ${series.title}`}
                       class="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
                     />
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/25 to-transparent"></div>
                   </div>
-                  <div class="absolute inset-x-0 bottom-0 flex h-[42%] flex-col justify-center bg-white px-4">
+                  <div class="flex flex-1 flex-col justify-center bg-white px-4">
                     <span class="text-[9px] font-bold uppercase tracking-[0.2em] text-charcoal/40">{series.label}</span>
                     <h4 class="font-display text-sm font-semibold leading-tight text-charcoal transition-colors group-hover:text-primary">{series.title}</h4>
-                    <p class="mt-0.5 line-clamp-1 text-[11px] leading-relaxed text-charcoal/55">{series.subtitle}</p>
+                    <p class="mt-0.5 line-clamp-2 text-[11px] leading-relaxed text-charcoal/55">{series.subtitle}</p>
                   </div>
                 </a>
               ))
