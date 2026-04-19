@@ -8,15 +8,6 @@ export interface EvangelismFront {
 
 export const evangelismFronts: EvangelismFront[] = [
   {
-    slug: 'carcelario',
-    title: 'Carcelario',
-    subtitle: 'Esperanza y restauracion',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuAHZ33zm0Bs_C_OrpCQi9xRm6PBscs-Wxps3Cv0_KQGUbVgy52G5MRZgfOhN4zgt44-ml47ou4i38rhzMxJ9EM1UWlT3BkNdxAC6Mstlc1c5U51Vd1L7SuLtCeZyZL4jjoHhT2OpAA-Ag0I_gEq3OKNwDfPFf7HJ0nOx9rfFnZ06j1HL1Os7abB6JPzmwRsTbpsaDAA1G7u-hbg2mkmStCVpQ4rps5UcsaOszL1yQrbw70xavRVpTiqSajlJ8W5EI7zQaufTPS5mYI',
-    description:
-      'Visitamos unidades penitenciarias para compartir la Palabra, orar y acompanar procesos de restauracion espiritual.',
-  },
-  {
     slug: 'hospitales',
     title: 'Hospitales',
     subtitle: 'Consuelo y fe',

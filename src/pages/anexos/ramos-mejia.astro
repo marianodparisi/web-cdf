@@ -1,0 +1,37 @@
+---
+import AnexoTemplate from '../../components/AnexoTemplate.astro';
+import Footer from '../../components/Footer.astro';
+import Navbar from '../../components/Navbar.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Sede Ramos Mejía | Iglesia Corazón de Fuego">
+  <Navbar />
+  <AnexoTemplate
+    title="Ramos Mejía"
+    subtitle="Nuestra sede principal, un lugar de encuentro, adoracion y formacion para toda la familia."
+    heroImage="/nosotros1.JPG"
+    storyImage="/nosotros2.JPG"
+    mapImage="/nosotros3.JPG"
+    storyTitle="Una casa para adorar, crecer y servir juntos."
+    storyParagraphs={[
+      'En Ramos Mejía nos reunimos como familia para buscar a Dios, recibir palabra, adorar y caminar procesos de formacion espiritual.',
+      'Desde esta sede se acompanan ministerios, equipos de servicio, espacios de discipulado y acciones que bendicen a la ciudad y a otras localidades.',
+    ]}
+    yearsValue="Casa"
+    yearsLabel="Sede principal"
+    localValue="CDF"
+    localLabel="Familia de fe"
+    locationTitle="Te esperamos en Ramos Mejía."
+    addressLines={['Leandro N. Alem 467', 'Ramos Mejía, Buenos Aires']}
+    meetingsLines={['Domingos — reuniones generales', 'Actividades ministeriales durante la semana']}
+    ctaTitle="Un lugar para encontrarte con Dios."
+    ctaText="La Sede Ramos Mejía es una casa abierta para cada persona y familia que quiere crecer en fe, comunidad y servicio."
+    primaryColor="#c5a059"
+    primaryDarkColor="#a8893d"
+    surfaceColor="#f9f9f7"
+    surfaceAltColor="#f3f4f6"
+    outlineColor="#d1d5db"
+  />
+  <Footer />
+</BaseLayout>

@@ -1,0 +1,28 @@
+---
+import Footer from '../../components/Footer.astro';
+import MinistryTemplate from '../../components/MinistryTemplate.astro';
+import Navbar from '../../components/Navbar.astro';
+import { ministries } from '../../data/ministries';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const ministry = ministries.find((item) => item.slug === 'protocolo');
+if (!ministry) throw new Error('Ministerio protocolo no encontrado');
+---
+
+<BaseLayout title="Protocolo | Iglesia Corazón de Fuego">
+  <Navbar />
+  <MinistryTemplate
+    title={ministry.name}
+    tagline={ministry.excerpt}
+    heroImage={ministry.image}
+    badge={ministry.area}
+    intro={ministry.description}
+    focusTitle="Bienvenida"
+    focusText={ministry.description}
+    participationTitle="Cómo sumarte"
+    participationText={ministry.participation}
+    scheduleTitle="Ritmo de servicio"
+    scheduleText={ministry.schedule}
+  />
+  <Footer />
+</BaseLayout>

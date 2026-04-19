@@ -59,6 +59,55 @@ export const ministries: Ministry[] = [
     schedule: 'Salidas regulares, acciones comunitarias y campanas especiales.',
   },
   {
+    slug: 'carcelario',
+    name: 'Ministerio Carcelario',
+    area: 'Restauracion',
+    image:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuAHZ33zm0Bs_C_OrpCQi9xRm6PBscs-Wxps3Cv0_KQGUbVgy52G5MRZgfOhN4zgt44-ml47ou4i38rhzMxJ9EM1UWlT3BkNdxAC6Mstlc1c5U51Vd1L7SuLtCeZyZL4jjoHhT2OpAA-Ag0I_gEq3OKNwDfPFf7HJ0nOx9rfFnZ06j1HL1Os7abB6JPzmwRsTbpsaDAA1G7u-hbg2mkmStCVpQ4rps5UcsaOszL1yQrbw70xavRVpTiqSajlJ8W5EI7zQaufTPS5mYI',
+    excerpt: 'Esperanza, palabra y acompanamiento en contextos de encierro.',
+    description:
+      'El Ministerio Carcelario visita unidades penitenciarias para compartir la Palabra, orar y acompanar procesos de restauracion espiritual.',
+    participation:
+      'Pueden sumarse personas con corazon pastoral, disposicion para servir y compromiso con el acompanamiento responsable.',
+    schedule: 'Visitas programadas, preparacion previa y seguimiento pastoral durante el mes.',
+  },
+  {
+    slug: 'alabanza-y-adoracion',
+    name: 'Alabanza y Adoración',
+    area: 'Adoración',
+    image: '/nosotros1.JPG',
+    excerpt: 'Un equipo que sirve guiando a la iglesia en alabanza y adoración.',
+    description:
+      'El Ministerio de Alabanza y Adoración prepara y acompana los tiempos congregacionales para exaltar a Jesus con excelencia, sensibilidad y unidad.',
+    participation:
+      'Pueden sumarse musicos, cantantes y servidores con compromiso espiritual, disposicion para ensayar y corazon de adoracion.',
+    schedule: 'Ensayos, reuniones de preparacion y servicio durante los encuentros generales.',
+  },
+  {
+    slug: 'multimedia',
+    name: 'Multimedia',
+    area: 'Comunicacion',
+    image: '/serie.png',
+    excerpt: 'Servicio tecnico y creativo para comunicar lo que Dios hace en la casa.',
+    description:
+      'Multimedia acompana cada reunion y proyecto desde sonido, pantallas, transmision, fotografia, video y comunicacion visual.',
+    participation:
+      'Pueden sumarse personas con experiencia tecnica o ganas de aprender en equipos de sonido, camaras, streaming, diseno y contenido.',
+    schedule: 'Servicio en reuniones, eventos especiales y espacios de capacitacion por equipo.',
+  },
+  {
+    slug: 'protocolo',
+    name: 'Protocolo',
+    area: 'Servicio',
+    image: '/nosotros2.JPG',
+    excerpt: 'Recepcion, orden y cuidado para que cada persona se sienta bienvenida.',
+    description:
+      'Protocolo sirve en la bienvenida, orientacion y organizacion de los encuentros, cuidando los detalles practicos de cada reunion.',
+    participation:
+      'Pueden sumarse personas con actitud de servicio, amabilidad, responsabilidad y deseo de recibir bien a cada familia.',
+    schedule: 'Servicio durante reuniones generales, eventos especiales y coordinaciones previas.',
+  },
+  {
     slug: 'firmes-y-adelante',
     name: 'Firmes y Adelante',
     area: 'Hombres y matrimonios',
