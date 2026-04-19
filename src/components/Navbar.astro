@@ -165,7 +165,8 @@ const annexLinks = [
     </div>
     <div
       id="mobile-menu"
-      class="md:hidden overflow-hidden max-h-0 -translate-y-2 opacity-0 pointer-events-none transition-[max-height,opacity,padding,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+      class="md:hidden overflow-hidden -translate-y-2 opacity-0 pointer-events-none transition-[max-height,opacity,padding,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+      style="max-height: 0"
     >
       <div class="flex flex-col gap-1 border-t border-gray-100 pt-4">
         <a class="mobile-link px-2 py-2 text-xs font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors" href="/nosotros">Nosotros</a>
@@ -297,23 +298,29 @@ const annexLinks = [
   setupAccordion(mobileAccordions);
 
   if (button && menu) {
-    const closedClasses = ['max-h-0', '-translate-y-2', 'opacity-0', 'pointer-events-none'];
-    const openClasses = ['max-h-[42rem]', 'translate-y-0', 'opacity-100', 'pointer-events-auto', 'pb-5'];
+    const closedClasses = ['-translate-y-2', 'opacity-0', 'pointer-events-none'];
+    const openClasses = ['translate-y-0', 'opacity-100', 'pointer-events-auto', 'pb-5'];
 
     const closeAllAccordions = () => {
       mobileAccordions.forEach(closeAccordion);
+    };
+
+    const closeMenu = () => {
+      menu.style.maxHeight = '0px';
+      menu.classList.remove(...openClasses);
+      menu.classList.add(...closedClasses);
+      closeAllAccordions();
     };
 
     const toggleMenu = () => {
       const isExpanded = button.getAttribute('aria-expanded') === 'true';
       button.setAttribute('aria-expanded', String(!isExpanded));
       if (isExpanded) {
-        menu.classList.remove(...openClasses);
-        menu.classList.add(...closedClasses);
-        closeAllAccordions();
+        closeMenu();
       } else {
         menu.classList.remove(...closedClasses);
         menu.classList.add(...openClasses);
+        menu.style.maxHeight = menu.scrollHeight + 'px';
       }
     };
 
@@ -321,9 +328,7 @@ const annexLinks = [
     menu.querySelectorAll('.mobile-link').forEach((link) => {
       link.addEventListener('click', () => {
         button.setAttribute('aria-expanded', 'false');
-        menu.classList.remove(...openClasses);
-        menu.classList.add(...closedClasses);
-        closeAllAccordions();
+        closeMenu();
       });
     });
   }
