@@ -87,12 +87,12 @@ const currentDevotionalEmbedUrl = getYouTubeEmbedUrl(currentDevotionalPost?.vide
     </div>
   </section>
 
-  <section data-animate="reveal" class="min-h-screen bg-[#F8F5F0] py-14 shadow-[inset_0_6px_32px_rgba(0,0,0,0.07),inset_0_-6px_32px_rgba(0,0,0,0.04)] md:py-16">
+  <section data-animate="reveal" class="min-h-screen bg-[#f5f5f5] py-14 shadow-[inset_0_6px_32px_rgba(0,0,0,0.07),inset_0_-6px_32px_rgba(0,0,0,0.04)] md:py-16">
     <div class="mx-auto max-w-[90rem] px-5 sm:px-6 lg:px-8">
       <div class="mb-8 md:mb-10">
         <div>
           <p class="mb-3 text-xs font-bold uppercase tracking-[0.24em] text-primary">Series</p>
-          <h2 class="font-display text-4xl font-semibold tracking-tight text-charcoal sm:text-5xl md:text-6xl">Serie actual</h2>
+          <h2 class="font-display text-3xl font-medium tracking-tight text-charcoal/70 sm:text-4xl">Serie actual</h2>
         </div>
       </div>
 
@@ -103,9 +103,9 @@ const currentDevotionalEmbedUrl = getYouTubeEmbedUrl(currentDevotionalPost?.vide
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`Ver serie ${currentSeries.title}`}
-          class="group relative block h-[440px] overflow-hidden rounded-[2.5rem] border-[12px] border-white bg-white shadow-[0_20px_40px_rgba(0,0,0,0.05),0_2px_8px_rgba(0,0,0,0.03)] md:h-[520px] lg:col-span-2"
+          class="group relative block h-[460px] overflow-hidden rounded-[2.5rem] border-[12px] border-white bg-white shadow-[0_20px_40px_rgba(0,0,0,0.06)] transition-transform duration-200 hover:-translate-y-1 md:h-[540px] lg:col-span-2"
         >
-          <picture class="absolute inset-x-0 top-0 flex h-[70%] w-full items-center justify-center overflow-hidden rounded-b-[1.75rem]">
+          <picture class="absolute inset-x-0 top-0 flex h-[68%] w-full items-center justify-center overflow-hidden rounded-b-[1.75rem]">
             {currentSeries.mobileImage && <source media="(max-width: 767px)" srcset={currentSeries.mobileImage} />}
             <img
               src={currentSeries.image}
@@ -113,13 +113,14 @@ const currentDevotionalEmbedUrl = getYouTubeEmbedUrl(currentDevotionalPost?.vide
               class="h-full w-full object-cover object-center opacity-85 transition-transform duration-700 group-hover:scale-105"
             />
           </picture>
-          <div class="absolute inset-x-0 top-0 h-[70%] rounded-b-[1.75rem] bg-gradient-to-t from-black/55 via-black/10 to-black/5"></div>
-          <div class="absolute inset-x-0 bottom-0 z-10 flex h-[30%] flex-col justify-center bg-white py-6 pl-4 pr-6 sm:py-8 sm:pl-5 sm:pr-8 md:py-10 md:pl-6 md:pr-10">
-            <div class="flex max-w-2xl flex-col gap-3">
-              <span class="inline-flex w-fit rounded-full bg-charcoal px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-white">
+          <div class="absolute inset-x-0 top-0 h-[68%] rounded-b-[1.75rem] bg-gradient-to-t from-black/40 via-black/10 to-transparent"></div>
+          <div class="absolute inset-x-0 bottom-0 z-10 flex h-[32%] flex-col justify-center bg-white py-6 pl-5 pr-6 sm:py-8 sm:pl-7 sm:pr-8 md:py-10 md:pl-8 md:pr-10">
+            <div class="flex max-w-2xl flex-col gap-2">
+              <span class="inline-flex w-fit rounded-full bg-[#2b2b2b] px-[14px] py-[6px] text-[12px] font-bold uppercase tracking-[0.05em] text-white opacity-90">
                 {currentSeries.label}
               </span>
-              <p class="line-clamp-2 max-w-xl text-sm leading-relaxed text-charcoal/75 sm:text-base">{currentSeries.description}</p>
+              <h3 class="font-display text-2xl font-bold text-charcoal sm:text-3xl md:text-4xl">{currentSeries.title}</h3>
+              <p class="line-clamp-1 max-w-xl text-sm leading-relaxed text-gray-500">{currentSeries.description}</p>
             </div>
           </div>
         </a>
@@ -130,24 +131,25 @@ const currentDevotionalEmbedUrl = getYouTubeEmbedUrl(currentDevotionalPost?.vide
           </div>
           <div class="flex flex-col gap-4">
             {
-              recentSeries.slice(0, 3).map((series) => (
+              recentSeries.slice(0, 3).map((series, index) => (
                 <a
                   href={series.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="group flex h-[130px] overflow-hidden rounded-[1.75rem] border-[12px] border-white bg-white shadow-[0_20px_40px_rgba(0,0,0,0.05),0_2px_8px_rgba(0,0,0,0.03)] transition duration-300 hover:-translate-y-1"
+                  class={`group flex h-[130px] overflow-hidden rounded-[1.75rem] border-[12px] border-white bg-white shadow-[0_20px_40px_rgba(0,0,0,0.06)] transition-transform duration-200 hover:-translate-y-1 ${index % 2 === 1 ? 'flex-row-reverse' : ''}`}
                 >
-                  <div class="relative w-[48%] flex-shrink-0 overflow-hidden rounded-r-[1.25rem]">
+                  <div class={`relative w-[48%] flex-shrink-0 overflow-hidden ${index % 2 === 1 ? 'rounded-l-[1.25rem]' : 'rounded-r-[1.25rem]'}`}>
                     <img
                       src={series.image}
                       alt={`Serie ${series.title}`}
                       class="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
                     />
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
                   </div>
                   <div class="flex flex-1 flex-col justify-center bg-white px-4">
                     <span class="text-[9px] font-bold uppercase tracking-[0.2em] text-charcoal/40">{series.label}</span>
                     <h4 class="font-display text-sm font-semibold leading-tight text-charcoal transition-colors group-hover:text-primary">{series.title}</h4>
-                    <p class="mt-0.5 line-clamp-2 text-[11px] leading-relaxed text-charcoal/55">{series.subtitle}</p>
+                    <p class="mt-0.5 line-clamp-2 text-[11px] leading-relaxed text-gray-500">{series.subtitle}</p>
                   </div>
                 </a>
               ))
