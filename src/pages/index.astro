@@ -103,9 +103,9 @@ const currentDevotionalEmbedUrl = getYouTubeEmbedUrl(currentDevotionalPost?.vide
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`Ver serie ${currentSeries.title}`}
-          class="group relative block h-[440px] overflow-hidden rounded-[2.5rem] border-4 border-white bg-black md:h-[520px] lg:col-span-2"
+          class="group relative block h-[440px] overflow-hidden rounded-[2.5rem] border-8 border-white bg-black md:h-[520px] lg:col-span-2"
         >
-          <picture class="absolute inset-0 block h-full w-full">
+          <picture class="absolute inset-x-0 top-0 block h-[70%] w-full">
             {currentSeries.mobileImage && <source media="(max-width: 767px)" srcset={currentSeries.mobileImage} />}
             <img
               src={currentSeries.image}
@@ -113,18 +113,14 @@ const currentDevotionalEmbedUrl = getYouTubeEmbedUrl(currentDevotionalPost?.vide
               class="h-full w-full object-cover object-center opacity-85 transition-transform duration-700 group-hover:scale-105"
             />
           </picture>
-          <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/25 to-black/10"></div>
-          <div class="absolute inset-x-0 bottom-0 z-10 flex flex-col gap-6 p-6 sm:p-8 md:p-10 lg:flex-row lg:items-end lg:justify-between">
-            <div class="max-w-2xl">
-              <span class="mb-4 inline-flex rounded-full bg-white px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-charcoal">
+          <div class="absolute inset-x-0 top-0 h-[70%] bg-gradient-to-t from-black/55 via-black/10 to-black/5"></div>
+          <div class="absolute inset-x-0 bottom-0 z-10 flex h-[30%] flex-col justify-center p-6 sm:p-8 md:p-10">
+            <div class="flex max-w-2xl flex-col gap-3">
+              <span class="inline-flex w-fit rounded-full bg-white px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-charcoal">
                 {currentSeries.label}
               </span>
-              <h3 class="font-display text-4xl font-semibold uppercase tracking-tight text-white sm:text-5xl md:text-6xl">{currentSeries.title}</h3>
-              <p class="mt-4 max-w-xl text-sm leading-relaxed text-white/75 sm:text-base">{currentSeries.description}</p>
+              <p class="line-clamp-2 max-w-xl text-sm leading-relaxed text-white/75 sm:text-base">{currentSeries.description}</p>
             </div>
-            <span class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/30 text-white transition duration-300 group-hover:-translate-y-1 group-hover:rotate-[-30deg] group-hover:border-primary group-hover:text-primary">
-              <span class="material-symbols-outlined text-xl">arrow_forward</span>
-            </span>
           </div>
         </a>
 
