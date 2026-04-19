@@ -1,322 +1,74 @@
 ---
-import Footer from '../components/Footer.astro';
-import Hero from '../components/Hero.astro';
-import Navbar from '../components/Navbar.astro';
-import { devotionalPosts } from '../data/devotionals';
-import { ministries } from '../data/ministries';
 import BaseLayout from '../layouts/BaseLayout.astro';
-
-const logoSlugs = new Set(['gold', 'kids', 'arde']);
-const currentDevotionalPost = devotionalPosts[0];
-const seriesPlaylistUrl = 'https://www.youtube.com/@Coraz%C3%B3ndeFuego/playlists';
-const sermonSeries = [
-  {
-    title: 'Éxodo',
-    subtitle: 'El camino hacia la libertad',
-    label: 'Serie actual',
-    image: '/exododesktop.jpg',
-    mobileImage: '/exodomobile.jpg',
-    href: 'https://www.youtube.com/playlist?list=PLbq3XgHcmjEtwhYdGCqO8PqbFY7EMFI5p',
-    description:
-      'Un recorrido por el libro de Éxodo para ver la fidelidad de Dios, la libertad y el camino hacia su propósito.',
-  },
-  {
-    title: 'Descanso',
-    subtitle: 'Serie febrero 2026',
-    label: 'Serie anterior',
-    image: '/descanso.jpeg',
-    href: 'https://www.youtube.com/live/4Vc9WsM4SlY?si=T83Ax_e5yMpvljs-',
-    description: 'Una serie para volver al ritmo de Dios y aprender a descansar en su presencia.',
-  },
-];
-const [currentSeries, ...recentSeries] = sermonSeries;
-const getYouTubeEmbedUrl = (videoUrl?: string) => {
-  if (!videoUrl) return null;
-  try {
-    const url = new URL(videoUrl);
-    const idFromPath = url.pathname.startsWith('/live/') ? url.pathname.split('/live/')[1] : null;
-    const idFromQuery = url.searchParams.get('v');
-    const videoId = idFromQuery || idFromPath;
-    return videoId ? `https://www.youtube.com/embed/${videoId}` : videoUrl;
-  } catch {
-    return videoUrl;
-  }
-};
-const currentDevotionalEmbedUrl = getYouTubeEmbedUrl(currentDevotionalPost?.videoUrl);
 ---
 
-<BaseLayout>
-  <Navbar />
-  <Hero />
-
-  <section data-animate="reveal" class="bg-white py-16 md:py-24">
-    <div class="mx-auto max-w-[90rem] px-5 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 gap-8 md:grid-cols-[1.05fr_0.95fr] md:items-center md:gap-14">
-        <div>
-          <p class="mb-3 text-xs font-bold uppercase tracking-[0.22em] text-primary">Quiénes somos</p>
-          <h2 class="font-display text-4xl font-semibold leading-[1.05] tracking-tight text-charcoal sm:text-5xl lg:text-6xl">
-            Existimos para ministrar al Señor y encender una generación.
-          </h2>
-        </div>
-        <div>
-          <p class="max-w-2xl text-base leading-relaxed text-gray-600 sm:text-lg">
-            Iglesia Corazón de Fuego es una casa de adoración, oración y formación. Nos reunimos para darle a Dios gratitud y alabanza, afirmar quién es Él, interceder por lo que desea hacer y caminar como familia en el propósito que nos confió.
-          </p>
-          <a class="mt-8 inline-flex items-center gap-2 border-b border-charcoal pb-1 text-xs font-bold uppercase tracking-widest text-charcoal transition-colors hover:border-primary hover:text-primary" href="/nosotros">
-            Conocé más de nosotros
-            <span class="material-symbols-outlined text-sm">arrow_outward</span>
-          </a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <section data-animate="reveal" class="min-h-screen bg-[#101010] py-14 text-white md:py-16">
-    <div class="mx-auto max-w-[90rem] px-5 sm:px-6 lg:px-8">
-      <div class="mb-8 md:mb-10">
-        <div>
-          <p class="mb-3 text-xs font-bold uppercase tracking-[0.24em] text-primary">Series</p>
-          <h2 class="font-display text-4xl font-semibold tracking-tight text-white sm:text-5xl md:text-6xl">Serie actual</h2>
-        </div>
-      </div>
-
-      <div class="grid grid-cols-1 gap-6 lg:grid-cols-3 lg:gap-8">
-        <a
-          data-animate="card"
-          href={currentSeries.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`Ver serie ${currentSeries.title}`}
-          class="group relative block h-[440px] overflow-hidden rounded-lg bg-black md:h-[520px] lg:col-span-2"
-        >
-          <picture class="absolute inset-0 block h-full w-full">
-            {currentSeries.mobileImage && <source media="(max-width: 767px)" srcset={currentSeries.mobileImage} />}
-            <img
-              src={currentSeries.image}
-              alt={`Serie ${currentSeries.title}`}
-              class="h-full w-full object-cover object-center opacity-85 transition-transform duration-700 group-hover:scale-105"
-            />
-          </picture>
-          <div class="absolute inset-0 bg-gradient-to-t from-black/95 via-black/25 to-black/10"></div>
-          <div class="absolute inset-x-0 bottom-0 z-10 flex flex-col gap-6 p-6 sm:p-8 md:p-10 lg:flex-row lg:items-end lg:justify-between">
-            <div class="max-w-2xl">
-              <span class="mb-4 inline-flex rounded bg-primary px-3 py-1 text-[10px] font-bold uppercase tracking-[0.2em] text-charcoal">
-                {currentSeries.label}
-              </span>
-              <h3 class="font-display text-4xl font-semibold uppercase tracking-tight text-white sm:text-5xl md:text-6xl">{currentSeries.title}</h3>
-              <p class="mt-2 text-xl font-medium text-primary sm:text-2xl">{currentSeries.subtitle}</p>
-              <p class="mt-4 max-w-xl text-sm leading-relaxed text-white/75 sm:text-base">{currentSeries.description}</p>
-            </div>
-            <span class="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/30 text-white transition duration-300 group-hover:-translate-y-1 group-hover:rotate-[-30deg] group-hover:border-primary group-hover:text-primary">
-              <span class="material-symbols-outlined text-xl">arrow_forward</span>
-            </span>
+<BaseLayout title="Corazón de Fuego - Próximamente">
+  <main class="flex min-h-screen flex-col bg-[#111111] text-white">
+    <section class="flex flex-1 items-center justify-center px-5 py-20 text-center sm:px-6 lg:px-8">
+      <div class="mx-auto flex max-w-5xl flex-col items-center">
+        <div class="mb-8 flex flex-col items-center gap-4">
+          <div class="flex h-16 w-16 items-center justify-center rounded bg-white/[0.06] ring-1 ring-white/10">
+            <span class="material-symbols-outlined text-4xl text-primary" style="font-variation-settings: 'FILL' 1;">local_fire_department</span>
           </div>
+          <p class="text-xs font-bold uppercase tracking-[0.28em] text-primary">Corazón de Fuego</p>
+        </div>
+
+        <h1 class="font-display text-[clamp(3.25rem,12vw,9rem)] font-extrabold uppercase leading-[0.88] tracking-tight text-white">
+          Próximamente
+        </h1>
+
+        <p class="mt-8 max-w-xl text-base leading-relaxed text-white/65 sm:text-lg md:text-xl">
+          Algo nuevo está naciendo.
+        </p>
+      </div>
+    </section>
+
+    <footer class="border-t border-white/10 bg-[#171717] px-5 py-8 sm:px-6 lg:px-8">
+      <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 text-center md:flex-row md:text-left">
+        <a class="font-display text-sm font-bold uppercase tracking-[0.22em] text-primary" href="/">
+          Corazón de Fuego
         </a>
 
-        <aside data-animate="card" class="flex flex-col">
-          <div class="mb-5 flex items-center justify-between">
-            <h3 class="text-lg font-bold tracking-tight text-white">Series anteriores</h3>
-          </div>
-          <div class="flex flex-col gap-4">
-            {
-              recentSeries.slice(0, 3).map((series) => (
-                <a
-                  href={series.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="group grid grid-cols-[6rem_1fr] gap-4 rounded-lg border border-white/10 bg-white/[0.04] p-3 transition duration-300 hover:-translate-y-1 hover:border-primary/50 hover:bg-white/[0.07]"
-                >
-                  <div class="h-24 overflow-hidden rounded bg-black">
-                    <img
-                      src={series.image}
-                      alt={`Serie ${series.title}`}
-                      class="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
-                    />
-                  </div>
-                  <div class="flex min-w-0 flex-col justify-center">
-                    <span class="mb-1 text-[10px] font-bold uppercase tracking-[0.2em] text-white/45">{series.label}</span>
-                    <h4 class="font-display text-lg font-semibold leading-tight text-white transition-colors group-hover:text-primary">{series.title}</h4>
-                    <p class="mt-1 line-clamp-2 text-sm leading-relaxed text-white/55">{series.subtitle}</p>
-                  </div>
-                </a>
-              ))
-            }
-          </div>
+        <div class="flex items-center gap-3">
           <a
-            href={seriesPlaylistUrl}
+            class="flex h-10 w-10 items-center justify-center rounded border border-white/20 text-white transition-colors hover:border-primary hover:text-primary"
+            href="https://www.facebook.com/corazondefuegoiglesia/?locale=es_LA"
             target="_blank"
             rel="noopener noreferrer"
-            class="group mt-7 inline-flex w-fit items-center gap-2 text-xs font-bold uppercase tracking-widest text-primary transition-all hover:gap-4"
+            aria-label="Facebook"
           >
-            Ver todas las series
-            <span class="material-symbols-outlined text-base">arrow_forward</span>
+            <svg class="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"></path>
+            </svg>
           </a>
-        </aside>
-      </div>
-    </div>
-  </section>
-
-  <section data-animate="reveal" class="py-14 md:py-12 bg-white" id="novedades">
-    <div class="mx-auto max-w-[90rem] px-5 sm:px-6 lg:px-8">
-      <div class="flex flex-col md:flex-row justify-between items-end mb-8 md:mb-10">
-        <div>
-          <h2 class="font-display text-4xl sm:text-5xl md:text-6xl text-charcoal mb-2">Anuncios</h2>
-          <p class="text-gray-500 max-w-md">Entérate de lo que está sucediendo en nuestra casa.</p>
-        </div>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-8">
-        <a
-          data-animate="card"
-          href="/ministerios/gold"
-          aria-label="Ver más sobre Encuentro GOLD"
-          class="md:col-span-2 relative block w-full h-[300px] sm:h-[360px] md:h-[450px] rounded-2xl md:rounded-3xl overflow-hidden shadow-lg group"
-        >
-          <img alt="Anuncio GOLD" class="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-700 group-hover:scale-[1.02]" src="/goldanuncio.jpg" />
-          <div class="absolute inset-0 bg-gradient-to-t from-charcoal/90 via-charcoal/20 to-transparent flex flex-col justify-end p-6 sm:p-8 md:p-10">
-            <span class="bg-primary text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider w-fit mb-3">Destacado</span>
-            <h3 class="font-display text-2xl sm:text-3xl md:text-4xl text-white leading-tight mb-2">
-              Encuentro GOLD
-            </h3>
-            <p class="text-gray-200 text-sm md:text-base max-w-lg mb-4 md:mb-6 font-light">
-              Un tiempo especial para compartir palabra, compañerismo y crecimiento.
-            </p>
-            <div>
-              <span class="hidden md:inline-flex items-center gap-2 text-white border-b border-white/50 pb-1 text-sm font-bold tracking-wider transition-colors group-hover:border-primary group-hover:text-primary">
-                Ver más
-              </span>
-            </div>
-          </div>
-        </a>
-        <div class="flex flex-col gap-5 md:gap-8 h-auto md:h-[450px]">
-          <a data-animate="card" href="/ministerios/arde" class="relative min-h-[205px] md:min-h-0 flex-1 rounded-2xl md:rounded-3xl overflow-hidden shadow-md group bg-charcoal">
-            <img alt="Campamento ARDE" class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" src="/campaarde.jpg" />
-            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-            <div class="absolute inset-x-0 bottom-0 p-5 sm:p-6 z-10">
-              <span class="inline-flex rounded-full bg-primary px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-charcoal font-semibold mb-3">Campa ARDE</span>
-              <h3 class="font-display text-2xl text-white mb-2">Campamento ARDE</h3>
-              <p class="text-white/80 text-sm">Una experiencia para adolescentes con amigos, palabra y dias que no se olvidan facil.</p>
-            </div>
+          <a
+            class="flex h-10 w-10 items-center justify-center rounded border border-white/20 text-white transition-colors hover:border-primary hover:text-primary"
+            href="https://www.instagram.com/corazondefuegoiglesia/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram"
+          >
+            <svg class="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.069-4.85.069-3.204 0-3.584-.012-4.849-.069-3.225-.149-4.771-1.664-4.919-4.919-.058-1.265-.069-1.644-.069-4.849 0-3.204.012-3.584.069-4.849.149-3.225 1.664-4.771 4.919-4.919 1.265-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path>
+            </svg>
           </a>
-          <a data-animate="card" href="/ministerios/kids" class="relative min-h-[205px] md:min-h-0 flex-1 rounded-2xl md:rounded-3xl overflow-hidden shadow-md group bg-charcoal text-white">
-            <img alt="Campa Kids" class="absolute inset-0 h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" src="/campakids.jpg" />
-            <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent"></div>
-            <div class="absolute inset-x-0 bottom-0 p-5 sm:p-6 z-10">
-              <span class="inline-flex rounded-full bg-primary px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-charcoal font-semibold mb-3">Campa Kids</span>
-              <h3 class="font-display text-2xl text-white mb-2">Campamento Kids</h3>
-              <p class="text-white/80 text-sm">Una aventura para que los chicos aprendan, jueguen y vivan la fe con alegria.</p>
-            </div>
+          <a
+            class="flex h-10 w-10 items-center justify-center rounded border border-white/20 text-white transition-colors hover:border-primary hover:text-primary"
+            href="https://www.youtube.com/@Coraz%C3%B3ndeFuego"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="YouTube"
+          >
+            <svg class="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="currentColor" d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"></path>
+            </svg>
           </a>
         </div>
-      </div>
-    </div>
-  </section>
 
-  <section data-animate="reveal" class="py-14 md:py-16 bg-white" id="devocional">
-    <div class="mx-auto max-w-[90rem] px-5 sm:px-6 lg:px-8">
-      <div class="flex flex-col md:flex-row justify-between items-end mb-8 md:mb-10">
-        <div>
-          <h2 class="font-display text-4xl sm:text-5xl md:text-6xl text-charcoal mb-2">Devocional Actual</h2>
-        </div>
+        <p class="text-xs uppercase tracking-[0.16em] text-white/45">
+          © 2026 Corazón de Fuego
+        </p>
       </div>
-      {currentDevotionalPost && (
-        <a href="/devocional" data-animate="card" class="group grid cursor-pointer grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-6 md:gap-8 items-stretch rounded-3xl border border-gray-200 bg-gray-50 p-5 sm:p-6 md:p-8 transition-colors hover:border-primary/50">
-          <div class="flex flex-col justify-center">
-            <div class="flex flex-wrap items-center gap-2">
-              <span class="inline-flex rounded-full bg-gray-100 px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-charcoal font-semibold">{currentDevotionalPost.weekLabel}</span>
-              <span class="inline-flex rounded-full bg-primary px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-charcoal font-semibold">Actual</span>
-            </div>
-            <h3 class="font-display text-3xl md:text-4xl text-charcoal mt-4 transition-colors group-hover:text-primary">{currentDevotionalPost.title}</h3>
-            <p class="text-gray-600 text-sm sm:text-base mt-4 leading-relaxed">{currentDevotionalPost.excerpt}</p>
-            <span class="mt-6 inline-flex h-10 w-10 items-center justify-center rounded-full border border-charcoal/20 text-charcoal transition duration-300 ease-out group-hover:-translate-y-1 group-hover:rotate-[-30deg] group-hover:border-primary group-hover:text-primary">
-              <span class="material-symbols-outlined text-xl">arrow_forward</span>
-            </span>
-          </div>
-
-          <div class="relative overflow-hidden rounded-2xl bg-charcoal shadow-sm lg:max-h-[320px]">
-            {currentDevotionalEmbedUrl ? (
-              <iframe
-                class="pointer-events-none min-h-[230px] w-full aspect-video lg:h-full lg:aspect-auto"
-                src={currentDevotionalEmbedUrl}
-                title={currentDevotionalPost.title}
-                loading="lazy"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowfullscreen
-              ></iframe>
-            ) : (
-              <div class="block h-full min-h-[210px]">
-                <img
-                  src={currentDevotionalPost.image}
-                  alt={currentDevotionalPost.title}
-                  class="h-full w-full object-cover translate-y-2 scale-105 transition-transform duration-500 group-hover:translate-y-2 group-hover:scale-110"
-                />
-              </div>
-            )}
-          </div>
-        </a>
-      )}
-    </div>
-  </section>
-
-  <section data-animate="reveal" class="py-16 md:py-24 bg-gray-50" id="ministerios">
-    <div class="mx-auto max-w-[90rem] px-5 sm:px-6 lg:px-8">
-      <div class="flex flex-col md:flex-row justify-between items-end mb-10 md:mb-16">
-        <div>
-          <h2 class="font-display text-4xl sm:text-5xl md:text-6xl text-charcoal mb-4">Nuestro Liderazgo / Ministerios</h2>
-          <p class="text-gray-500 max-w-md">Áreas donde servimos y crecemos juntos como familia.</p>
-        </div>
-        <a class="hidden md:inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-charcoal border-b border-charcoal pb-1 hover:text-primary hover:border-primary transition-colors" href="/ministerios">
-          Ver seccion
-          <span class="material-symbols-outlined text-sm">arrow_outward</span>
-        </a>
-      </div>
-      <div class="flex flex-wrap justify-center gap-4 sm:gap-5 lg:gap-6">
-        {
-          ministries.map((ministry) => (
-            <a data-animate="card" class="group flex w-[calc(50%-0.5rem)] min-w-0 max-w-[220px] flex-col items-center text-center md:w-[calc(33.333%-0.85rem)] lg:w-[calc(25%-1rem)] xl:w-[calc(16.666%-1rem)]" href={`/ministerios/${ministry.slug}`}>
-              <div class={`relative overflow-hidden rounded-2xl md:rounded-[1.5rem] mb-3 md:mb-4 aspect-[4/5] sm:aspect-[3/4] w-full ${logoSlugs.has(ministry.slug) ? 'bg-white border border-gray-300 p-3' : ''}`}>
-                <img
-                  alt={`Ministerio ${ministry.name}`}
-                  class={`w-full h-full transition duration-500 ${logoSlugs.has(ministry.slug) ? 'object-contain' : 'object-cover group-hover:scale-105'}`}
-                  src={ministry.image}
-                />
-                <div class={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-4 ${logoSlugs.has(ministry.slug) ? 'bg-gradient-to-t from-charcoal/45 to-transparent' : 'bg-gradient-to-t from-charcoal/80 to-transparent'}`}>
-                  <span class="text-white text-xs font-bold uppercase tracking-wider">Ver ministerio</span>
-                </div>
-              </div>
-              <h3 class="font-display text-base sm:text-lg text-charcoal group-hover:text-primary transition-colors">{ministry.name}</h3>
-              <p class="text-xs text-gray-500 font-bold uppercase tracking-widest mt-1">{ministry.area}</p>
-            </a>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
-  <section data-animate="reveal" class="py-14 md:py-12 bg-white" id="radio">
-    <div class="mx-auto max-w-[90rem] px-5 sm:px-6 lg:px-8">
-      <div class="bg-charcoal rounded-2xl md:rounded-3xl p-6 sm:p-8 md:p-16 flex flex-col md:flex-row items-center justify-between relative overflow-hidden">
-        <div class="absolute inset-0 opacity-10" style="background-image: url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'1\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E');"></div>
-        <div class="flex items-center gap-4 sm:gap-6 relative z-10">
-          <div class="h-20 w-20 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-md">
-            <span class="material-symbols-outlined text-white text-4xl">mic</span>
-          </div>
-          <div>
-            <h2 class="font-display text-4xl sm:text-5xl md:text-6xl text-white mb-2">Radio Corazón</h2>
-            <div class="flex items-center gap-3">
-              <span class="text-gray-400 text-xs tracking-widest uppercase">La frecuencia del cielo</span>
-              <div class="flex items-end gap-[3px] h-3 audio-wave">
-                <span></span><span></span><span></span><span></span><span></span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="mt-6 md:mt-0 relative z-10 flex flex-col md:flex-row items-center gap-4 md:gap-6">
-          <span class="px-4 py-1.5 bg-primary text-charcoal text-xs font-bold uppercase tracking-wider rounded-full">Próximamente</span>
-          <p class="text-white/60 text-sm font-light italic text-center md:text-right">"24/7 conectados contigo."</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <Footer />
+    </footer>
+  </main>
 </BaseLayout>
