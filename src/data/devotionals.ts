@@ -15,7 +15,7 @@ export const devotionalPosts: DevotionalPost[] = [
     title: 'El tiempo del Padre',
     type: 'Devocional',
     weekLabel: 'Malaquías 1:6-7',
-    image: '/devocionalejemplo.jpg',
+    image: '/devocional/devocionalejemplo.jpg',
     excerpt: 'Dios no busca lo que sobra de nuestra vida. Como Padre y Señor, merece honra, temor reverente y lo más valioso de nuestro tiempo.',
     content: [
       'El hijo honra al padre, y él siervo a su señor. Si, pues, soy yo padre, ¿dónde está mi honra? y si soy señor, ¿dónde está mi temor? dice Jehová de los ejércitos a vosotros, oh sacerdotes, que menospreciais mi nombre. Y decís: ¿En qué hemos menospreciado tu nombre? En que ofrecéis sobre mi altar pan inmundo. Y dijisteis: ¿En qué te hemos deshonrado? En que pensáis que la mesa de Jehová es despreciable.',
@@ -31,7 +31,7 @@ export const devotionalPosts: DevotionalPost[] = [
     title: 'Testimonio de restauracion familiar',
     type: 'Testimonio',
     weekLabel: 'Semana 4 - Febrero 2026',
-    image: '/gold.png',
+    image: '/ministries/gold/gold.png',
     excerpt: 'Un hogar que encontro direccion en Cristo a traves de la oracion perseverante.',
     content: [
       'Durante meses, una familia de la casa atraveso conversaciones quebradas y distancia emocional. En comunidad, comenzaron a caminar un proceso de perdon y restauracion.',
@@ -43,7 +43,7 @@ export const devotionalPosts: DevotionalPost[] = [
     title: 'Corazon disponible para servir',
     type: 'Devocional',
     weekLabel: 'Semana 3 - Febrero 2026',
-    image: '/arde.png',
+    image: '/ministries/arde/arde.png',
     excerpt: 'Servir no es solo una tarea, es una forma de amar al cuerpo de Cristo.',
     content: [
       'Dios forma caracter mientras servimos con fidelidad. Lo que hacemos en secreto, con amor y orden, construye una iglesia mas saludable para todos.',
@@ -55,7 +55,7 @@ export const devotionalPosts: DevotionalPost[] = [
     title: 'Fe en tiempos de espera',
     type: 'Devocional',
     weekLabel: 'Semana 2 - Febrero 2026',
-    image: '/kids.png',
+    image: '/ministries/kids/kids.png',
     excerpt: 'La espera tambien puede ser un lugar de crecimiento y confianza.',
     content: [
       'Esperar no significa estar detenido. En Dios, la espera es una temporada donde El ajusta motivaciones, afirma promesas y fortalece nuestra confianza.',

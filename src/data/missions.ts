@@ -19,7 +19,7 @@ export const missions: Mission[] = [
     startDate: '2025-10-01',
     image:
       'https://lh3.googleusercontent.com/aida-public/AB6AXuBGvlfxoZ2T0HVvzaJK4f6loCzk_BzLERbiD7SFld9M1VhIEDpk0XOmNtwpc52ne1l43m_NLjZa7xQ2DeGu77uNcdw70hFpyi02TsvaRA4pwHsGD1bVRbSRoa8mpvK0QN6UFkt37htyl9ZsJ4pZ74yVv3QEQ0V0kpaUvQ1AvtrNN11axWFfEy3Eqfb2RIi3mAV_hdrcbhiv9sV22LcNnJp2YcGOl4VpRWvG7F6jtwOEdH8lDpAlhLk9lhHMlmZbPx8S5KcJWm4J9fY',
-    video: '/mozambique-compressed.mp4',
+    video: '/missions/mozambique-compressed.mp4',
     summary:
       'Salida misionera para compartir el evangelio, servir a comunidades locales y fortalecer el trabajo pastoral junto a iglesias que ya estan sembrando fe, esperanza y acompanamiento en la region.',
     focus: 'Evangelismo y acompanamiento pastoral',

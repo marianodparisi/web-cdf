@@ -14,7 +14,7 @@ export const ministries: Ministry[] = [
     slug: 'life',
     name: 'Life',
     area: 'Jovenes',
-    image: '/life.png',
+    image: '/ministries/life/life.png',
     excerpt: 'Un espacio para jovenes que quieren crecer en fe, identidad y proposito.',
     description:
       'Life es el ministerio de jovenes de nuestra casa. Nos reunimos para adorar, aprender la Palabra y construir amistades sanas que nos acerquen mas a Jesus.',
@@ -26,7 +26,7 @@ export const ministries: Ministry[] = [
     slug: 'gold',
     name: 'Gold',
     area: 'Mujeres',
-    image: '/gold.png',
+    image: '/ministries/gold/gold.png',
     excerpt: 'Mujeres que se fortalecen en la Palabra, oracion y comunion.',
     description:
       'Gold es un ministerio enfocado en afirmar la identidad de la mujer en Cristo. Promovemos sanidad interior, crecimiento espiritual y liderazgo en cada temporada de vida.',
@@ -38,7 +38,7 @@ export const ministries: Ministry[] = [
     slug: 'kids',
     name: 'Kids',
     area: 'Ninos',
-    image: '/kids.png',
+    image: '/ministries/kids/kids.png',
     excerpt: 'Formacion biblica para ninos en un ambiente seguro y alegre.',
     description:
       'Kids acompana a los mas pequenos para que conozcan a Jesus desde temprana edad. Ensenamos con dinamicas, musica, juegos y lecciones adaptadas por edades.',
@@ -50,7 +50,7 @@ export const ministries: Ministry[] = [
     slug: 'arde',
     name: 'Arde',
     area: 'Evangelismo',
-    image: '/arde.png',
+    image: '/ministries/arde/arde.png',
     excerpt: 'Un equipo activo para llevar el Evangelio a la ciudad.',
     description:
       'Arde impulsa la mision de salir, anunciar y servir. Nos movemos en acciones de evangelismo, ayuda comunitaria y alcance territorial con el mensaje de Cristo.',
@@ -75,7 +75,7 @@ export const ministries: Ministry[] = [
     slug: 'alabanza-y-adoracion',
     name: 'Alabanza y Adoración',
     area: 'Adoración',
-    image: '/nosotros1.JPG',
+    image: '/sedes/nosotros1.JPG',
     excerpt: 'Un equipo que sirve guiando a la iglesia en alabanza y adoración.',
     description:
       'El Ministerio de Alabanza y Adoración prepara y acompana los tiempos congregacionales para exaltar a Jesus con excelencia, sensibilidad y unidad.',
@@ -87,7 +87,7 @@ export const ministries: Ministry[] = [
     slug: 'multimedia',
     name: 'Multimedia',
     area: 'Comunicacion',
-    image: '/serie.png',
+    image: '/ministries/arde/serie.png',
     excerpt: 'Servicio tecnico y creativo para comunicar lo que Dios hace en la casa.',
     description:
       'Multimedia acompana cada reunion y proyecto desde sonido, pantallas, transmision, fotografia, video y comunicacion visual.',
@@ -99,7 +99,7 @@ export const ministries: Ministry[] = [
     slug: 'protocolo',
     name: 'Protocolo',
     area: 'Servicio',
-    image: '/nosotros2.JPG',
+    image: '/sedes/nosotros2.JPG',
     excerpt: 'Recepcion, orden y cuidado para que cada persona se sienta bienvenida.',
     description:
       'Protocolo sirve en la bienvenida, orientacion y organizacion de los encuentros, cuidando los detalles practicos de cada reunion.',
