@@ -105,7 +105,7 @@ const currentDevotionalEmbedUrl = getYouTubeEmbedUrl(currentDevotionalPost?.vide
           aria-label={`Ver serie ${currentSeries.title}`}
           class="group relative block h-[440px] overflow-hidden rounded-[2.5rem] border-8 border-white bg-black md:h-[520px] lg:col-span-2"
         >
-          <picture class="absolute inset-x-0 top-0 flex h-[70%] w-full items-center justify-center overflow-hidden">
+          <picture class="absolute inset-x-0 top-0 flex h-[70%] w-full items-center justify-center overflow-hidden rounded-b-[2rem]">
             {currentSeries.mobileImage && <source media="(max-width: 767px)" srcset={currentSeries.mobileImage} />}
             <img
               src={currentSeries.image}
