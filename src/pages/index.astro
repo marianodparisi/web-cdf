@@ -24,7 +24,7 @@ const sermonSeries = [
     title: 'Sanados',
     subtitle: 'Restauración para el corazón',
     label: 'Serie anterior',
-    image: '/series/seriesanados.jpg',
+    image: '/sanadosvertical.jpg',
     href: 'https://www.youtube.com/playlist?list=PLbq3XgHcmjEv4unRsnKoJVVnt9yLDdv4T',
     description: 'Una serie para recibir sanidad, libertad y restauración en Jesús.',
   },
@@ -32,7 +32,7 @@ const sermonSeries = [
     title: 'Descanso',
     subtitle: 'Serie febrero 2026',
     label: 'Serie anterior',
-    image: '/series/seriedescanso.jpg',
+    image: '/descansovertical.jpg',
     href: 'https://www.youtube.com/playlist?list=PLbq3XgHcmjEuy20aDEPjbTu6MUZhOCUqG',
     description: 'Una serie para volver al ritmo de Dios y aprender a descansar en su presencia.',
   },
@@ -40,9 +40,25 @@ const sermonSeries = [
     title: 'Pertenecer',
     subtitle: 'Una casa, una familia, un propósito',
     label: 'Serie anterior',
-    image: '/series/seriepertenecer.jpg',
+    image: '/pertenecervertical.jpg',
     href: 'https://www.youtube.com/playlist?list=PLbq3XgHcmjEt1a2mr2d-g7-z6tzo7C-HP',
     description: 'Una serie sobre identidad, familia espiritual y el llamado a caminar juntos.',
+  },
+  {
+    title: 'Enviame',
+    subtitle: 'Disponibles para responder al llamado',
+    label: 'Serie anterior',
+    image: '/enviamevertical.jpg',
+    href: seriesPlaylistUrl,
+    description: 'Una serie sobre disponibilidad, obediencia y misión.',
+  },
+  {
+    title: 'Gozo',
+    subtitle: 'La alegría que nace en Dios',
+    label: 'Serie anterior',
+    image: '/gozovertical.jpg',
+    href: seriesPlaylistUrl,
+    description: 'Una serie para redescubrir el gozo verdadero en Cristo.',
   },
 ];
 const [currentSeries, ...recentSeries] = sermonSeries;
@@ -89,10 +105,13 @@ const currentDevotionalEmbedUrl = getYouTubeEmbedUrl(currentDevotionalPost?.vide
 
   <section data-animate="reveal" class="min-h-screen bg-[#f3f3f3] py-14 shadow-[inset_0_6px_32px_rgba(0,0,0,0.07),inset_0_-6px_32px_rgba(0,0,0,0.04)] md:py-16">
     <div class="mx-auto max-w-[90rem] px-5 sm:px-6 lg:px-8">
-      <div class="mb-12 md:mb-14">
-        <div>
+      <div class="mb-12 grid grid-cols-1 gap-6 md:mb-14 lg:grid-cols-3 lg:items-end">
+        <div class="lg:col-span-2">
           <p class="mb-3 text-xs font-bold uppercase tracking-[0.24em] text-primary">Series</p>
           <h2 class="font-display text-3xl font-medium tracking-tight text-[#6b7280] sm:text-4xl">Serie actual</h2>
+        </div>
+        <div>
+          <h3 class="font-display text-3xl font-medium tracking-tight text-[#6b7280] sm:text-4xl">Series anteriores</h3>
         </div>
       </div>
 
@@ -103,57 +122,75 @@ const currentDevotionalEmbedUrl = getYouTubeEmbedUrl(currentDevotionalPost?.vide
           target="_blank"
           rel="noopener noreferrer"
           aria-label={`Ver serie ${currentSeries.title}`}
-          class="group relative block h-[460px] overflow-hidden rounded-[2.5rem] border-[12px] border-white bg-white shadow-[0_20px_40px_rgba(0,0,0,0.05),0_2px_6px_rgba(0,0,0,0.03)] transition-all duration-200 hover:-translate-y-[3px] md:h-[540px] lg:col-span-2"
+          class="group relative block h-[460px] overflow-hidden rounded-[2.5rem] bg-[#f7f7f7] shadow-[0_42px_90px_rgba(0,0,0,0.22),0_16px_38px_rgba(0,0,0,0.16),0_3px_10px_rgba(0,0,0,0.10)] transition-all duration-200 hover:-translate-y-[3px] md:h-[540px] lg:col-span-2"
         >
-          <picture class="absolute inset-x-0 top-0 flex h-[68%] w-full items-center justify-center overflow-hidden rounded-b-[1.75rem]">
+          <picture class="absolute inset-0 flex h-full w-full items-center justify-center overflow-hidden">
             {currentSeries.mobileImage && <source media="(max-width: 767px)" srcset={currentSeries.mobileImage} />}
             <img
               src={currentSeries.image}
               alt={`Serie ${currentSeries.title}`}
-              class="h-full w-full object-cover object-center opacity-85 transition-transform duration-700 group-hover:scale-105"
+              class="h-full w-full object-cover object-center transition-[filter,transform] duration-700 ease-out [filter:sepia(0.22)_saturate(0.78)_contrast(1.08)_brightness(0.93)] group-hover:scale-105"
             />
           </picture>
-          <div class="absolute inset-x-0 top-0 h-[68%] rounded-b-[1.75rem] bg-gradient-to-t from-black/[0.12] to-transparent"></div>
-          <div class="absolute inset-x-0 bottom-0 z-10 flex h-[32%] flex-col justify-center bg-white py-6 pl-5 pr-6 sm:py-8 sm:pl-7 sm:pr-8 md:py-10 md:pl-8 md:pr-10">
-            <div class="flex max-w-2xl flex-col gap-2">
-              <span class="inline-flex w-fit rounded-full bg-[#2b2b2b] px-[14px] py-[6px] text-[11px] font-bold uppercase tracking-[0.08em] text-white opacity-90">
-                {currentSeries.label}
-              </span>
-              <h3 class="font-display text-2xl font-bold text-charcoal sm:text-3xl md:text-4xl">{currentSeries.title}</h3>
-              <p class="line-clamp-1 max-w-xl text-sm leading-relaxed text-gray-500">{currentSeries.description}</p>
+          <div class="absolute inset-x-0 top-0 z-10 flex items-start justify-between p-6 sm:p-8">
+            <span class="inline-flex w-fit text-sm font-extrabold uppercase tracking-[0.16em] text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.45)] sm:text-base">
+              {currentSeries.label}
+            </span>
+            <span class="inline-flex w-fit text-sm font-extrabold uppercase tracking-[0.16em] text-white drop-shadow-[0_2px_14px_rgba(0,0,0,0.45)] sm:text-base">
+              Abril
+            </span>
+          </div>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/45 via-black/10 to-white/10"></div>
+          <div class="absolute inset-x-0 bottom-0 h-[48%] bg-gradient-to-t from-white/45 via-white/24 to-transparent backdrop-blur-[2px] [mask-image:linear-gradient(to_top,black_0%,black_62%,transparent_100%)]"></div>
+          <div class="absolute inset-x-0 bottom-0 z-10 p-6 sm:p-8 md:p-10">
+            <div class="flex max-w-full flex-col gap-4 text-white drop-shadow-[0_2px_18px_rgba(0,0,0,0.35)] md:max-w-[50%]">
+              <h3 class="font-display text-3xl font-bold text-white drop-shadow-sm sm:text-4xl md:text-5xl">{currentSeries.title}</h3>
+              <p class="line-clamp-2 max-w-xl text-sm leading-relaxed text-white/85">{currentSeries.description}</p>
             </div>
+          </div>
+          <div class="absolute bottom-6 right-6 z-20 sm:bottom-8 sm:right-8 md:bottom-10 md:right-10">
+            <span class="inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-2 text-xs font-bold uppercase tracking-[0.12em] text-white shadow-[0_12px_35px_rgba(0,0,0,0.18)] backdrop-blur-2xl">
+              <span class="material-symbols-outlined text-base">play_circle</span>
+              YouTube
+            </span>
           </div>
         </a>
 
-        <aside data-animate="card" class="flex flex-col">
-          <div class="mb-5 flex items-center justify-between">
-            <h3 class="text-lg font-bold tracking-tight text-charcoal">Series anteriores</h3>
-          </div>
-          <div class="flex flex-col gap-5">
+        <aside data-animate="card" class="flex h-[460px] flex-col md:h-[540px]">
+          <div class="relative min-h-0 flex-1">
             {
-              recentSeries.slice(0, 3).map((series, index) => {
-                const imgWidth = index === 0 ? 'w-[48%]' : index === 1 ? 'w-[52%]' : 'w-[44%]';
-                const imgRound = index % 2 === 1 ? 'rounded-l-[1.25rem]' : 'rounded-r-[1.25rem]';
+              recentSeries.map((series, index) => {
+                const imagePosition =
+                  series.title === 'Gozo'
+                    ? 'object-[center_0%]'
+                    : series.title === 'Enviame'
+                      ? 'object-[center_34%]'
+                      : 'object-center';
+                const imageScale =
+                  series.title === 'Gozo'
+                    ? '-translate-y-2 scale-[1.16] group-hover:-translate-y-3 group-hover:scale-[1.2]'
+                    : 'group-hover:scale-105';
+                const stackPosition = [
+                  'top-[8%] left-[48%] -translate-x-1/2 z-[5]',
+                  'top-[22%] left-[30%] -translate-x-1/2 z-[4]',
+                  'top-[34%] left-[62%] -translate-x-1/2 z-[3]',
+                  'top-[46%] left-[36%] -translate-x-1/2 z-[2]',
+                  'top-[58%] left-[68%] -translate-x-1/2 z-[1]',
+                ][index] ?? 'top-0 left-1/2 -translate-x-1/2';
                 return (
                   <a
                     href={series.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    class={`group flex h-[130px] overflow-hidden rounded-[1.75rem] border-[12px] border-white bg-white shadow-[0_20px_40px_rgba(0,0,0,0.05),0_2px_6px_rgba(0,0,0,0.03)] transition-all duration-200 hover:-translate-y-[3px] ${index % 2 === 1 ? 'flex-row-reverse' : ''}`}
+                    aria-label={`Ver serie ${series.title}`}
+                    class={`group absolute block aspect-square w-[9.25rem] overflow-hidden rounded-[28px] bg-[#f7f7f7] shadow-[0_42px_90px_rgba(0,0,0,0.22),0_16px_38px_rgba(0,0,0,0.16),0_3px_10px_rgba(0,0,0,0.10)] transition-all duration-300 hover:z-20 hover:-translate-y-2 sm:w-[10rem] md:w-[10.75rem] lg:w-[8.8rem] xl:w-[9.6rem] ${stackPosition}`}
                   >
-                    <div class={`relative flex-shrink-0 overflow-hidden ${imgWidth} ${imgRound}`}>
-                      <img
-                        src={series.image}
-                        alt={`Serie ${series.title}`}
-                        class="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-110"
-                      />
-                      <div class="absolute inset-0 bg-gradient-to-t from-black/15 to-transparent"></div>
-                    </div>
-                    <div class="flex flex-1 flex-col justify-center bg-white px-4">
-                      <span class="text-[11px] font-bold uppercase tracking-[0.12em] text-[#9ca3af]">{series.label}</span>
-                      <h4 class="font-display text-sm font-semibold leading-tight text-charcoal transition-colors group-hover:text-primary">{series.title}</h4>
-                      <p class="mt-0.5 line-clamp-2 text-[11px] leading-relaxed text-gray-500">{series.subtitle}</p>
-                    </div>
+                    <img
+                      src={series.image}
+                      alt={`Serie ${series.title}`}
+                      class={`h-full w-full object-cover transition-[filter,transform] duration-700 ease-out [filter:grayscale(1)_sepia(0.15)_contrast(1.05)_brightness(0.95)] group-hover:[filter:grayscale(0)_sepia(0)_contrast(1)_brightness(1)] ${imagePosition} ${imageScale}`}
+                    />
+                    <div class="absolute inset-0 bg-white/15 mix-blend-screen"></div>
                   </a>
                 );
               })
@@ -163,7 +200,7 @@ const currentDevotionalEmbedUrl = getYouTubeEmbedUrl(currentDevotionalPost?.vide
             href={seriesPlaylistUrl}
             target="_blank"
             rel="noopener noreferrer"
-            class="group mt-7 inline-flex w-fit items-center gap-2 text-xs font-bold uppercase tracking-widest text-primary transition-all hover:gap-4"
+            class="group mt-4 inline-flex h-8 w-fit shrink-0 items-center gap-2 text-xs font-bold uppercase tracking-widest text-primary transition-all hover:gap-4"
           >
             Ver todas las series
             <span class="material-symbols-outlined text-base">arrow_forward</span>
