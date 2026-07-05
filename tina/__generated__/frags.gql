@@ -1,0 +1,8 @@
+fragment SiteContentParts on SiteContent {
+  __typename
+  title
+  eyebrow
+  body
+  ctaLabel
+  ctaHref
+}

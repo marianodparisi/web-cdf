@@ -3,6 +3,7 @@ import { ministries } from '../data/ministries';
 
 interface Props {
   sticky?: boolean;
+  transparent?: boolean;
   logoImageSrc?: string;
   logoLabel?: string;
   logoMode?: 'image' | 'annex';
@@ -14,6 +15,7 @@ interface Props {
 
 const {
   sticky = false,
+  transparent = false,
   logoImageSrc = '/brand/logo.png',
   logoLabel = 'Corazon de Fuego',
   logoMode = 'image',
@@ -52,32 +54,45 @@ const annexLinks = [
 ];
 ---
 
-<nav data-animate="nav" class:list={['top-0 w-full z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100', sticky ? 'sticky' : 'relative']}>
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+<nav
+  data-animate="nav"
+  data-nav-transparent={transparent ? 'true' : undefined}
+  data-nav-surface={transparent ? 'dark' : undefined}
+  class:list={[
+    'top-0 w-full z-50 border-b transition-[background-color,border-color,box-shadow,backdrop-filter] duration-300',
+    transparent ? 'fixed bg-transparent border-transparent shadow-none backdrop-blur-0' : 'bg-white/95 backdrop-blur-sm border-gray-100',
+    sticky ? 'sticky' : transparent ? undefined : 'relative',
+  ]}
+>
+  <div class:list={[
+    'relative z-10 mx-auto',
+    transparent ? 'w-full max-w-none pl-3 pr-4 sm:pl-4 sm:pr-6 lg:pl-6 lg:pr-8' : 'max-w-7xl px-4 sm:px-6 lg:px-8',
+  ]}>
     <div class="flex justify-between items-center h-20">
       <div class="flex-shrink-0 flex items-center gap-3">
         <a href="/" class="inline-flex items-center gap-3">
           {
             logoMode === 'annex' ? (
-              <div class={`rounded-[1.4rem] border px-4 py-3 shadow-sm ${logoPanelClass} ${logoRingClass}`}>
-                <p class={`text-[0.55rem] font-semibold uppercase tracking-[0.28em] ${logoAccentClass}`}>Corazón de Fuego</p>
-                <p class={`font-display text-2xl leading-none tracking-tight sm:text-[2rem] ${logoTextClass}`}>{logoLabel}</p>
+              <div data-nav-annex-panel class={`rounded-[1.4rem] border px-4 py-3 shadow-sm ${logoPanelClass} ${logoRingClass}`}>
+                <p data-nav-annex-accent class={`text-[0.55rem] font-semibold uppercase tracking-[0.28em] ${logoAccentClass}`}>Corazón de Fuego</p>
+                <p data-nav-annex-text class={`font-display text-2xl leading-none tracking-tight sm:text-[2rem] ${logoTextClass}`}>{logoLabel}</p>
               </div>
             ) : (
-              <img src={logoImageSrc} alt="Logo Corazon de Fuego" class="h-[5.5rem] w-auto object-contain sm:h-24" />
+              <img data-nav-logo src={logoImageSrc} alt="Logo Corazon de Fuego" class="h-[5.5rem] w-auto object-contain transition-[filter] duration-300 sm:h-24" />
             )
           }
         </a>
       </div>
-      <div class="hidden md:flex items-center space-x-8">
-        <a data-animate="nav-link" class="text-xs font-bold tracking-widest uppercase hover:text-primary transition-colors text-charcoal" href="/nosotros">Nosotros</a>
-        <a data-animate="nav-link" class="text-xs font-bold tracking-widest uppercase hover:text-primary transition-colors text-charcoal" href="/misiones">Misiones</a>
-        <a data-animate="nav-link" class="text-xs font-bold tracking-widest uppercase hover:text-primary transition-colors text-charcoal" href="/evangelismo">Evangelismo</a>
+      <div class="hidden md:absolute md:left-1/2 md:flex md:-translate-x-[40%] md:items-center md:justify-center md:space-x-8">
+        <a data-animate="nav-link" data-nav-link class="nav-sweep text-center text-xs font-bold tracking-widest uppercase hover:text-primary transition-colors text-charcoal" href="/nosotros">Nosotros</a>
+        <a data-animate="nav-link" data-nav-link class="nav-sweep text-center text-xs font-bold tracking-widest uppercase hover:text-primary transition-colors text-charcoal" href="/misiones">Misiones</a>
+        <a data-animate="nav-link" data-nav-link class="nav-sweep text-center text-xs font-bold tracking-widest uppercase hover:text-primary transition-colors text-charcoal" href="/evangelismo">Evangelismo</a>
         <div class="relative group">
           <button
             data-animate="nav-link"
+            data-nav-link
             type="button"
-            class="text-xs font-bold tracking-widest uppercase hover:text-primary transition-colors text-charcoal inline-flex items-center gap-1"
+            class="nav-sweep inline-flex items-center justify-center gap-1 text-center text-xs font-bold tracking-widest uppercase hover:text-primary transition-colors text-charcoal"
             aria-haspopup="true"
           >
             Nuestras Sedes
@@ -104,8 +119,9 @@ const annexLinks = [
         <div class="relative group">
           <button
             data-animate="nav-link"
+            data-nav-link
             type="button"
-            class="text-xs font-bold tracking-widest uppercase hover:text-primary transition-colors text-charcoal inline-flex items-center gap-1"
+            class="nav-sweep inline-flex items-center justify-center gap-1 text-center text-xs font-bold tracking-widest uppercase hover:text-primary transition-colors text-charcoal"
             aria-haspopup="true"
           >
             Educativos
@@ -127,8 +143,9 @@ const annexLinks = [
         <div class="relative group">
           <button
             data-animate="nav-link"
+            data-nav-link
             type="button"
-            class="text-xs font-bold tracking-widest uppercase hover:text-primary transition-colors text-charcoal inline-flex items-center gap-1"
+            class="nav-sweep inline-flex items-center justify-center gap-1 text-center text-xs font-bold tracking-widest uppercase hover:text-primary transition-colors text-charcoal"
             aria-haspopup="true"
           >
             Ministerios
@@ -154,7 +171,9 @@ const annexLinks = [
       <div class="md:hidden">
         <button
           id="mobile-menu-button"
-          class="text-charcoal hover:text-primary focus:outline-none"
+          data-nav-link
+          data-nav-menu-icon
+          class="text-charcoal hover:text-primary focus:outline-none transition-colors"
           aria-label="Abrir menú"
           aria-controls="mobile-menu"
           aria-expanded="false"
@@ -165,24 +184,24 @@ const annexLinks = [
     </div>
     <div
       id="mobile-menu"
-      class="md:hidden overflow-hidden -translate-y-2 opacity-0 pointer-events-none transition-[max-height,opacity,padding,transform] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
+      class="md:hidden overflow-hidden bg-transparent opacity-0 pointer-events-none transition-[max-height,opacity] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)]"
       style="max-height: 0"
     >
-      <div class="flex flex-col gap-1 border-t border-gray-100 pt-4">
-        <a class="mobile-link px-2 py-2 text-xs font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors" href="/nosotros">Nosotros</a>
-        <a class="mobile-link px-2 py-2 text-xs font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors" href="/misiones">Misiones</a>
-        <a class="mobile-link px-2 py-2 text-xs font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors" href="/evangelismo">Evangelismo</a>
+      <div class="flex flex-col gap-2 border-t border-black/5 px-1 pt-2 pb-3">
+        <a class="mobile-link px-4 py-3 text-left text-sm font-bold tracking-[0.18em] uppercase text-charcoal hover:text-primary transition-colors" href="/nosotros">Nosotros</a>
+        <a class="mobile-link px-4 py-3 text-left text-sm font-bold tracking-[0.18em] uppercase text-charcoal hover:text-primary transition-colors" href="/misiones">Misiones</a>
+        <a class="mobile-link px-4 py-3 text-left text-sm font-bold tracking-[0.18em] uppercase text-charcoal hover:text-primary transition-colors" href="/evangelismo">Evangelismo</a>
         <details id="mobile-anexos-menu" data-nav-accordion="mobile" class="mobile-accordion [&_summary::-webkit-details-marker]:hidden">
-          <summary class="list-none px-2 py-2 text-xs font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors inline-flex items-center gap-1 cursor-pointer">
+          <summary class="list-none px-4 py-3 text-sm font-bold tracking-[0.18em] uppercase text-charcoal hover:text-primary transition-colors inline-flex w-full items-center justify-between gap-3 text-left cursor-pointer">
             Nuestras Sedes
             <span data-accordion-icon class="material-symbols-outlined text-base transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]">expand_more</span>
           </summary>
           <div data-accordion-panel class="mobile-accordion-panel">
-            <div class="pl-4 pb-1 flex flex-col gap-1">
+            <div class="flex flex-col gap-1 pb-1 pl-6">
               {
                 annexLinks.map((annex) => (
                   <a
-                    class="mobile-link px-2 py-1.5 text-[11px] font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors inline-flex items-center gap-3"
+                    class="mobile-link px-2 py-2 text-[12px] font-bold tracking-[0.16em] uppercase text-charcoal hover:text-primary transition-colors inline-flex items-center gap-3"
                     href={annex.href}
                   >
                     <span class={`inline-flex h-7 w-7 items-center justify-center ${annex.badgeClass}`}>
@@ -196,28 +215,28 @@ const annexLinks = [
           </div>
         </details>
         <details id="mobile-institucional-menu" data-nav-accordion="mobile" class="mobile-accordion [&_summary::-webkit-details-marker]:hidden">
-          <summary class="list-none px-2 py-2 text-xs font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors inline-flex items-center gap-1 cursor-pointer">
+          <summary class="list-none px-4 py-3 text-sm font-bold tracking-[0.18em] uppercase text-charcoal hover:text-primary transition-colors inline-flex w-full items-center justify-between gap-3 text-left cursor-pointer">
             Educativos
             <span data-accordion-icon class="material-symbols-outlined text-base transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]">expand_more</span>
           </summary>
           <div data-accordion-panel class="mobile-accordion-panel">
-            <div class="pl-4 pb-1 flex flex-col gap-1">
-              <a class="mobile-link px-2 py-1.5 text-[11px] font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors inline-flex items-center gap-2" href="/institucional/iete"><span class="material-symbols-outlined text-base">school</span><span>IETE</span></a>
-              <a class="mobile-link px-2 py-1.5 text-[11px] font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors inline-flex items-center gap-2" href="/institucional/discipulados"><span class="material-symbols-outlined text-base">groups</span><span>Discipulados</span></a>
+            <div class="flex flex-col gap-1 pb-1 pl-6">
+              <a class="mobile-link px-2 py-2 text-[12px] font-bold tracking-[0.16em] uppercase text-charcoal hover:text-primary transition-colors inline-flex items-center gap-2" href="/institucional/iete"><span class="material-symbols-outlined text-base">school</span><span>IETE</span></a>
+              <a class="mobile-link px-2 py-2 text-[12px] font-bold tracking-[0.16em] uppercase text-charcoal hover:text-primary transition-colors inline-flex items-center gap-2" href="/institucional/discipulados"><span class="material-symbols-outlined text-base">groups</span><span>Discipulados</span></a>
             </div>
           </div>
         </details>
         <details id="mobile-ministerios-menu" data-nav-accordion="mobile" class="mobile-accordion [&_summary::-webkit-details-marker]:hidden">
-          <summary class="list-none px-2 py-2 text-xs font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors inline-flex items-center gap-1 cursor-pointer">
+          <summary class="list-none px-4 py-3 text-sm font-bold tracking-[0.18em] uppercase text-charcoal hover:text-primary transition-colors inline-flex w-full items-center justify-between gap-3 text-left cursor-pointer">
             Ministerios
             <span data-accordion-icon class="material-symbols-outlined text-base transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]">expand_more</span>
           </summary>
           <div data-accordion-panel class="mobile-accordion-panel">
-            <div class="pl-4 pb-1 flex flex-col gap-1">
+            <div class="flex flex-col gap-1 pb-1 pl-6">
               {
                 navbarMinistries.map((ministry) => (
                   <a
-                    class="mobile-link px-2 py-1.5 text-[11px] font-bold tracking-widest uppercase text-charcoal hover:text-primary transition-colors inline-flex items-center gap-2"
+                    class="mobile-link px-2 py-2 text-[12px] font-bold tracking-[0.16em] uppercase text-charcoal hover:text-primary transition-colors inline-flex items-center gap-2"
                     href={`/ministerios/${ministry.slug}`}
                   >
                     <img src={ministry.image} alt={ministry.name} class="h-5 w-5 rounded-full object-cover bg-white border border-gray-200" />
@@ -234,6 +253,124 @@ const annexLinks = [
 </nav>
 
 <style is:inline>
+  .nav-sweep {
+    position: relative;
+    overflow: hidden;
+    border-radius: 9999px;
+    padding: 0.65rem 0.9rem;
+    transition:
+      color 220ms ease,
+      transform 220ms ease;
+    isolation: isolate;
+  }
+
+  .nav-sweep::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: rgb(197 160 89 / 0.16);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 340ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .nav-sweep:hover::before,
+  .nav-sweep:focus-visible::before,
+  .group:hover .nav-sweep::before,
+  .group:focus-within .nav-sweep::before {
+    transform: scaleX(1);
+  }
+
+  .nav-sweep:hover,
+  .nav-sweep:focus-visible,
+  .group:hover .nav-sweep,
+  .group:focus-within .nav-sweep {
+    transform: translateY(-1px);
+  }
+
+  nav[data-nav-transparent='true'][data-nav-surface='dark'] [data-nav-link] {
+    color: white;
+  }
+
+  nav[data-nav-transparent='true'][data-nav-surface='light'] [data-nav-link] {
+    color: rgb(58 58 58);
+  }
+
+  nav[data-nav-transparent='true'][data-nav-surface='dark'] [data-nav-logo] {
+    filter: brightness(0) invert(1);
+  }
+
+  nav[data-mobile-menu-open='true'][data-nav-transparent='true'] [data-nav-logo],
+  nav[data-mobile-menu-open='true'] [data-nav-logo] {
+    filter: none;
+  }
+
+  nav[data-mobile-menu-open='true'] {
+    background: white;
+    border-bottom-width: 0;
+    border-color: transparent;
+    box-shadow: none;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  body.mobile-menu-open > *:not(nav[data-animate='nav']) {
+    filter: blur(6px) saturate(0.95);
+    transition:
+      filter 520ms cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 520ms cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  nav[data-nav-transparent='true'][data-nav-surface='dark'] [data-nav-annex-panel] {
+    background: rgb(255 255 255 / 0.08);
+    border-color: rgb(255 255 255 / 0.2);
+    box-shadow: 0 18px 50px rgb(0 0 0 / 0.18);
+    backdrop-filter: blur(12px);
+  }
+
+  nav[data-nav-transparent='true'][data-nav-surface='light'] [data-nav-annex-panel] {
+    background: rgb(255 255 255 / 0.72);
+    border-color: rgb(197 160 89 / 0.18);
+    box-shadow: 0 18px 50px rgb(0 0 0 / 0.08);
+    backdrop-filter: blur(12px);
+  }
+
+  nav[data-nav-transparent='true'][data-nav-surface='dark'] [data-nav-annex-text] {
+    color: white;
+  }
+
+  nav[data-nav-transparent='true'][data-nav-surface='light'] [data-nav-annex-text] {
+    color: rgb(58 58 58);
+  }
+
+  nav[data-nav-transparent='true'][data-nav-surface='dark'] [data-nav-annex-accent] {
+    color: rgb(229 231 235);
+  }
+
+  nav[data-nav-transparent='true'][data-nav-surface='light'] [data-nav-annex-accent] {
+    color: rgb(197 160 89);
+  }
+
+  nav[data-mobile-menu-open='true'][data-nav-transparent='true'] [data-nav-link],
+  nav[data-mobile-menu-open='true'] [data-nav-link] {
+    color: rgb(58 58 58);
+  }
+
+  nav[data-mobile-menu-open='true'][data-nav-transparent='true'] [data-nav-menu-icon],
+  nav[data-mobile-menu-open='true'] [data-nav-menu-icon] {
+    color: rgb(58 58 58);
+  }
+
+  nav[data-mobile-menu-open='true'][data-nav-transparent='true'] .mobile-link,
+  nav[data-mobile-menu-open='true'][data-nav-transparent='true'] summary,
+  nav[data-mobile-menu-open='true'] .mobile-link,
+  nav[data-mobile-menu-open='true'] summary {
+    color: rgb(58 58 58);
+  }
+
   .mobile-accordion-panel {
     display: grid;
     grid-template-rows: 0fr;
@@ -258,6 +395,8 @@ const annexLinks = [
 </style>
 
 <script>
+  const transparentNav = document.querySelector('[data-nav-transparent="true"]') as HTMLElement | null;
+  const nav = document.querySelector('[data-animate="nav"]') as HTMLElement | null;
   const button = document.getElementById('mobile-menu-button');
   const menu = document.getElementById('mobile-menu');
   const mobileAccordions = [...document.querySelectorAll('details[data-nav-accordion="mobile"]')] as HTMLDetailsElement[];
@@ -297,15 +436,66 @@ const annexLinks = [
 
   setupAccordion(mobileAccordions);
 
+  if (transparentNav) {
+    const resolveSurface = (element: Element | null) => {
+      const surfaceHost = element?.closest('[data-nav-surface-zone]') as HTMLElement | null;
+      return surfaceHost?.dataset.navSurfaceZone === 'dark' ? 'dark' : 'light';
+    };
+
+    const syncTransparentNavSurface = () => {
+      const sampleY = Math.max(transparentNav.offsetHeight - 12, 12);
+      const samplePoints = [
+        window.innerWidth * 0.2,
+        window.innerWidth * 0.5,
+        window.innerWidth * 0.8,
+      ];
+
+      const darkHits = samplePoints.reduce((count, pointX) => {
+        const sampledElement = document
+          .elementsFromPoint(pointX, sampleY)
+          .find((element) => !transparentNav.contains(element));
+        return count + (resolveSurface(sampledElement ?? null) === 'dark' ? 1 : 0);
+      }, 0);
+
+      transparentNav.dataset.navSurface = darkHits >= 2 ? 'dark' : 'light';
+    };
+
+    syncTransparentNavSurface();
+    window.addEventListener('scroll', syncTransparentNavSurface, { passive: true });
+    window.addEventListener('resize', syncTransparentNavSurface);
+  }
+
   if (button && menu) {
-    const closedClasses = ['-translate-y-2', 'opacity-0', 'pointer-events-none'];
-    const openClasses = ['translate-y-0', 'opacity-100', 'pointer-events-auto', 'pb-5'];
+    const closedClasses = ['opacity-0', 'pointer-events-none'];
+    const openClasses = ['opacity-100', 'pointer-events-auto'];
+    const syncMenuHeight = () => {
+      if (button.getAttribute('aria-expanded') === 'true') {
+        menu.style.maxHeight = menu.scrollHeight + 'px';
+      }
+    };
+    let menuHeightAnimationFrame = 0;
+
+    const animateMenuHeight = () => {
+      window.cancelAnimationFrame(menuHeightAnimationFrame);
+
+      const tick = () => {
+        syncMenuHeight();
+        if (button.getAttribute('aria-expanded') === 'true') {
+          menuHeightAnimationFrame = window.requestAnimationFrame(tick);
+        }
+      };
+
+      menuHeightAnimationFrame = window.requestAnimationFrame(tick);
+      window.setTimeout(() => window.cancelAnimationFrame(menuHeightAnimationFrame), accordionDuration + 120);
+    };
 
     const closeAllAccordions = () => {
       mobileAccordions.forEach(closeAccordion);
     };
 
     const closeMenu = () => {
+      if (nav) nav.dataset.mobileMenuOpen = 'false';
+      document.body.classList.remove('mobile-menu-open');
       menu.style.maxHeight = '0px';
       menu.classList.remove(...openClasses);
       menu.classList.add(...closedClasses);
@@ -318,13 +508,21 @@ const annexLinks = [
       if (isExpanded) {
         closeMenu();
       } else {
+        if (nav) nav.dataset.mobileMenuOpen = 'true';
+        document.body.classList.add('mobile-menu-open');
         menu.classList.remove(...closedClasses);
         menu.classList.add(...openClasses);
-        menu.style.maxHeight = menu.scrollHeight + 'px';
+        syncMenuHeight();
       }
     };
 
     button.addEventListener('click', toggleMenu);
+    mobileAccordions.forEach((accordion) => {
+      accordion.addEventListener('click', () => {
+        animateMenuHeight();
+      });
+    });
+    window.addEventListener('resize', syncMenuHeight);
     menu.querySelectorAll('.mobile-link').forEach((link) => {
       link.addEventListener('click', () => {
         button.setAttribute('aria-expanded', 'false');
