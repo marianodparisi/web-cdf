@@ -18,9 +18,15 @@
     "@astrojs/node": "^11.0.2",
     "@astrojs/tailwind": "^6.0.2",
     "@tinacms/astro": "^0.5.1",
+    "@tinacms/datalayer": "^2.0.26",
     "astro": "^7.0.6",
+    "bcryptjs": "^3.0.3",
+    "dotenv": "^17.4.2",
+    "mongodb-level": "^0.0.4",
+    "mysql2": "^3.22.5",
     "tailwindcss": "^3.4.6",
-    "tinacms": "^3.9.4"
+    "tinacms": "^3.9.4",
+    "tinacms-gitprovider-github": "^4.1.13"
   },
   "devDependencies": {
     "@tinacms/cli": "^2.5.2"

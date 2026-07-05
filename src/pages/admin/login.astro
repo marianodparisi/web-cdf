@@ -1,0 +1,71 @@
+---
+const error = Astro.url.searchParams.get('error');
+const errorMessage =
+  error === 'server'
+    ? 'Hay un error del servidor en la autenticacion. Revisa la consola del server.'
+    : error
+      ? 'Credenciales invalidas. Revisalas e intenta de nuevo.'
+      : null;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Login | Corazon de Fuego</title>
+    <link rel="icon" type="image/png" href="/brand/favico.png" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Inter:wght@300;400;500;600;700;800&display=swap"
+    />
+  </head>
+  <body style="margin:0;font-family:'DM Sans',sans-serif;background:#f5f1e8;color:#3a3a3a;">
+    <main style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;">
+      <div style="width:min(100%,420px);background:white;border:1px solid rgba(0,0,0,.06);border-radius:28px;padding:32px;box-shadow:0 24px 70px rgba(0,0,0,.08);">
+        <p style="margin:0 0 10px;font-size:12px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:#c5a059;">
+          Corazon de Fuego
+        </p>
+        <h1 style="margin:0 0 12px;font-family:'Inter',sans-serif;font-size:40px;line-height:1;letter-spacing:-0.04em;">
+          Admin
+        </h1>
+        <p style="margin:0 0 24px;color:rgba(58,58,58,.72);line-height:1.6;">
+          Ingresá con tu usuario o email y tu contraseña para editar contenido.
+        </p>
+
+        {errorMessage && (
+          <p style="margin:0 0 18px;padding:12px 14px;border-radius:14px;background:#fff4f1;color:#a33b22;font-size:14px;">
+            {errorMessage}
+          </p>
+        )}
+
+        <form method="POST" action="/api/admin/login" style="display:grid;gap:14px;">
+          <label style="display:grid;gap:8px;">
+            <span style="font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;">Usuario o email</span>
+            <input
+              type="text"
+              name="identifier"
+              required
+              style="height:48px;border-radius:14px;border:1px solid rgba(0,0,0,.1);padding:0 14px;font:inherit;"
+            />
+          </label>
+          <label style="display:grid;gap:8px;">
+            <span style="font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;">Contrasena</span>
+            <input
+              type="password"
+              name="password"
+              required
+              style="height:48px;border-radius:14px;border:1px solid rgba(0,0,0,.1);padding:0 14px;font:inherit;"
+            />
+          </label>
+          <button
+            type="submit"
+            style="margin-top:8px;height:50px;border:0;border-radius:999px;background:#3a3a3a;color:white;font:inherit;font-weight:700;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;"
+          >
+            Entrar
+          </button>
+        </form>
+      </div>
+    </main>
+  </body>
+ </html>

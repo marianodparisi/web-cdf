@@ -1,10 +1,12 @@
 // tina/config.ts
-import { defineConfig } from "tinacms";
+import { LocalAuthProvider, defineConfig } from "tinacms";
 var branch = process.env.NEXT_PUBLIC_TINA_BRANCH || process.env.HEAD || process.env.VERCEL_GIT_COMMIT_REF || "dev";
 var config_default = defineConfig({
   branch,
   clientId: process.env.NEXT_PUBLIC_TINA_CLIENT_ID || "",
   token: process.env.TINA_TOKEN || "",
+  contentApiUrlOverride: "/api/tina/gql",
+  authProvider: new LocalAuthProvider(),
   build: {
     publicFolder: "public",
     outputFolder: "admin"

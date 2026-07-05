@@ -3,7 +3,7 @@
 ## Proyecto
 
 - Repo local: `/home/cdf/web-cdf`.
-- Sitio Astro estatico para Iglesia Corazon de Fuego.
+- Sitio Astro para Iglesia Corazon de Fuego, ahora en modo SSR Node.
 - Branches principales:
   - `main`: produccion, despliega a `corazondefuego.com`.
   - `dev`: desarrollo, despliega a `dev.corazondefuego.com`.
@@ -11,19 +11,10 @@
 
 ## Deploy
 
-- Produccion usa `.github/workflows/deploy-hostinger-ftp.yml`.
-- Dev usa `.github/workflows/deploy-hostinger-ftp-dev.yml`.
-- Secrets produccion:
-  - `FTP_SERVER`
-  - `FTP_USERNAME`
-  - `FTP_PASSWORD`
-  - `FTP_SERVER_DIR`
-- Secrets dev:
-  - `DEV_FTP_SERVER`
-  - `DEV_FTP_USERNAME`
-  - `DEV_FTP_PASSWORD`
-  - `DEV_FTP_SERVER_DIR`
-- El deploy compila en GitHub Actions con `npm run build`, por eso no hace falta commitear `dist/`.
+- Ya no usa deploy por GitHub Actions/FTP.
+- Hostinger corre la app Node directamente y hace autodeploy desde GitHub.
+- Los workflows viejos de `.github/workflows/` fueron eliminados.
+- `npm run build` ahora genera salida SSR para Node.
 
 ## Estructura relevante
 
@@ -31,10 +22,18 @@
 - Navbar: `src/components/Navbar.astro`.
 - Footer: `src/components/Footer.astro`.
 - Home: `src/pages/index.astro`.
+- Middleware SSR: `src/middleware.ts`.
+- Auth admin: `src/lib/admin-auth.ts`.
+- Login admin: `src/pages/admin/login.astro`.
+- API login admin: `src/pages/api/admin/login.ts`.
+- API Tina GraphQL: `src/pages/api/tina/gql.ts`.
 - Datos de ministerios: `src/data/ministries.ts`.
 - Datos de evangelismo: `src/data/evangelism.ts`.
 - Datos de misiones: `src/data/missions.ts`.
 - Devocionales: `src/data/devotionals.ts`.
+- Config Tina: `tina/config.ts`.
+- Database Tina self-hosted: `tina/database.ts`.
+- Demo Tina: `src/pages/tinacms-demo.astro`.
 
 ## Convenciones actuales
 
@@ -73,9 +72,16 @@ No volver a asumir assets en la raiz de `public/`; revisar rutas nuevas antes de
 
 ## Cambios funcionales recientes
 
-- `dev` tiene workflow propio para Hostinger dev.
-- Home de `dev` conserva el sitio completo.
-- `main` tiene home de "Proximamente" para produccion.
+- Astro corre con `output: 'server'` y `@astrojs/node`.
+- `npm run dev` usa `tinacms dev -c "astro dev"`.
+- `npm run build` mantiene build SSR de Astro; `build:tina` queda separado.
+- Tina ya esta integrado para desarrollo/local con una coleccion demo JSON en `content/site-content/home.json`.
+- El admin propio usa MySQL para login/password y crea `admin_users` automaticamente si existe `ADMIN_USERNAME/ADMIN_PASSWORD` en env.
+- Tina self-hosted usa:
+  - GitHub como git provider
+  - MongoDB como datalayer
+  - la misma sesion/cookie del admin para proteger `/api/tina/gql`
+- En local conviene usar `TINA_PUBLIC_IS_LOCAL=true` hasta cargar `GITHUB_PERSONAL_ACCESS_TOKEN`.
 - Se agregaron ministerios:
   - Ministerio Carcelario
   - Alabanza y Adoracion
@@ -87,4 +93,3 @@ No volver a asumir assets en la raiz de `public/`; revisar rutas nuevas antes de
   - Sanados
   - Descanso
   - Pertenecer
-

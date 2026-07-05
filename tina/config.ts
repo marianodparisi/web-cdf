@@ -1,4 +1,4 @@
-import { defineConfig } from 'tinacms';
+import { LocalAuthProvider, defineConfig } from 'tinacms';
 
 const branch =
   process.env.NEXT_PUBLIC_TINA_BRANCH ||
@@ -10,6 +10,8 @@ export default defineConfig({
   branch,
   clientId: process.env.NEXT_PUBLIC_TINA_CLIENT_ID || '',
   token: process.env.TINA_TOKEN || '',
+  contentApiUrlOverride: '/api/tina/gql',
+  authProvider: new LocalAuthProvider(),
   build: {
     publicFolder: 'public',
     outputFolder: 'admin',
