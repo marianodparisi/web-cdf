@@ -1,4 +1,5 @@
 import type { APIRoute } from 'astro';
+import { stabilizeNodeStdin } from '../../../lib/node-stdio';
 
 type CheckResult = {
   ok: boolean;
@@ -101,6 +102,7 @@ const checkGithub = async (): Promise<CheckResult> => {
 
 const checkTina = async (): Promise<CheckResult> => {
   try {
+    stabilizeNodeStdin();
     const { default: databaseClient } = await import('../../../../tina/__generated__/databaseClient');
     const result = await databaseClient.request({
       query: 'query { collections { name label path format } }',

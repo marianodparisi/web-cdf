@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { getAdminSessionCookie, verifyAdminSessionValue } from '../../../lib/admin-auth';
+import { stabilizeNodeStdin } from '../../../lib/node-stdio';
 
 const readEnv = (name: string) => {
   const metaEnv = (import.meta as ImportMeta & { env?: Record<string, string | undefined> }).env;
@@ -47,6 +48,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   }
 
   try {
+    stabilizeNodeStdin();
     const { default: databaseClient } = await import('../../../../tina/__generated__/databaseClient');
     const result = await databaseClient.request({
       query: body.query,
