@@ -16,6 +16,15 @@ export const ensureTinaDatabaseIndexed = async () => {
   if (!bootstrapPromise) {
     bootstrapPromise = database
       .getGraphQLSchema()
+      .then(async (existingSchema: unknown) => {
+        if (existingSchema) return;
+
+        await database.indexContent({
+          graphQLSchema,
+          tinaSchema: { schema },
+          lookup,
+        });
+      })
       .catch(async (error: unknown) => {
         if (!isMissingSchemaError(error)) throw error;
 
@@ -25,7 +34,6 @@ export const ensureTinaDatabaseIndexed = async () => {
           lookup,
         });
       })
-      .then(() => undefined)
       .catch((error: unknown) => {
         bootstrapPromise = null;
         throw error;
