@@ -1,11 +1,13 @@
 ---
 const error = Astro.url.searchParams.get('error');
-const errorMessage =
-  error === 'server'
-    ? 'Hay un error del servidor en la autenticacion. Revisa la consola del server.'
-    : error
-      ? 'Credenciales invalidas. Revisalas e intenta de nuevo.'
-      : null;
+const errorMessages: Record<string, string> = {
+  '1': 'Credenciales invalidas. Revisalas e intenta de nuevo.',
+  env: 'Falta una variable de entorno del admin o MySQL.',
+  'db-auth': 'MySQL rechazo el usuario o la contrasena configurada.',
+  'db-connection': 'No se pudo conectar al host de MySQL configurado.',
+  server: 'Hay un error del servidor en la autenticacion. Revisa la consola del server.',
+};
+const errorMessage = error ? errorMessages[error] || errorMessages.server : null;
 ---
 
 <!doctype html>
