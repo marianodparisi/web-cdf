@@ -1,6 +1,9 @@
-import mongodbLevel from 'mongodb-level';
+import * as mongodbLevelNamespace from 'mongodb-level';
 
-const { MongodbLevel } = mongodbLevel;
+const { MongodbLevel } =
+  'default' in mongodbLevelNamespace
+    ? (mongodbLevelNamespace.default as typeof mongodbLevelNamespace)
+    : mongodbLevelNamespace;
 
 type OpenCallback = (error?: Error) => void;
 

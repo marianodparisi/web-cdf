@@ -16,9 +16,7 @@ export const ensureTinaDatabaseIndexed = async () => {
   if (!bootstrapPromise) {
     bootstrapPromise = database
       .getGraphQLSchema()
-      .then(async (existingSchema: unknown) => {
-        if (existingSchema) return;
-
+      .then(async () => {
         await database.indexContent({
           graphQLSchema,
           tinaSchema: { schema },
