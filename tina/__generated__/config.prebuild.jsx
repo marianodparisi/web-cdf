@@ -1,5 +1,41 @@
+// tina/local-auth-provider.ts
+var defineConfig = (config) => config;
+var LocalAuthProvider = class {
+  async authenticate() {
+    return { access_token: "LOCAL", id_token: "LOCAL", refresh_token: "LOCAL" };
+  }
+  async authorize() {
+    return true;
+  }
+  async getUser() {
+    return true;
+  }
+  async getToken() {
+    return { id_token: "" };
+  }
+  async fetchWithToken(input, init) {
+    return fetch(input, init);
+  }
+  async isAuthorized() {
+    return true;
+  }
+  async isAuthenticated() {
+    return true;
+  }
+  getLoginStrategy() {
+    return "Redirect";
+  }
+  getLoginScreen() {
+    return null;
+  }
+  getSessionProvider() {
+    return ({ children }) => children;
+  }
+  async logout() {
+  }
+};
+
 // tina/config.ts
-import { LocalAuthProvider, defineConfig } from "../local-auth-provider";
 var branch = process.env.NEXT_PUBLIC_TINA_BRANCH || process.env.HEAD || process.env.VERCEL_GIT_COMMIT_REF || "dev";
 var config_default = defineConfig({
   branch,
