@@ -1,7 +1,5 @@
 // @ts-nocheck
 import { resolve } from "@tinacms/datalayer";
-import type { TinaClient } from "tinacms/dist/client";
-
 import { queries } from "./types.js";
 import database from "../database";
 
@@ -43,7 +41,7 @@ function createDatabaseClient<GenQueries = Record<string, unknown>>({
   queries,
 }: {
   queries: (client: {
-    request: TinaClient<GenQueries>["request"];
+    request: (args: { query: string; variables?: Record<string, unknown>; user?: unknown }) => Promise<unknown>;
   }) => GenQueries;
 }) {
   const request = async ({ query, variables, user }) => {

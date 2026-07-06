@@ -1,5 +1,5 @@
 // tina/config.ts
-import { LocalAuthProvider, defineConfig } from "tinacms";
+import { LocalAuthProvider, defineConfig } from "../local-auth-provider";
 var branch = process.env.NEXT_PUBLIC_TINA_BRANCH || process.env.HEAD || process.env.VERCEL_GIT_COMMIT_REF || "dev";
 var config_default = defineConfig({
   branch,

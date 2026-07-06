@@ -82,7 +82,6 @@ export function getSdk(requester) {
     }
   };
 }
-import { createClient } from "tinacms/dist/client";
 const generateRequester = (client) => {
   const requester = async (doc, vars, options) => {
     let url = client.apiUrl;
@@ -101,10 +100,15 @@ const generateRequester = (client) => {
 };
 export const ExperimentalGetTinaClient = () => getSdk(
   generateRequester(
-    createClient({
-      url: "/api/tina/gql",
-      queries
-    })
+    {
+      apiUrl: "/api/tina/gql",
+      request: ({ query, variables, url }, options) =>
+        fetch(url || "/api/tina/gql", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query, variables, options })
+        }).then((response) => response.json())
+    }
   )
 );
 export const queries = (client) => {

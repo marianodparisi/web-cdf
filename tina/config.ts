@@ -1,4 +1,4 @@
-import { LocalAuthProvider, defineConfig } from 'tinacms';
+import { LocalAuthProvider, defineConfig } from './local-auth-provider';
 
 const branch =
   process.env.NEXT_PUBLIC_TINA_BRANCH ||
