@@ -49,6 +49,8 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
   try {
     stabilizeNodeStdin();
+    const { ensureTinaDatabaseIndexed } = await import('../../../../tina/bootstrap');
+    await ensureTinaDatabaseIndexed();
     const { default: databaseClient } = await import('../../../../tina/__generated__/databaseClient');
     const result = await databaseClient.request({
       query: body.query,

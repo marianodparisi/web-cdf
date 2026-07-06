@@ -103,6 +103,8 @@ const checkGithub = async (): Promise<CheckResult> => {
 const checkTina = async (): Promise<CheckResult> => {
   try {
     stabilizeNodeStdin();
+    const { ensureTinaDatabaseIndexed } = await import('../../../../tina/bootstrap');
+    await ensureTinaDatabaseIndexed();
     const { default: databaseClient } = await import('../../../../tina/__generated__/databaseClient');
     const result = await databaseClient.request({
       query: 'query { collections { name label path format } }',
