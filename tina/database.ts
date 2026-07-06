@@ -1,6 +1,6 @@
 import { createDatabase, createLocalDatabase } from '@tinacms/datalayer';
-import { MongodbLevel } from 'mongodb-level';
 import { GitHubProvider } from 'tinacms-gitprovider-github';
+import { TinaMongodbLevel } from './mongodb-level';
 
 type TinaDatabase = ReturnType<typeof createDatabase> | ReturnType<typeof createLocalDatabase>;
 
@@ -27,7 +27,7 @@ const createTinaDatabase = () =>
           repo: process.env.GITHUB_REPO as string,
           token: process.env.GITHUB_PERSONAL_ACCESS_TOKEN as string,
         }),
-        databaseAdapter: new MongodbLevel<string, Record<string, any>>({
+        databaseAdapter: new TinaMongodbLevel<string, Record<string, any>>({
           collectionName: `tinacms-${branch}`,
           dbName: process.env.MONGODB_DB_NAME || 'tina_cdf',
           mongoUri: process.env.MONGODB_URI as string,

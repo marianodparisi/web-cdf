@@ -12,7 +12,13 @@ const readEnv = (name: string) => {
 };
 
 const sanitizeError = (error: unknown) => {
-  if (error instanceof Error) return `${error.name}: ${error.message}`;
+  if (error instanceof Error) {
+    return {
+      message: `${error.name}: ${error.message}`,
+      code: 'code' in error ? String(error.code) : undefined,
+      stack: error.stack?.split('\n').slice(0, 8),
+    };
+  }
   return String(error);
 };
 
