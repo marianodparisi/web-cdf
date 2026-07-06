@@ -1,4 +1,6 @@
-import { MongodbLevel } from 'mongodb-level';
+import mongodbLevel from 'mongodb-level';
+
+const { MongodbLevel } = mongodbLevel;
 
 type OpenCallback = (error?: Error) => void;
 
