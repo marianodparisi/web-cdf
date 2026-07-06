@@ -1,5 +1,6 @@
 import { createDatabase, createLocalDatabase } from '@tinacms/datalayer';
 import { GitHubProvider } from 'tinacms-gitprovider-github';
+import { TinaGithubBridge } from './github-bridge';
 import { TinaMongodbLevel } from './mongodb-level';
 
 type TinaDatabase = ReturnType<typeof createDatabase> | ReturnType<typeof createLocalDatabase>;
@@ -17,16 +18,19 @@ const branch =
 
 const isLocal = process.env.TINA_PUBLIC_IS_LOCAL === 'true';
 
+const githubConfig = {
+  branch,
+  owner: process.env.GITHUB_OWNER as string,
+  repo: process.env.GITHUB_REPO as string,
+  token: process.env.GITHUB_PERSONAL_ACCESS_TOKEN as string,
+};
+
 const createTinaDatabase = () =>
   isLocal
     ? createLocalDatabase()
     : createDatabase({
-        gitProvider: new GitHubProvider({
-          branch,
-          owner: process.env.GITHUB_OWNER as string,
-          repo: process.env.GITHUB_REPO as string,
-          token: process.env.GITHUB_PERSONAL_ACCESS_TOKEN as string,
-        }),
+        bridge: new TinaGithubBridge(githubConfig),
+        gitProvider: new GitHubProvider(githubConfig),
         databaseAdapter: new TinaMongodbLevel<string, Record<string, any>>({
           collectionName: `tinacms-${branch}`,
           dbName: process.env.MONGODB_DB_NAME || 'tina_cdf',
