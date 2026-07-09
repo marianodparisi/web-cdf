@@ -41,5 +41,11 @@ export class LocalAuthProvider {
     return ({ children }: { children?: unknown }) => children;
   }
 
-  async logout() {}
+  async logout() {
+    await fetch('/api/admin/logout', { method: 'POST' }).catch(() => undefined);
+
+    if (typeof window !== 'undefined') {
+      window.location.assign('/admin/login');
+    }
+  }
 }
