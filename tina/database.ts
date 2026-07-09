@@ -39,6 +39,35 @@ const createTinaDatabase = () =>
         namespace: branch,
       });
 
-globalThis.__cdfTinaDatabase ||= createTinaDatabase();
+export const getTinaDatabase = () => {
+  globalThis.__cdfTinaDatabase ||= createTinaDatabase();
+  return globalThis.__cdfTinaDatabase;
+};
 
-export default globalThis.__cdfTinaDatabase;
+export const resetTinaDatabase = async () => {
+  const currentDatabase = globalThis.__cdfTinaDatabase as
+    | (TinaDatabase & { rootLevel?: { close?: () => Promise<void> } })
+    | undefined;
+
+  await currentDatabase?.rootLevel?.close?.().catch(() => undefined);
+  globalThis.__cdfTinaDatabase = createTinaDatabase();
+  return globalThis.__cdfTinaDatabase;
+};
+
+const databaseProxy = new Proxy(
+  {},
+  {
+    get(_target, property) {
+      const database = getTinaDatabase() as Record<PropertyKey, unknown>;
+      const value = database[property];
+
+      return typeof value === 'function' ? value.bind(database) : value;
+    },
+    set(_target, property, value) {
+      (getTinaDatabase() as Record<PropertyKey, unknown>)[property] = value;
+      return true;
+    },
+  }
+) as TinaDatabase;
+
+export default databaseProxy;
