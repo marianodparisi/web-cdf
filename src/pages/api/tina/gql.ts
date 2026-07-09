@@ -21,17 +21,36 @@ const jsonResponse = (body: unknown, status = 200) =>
     headers: { 'Content-Type': 'application/json' },
   });
 
+const withTinaTimeout = async <T>(promise: Promise<T>, label: string) => {
+  const timeoutMs = 12000;
+  let timeout: ReturnType<typeof setTimeout>;
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    timeout = setTimeout(() => {
+      reject(new Error(`${label} timed out after ${timeoutMs}ms`));
+    }, timeoutMs);
+  });
+
+  try {
+    return await Promise.race([promise, timeoutPromise]);
+  } finally {
+    clearTimeout(timeout!);
+  }
+};
+
 const runTinaRequest = async (
   body: { query: string; variables: Record<string, unknown> },
   session: { username: string }
 ) => {
   const { default: databaseClient } = await import('../../../../tina/__generated__/databaseClient');
 
-  return databaseClient.request({
-    query: body.query,
-    variables: body.variables,
-    user: { name: session.username, sub: session.username },
-  });
+  return withTinaTimeout(
+    databaseClient.request({
+      query: body.query,
+      variables: body.variables,
+      user: { name: session.username, sub: session.username },
+    }),
+    'Tina GraphQL request'
+  );
 };
 
 export const POST: APIRoute = async ({ request, cookies }) => {
@@ -72,7 +91,7 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
     if (isMissingTinaIndexError(error)) {
       try {
-        await ensureTinaDatabaseIndexed();
+        await withTinaTimeout(ensureTinaDatabaseIndexed(), 'Tina bootstrap');
         const result = await runTinaRequest(body, session);
 
         return jsonResponse(result);

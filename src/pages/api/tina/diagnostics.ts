@@ -23,6 +23,21 @@ const sanitizeError = (error: unknown) => {
   return String(error);
 };
 
+const withTimeout = async <T>(promise: Promise<T>, label: string, timeoutMs = 12000) => {
+  let timeout: ReturnType<typeof setTimeout>;
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    timeout = setTimeout(() => {
+      reject(new Error(`${label} timed out after ${timeoutMs}ms`));
+    }, timeoutMs);
+  });
+
+  try {
+    return await Promise.race([promise, timeoutPromise]);
+  } finally {
+    clearTimeout(timeout!);
+  }
+};
+
 const checkMongo = async (): Promise<CheckResult> => {
   try {
     const { MongoClient } = await import('mongodb');
@@ -104,13 +119,16 @@ const checkTina = async (): Promise<CheckResult> => {
   try {
     stabilizeNodeStdin();
     const { ensureTinaDatabaseIndexed } = await import('../../../../tina/bootstrap');
-    await ensureTinaDatabaseIndexed();
+    await withTimeout(ensureTinaDatabaseIndexed(), 'Tina bootstrap');
     const { default: databaseClient } = await import('../../../../tina/__generated__/databaseClient');
-    const result = await databaseClient.request({
-      query: 'query { collections { name label path format } }',
-      variables: {},
-      user: { name: 'diagnostics', sub: 'diagnostics' },
-    });
+    const result = await withTimeout(
+      databaseClient.request({
+        query: 'query { collections { name label path format } }',
+        variables: {},
+        user: { name: 'diagnostics', sub: 'diagnostics' },
+      }),
+      'Tina diagnostics query'
+    );
 
     return {
       ok: !result.errors,
