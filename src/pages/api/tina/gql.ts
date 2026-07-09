@@ -21,6 +21,26 @@ const jsonResponse = (body: unknown, status = 200) =>
     headers: { 'Content-Type': 'application/json' },
   });
 
+const tinaErrorResponse = (error: unknown) => {
+  const message = error instanceof Error ? error.message : 'Unknown Tina API error';
+
+  return jsonResponse({
+    data: null,
+    errors: [
+      {
+        message,
+        extensions:
+          error instanceof Error
+            ? {
+                name: error.name,
+                code: 'code' in error ? String(error.code) : undefined,
+              }
+            : undefined,
+      },
+    ],
+  });
+};
+
 const withTinaTimeout = async <T>(promise: Promise<T>, label: string) => {
   const timeoutMs = 12000;
   let timeout: ReturnType<typeof setTimeout>;
@@ -96,34 +116,14 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
         return jsonResponse(result);
       } catch (retryError) {
-        const message = retryError instanceof Error ? retryError.message : 'Unknown Tina API error';
         console.error('Tina GraphQL retry error:', retryError);
 
-        return jsonResponse(
-          {
-            errors: [
-              {
-                message,
-              },
-            ],
-          },
-          500
-        );
+        return tinaErrorResponse(retryError);
       }
     }
 
-    const message = error instanceof Error ? error.message : 'Unknown Tina API error';
     console.error('Tina GraphQL error:', error);
 
-    return jsonResponse(
-      {
-        errors: [
-          {
-            message,
-          },
-        ],
-      },
-      500
-    );
+    return tinaErrorResponse(error);
   }
 };
