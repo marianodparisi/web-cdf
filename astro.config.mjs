@@ -3,6 +3,7 @@ import node from '@astrojs/node';
 import tina from '@tinacms/astro/integration';
 import { tinaAdminDevRedirect } from '@tinacms/astro/vite';
 import tailwind from '@astrojs/tailwind';
+import { fileURLToPath } from 'node:url';
 
 // https://astro.build/config
 export default defineConfig({
@@ -23,6 +24,11 @@ export default defineConfig({
   },
   integrations: [tailwind(), tina()],
   vite: {
+    resolve: {
+      alias: {
+        'tinacms/dist/client': fileURLToPath(new URL('./src/lib/tina-client-stub.ts', import.meta.url))
+      }
+    },
     plugins: [tinaAdminDevRedirect()],
     ssr: {
       noExternal: ['@tinacms/astro', '@tinacms/bridge']
