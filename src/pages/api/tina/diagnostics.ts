@@ -43,19 +43,64 @@ const checkMongo = async (): Promise<CheckResult> => {
     const { MongoClient } = await import('mongodb');
     const mongoUri = readEnv('MONGODB_URI');
     const dbName = readEnv('MONGODB_DB_NAME') || 'tina_cdf';
+    const branch = readEnv('GITHUB_BRANCH') || readEnv('NEXT_PUBLIC_TINA_BRANCH') || 'dev';
+    const tinaCollectionName = `tinacms-${branch}`;
 
     if (!mongoUri) return { ok: false, error: 'Missing MONGODB_URI' };
 
     const client = new MongoClient(mongoUri, { serverSelectionTimeoutMS: 8000 });
     await client.connect();
     await client.db('admin').command({ ping: 1 });
-    await client
-      .db(dbName)
+    const db = client.db(dbName);
+    await db
       .collection('__tina_diagnostics')
       .updateOne({ _id: 'ping' }, { $set: { checkedAt: new Date() } }, { upsert: true });
+
+    const collections = await db.listCollections({}, { nameOnly: true }).toArray();
+    const tinaCollection = db.collection(tinaCollectionName);
+    const tinaCollectionExists = collections.some((collection) => collection.name === tinaCollectionName);
+    const tinaDocumentCount = tinaCollectionExists ? await tinaCollection.countDocuments() : 0;
+    const expectedContentKeys = ['content/site-content/home.json', 'content/dev-notes/probe.md'];
+    const expectedContent = tinaCollectionExists
+      ? await tinaCollection
+          .find({ key: { $in: expectedContentKeys } }, { projection: { _id: 0, key: 1 } })
+          .sort({ key: 1 })
+          .toArray()
+      : [];
+    const sampleKeys = tinaCollectionExists
+      ? await tinaCollection
+          .find({}, { projection: { _id: 0, key: 1 } })
+          .sort({ key: 1 })
+          .limit(80)
+          .toArray()
+      : [];
+    const schemaKeys = tinaCollectionExists
+      ? await tinaCollection
+          .find(
+            { key: { $regex: 'schema|graphql|lookup|index|definition', $options: 'i' } },
+            { projection: { _id: 0, key: 1 } }
+          )
+          .sort({ key: 1 })
+          .limit(80)
+          .toArray()
+      : [];
     await client.close();
 
-    return { ok: true, detail: { dbName } };
+    return {
+      ok: true,
+      detail: {
+        dbName,
+        branch,
+        tinaCollectionName,
+        collections: collections.map((collection) => collection.name).sort(),
+        tinaCollectionExists,
+        tinaDocumentCount,
+        expectedContentKeys,
+        indexedExpectedContentKeys: expectedContent.map((item) => item.key),
+        sampleKeys: sampleKeys.map((item) => item.key),
+        schemaKeys: schemaKeys.map((item) => item.key),
+      },
+    };
   } catch (error) {
     return { ok: false, error: sanitizeError(error) };
   }
