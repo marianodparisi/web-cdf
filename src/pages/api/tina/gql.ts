@@ -21,6 +21,19 @@ const jsonResponse = (body: unknown, status = 200) =>
     headers: { 'Content-Type': 'application/json' },
   });
 
+const runTinaRequest = async (
+  body: { query: string; variables: Record<string, unknown> },
+  session: { username: string }
+) => {
+  const { default: databaseClient } = await import('../../../../tina/__generated__/databaseClient');
+
+  return databaseClient.request({
+    query: body.query,
+    variables: body.variables,
+    user: { name: session.username, sub: session.username },
+  });
+};
+
 export const POST: APIRoute = async ({ request, cookies }) => {
   const session = verifyAdminSessionValue(cookies.get(getAdminSessionCookie())?.value);
 
@@ -49,17 +62,37 @@ export const POST: APIRoute = async ({ request, cookies }) => {
 
   try {
     stabilizeNodeStdin();
-    const { ensureTinaDatabaseIndexed } = await import('../../../../tina/bootstrap');
-    await ensureTinaDatabaseIndexed();
-    const { default: databaseClient } = await import('../../../../tina/__generated__/databaseClient');
-    const result = await databaseClient.request({
-      query: body.query,
-      variables: body.variables,
-      user: { name: session.username, sub: session.username },
-    });
+    const result = await runTinaRequest(body, session);
 
     return jsonResponse(result);
   } catch (error) {
+    const { ensureTinaDatabaseIndexed, isMissingTinaIndexError } = await import(
+      '../../../../tina/bootstrap'
+    );
+
+    if (isMissingTinaIndexError(error)) {
+      try {
+        await ensureTinaDatabaseIndexed();
+        const result = await runTinaRequest(body, session);
+
+        return jsonResponse(result);
+      } catch (retryError) {
+        const message = retryError instanceof Error ? retryError.message : 'Unknown Tina API error';
+        console.error('Tina GraphQL retry error:', retryError);
+
+        return jsonResponse(
+          {
+            errors: [
+              {
+                message,
+              },
+            ],
+          },
+          500
+        );
+      }
+    }
+
     const message = error instanceof Error ? error.message : 'Unknown Tina API error';
     console.error('Tina GraphQL error:', error);
 
