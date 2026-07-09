@@ -5,6 +5,8 @@ import schema from './__generated__/_schema.json';
 
 let bootstrapPromise: Promise<void> | null = null;
 
+const knownContentPath = 'content/site-content/home.json';
+
 const isMissingSchemaError = (error: unknown) =>
   error instanceof Error &&
   (error.message.includes('GraphQL schema not found') ||
@@ -17,6 +19,9 @@ export const ensureTinaDatabaseIndexed = async () => {
     bootstrapPromise = database
       .getGraphQLSchema()
       .then(async () => {
+        const hasIndexedContent = await database.documentExists(knownContentPath);
+        if (hasIndexedContent) return;
+
         await database.indexContent({
           graphQLSchema,
           tinaSchema: { schema },
