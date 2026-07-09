@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TinaCMS</title>
     <script>
+      if (window.location.pathname.replace(/\/$/, '') === '/admin') {
+        window.location.replace(`/admin/index.html${window.location.hash}`)
+      }
+
       window.__cdfAdminSessionReady = fetch(`/api/admin/session/?t=${Date.now()}`, {
         credentials: 'same-origin',
         cache: 'no-store',
