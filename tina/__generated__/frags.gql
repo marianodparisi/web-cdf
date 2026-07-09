@@ -6,3 +6,8 @@ fragment SiteContentParts on SiteContent {
   ctaLabel
   ctaHref
 }
+
+fragment DevNotesParts on DevNotes {
+  __typename
+  body
+}

@@ -60,6 +60,20 @@ export default defineConfig({
           },
         ],
       },
+      {
+        name: 'devNotes',
+        label: 'Dev Notes',
+        path: 'content/dev-notes',
+        format: 'md',
+        fields: [
+          {
+            type: 'rich-text',
+            name: 'body',
+            label: 'Body',
+            isBody: true,
+          },
+        ],
+      },
     ],
   },
 });

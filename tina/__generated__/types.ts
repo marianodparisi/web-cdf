@@ -84,6 +84,8 @@ export type Query = {
   document: DocumentNode;
   siteContent: SiteContent;
   siteContentConnection: SiteContentConnection;
+  devNotes: DevNotes;
+  devNotesConnection: DevNotesConnection;
 };
 
 
@@ -122,8 +124,24 @@ export type QuerySiteContentConnectionArgs = {
   filter?: InputMaybe<SiteContentFilter>;
 };
 
+
+export type QueryDevNotesArgs = {
+  relativePath?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryDevNotesConnectionArgs = {
+  before?: InputMaybe<Scalars['String']['input']>;
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Float']['input']>;
+  last?: InputMaybe<Scalars['Float']['input']>;
+  sort?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<DevNotesFilter>;
+};
+
 export type DocumentFilter = {
   siteContent?: InputMaybe<SiteContentFilter>;
+  devNotes?: InputMaybe<DevNotesFilter>;
 };
 
 export type DocumentConnectionEdges = {
@@ -163,7 +181,7 @@ export type CollectionDocumentsArgs = {
   folder?: InputMaybe<Scalars['String']['input']>;
 };
 
-export type DocumentNode = SiteContent | Folder;
+export type DocumentNode = SiteContent | DevNotes | Folder;
 
 export type SiteContent = Node & Document & {
   __typename?: 'SiteContent';
@@ -211,6 +229,31 @@ export type SiteContentConnection = Connection & {
   edges?: Maybe<Array<Maybe<SiteContentConnectionEdges>>>;
 };
 
+export type DevNotes = Node & Document & {
+  __typename?: 'DevNotes';
+  body?: Maybe<Scalars['JSON']['output']>;
+  id: Scalars['ID']['output'];
+  _sys: SystemInfo;
+  _values: Scalars['JSON']['output'];
+};
+
+export type DevNotesFilter = {
+  body?: InputMaybe<RichTextFilter>;
+};
+
+export type DevNotesConnectionEdges = {
+  __typename?: 'DevNotesConnectionEdges';
+  cursor: Scalars['String']['output'];
+  node?: Maybe<DevNotes>;
+};
+
+export type DevNotesConnection = Connection & {
+  __typename?: 'DevNotesConnection';
+  pageInfo: PageInfo;
+  totalCount: Scalars['Float']['output'];
+  edges?: Maybe<Array<Maybe<DevNotesConnectionEdges>>>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   addPendingDocument: DocumentNode;
@@ -220,6 +263,8 @@ export type Mutation = {
   createFolder: DocumentNode;
   updateSiteContent: SiteContent;
   createSiteContent: SiteContent;
+  updateDevNotes: DevNotes;
+  createDevNotes: DevNotes;
 };
 
 
@@ -267,13 +312,27 @@ export type MutationCreateSiteContentArgs = {
   params: SiteContentMutation;
 };
 
+
+export type MutationUpdateDevNotesArgs = {
+  relativePath: Scalars['String']['input'];
+  params: DevNotesMutation;
+};
+
+
+export type MutationCreateDevNotesArgs = {
+  relativePath: Scalars['String']['input'];
+  params: DevNotesMutation;
+};
+
 export type DocumentUpdateMutation = {
   siteContent?: InputMaybe<SiteContentMutation>;
+  devNotes?: InputMaybe<DevNotesMutation>;
   relativePath?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type DocumentMutation = {
   siteContent?: InputMaybe<SiteContentMutation>;
+  devNotes?: InputMaybe<DevNotesMutation>;
 };
 
 export type SiteContentMutation = {
@@ -284,7 +343,13 @@ export type SiteContentMutation = {
   ctaHref?: InputMaybe<Scalars['String']['input']>;
 };
 
+export type DevNotesMutation = {
+  body?: InputMaybe<Scalars['JSON']['input']>;
+};
+
 export type SiteContentPartsFragment = { __typename: 'SiteContent', title: string, eyebrow?: string | null, body?: any | null, ctaLabel?: string | null, ctaHref?: string | null };
+
+export type DevNotesPartsFragment = { __typename: 'DevNotes', body?: any | null };
 
 export type SiteContentQueryVariables = Exact<{
   relativePath: Scalars['String']['input'];
@@ -305,6 +370,25 @@ export type SiteContentConnectionQueryVariables = Exact<{
 
 export type SiteContentConnectionQuery = { __typename?: 'Query', siteContentConnection: { __typename?: 'SiteContentConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges?: Array<{ __typename?: 'SiteContentConnectionEdges', cursor: string, node?: { __typename: 'SiteContent', id: string, title: string, eyebrow?: string | null, body?: any | null, ctaLabel?: string | null, ctaHref?: string | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null } | null> | null } };
 
+export type DevNotesQueryVariables = Exact<{
+  relativePath: Scalars['String']['input'];
+}>;
+
+
+export type DevNotesQuery = { __typename?: 'Query', devNotes: { __typename: 'DevNotes', id: string, body?: any | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } };
+
+export type DevNotesConnectionQueryVariables = Exact<{
+  before?: InputMaybe<Scalars['String']['input']>;
+  after?: InputMaybe<Scalars['String']['input']>;
+  first?: InputMaybe<Scalars['Float']['input']>;
+  last?: InputMaybe<Scalars['Float']['input']>;
+  sort?: InputMaybe<Scalars['String']['input']>;
+  filter?: InputMaybe<DevNotesFilter>;
+}>;
+
+
+export type DevNotesConnectionQuery = { __typename?: 'Query', devNotesConnection: { __typename?: 'DevNotesConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges?: Array<{ __typename?: 'DevNotesConnectionEdges', cursor: string, node?: { __typename: 'DevNotes', id: string, body?: any | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string } } | null } | null> | null } };
+
 export const SiteContentPartsFragmentDoc = gql`
     fragment SiteContentParts on SiteContent {
   __typename
@@ -313,6 +397,12 @@ export const SiteContentPartsFragmentDoc = gql`
   body
   ctaLabel
   ctaHref
+}
+    `;
+export const DevNotesPartsFragmentDoc = gql`
+    fragment DevNotesParts on DevNotes {
+  __typename
+  body
 }
     `;
 export const SiteContentDocument = gql`
@@ -372,6 +462,63 @@ export const SiteContentConnectionDocument = gql`
   }
 }
     ${SiteContentPartsFragmentDoc}`;
+export const DevNotesDocument = gql`
+    query devNotes($relativePath: String!) {
+  devNotes(relativePath: $relativePath) {
+    ... on Document {
+      _sys {
+        filename
+        basename
+        hasReferences
+        breadcrumbs
+        path
+        relativePath
+        extension
+      }
+      id
+    }
+    ...DevNotesParts
+  }
+}
+    ${DevNotesPartsFragmentDoc}`;
+export const DevNotesConnectionDocument = gql`
+    query devNotesConnection($before: String, $after: String, $first: Float, $last: Float, $sort: String, $filter: DevNotesFilter) {
+  devNotesConnection(
+    before: $before
+    after: $after
+    first: $first
+    last: $last
+    sort: $sort
+    filter: $filter
+  ) {
+    pageInfo {
+      hasPreviousPage
+      hasNextPage
+      startCursor
+      endCursor
+    }
+    totalCount
+    edges {
+      cursor
+      node {
+        ... on Document {
+          _sys {
+            filename
+            basename
+            hasReferences
+            breadcrumbs
+            path
+            relativePath
+            extension
+          }
+          id
+        }
+        ...DevNotesParts
+      }
+    }
+  }
+}
+    ${DevNotesPartsFragmentDoc}`;
 export type Requester<C= {}> = <R, V>(doc: DocumentNode, vars?: V, options?: C) => Promise<R>
   export function getSdk<C>(requester: Requester<C>) {
     return {
@@ -380,6 +527,12 @@ export type Requester<C= {}> = <R, V>(doc: DocumentNode, vars?: V, options?: C) 
       },
     siteContentConnection(variables?: SiteContentConnectionQueryVariables, options?: C): Promise<{data: SiteContentConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: SiteContentConnectionQueryVariables, query: string}> {
         return requester<{data: SiteContentConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: SiteContentConnectionQueryVariables, query: string}, SiteContentConnectionQueryVariables>(SiteContentConnectionDocument, variables, options);
+      },
+    devNotes(variables: DevNotesQueryVariables, options?: C): Promise<{data: DevNotesQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: DevNotesQueryVariables, query: string}> {
+        return requester<{data: DevNotesQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: DevNotesQueryVariables, query: string}, DevNotesQueryVariables>(DevNotesDocument, variables, options);
+      },
+    devNotesConnection(variables?: DevNotesConnectionQueryVariables, options?: C): Promise<{data: DevNotesConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: DevNotesConnectionQueryVariables, query: string}> {
+        return requester<{data: DevNotesConnectionQuery, errors?: { message: string, locations: { line: number, column: number }[], path: string[] }[], variables: DevNotesConnectionQueryVariables, query: string}, DevNotesConnectionQueryVariables>(DevNotesConnectionDocument, variables, options);
       }
     };
   }

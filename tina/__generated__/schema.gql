@@ -56,10 +56,13 @@ type Query {
   document(collection: String, relativePath: String): DocumentNode!
   siteContent(relativePath: String): SiteContent!
   siteContentConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: SiteContentFilter): SiteContentConnection!
+  devNotes(relativePath: String): DevNotes!
+  devNotesConnection(before: String, after: String, first: Float, last: Float, sort: String, filter: DevNotesFilter): DevNotesConnection!
 }
 
 input DocumentFilter {
   siteContent: SiteContentFilter
+  devNotes: DevNotesFilter
 }
 
 type DocumentConnectionEdges {
@@ -85,7 +88,7 @@ type Collection {
   documents(before: String, after: String, first: Float, last: Float, sort: String, filter: DocumentFilter, folder: String): DocumentConnection!
 }
 
-union DocumentNode = SiteContent | Folder
+union DocumentNode = SiteContent | DevNotes | Folder
 
 type SiteContent implements Node & Document {
   title: String!
@@ -130,6 +133,28 @@ type SiteContentConnection implements Connection {
   edges: [SiteContentConnectionEdges]
 }
 
+type DevNotes implements Node & Document {
+  body: JSON
+  id: ID!
+  _sys: SystemInfo!
+  _values: JSON!
+}
+
+input DevNotesFilter {
+  body: RichTextFilter
+}
+
+type DevNotesConnectionEdges {
+  cursor: String!
+  node: DevNotes
+}
+
+type DevNotesConnection implements Connection {
+  pageInfo: PageInfo!
+  totalCount: Float!
+  edges: [DevNotesConnectionEdges]
+}
+
 type Mutation {
   addPendingDocument(collection: String!, relativePath: String!, template: String): DocumentNode!
   updateDocument(collection: String, relativePath: String!, params: DocumentUpdateMutation!): DocumentNode!
@@ -138,15 +163,19 @@ type Mutation {
   createFolder(collection: String, relativePath: String!): DocumentNode!
   updateSiteContent(relativePath: String!, params: SiteContentMutation!): SiteContent!
   createSiteContent(relativePath: String!, params: SiteContentMutation!): SiteContent!
+  updateDevNotes(relativePath: String!, params: DevNotesMutation!): DevNotes!
+  createDevNotes(relativePath: String!, params: DevNotesMutation!): DevNotes!
 }
 
 input DocumentUpdateMutation {
   siteContent: SiteContentMutation
+  devNotes: DevNotesMutation
   relativePath: String
 }
 
 input DocumentMutation {
   siteContent: SiteContentMutation
+  devNotes: DevNotesMutation
 }
 
 input SiteContentMutation {
@@ -155,6 +184,10 @@ input SiteContentMutation {
   body: JSON
   ctaLabel: String
   ctaHref: String
+}
+
+input DevNotesMutation {
+  body: JSON
 }
 
 schema {

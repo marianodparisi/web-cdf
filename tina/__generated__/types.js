@@ -15,6 +15,12 @@ export const SiteContentPartsFragmentDoc = gql`
   ctaHref
 }
     `;
+export const DevNotesPartsFragmentDoc = gql`
+    fragment DevNotesParts on DevNotes {
+  __typename
+  body
+}
+    `;
 export const SiteContentDocument = gql`
     query siteContent($relativePath: String!) {
   siteContent(relativePath: $relativePath) {
@@ -72,6 +78,63 @@ export const SiteContentConnectionDocument = gql`
   }
 }
     ${SiteContentPartsFragmentDoc}`;
+export const DevNotesDocument = gql`
+    query devNotes($relativePath: String!) {
+  devNotes(relativePath: $relativePath) {
+    ... on Document {
+      _sys {
+        filename
+        basename
+        hasReferences
+        breadcrumbs
+        path
+        relativePath
+        extension
+      }
+      id
+    }
+    ...DevNotesParts
+  }
+}
+    ${DevNotesPartsFragmentDoc}`;
+export const DevNotesConnectionDocument = gql`
+    query devNotesConnection($before: String, $after: String, $first: Float, $last: Float, $sort: String, $filter: DevNotesFilter) {
+  devNotesConnection(
+    before: $before
+    after: $after
+    first: $first
+    last: $last
+    sort: $sort
+    filter: $filter
+  ) {
+    pageInfo {
+      hasPreviousPage
+      hasNextPage
+      startCursor
+      endCursor
+    }
+    totalCount
+    edges {
+      cursor
+      node {
+        ... on Document {
+          _sys {
+            filename
+            basename
+            hasReferences
+            breadcrumbs
+            path
+            relativePath
+            extension
+          }
+          id
+        }
+        ...DevNotesParts
+      }
+    }
+  }
+}
+    ${DevNotesPartsFragmentDoc}`;
 export function getSdk(requester) {
   return {
     siteContent(variables, options) {
@@ -79,9 +142,16 @@ export function getSdk(requester) {
     },
     siteContentConnection(variables, options) {
       return requester(SiteContentConnectionDocument, variables, options);
+    },
+    devNotes(variables, options) {
+      return requester(DevNotesDocument, variables, options);
+    },
+    devNotesConnection(variables, options) {
+      return requester(DevNotesConnectionDocument, variables, options);
     }
   };
 }
+import { createClient } from "tinacms/dist/client";
 const generateRequester = (client) => {
   const requester = async (doc, vars, options) => {
     let url = client.apiUrl;
@@ -100,15 +170,10 @@ const generateRequester = (client) => {
 };
 export const ExperimentalGetTinaClient = () => getSdk(
   generateRequester(
-    {
-      apiUrl: "/api/tina/gql",
-      request: ({ query, variables, url }, options) =>
-        fetch(url || "/api/tina/gql", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ query, variables, options })
-        }).then((response) => response.json())
-    }
+    createClient({
+      url: "/api/tina/gql",
+      queries
+    })
   )
 );
 export const queries = (client) => {

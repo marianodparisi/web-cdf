@@ -5,25 +5,7 @@
     <link rel="icon" href="/admin/assets/favicon-eb31bc17.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TinaCMS</title>
-    <script>
-      if (window.location.pathname.replace(/\/$/, '') === '/admin') {
-        window.location.replace(`/admin/index.html${window.location.hash}`)
-      }
-
-      window.__cdfAdminSessionReady = fetch(`/api/admin/session/?t=${Date.now()}`, {
-        credentials: 'same-origin',
-        cache: 'no-store',
-      }).then((response) => {
-        if (response.status === 401) {
-          window.location.replace('/admin/login')
-          return new Promise(() => {})
-        }
-      })
-    </script>
-    <script type="module">
-      await window.__cdfAdminSessionReady
-      await import('/admin/assets/index-30e34cf3.js')
-    </script>
+    <script type="module" crossorigin src="/admin/assets/index-b2f23517.js"></script>
     <link rel="stylesheet" href="/admin/assets/index-53e50aaf.css">
   </head>
   <body class="tina-tailwind">
