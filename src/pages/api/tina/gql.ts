@@ -41,6 +41,19 @@ const tinaErrorResponse = (error: unknown) => {
   });
 };
 
+const getTinaResultErrorMessage = (result: unknown) => {
+  if (!result || typeof result !== 'object' || !('errors' in result)) return null;
+
+  const errors = (result as { errors?: Array<{ message?: unknown }> | null }).errors;
+  if (!Array.isArray(errors) || errors.length === 0) return null;
+
+  const message = errors
+    .map((error) => (typeof error.message === 'string' ? error.message : 'Unknown Tina error'))
+    .join(', ');
+
+  return message || null;
+};
+
 const withTinaTimeout = async <T>(promise: Promise<T>, label: string) => {
   const timeoutMs = 12000;
   let timeout: ReturnType<typeof setTimeout>;
@@ -63,7 +76,7 @@ const runTinaRequest = async (
 ) => {
   const { default: databaseClient } = await import('../../../../tina/__generated__/databaseClient');
 
-  return withTinaTimeout(
+  const result = await withTinaTimeout(
     databaseClient.request({
       query: body.query,
       variables: body.variables,
@@ -71,6 +84,13 @@ const runTinaRequest = async (
     }),
     'Tina GraphQL request'
   );
+
+  const errorMessage = getTinaResultErrorMessage(result);
+  if (errorMessage) {
+    throw new Error(errorMessage);
+  }
+
+  return result;
 };
 
 export const POST: APIRoute = async ({ request, cookies }) => {

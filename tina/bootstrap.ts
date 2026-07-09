@@ -11,6 +11,7 @@ export const isMissingTinaIndexError = (error: unknown) =>
   error instanceof Error &&
   (error.message.includes('GraphQL schema not found') ||
     error.message.includes('Unable to get schema from level db') ||
+    error.message.includes('Database is not open') ||
     error.message.includes('No indexDefinitions for collection') ||
     error.message.includes('tina/__generated__/_schema.json') ||
     error.message.includes('tina/__generated__/_graphql.json'));
