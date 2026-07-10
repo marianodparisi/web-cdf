@@ -17,18 +17,25 @@ var redirectToLogin = () => {
     window.location.replace(loginPath);
   }
 };
+var ensureAdminSession = async () => {
+  const hasSession = await hasAdminSession();
+  if (!hasSession) {
+    redirectToLogin();
+  }
+  return hasSession;
+};
 var LocalAuthProvider = class {
   async authenticate() {
-    if (!await hasAdminSession()) {
-      redirectToLogin();
+    if (!await ensureAdminSession()) {
+      return new Promise(() => void 0);
     }
     return { access_token: "LOCAL", id_token: "LOCAL", refresh_token: "LOCAL" };
   }
   async authorize() {
-    return hasAdminSession();
+    return ensureAdminSession();
   }
   async getUser() {
-    return hasAdminSession();
+    return ensureAdminSession();
   }
   async getToken() {
     return { id_token: "" };
@@ -37,10 +44,10 @@ var LocalAuthProvider = class {
     return fetch(input, init);
   }
   async isAuthorized() {
-    return hasAdminSession();
+    return ensureAdminSession();
   }
   async isAuthenticated() {
-    return hasAdminSession();
+    return ensureAdminSession();
   }
   getLoginStrategy() {
     return "Redirect";
