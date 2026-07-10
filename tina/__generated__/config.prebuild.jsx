@@ -1,14 +1,34 @@
 // tina/local-auth-provider.ts
 var defineConfig = (config) => config;
+var loginPath = "/admin/login";
+var sessionPath = "/api/admin/session";
+var hasAdminSession = async () => {
+  if (typeof window === "undefined") {
+    return true;
+  }
+  const response = await fetch(sessionPath, {
+    credentials: "same-origin",
+    headers: { Accept: "application/json" }
+  }).catch(() => void 0);
+  return response?.ok === true;
+};
+var redirectToLogin = () => {
+  if (typeof window !== "undefined") {
+    window.location.replace(loginPath);
+  }
+};
 var LocalAuthProvider = class {
   async authenticate() {
+    if (!await hasAdminSession()) {
+      redirectToLogin();
+    }
     return { access_token: "LOCAL", id_token: "LOCAL", refresh_token: "LOCAL" };
   }
   async authorize() {
-    return true;
+    return hasAdminSession();
   }
   async getUser() {
-    return true;
+    return hasAdminSession();
   }
   async getToken() {
     return { id_token: "" };
@@ -17,10 +37,10 @@ var LocalAuthProvider = class {
     return fetch(input, init);
   }
   async isAuthorized() {
-    return true;
+    return hasAdminSession();
   }
   async isAuthenticated() {
-    return true;
+    return hasAdminSession();
   }
   getLoginStrategy() {
     return "Redirect";
