@@ -113,39 +113,46 @@ const { title = 'Iglesia Corazón de Fuego' } = Astro.props;
 
           const sections = gsap.utils.toArray('[data-animate="reveal"]');
           sections.forEach((section) => {
-            gsap.fromTo(
-              section,
-              { y: 52, autoAlpha: 0 },
-              {
-                y: 0,
-                autoAlpha: 1,
-                duration: 1,
-                ease: 'power3.out',
-                immediateRender: false,
-                scrollTrigger: {
-                  trigger: section,
-                  start: 'top 82%',
-                  once: true,
-                },
-              }
-            );
+            const isCinematicSection = section.closest('[data-cinematic-page]');
+            if (isCinematicSection) {
+              gsap.set(section, { y: 0, autoAlpha: 1 });
+            } else {
+              gsap.fromTo(
+                section,
+                { y: 52, autoAlpha: 0 },
+                {
+                  y: 0,
+                  autoAlpha: 1,
+                  duration: 1,
+                  ease: 'power3.out',
+                  immediateRender: false,
+                  scrollTrigger: {
+                    trigger: section,
+                    start: 'top 82%',
+                    once: true,
+                  },
+                }
+              );
+            }
 
             const cards = section.querySelectorAll('[data-animate="card"]');
             cards.forEach((card) => {
               gsap.fromTo(
                 card,
-                { y: 44, autoAlpha: 0, scale: 0.98 },
+                { y: isCinematicSection ? 64 : 44, autoAlpha: 0, scale: isCinematicSection ? 1 : 0.98 },
                 {
                   y: 0,
                   autoAlpha: 1,
                   scale: 1,
-                  duration: 0.8,
+                  duration: isCinematicSection ? 1.15 : 0.8,
                   ease: 'power2.out',
                   immediateRender: false,
                   scrollTrigger: {
                     trigger: card,
-                    start: 'top 92%',
-                    once: true,
+                    start: isCinematicSection ? 'top 91%' : 'top 92%',
+                    end: isCinematicSection ? 'top 56%' : undefined,
+                    scrub: isCinematicSection ? 0.75 : false,
+                    once: !isCinematicSection,
                   },
                 }
               );
@@ -211,6 +218,161 @@ const { title = 'Iglesia Corazón de Fuego' } = Astro.props;
                 gsap.to(icon, { y: 0, duration: 0.25, ease: 'power2.out' });
               });
             });
+          }
+
+          const cinematicPage = document.querySelector('[data-cinematic-page]');
+          if (cinematicPage) {
+            const cinematicHero = cinematicPage.querySelector('[data-animate="hero"]');
+            const heroImage = cinematicPage.querySelector('[data-cinematic="hero-image"]');
+            const heroGlow = cinematicPage.querySelector('[data-cinematic="hero-glow"]');
+            const heroCopy = cinematicPage.querySelector('[data-cinematic="hero-copy"]');
+            const heroAside = cinematicPage.querySelector('[data-cinematic="hero-aside"]');
+            const heroFooter = cinematicPage.querySelector('[data-cinematic="hero-footer"]');
+
+            if (heroImage) {
+              gsap.fromTo(heroImage, { scale: 1.16, autoAlpha: 0.55 }, { scale: 1.05, autoAlpha: 1, duration: 2.1, ease: 'power2.out' });
+            }
+
+            const heroTimeline = gsap.timeline({ delay: 0.18 });
+            if (heroCopy) heroTimeline.fromTo(heroCopy, { y: 52, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 1.25, ease: 'power4.out' });
+            if (heroAside) heroTimeline.fromTo(heroAside, { x: 26, autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.9, ease: 'power3.out' }, '-=0.65');
+            if (heroFooter) heroTimeline.fromTo(heroFooter, { y: 12, autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.75, ease: 'power2.out' }, '-=0.42');
+
+            if (cinematicHero && heroImage) {
+              gsap.to(heroImage, {
+                yPercent: 7,
+                ease: 'none',
+                scrollTrigger: {
+                  trigger: cinematicHero,
+                  start: 'top top',
+                  end: 'bottom top',
+                  scrub: 1,
+                },
+              });
+            }
+
+            if (cinematicHero && heroGlow) {
+              gsap.to(heroGlow, {
+                xPercent: -22,
+                yPercent: 16,
+                ease: 'none',
+                scrollTrigger: {
+                  trigger: cinematicHero,
+                  start: 'top top',
+                  end: 'bottom top',
+                  scrub: 1.4,
+                },
+              });
+            }
+
+            cinematicPage.querySelectorAll('[data-cinematic="image"]').forEach((image) => {
+              const frame = image.parentElement;
+              if (!frame) return;
+              gsap.fromTo(
+                image,
+                { yPercent: -7, scale: 1.12 },
+                {
+                  yPercent: 7,
+                  scale: 1.04,
+                  ease: 'none',
+                  scrollTrigger: {
+                    trigger: frame,
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: 1.1,
+                  },
+                }
+              );
+            });
+
+            cinematicPage.querySelectorAll('[data-cinematic-heading]').forEach((heading) => {
+              gsap.fromTo(
+                heading,
+                { y: 44, clipPath: 'inset(0 0 100% 0)' },
+                {
+                  y: 0,
+                  clipPath: 'inset(0 0 0% 0)',
+                  ease: 'none',
+                  scrollTrigger: {
+                    trigger: heading,
+                    start: 'top 88%',
+                    end: 'top 55%',
+                    scrub: 0.75,
+                  },
+                }
+              );
+            });
+
+            cinematicPage.querySelectorAll('[data-cinematic-copy]').forEach((copyBlock) => {
+              const copyItems = [...copyBlock.children];
+              if (copyItems.length === 0) return;
+              gsap.fromTo(
+                copyItems,
+                { y: 30, autoAlpha: 0 },
+                {
+                  y: 0,
+                  autoAlpha: 1,
+                  stagger: 0.12,
+                  ease: 'none',
+                  scrollTrigger: {
+                    trigger: copyBlock,
+                    start: 'top 90%',
+                    end: 'top 42%',
+                    scrub: 0.85,
+                  },
+                }
+              );
+            });
+
+            cinematicPage.querySelectorAll('.mission-media-frame').forEach((mediaFrame) => {
+              gsap.fromTo(
+                mediaFrame,
+                { y: 54, clipPath: 'inset(0 0 100% 0)' },
+                {
+                  y: 0,
+                  clipPath: 'inset(0 0 0% 0)',
+                  ease: 'none',
+                  scrollTrigger: {
+                    trigger: mediaFrame,
+                    start: 'top 92%',
+                    end: 'top 48%',
+                    scrub: 0.9,
+                  },
+                }
+              );
+            });
+
+            if (window.matchMedia('(hover: hover)').matches) {
+              cinematicPage.querySelectorAll('[data-cinematic-card][data-cinematic-tilt]').forEach((card) => {
+                card.addEventListener('pointermove', (event) => {
+                  const bounds = card.getBoundingClientRect();
+                  const pointerX = (event.clientX - bounds.left) / bounds.width - 0.5;
+                  const pointerY = (event.clientY - bounds.top) / bounds.height - 0.5;
+                  gsap.to(card, {
+                    x: pointerX * 5,
+                    y: pointerY * 5 - 3,
+                    rotationY: pointerX * 2.2,
+                    rotationX: pointerY * -2.2,
+                    transformPerspective: 1100,
+                    duration: 0.45,
+                    ease: 'power2.out',
+                    overwrite: 'auto',
+                  });
+                });
+
+                card.addEventListener('pointerleave', () => {
+                  gsap.to(card, {
+                    x: 0,
+                    y: 0,
+                    rotationX: 0,
+                    rotationY: 0,
+                    duration: 0.75,
+                    ease: 'elastic.out(1, 0.52)',
+                    overwrite: 'auto',
+                  });
+                });
+              });
+            }
           }
         } catch (error) {
           console.warn('GSAP no se pudo cargar:', error);

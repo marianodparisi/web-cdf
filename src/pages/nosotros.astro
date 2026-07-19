@@ -5,64 +5,86 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 ---
 
 <BaseLayout title="Nosotros | Iglesia Corazon de Fuego">
-  <Navbar />
+  <Navbar transparent />
 
-  <main class="bg-white">
-    <section data-animate="reveal" class="relative overflow-hidden bg-charcoal text-white">
-      <div class="mx-auto grid max-w-[90rem] grid-cols-1 gap-10 px-5 py-20 sm:px-6 md:py-28 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:px-8">
-        <div class="max-w-5xl">
-          <p class="mb-5 text-xs font-bold uppercase tracking-[0.28em] text-primary">Iglesia Corazon de Fuego</p>
-          <h1 class="font-display text-5xl font-semibold leading-[1.02] tracking-tight sm:text-6xl lg:text-7xl">
-            Existimos para ministrar al Señor y encender una generación.
-          </h1>
-          <p class="mt-8 max-w-3xl text-lg leading-relaxed text-white/75 sm:text-xl">
-            Somos una casa de adoración, oración y formación. Nos reunimos para darle a Dios gratitud y alabanza, afirmar quién es Él, interceder por lo que desea hacer y caminar como familia en el propósito que nos confió.
-          </p>
+  <main data-cinematic-page="nosotros" class="nosotros-cinematic overflow-hidden bg-white">
+    <section data-animate="hero" data-nav-surface-zone="dark" class="cinematic-hero relative isolate flex min-h-[42rem] overflow-hidden bg-charcoal text-white sm:min-h-[46rem] lg:min-h-screen">
+      <img
+        src="/sedes/nosotros1.JPG"
+        alt="Primeros años de Iglesia Corazón de Fuego"
+        data-cinematic="hero-image"
+        class="absolute inset-0 -z-20 h-full w-full scale-105 object-cover object-[58%_center] [filter:brightness(0.58)_sepia(0.22)_saturate(0.76)_contrast(1.12)]"
+      />
+      <div class="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(10,10,9,0.94)_0%,rgba(17,17,16,0.71)_45%,rgba(17,17,16,0.16)_100%)]"></div>
+      <div class="absolute inset-0 -z-10 bg-[linear-gradient(0deg,rgba(10,10,9,0.82)_0%,transparent_47%,rgba(10,10,9,0.28)_100%)]"></div>
+      <div aria-hidden="true" class="cinematic-grain absolute inset-0 -z-10 opacity-30 mix-blend-soft-light"></div>
+      <div data-cinematic="hero-glow" class="absolute -right-40 top-[18%] -z-10 h-96 w-96 rounded-full bg-primary/15 blur-3xl"></div>
+
+      <div class="relative mx-auto flex w-full max-w-[90rem] flex-col justify-end px-5 pb-12 pt-36 sm:px-6 sm:pb-16 md:pt-40 lg:px-8 lg:pb-20">
+        <div class="grid items-end gap-10 lg:grid-cols-[minmax(0,1fr)_15rem] lg:gap-16">
+          <div data-cinematic="hero-copy" class="max-w-4xl">
+            <p class="mb-6 text-[0.65rem] font-bold uppercase tracking-[0.32em] text-primary sm:text-xs">Iglesia Corazón de Fuego · Ramos Mejía</p>
+            <h1 class="max-w-4xl font-display text-5xl font-semibold leading-[0.96] tracking-[-0.045em] text-white sm:text-6xl md:text-7xl lg:text-[5.7rem]">
+              Una casa para encontrarnos con Su presencia.
+            </h1>
+            <p class="mt-7 max-w-2xl text-base leading-relaxed text-white/75 sm:text-lg">
+              Adoramos, oramos y caminamos juntos para conocer a Jesús y encender una generación que viva para Él.
+            </p>
+          </div>
+
+          <div data-cinematic="hero-aside" class="border-l border-primary/70 pl-5 text-sm leading-relaxed text-white/70 lg:mb-2">
+            <p class="font-display text-2xl leading-none text-white">Adoración que se vuelve vida.</p>
+            <p class="mt-4 text-[0.65rem] font-bold uppercase tracking-[0.24em] text-primary">Desde 2008</p>
+          </div>
         </div>
-        <div data-animate="card" class="relative min-h-[340px] overflow-hidden rounded-2xl border border-white/10 bg-white/5 sm:min-h-[460px]">
-          <img src="/sedes/nosotros1.JPG" alt="Iglesia Corazon de Fuego" class="absolute inset-0 h-full w-full object-cover" />
-          <div class="absolute inset-0 bg-gradient-to-t from-charcoal/45 to-transparent"></div>
+
+        <div data-cinematic="hero-footer" class="mt-12 flex items-center gap-3 text-[0.62rem] font-bold uppercase tracking-[0.26em] text-white/55 sm:mt-16">
+          <span class="h-px w-10 bg-primary"></span>
+          Conocé nuestra historia
         </div>
       </div>
     </section>
 
-    <section data-animate="reveal" class="py-16 md:py-24">
-      <div class="mx-auto grid max-w-[90rem] grid-cols-1 gap-8 px-5 sm:px-6 md:grid-cols-3 lg:px-8">
-        <article data-animate="card" class="rounded-2xl border border-gray-200 bg-gray-50 p-6 sm:p-8">
+    <section data-animate="reveal" data-nav-surface-zone="dark" class="relative overflow-hidden bg-[#151514] py-20 text-white md:py-32">
+      <div aria-hidden="true" class="cinematic-orb cinematic-orb--left"></div>
+      <div class="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/70 to-transparent"></div>
+      <div class="absolute -left-28 bottom-0 h-72 w-72 rounded-full bg-primary/10 blur-3xl"></div>
+      <div class="cinematic-values-grid relative mx-auto grid max-w-[90rem] grid-cols-1 gap-5 px-5 sm:px-6 md:grid-cols-3 lg:px-8">
+        <article data-animate="card" data-cinematic-card data-scene-index="01" class="cinematic-dark-card group min-h-64 border border-white/10 bg-white/[0.035] p-7 transition-colors hover:border-primary/50 hover:bg-white/[0.07] sm:p-9">
           <p class="text-xs font-bold uppercase tracking-[0.22em] text-primary">Adoración</p>
-          <h2 class="mt-4 font-display text-3xl text-charcoal">Darle a Dios el lugar central.</h2>
-          <p class="mt-4 text-sm leading-relaxed text-gray-600">
+          <h2 class="mt-5 font-display text-3xl leading-tight text-white">Darle a Dios el lugar central.</h2>
+          <p class="mt-5 text-sm leading-relaxed text-white/65">
             Nuestra primera respuesta es ministrar al Señor con gratitud, reverencia y alabanza.
           </p>
         </article>
 
-        <article data-animate="card" class="rounded-2xl border border-gray-200 bg-white p-6 sm:p-8">
+        <article data-animate="card" data-cinematic-card data-scene-index="02" class="cinematic-dark-card group min-h-64 border border-white/10 bg-white/[0.035] p-7 transition-colors hover:border-primary/50 hover:bg-white/[0.07] sm:p-9">
           <p class="text-xs font-bold uppercase tracking-[0.22em] text-primary">Oración</p>
-          <h2 class="mt-4 font-display text-3xl text-charcoal">Ponernos de acuerdo con su voluntad.</h2>
-          <p class="mt-4 text-sm leading-relaxed text-gray-600">
+          <h2 class="mt-5 font-display text-3xl leading-tight text-white">Ponernos de acuerdo con su voluntad.</h2>
+          <p class="mt-5 text-sm leading-relaxed text-white/65">
             Intercedemos por nuestras familias, la ciudad y todo lo que Dios desea transformar.
           </p>
         </article>
 
-        <article data-animate="card" class="rounded-2xl border border-gray-200 bg-gray-50 p-6 sm:p-8">
+        <article data-animate="card" data-cinematic-card data-scene-index="03" class="cinematic-dark-card group min-h-64 border border-white/10 bg-white/[0.035] p-7 transition-colors hover:border-primary/50 hover:bg-white/[0.07] sm:p-9">
           <p class="text-xs font-bold uppercase tracking-[0.22em] text-primary">Formación</p>
-          <h2 class="mt-4 font-display text-3xl text-charcoal">Caminar como discípulos de Jesús.</h2>
-          <p class="mt-4 text-sm leading-relaxed text-gray-600">
+          <h2 class="mt-5 font-display text-3xl leading-tight text-white">Caminar como discípulos de Jesús.</h2>
+          <p class="mt-5 text-sm leading-relaxed text-white/65">
             Crecemos en comunidad para vivir la fe con carácter, convicción y servicio.
           </p>
         </article>
       </div>
     </section>
 
-    <section data-animate="reveal" class="bg-gray-50 py-16 md:py-24">
-      <div class="mx-auto grid max-w-[90rem] grid-cols-1 gap-10 px-5 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:px-8">
-        <div>
+    <section data-animate="reveal" class="cinematic-light-section relative bg-[#e9e4da] py-20 md:py-32">
+      <div class="cinematic-statement mx-auto grid max-w-[90rem] grid-cols-1 gap-12 px-5 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-center lg:gap-20 lg:px-8">
+        <div class="border-l-2 border-primary pl-6 sm:pl-8">
           <p class="mb-4 text-xs font-bold uppercase tracking-[0.22em] text-primary">Nuestra casa</p>
-          <h2 class="font-display text-4xl font-semibold leading-tight text-charcoal sm:text-5xl">
+          <h2 data-cinematic-heading class="font-display text-4xl font-semibold leading-[1.04] tracking-tight text-charcoal sm:text-5xl lg:text-6xl">
             Una comunidad para encontrarte con Dios, crecer y servir.
           </h2>
         </div>
-        <div class="space-y-5 text-base leading-relaxed text-gray-600 sm:text-lg">
+        <div data-cinematic-copy class="space-y-6 border-t border-charcoal/15 pt-8 text-base leading-relaxed text-charcoal/75 sm:text-lg">
           <p>
             Creemos que la iglesia es una familia espiritual llamada a revelar a Cristo con palabras, obras y una vida rendida a Dios.
           </p>
@@ -77,28 +99,30 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       </div>
     </section>
 
-    <section data-animate="reveal" class="py-16 md:py-24">
+    <section data-animate="reveal" data-nav-surface-zone="dark" class="cinematic-history relative overflow-hidden bg-[#1a1a18] py-20 text-white md:py-32">
+      <div aria-hidden="true" class="cinematic-orb cinematic-orb--right"></div>
+      <div class="absolute right-0 top-0 h-full w-px bg-primary/30"></div>
       <div class="mx-auto max-w-[90rem] px-5 sm:px-6 lg:px-8">
         <div class="mb-10 max-w-4xl">
           <p class="mb-4 text-xs font-bold uppercase tracking-[0.22em] text-primary">Nuestra historia</p>
-          <h2 class="font-display text-4xl font-semibold leading-tight text-charcoal sm:text-5xl">
+          <h2 data-cinematic-heading class="font-display text-4xl font-semibold leading-[1.04] tracking-tight text-white sm:text-5xl lg:text-6xl">
             Dios abrió camino para levantar una casa en Ramos Mejía.
           </h2>
         </div>
 
-        <div class="grid grid-cols-1 gap-6 lg:grid-cols-[0.85fr_1.15fr] lg:gap-10">
-          <aside class="rounded-2xl bg-charcoal p-6 text-white sm:p-8">
+        <div class="grid grid-cols-1 gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-14">
+          <aside class="cinematic-dark-card border border-white/10 bg-white/[0.055] p-6 text-white sm:p-8">
             <p class="text-xs font-bold uppercase tracking-[0.22em] text-primary">Fundación</p>
             <h3 class="mt-4 font-display text-3xl leading-tight">Una obra nacida en oración, espera y obediencia.</h3>
             <p class="mt-5 text-sm leading-relaxed text-white/70">
               Desde el primer llamado hasta el terreno en una avenida visible, cada paso confirmó que Dios estaba preparando algo nuevo.
             </p>
-            <div class="mt-8 overflow-hidden rounded-2xl">
-              <img src="/sedes/nosotros2.JPG" alt="Historia de Iglesia Corazon de Fuego" class="h-72 w-full object-cover" />
+            <div class="cinematic-image-frame cinematic-image-frame--story mt-8 overflow-hidden border border-white/10">
+              <img data-cinematic="image" src="/sedes/nosotros2.JPG" alt="Historia de Iglesia Corazon de Fuego" class="h-72 w-full object-cover [filter:brightness(0.82)_saturate(0.78)_contrast(1.05)]" />
             </div>
           </aside>
 
-          <div class="space-y-5 text-base leading-relaxed text-gray-600">
+          <div data-cinematic-copy class="space-y-6 border-t border-white/15 pt-8 text-base leading-relaxed text-white/70 lg:border-t-0 lg:border-l lg:pl-10 lg:pt-0">
             <p>
               Allá por el año 2006 comenzó a sentirse el llamado de Dios hacia algo nuevo. Ese sentir fue guardado en oración, esperando que el Señor mostrara con mayor claridad el camino.
             </p>
@@ -116,12 +140,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       </div>
     </section>
 
-    <section data-animate="reveal" class="bg-gray-50 py-16 md:py-24">
-      <div class="mx-auto grid max-w-[90rem] grid-cols-1 gap-6 px-5 sm:px-6 lg:grid-cols-2 lg:px-8">
-        <article data-animate="card" class="rounded-2xl border border-gray-200 bg-white p-6 sm:p-8">
+    <section data-animate="reveal" class="cinematic-light-section relative bg-[#f2eee6] py-20 md:py-32">
+      <div class="cinematic-manifesto-grid mx-auto grid max-w-[90rem] grid-cols-1 gap-5 px-5 sm:px-6 lg:grid-cols-2 lg:px-8">
+        <article data-animate="card" data-cinematic-card class="cinematic-paper-card border border-charcoal/10 bg-[#faf8f3] p-7 shadow-[0_24px_60px_rgba(50,44,35,0.08)] sm:p-10">
           <p class="text-xs font-bold uppercase tracking-[0.22em] text-primary">El nombre</p>
-          <h2 class="mt-4 font-display text-4xl leading-tight text-charcoal">¿Por qué Corazón de Fuego?</h2>
-          <div class="mt-6 space-y-5 text-base leading-relaxed text-gray-600">
+          <h2 data-cinematic-heading class="mt-5 font-display text-4xl leading-[1.04] tracking-tight text-charcoal">¿Por qué Corazón de Fuego?</h2>
+          <div data-cinematic-copy class="mt-7 space-y-5 text-base leading-relaxed text-charcoal/70">
             <p>
               El nombre nació en un momento de oración, recordando el camino a Emaús en Lucas 24:13-35. Los discípulos estaban tristes y desanimados, pero cuando Jesús se acercó, les habló y les abrió las Escrituras, algo volvió a arder dentro de ellos.
             </p>
@@ -131,10 +155,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           </div>
         </article>
 
-        <article data-animate="card" class="rounded-2xl border border-gray-200 bg-white p-6 sm:p-8">
+        <article data-animate="card" data-cinematic-card class="cinematic-paper-card border border-charcoal/10 bg-[#faf8f3] p-7 shadow-[0_24px_60px_rgba(50,44,35,0.08)] sm:p-10">
           <p class="text-xs font-bold uppercase tracking-[0.22em] text-primary">La visión</p>
-          <h2 class="mt-4 font-display text-4xl leading-tight text-charcoal">Una iglesia que alcanza, forma y envía.</h2>
-          <div class="mt-6 space-y-5 text-base leading-relaxed text-gray-600">
+          <h2 data-cinematic-heading class="mt-5 font-display text-4xl leading-[1.04] tracking-tight text-charcoal">Una iglesia que alcanza, forma y envía.</h2>
+          <div data-cinematic-copy class="mt-7 space-y-5 text-base leading-relaxed text-charcoal/70">
             <p>
               La visión de Corazón de Fuego es generar una iglesia evangelística: una comunidad que alcance con el mensaje de salvación de nuestro Señor Jesucristo de muchas maneras y en muchos lugares.
             </p>
@@ -149,11 +173,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       </div>
     </section>
 
-    <section data-animate="reveal" class="py-16 md:py-24">
-      <div class="mx-auto grid max-w-[90rem] grid-cols-1 gap-10 px-5 sm:px-6 lg:grid-cols-[1fr_0.9fr] lg:items-center lg:px-8">
-        <div class="space-y-5 text-base leading-relaxed text-gray-600 sm:text-lg">
+    <section data-animate="reveal" data-nav-surface-zone="dark" class="cinematic-closing relative overflow-hidden bg-[#121211] py-20 text-white md:py-32">
+      <div aria-hidden="true" class="cinematic-orb cinematic-orb--bottom"></div>
+      <div class="mx-auto grid max-w-[90rem] grid-cols-1 gap-12 px-5 sm:px-6 lg:grid-cols-[1fr_0.9fr] lg:items-center lg:gap-20 lg:px-8">
+        <div data-cinematic-copy class="space-y-6 text-base leading-relaxed text-white/70 sm:text-lg">
           <p class="text-xs font-bold uppercase tracking-[0.22em] text-primary">La iglesia responde</p>
-          <h2 class="font-display text-4xl font-semibold leading-tight text-charcoal sm:text-5xl">
+          <h2 data-cinematic-heading class="font-display text-4xl font-semibold leading-[1.04] tracking-tight text-white sm:text-5xl lg:text-6xl">
             Un equipo disponible para servir y soñar por más.
           </h2>
           <p>
@@ -163,10 +188,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             Cada desafío se camina en equipo: viajes misioneros, campañas, sedes, jóvenes, adolescentes y cada tarea que Dios propone. Es un privilegio servir con quienes llevan años en la congregación y con quienes se van sumando día a día.
           </p>
         </div>
-        <div class="overflow-hidden rounded-2xl border border-gray-200 bg-gray-50">
-          <img src="/sedes/nosotros3.JPG" alt="Equipo de Iglesia Corazon de Fuego" class="h-72 w-full object-cover sm:h-80" />
-          <div class="p-6 sm:p-8">
-          <p class="font-display text-3xl leading-tight text-charcoal">
+        <div data-cinematic-card class="cinematic-dark-card cinematic-image-frame cinematic-image-frame--closing overflow-hidden border border-white/10 bg-white/[0.055]">
+          <img data-cinematic="image" src="/sedes/nosotros3.JPG" alt="Equipo de Iglesia Corazon de Fuego" class="h-72 w-full object-cover [filter:brightness(0.84)_saturate(0.8)_contrast(1.06)] sm:h-80" />
+          <div class="border-t border-white/10 p-7 sm:p-9">
+          <p class="font-display text-3xl leading-tight text-white">
             “Todo se puede, todo está al alcance, podemos soñar y seguir por más.”
           </p>
           </div>
