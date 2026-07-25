@@ -1,0 +1,111 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { getMinistries } from '../../lib/content/collections';
+import { canEdit, getSession } from '../../lib/admin-guard';
+import { ministrySectionKey } from '../../lib/content/sections';
+
+const session = getSession(Astro.locals);
+const ministries = await getMinistries();
+
+const tasks = [
+  {
+    section: 'devocionales',
+    href: '/admin/devocionales',
+    icon: 'menu_book',
+    title: 'Devocionales y testimonios',
+    description: 'Publicar el devocional de la semana o cargar un testimonio.',
+  },
+  {
+    section: 'anuncios',
+    href: '/admin/anuncios',
+    icon: 'campaign',
+    title: 'Anuncios del inicio',
+    description: 'Los tres avisos que aparecen en la página principal.',
+  },
+  {
+    section: 'series',
+    href: '/admin/series',
+    icon: 'video_library',
+    title: 'Series de predicación',
+    description: 'Cambiar la serie actual y las anteriores.',
+  },
+].filter((task) => canEdit(session, task.section));
+
+const editableMinistries = ministries.filter((ministry) =>
+  canEdit(session, ministrySectionKey(ministry.slug))
+);
+
+const hasNothing = tasks.length === 0 && editableMinistries.length === 0;
+---
+
+<AdminLayout title={`Hola, ${session.username}`} session={session}>
+  <p class="-mt-4 mb-8 text-lg text-charcoal/65">¿Qué querés editar hoy?</p>
+
+  {
+    hasNothing && (
+      <div class="rounded-2xl border border-black/10 bg-white p-6">
+        <p class="text-charcoal/70">
+          Todavía no tenés ninguna sección asignada. Pedile a la persona que administra el panel que te dé
+          acceso.
+        </p>
+      </div>
+    )
+  }
+
+  {
+    tasks.length > 0 && (
+      <div class="grid gap-4 sm:grid-cols-2">
+        {tasks.map((task) => (
+          <a
+            href={task.href}
+            class="group flex flex-col rounded-2xl border border-black/10 bg-white p-6 transition-shadow hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)]"
+          >
+            <span class="material-symbols-outlined text-3xl text-primary">{task.icon}</span>
+            <span class="mt-4 font-display text-xl font-semibold group-hover:text-primary">{task.title}</span>
+            <span class="mt-2 text-sm leading-relaxed text-charcoal/60">{task.description}</span>
+          </a>
+        ))}
+      </div>
+    )
+  }
+
+  {
+    editableMinistries.length > 0 && (
+      <section class="mt-10">
+        <h2 class="mb-4 font-display text-xl font-semibold">Ministerios</h2>
+        <div class="grid gap-3 sm:grid-cols-2">
+          {editableMinistries.map((ministry) => (
+            <a
+              href={`/admin/ministerios/${ministry.slug}`}
+              class="group flex items-center gap-4 rounded-2xl border border-black/10 bg-white p-4 transition-shadow hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)]"
+            >
+              <img
+                src={ministry.image}
+                alt=""
+                class="h-12 w-12 shrink-0 rounded-full border border-black/10 object-cover"
+              />
+              <span>
+                <span class="block font-semibold group-hover:text-primary">{ministry.name}</span>
+                <span class="block text-sm text-charcoal/55">{ministry.area}</span>
+              </span>
+            </a>
+          ))}
+        </div>
+      </section>
+    )
+  }
+
+  {
+    session.role === 'admin' && (
+      <section class="mt-10 border-t border-black/10 pt-8">
+        <a
+          href="/admin/usuarios"
+          class="group inline-flex items-center gap-3 text-charcoal/70 transition-colors hover:text-primary"
+        >
+          <span class="material-symbols-outlined text-2xl">group</span>
+          <span class="font-semibold">Personas con acceso al panel</span>
+        </a>
+      </section>
+    )
+  }
+</AdminLayout>

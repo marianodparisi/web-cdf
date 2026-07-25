@@ -1,0 +1,140 @@
+---
+import Field from '../../../components/admin/Field.astro';
+import ImageField from '../../../components/admin/ImageField.astro';
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { getDevotionalBySlug, paragraphsToText } from '../../../lib/content/collections';
+import { canEdit, denyRedirect, getSession } from '../../../lib/admin-guard';
+
+const session = getSession(Astro.locals);
+if (!canEdit(session, 'devocionales')) {
+  return denyRedirect('No tenés acceso a los devocionales.');
+}
+
+const { slug } = Astro.params;
+const isNew = slug === 'nuevo';
+const post = isNew ? null : await getDevotionalBySlug(slug);
+
+if (!isNew && !post) {
+  return denyRedirect('Ese devocional ya no existe.');
+}
+
+const title = isNew ? 'Publicar un devocional' : 'Editar';
+---
+
+<AdminLayout
+  title={title}
+  backHref="/admin/devocionales"
+  backLabel="Volver a la lista"
+  session={session}
+>
+  {
+    post && (
+      <a
+        href={`/devocional/${post.slug}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="mb-8 inline-flex items-center gap-2 text-sm font-semibold text-charcoal/70 transition-colors hover:text-primary"
+      >
+        <span class="material-symbols-outlined text-lg">open_in_new</span>
+        Ver cómo se ve en el sitio
+      </a>
+    )
+  }
+
+  <form
+    method="POST"
+    action="/api/admin/devocionales"
+    enctype="multipart/form-data"
+    data-warn-unsaved
+    class="rounded-2xl border border-black/10 bg-white p-6 sm:p-8"
+  >
+    <input type="hidden" name="accion" value="guardar" />
+    <input type="hidden" name="slug" value={post?.slug ?? ''} />
+
+    <Field name="title" label="Título" value={post?.title ?? ''} required />
+
+    <div class="mb-6">
+      <label class="mb-2 block text-sm font-bold text-charcoal" for="type">¿Qué es?</label>
+      <select
+        id="type"
+        name="type"
+        class="w-full rounded-2xl border border-black/15 bg-white px-4 py-3 text-base outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/25"
+      >
+        <option value="Devocional" selected={post?.type !== 'Testimonio'}>Devocional</option>
+        <option value="Testimonio" selected={post?.type === 'Testimonio'}>Testimonio</option>
+      </select>
+    </div>
+
+    <Field
+      name="weekLabel"
+      label="Referencia"
+      value={post?.weekLabel ?? ''}
+      hint="La cita bíblica o la semana. Por ejemplo: Malaquías 1:6-7, o Semana 3 - Marzo."
+      required
+    />
+
+    <Field
+      name="excerpt"
+      label="Resumen corto"
+      value={post?.excerpt ?? ''}
+      rows={3}
+      hint="Dos o tres líneas. Es lo que se lee en la portada, antes de entrar a la nota."
+      required
+    />
+
+    <Field
+      name="content"
+      label="El texto completo"
+      value={post ? paragraphsToText(post.content) : ''}
+      rows={16}
+      hint="Dejá una línea en blanco entre párrafo y párrafo. Así se separan en el sitio."
+      required
+    />
+
+    <Field
+      name="videoUrl"
+      label="Link del video de YouTube"
+      value={post?.videoUrl ?? ''}
+      type="url"
+      hint="Si lo dejás vacío, no se muestra ningún video."
+      placeholder="https://www.youtube.com/..."
+    />
+
+    <ImageField name="image" label="Foto" currentImage={post?.image} />
+
+    <div class="mt-8 flex flex-col gap-3 border-t border-black/10 pt-6 sm:flex-row sm:items-center">
+      <button
+        type="submit"
+        class="rounded-full bg-primary px-8 py-4 text-base font-bold text-charcoal transition-colors hover:bg-primary-dark hover:text-white disabled:opacity-60"
+      >
+        Guardar
+      </button>
+      <a
+        href="/admin/devocionales"
+        class="rounded-full px-6 py-4 text-center font-semibold text-charcoal/70 transition-colors hover:text-charcoal"
+      >
+        Cancelar
+      </a>
+    </div>
+  </form>
+
+  {
+    post && (
+      <form
+        method="POST"
+        action="/api/admin/devocionales"
+        class="mt-8 border-t border-black/10 pt-8"
+        onsubmit="return confirm('¿Seguro que querés borrarlo? No se puede deshacer desde el panel.')"
+      >
+        <input type="hidden" name="accion" value="borrar" />
+        <input type="hidden" name="slug" value={post.slug} />
+        <button
+          type="submit"
+          class="rounded-full border border-red-600/30 px-6 py-3 text-sm font-bold text-red-700 transition-colors hover:bg-red-50"
+        >
+          Borrar este devocional
+        </button>
+      </form>
+    )
+  }
+</AdminLayout>

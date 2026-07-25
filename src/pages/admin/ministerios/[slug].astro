@@ -1,0 +1,98 @@
+---
+import Field from '../../../components/admin/Field.astro';
+import ImageField from '../../../components/admin/ImageField.astro';
+import AdminLayout from '../../../layouts/AdminLayout.astro';
+import { getMinistryBySlug } from '../../../lib/content/collections';
+import { canEdit, denyRedirect, getSession } from '../../../lib/admin-guard';
+import { ministrySectionKey } from '../../../lib/content/sections';
+
+const session = getSession(Astro.locals);
+const { slug } = Astro.params;
+const ministry = await getMinistryBySlug(slug);
+
+if (!ministry) {
+  return denyRedirect('Ese ministerio no existe.');
+}
+
+if (!canEdit(session, ministrySectionKey(ministry.slug))) {
+  return denyRedirect(`No tenés acceso a ${ministry.name}.`);
+}
+---
+
+<AdminLayout title={ministry.name} backHref="/admin" backLabel="Volver al panel" session={session}>
+  <a
+    href={`/ministerios/${ministry.slug}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="mb-8 inline-flex items-center gap-2 text-sm font-semibold text-charcoal/70 transition-colors hover:text-primary"
+  >
+    <span class="material-symbols-outlined text-lg">open_in_new</span>
+    Ver cómo se ve en el sitio
+  </a>
+
+  <form
+    method="POST"
+    action="/api/admin/ministerios"
+    enctype="multipart/form-data"
+    data-warn-unsaved
+    class="rounded-2xl border border-black/10 bg-white p-6 sm:p-8"
+  >
+    <input type="hidden" name="slug" value={ministry.slug} />
+
+    <Field name="name" label="Nombre" value={ministry.name} required />
+    <Field
+      name="area"
+      label="A quién está dirigido"
+      value={ministry.area}
+      hint="Por ejemplo: Jóvenes, Mujeres, Niños."
+      required
+    />
+    <Field
+      name="excerpt"
+      label="Resumen corto"
+      value={ministry.excerpt}
+      rows={2}
+      hint="Una línea. Es lo que se lee en la lista de ministerios y en el inicio."
+      required
+    />
+    <Field
+      name="description"
+      label="Descripción"
+      value={ministry.description}
+      rows={5}
+      hint="Qué es el ministerio y qué hace."
+      required
+    />
+    <Field
+      name="participation"
+      label="Cómo sumarse"
+      value={ministry.participation}
+      rows={5}
+      hint="Quién puede participar y cómo dar el primer paso."
+      required
+    />
+    <Field
+      name="schedule"
+      label="Cuándo se reúnen"
+      value={ministry.schedule}
+      rows={2}
+      required
+    />
+    <ImageField name="image" label="Foto o logo" currentImage={ministry.image} />
+
+    <div class="mt-8 flex flex-col gap-3 border-t border-black/10 pt-6 sm:flex-row sm:items-center">
+      <button
+        type="submit"
+        class="rounded-full bg-primary px-8 py-4 text-base font-bold text-charcoal transition-colors hover:bg-primary-dark hover:text-white disabled:opacity-60"
+      >
+        Guardar
+      </button>
+      <a
+        href="/admin"
+        class="rounded-full px-6 py-4 text-center font-semibold text-charcoal/70 transition-colors hover:text-charcoal"
+      >
+        Cancelar
+      </a>
+    </div>
+  </form>
+</AdminLayout>

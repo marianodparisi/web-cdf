@@ -16,7 +16,12 @@ const [devotionalPosts, ministries, sermonSeries, announcements] = await Promise
 ]);
 
 const currentDevotionalPost = devotionalPosts[0];
-const [currentSeries, ...recentSeries] = sermonSeries;
+
+// Una serie recién agregada desde el panel arranca sin portada ni link. Se
+// muestra en el sitio recién cuando la terminan de completar; si no, el inicio
+// mostraría una imagen rota y un link muerto.
+const publishedSeries = sermonSeries.filter((series) => series.image && series.href);
+const [currentSeries, ...recentSeries] = publishedSeries;
 const getYouTubeEmbedUrl = (videoUrl?: string) => {
   if (!videoUrl) return null;
   try {

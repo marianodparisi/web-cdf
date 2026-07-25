@@ -1,0 +1,180 @@
+---
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import { listAdminUsers } from '../../lib/admin-auth';
+import { denyRedirect, getSession } from '../../lib/admin-guard';
+import { getSectionCatalog } from '../../lib/content/sections';
+
+const session = getSession(Astro.locals);
+if (session.role !== 'admin') {
+  return denyRedirect('Solo un administrador puede gestionar los accesos.');
+}
+
+const [users, catalog] = await Promise.all([listAdminUsers(), getSectionCatalog()]);
+const groups = ['Contenido', 'Ministerios'] as const;
+
+const inputClass =
+  'w-full rounded-2xl border border-black/15 bg-white px-4 py-3 text-base outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/25';
+---
+
+<AdminLayout title="Personas con acceso" backHref="/admin" backLabel="Volver al panel" session={session}>
+  <p class="-mt-4 mb-8 text-charcoal/65">
+    Un administrador puede editar todo y gestionar estos accesos. Un editor solo ve las secciones que le
+    marques.
+  </p>
+
+  <section class="mb-10 rounded-2xl border border-black/10 bg-white p-6 sm:p-8">
+    <h2 class="mb-6 font-display text-xl font-semibold">Dar acceso a alguien nuevo</h2>
+
+    <form method="POST" action="/api/admin/usuarios">
+      <input type="hidden" name="accion" value="crear" />
+
+      <div class="mb-6 grid gap-4 sm:grid-cols-2">
+        <div>
+          <label class="mb-2 block text-sm font-bold" for="username">Usuario</label>
+          <input id="username" name="username" required class={inputClass} autocomplete="off" />
+        </div>
+        <div>
+          <label class="mb-2 block text-sm font-bold" for="email">
+            Email <span class="font-normal text-charcoal/45">(opcional)</span>
+          </label>
+          <input id="email" name="email" type="email" class={inputClass} autocomplete="off" />
+        </div>
+      </div>
+
+      <div class="mb-6">
+        <label class="mb-2 block text-sm font-bold" for="password">Contraseña</label>
+        <p class="mb-2 text-sm text-charcoal/60">Mínimo 8 caracteres. Después se la pasás a la persona.</p>
+        <input id="password" name="password" type="text" minlength="8" required class={inputClass} autocomplete="new-password" />
+      </div>
+
+      <fieldset class="mb-6">
+        <legend class="mb-3 text-sm font-bold">¿Qué puede editar?</legend>
+        <label class="mb-4 flex items-center gap-3">
+          <input type="checkbox" name="role" value="admin" class="h-5 w-5 rounded border-black/25" />
+          <span>Es administrador: puede editar todo y gestionar accesos</span>
+        </label>
+
+        {
+          groups.map((group) => (
+            <div class="mb-4">
+              <p class="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-charcoal/45">{group}</p>
+              <div class="grid gap-2 sm:grid-cols-2">
+                {catalog
+                  .filter((section) => section.group === group)
+                  .map((section) => (
+                    <label class="flex items-center gap-3 rounded-xl border border-black/10 px-4 py-3">
+                      <input type="checkbox" name="sections" value={section.key} class="h-5 w-5 rounded border-black/25" />
+                      <span class="text-sm">{section.label}</span>
+                    </label>
+                  ))}
+              </div>
+            </div>
+          ))
+        }
+      </fieldset>
+
+      <button
+        type="submit"
+        class="rounded-full bg-primary px-8 py-4 font-bold text-charcoal transition-colors hover:bg-primary-dark hover:text-white disabled:opacity-60"
+      >
+        Crear el acceso
+      </button>
+    </form>
+  </section>
+
+  <h2 class="mb-4 font-display text-xl font-semibold">Accesos actuales</h2>
+
+  <div class="flex flex-col gap-6">
+    {
+      users.map((user) => (
+        <form method="POST" action="/api/admin/usuarios" class="rounded-2xl border border-black/10 bg-white p-6 sm:p-8">
+          <input type="hidden" name="id" value={String(user.id)} />
+
+          <div class="mb-5 flex flex-wrap items-baseline gap-3">
+            <span class="font-display text-lg font-semibold">{user.username}</span>
+            {user.email && <span class="text-sm text-charcoal/55">{user.email}</span>}
+            {user.username === session.username && (
+              <span class="rounded-full bg-primary/15 px-3 py-1 text-[0.7rem] font-bold uppercase tracking-wider text-primary-dark">
+                Sos vos
+              </span>
+            )}
+          </div>
+
+          <fieldset class="mb-5">
+            <label class="mb-4 flex items-center gap-3">
+              <input
+                type="checkbox"
+                name="role"
+                value="admin"
+                checked={user.role === 'admin'}
+                class="h-5 w-5 rounded border-black/25"
+              />
+              <span>Es administrador</span>
+            </label>
+
+            {groups.map((group) => (
+              <div class="mb-4">
+                <p class="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-charcoal/45">{group}</p>
+                <div class="grid gap-2 sm:grid-cols-2">
+                  {catalog
+                    .filter((section) => section.group === group)
+                    .map((section) => (
+                      <label class="flex items-center gap-3 rounded-xl border border-black/10 px-4 py-3">
+                        <input
+                          type="checkbox"
+                          name="sections"
+                          value={section.key}
+                          checked={user.sections.includes(section.key)}
+                          class="h-5 w-5 rounded border-black/25"
+                        />
+                        <span class="text-sm">{section.label}</span>
+                      </label>
+                    ))}
+                </div>
+              </div>
+            ))}
+          </fieldset>
+
+          <div class="mb-6">
+            <label class="mb-2 block text-sm font-bold" for={`password-${user.id}`}>
+              Cambiarle la contraseña <span class="font-normal text-charcoal/45">(opcional)</span>
+            </label>
+            <p class="mb-2 text-sm text-charcoal/60">Dejalo vacío para no tocarla.</p>
+            <input
+              id={`password-${user.id}`}
+              name="password"
+              type="text"
+              minlength="8"
+              class={inputClass}
+              autocomplete="new-password"
+            />
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3">
+            <button
+              type="submit"
+              name="accion"
+              value="guardar"
+              class="rounded-full bg-primary px-8 py-4 font-bold text-charcoal transition-colors hover:bg-primary-dark hover:text-white disabled:opacity-60"
+            >
+              Guardar
+            </button>
+
+            {user.username !== session.username && (
+              <button
+                type="submit"
+                name="accion"
+                value="borrar"
+                formnovalidate
+                onclick="return confirm('¿Sacarle el acceso a esta persona?')"
+                class="rounded-full border border-red-600/30 px-6 py-3 text-sm font-bold text-red-700 transition-colors hover:bg-red-50"
+              >
+                Sacar el acceso
+              </button>
+            )}
+          </div>
+        </form>
+      ))
+    }
+  </div>
+</AdminLayout>

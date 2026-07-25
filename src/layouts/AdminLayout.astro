@@ -1,0 +1,155 @@
+---
+import '../styles/global.css';
+import type { AdminSession } from '../lib/admin-auth';
+
+interface Props {
+  title: string;
+  /** Vuelve a la pantalla anterior. Sin esto la gente se pierde y cierra sesión. */
+  backHref?: string;
+  backLabel?: string;
+  session: AdminSession;
+}
+
+const { title, backHref, backLabel = 'Volver', session } = Astro.props;
+
+const feedback = Astro.url.searchParams.get('ok');
+const errorMessage = Astro.url.searchParams.get('error');
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} | Panel Corazón de Fuego</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" type="image/png" href="/brand/favico.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+    />
+  </head>
+  <body class="min-h-screen bg-[#f5f1e8] font-body text-charcoal antialiased">
+    <header class="border-b border-black/10 bg-white">
+      <div class="mx-auto flex max-w-4xl items-center justify-between gap-4 px-5 py-4 sm:px-6">
+        <a href="/admin" class="flex items-center gap-3">
+          <img src="/brand/logo.png" alt="" class="h-9 w-auto object-contain" />
+          <span class="hidden text-sm font-bold uppercase tracking-[0.18em] text-charcoal sm:inline">Panel</span>
+        </a>
+        <div class="flex items-center gap-3">
+          <span class="hidden text-sm text-charcoal/60 sm:inline">{session.username}</span>
+          <a
+            href="/api/admin/logout"
+            class="rounded-full border border-black/10 px-4 py-2 text-sm font-semibold text-charcoal transition-colors hover:bg-black/5"
+          >
+            Salir
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-4xl px-5 py-8 sm:px-6 sm:py-10">
+      {
+        backHref && (
+          <a
+            href={backHref}
+            class="mb-6 inline-flex items-center gap-2 text-sm font-semibold text-charcoal/70 transition-colors hover:text-primary"
+          >
+            <span class="material-symbols-outlined text-lg">arrow_back</span>
+            {backLabel}
+          </a>
+        )
+      }
+
+      <h1 class="font-display text-3xl font-semibold tracking-tight sm:text-4xl">{title}</h1>
+
+      {
+        feedback && (
+          <p
+            role="status"
+            class="mt-6 flex items-start gap-3 rounded-2xl border border-green-600/20 bg-green-50 px-5 py-4 text-green-900"
+          >
+            <span class="material-symbols-outlined text-xl">check_circle</span>
+            <span>{feedback}</span>
+          </p>
+        )
+      }
+
+      {
+        errorMessage && (
+          <p
+            role="alert"
+            class="mt-6 flex items-start gap-3 rounded-2xl border border-red-600/20 bg-red-50 px-5 py-4 text-red-900"
+          >
+            <span class="material-symbols-outlined text-xl">error</span>
+            <span>{errorMessage}</span>
+          </p>
+        )
+      }
+
+      <div class="mt-8">
+        <slot />
+      </div>
+    </main>
+
+    <script>
+      // Avisar antes de perder lo escrito. El caso real es alguien que edita un
+      // devocional largo en el celular y toca "atrás" sin querer.
+      const form = document.querySelector<HTMLFormElement>('form[data-warn-unsaved]');
+      if (form) {
+        let dirty = false;
+        let saving = false;
+
+        form.addEventListener('input', () => {
+          dirty = true;
+        });
+        form.addEventListener('submit', () => {
+          saving = true;
+        });
+
+        window.addEventListener('beforeunload', (event) => {
+          if (!dirty || saving) return;
+          event.preventDefault();
+          event.returnValue = '';
+        });
+      }
+
+      // Vista previa inmediata de la foto elegida, antes de guardar.
+      document.querySelectorAll<HTMLInputElement>('input[type="file"][data-preview]').forEach((input) => {
+        input.addEventListener('change', () => {
+          const file = input.files?.[0];
+          const previewId = input.dataset.preview;
+          if (!file || !previewId) return;
+
+          const preview = document.getElementById(previewId) as HTMLImageElement | null;
+          if (!preview) return;
+
+          preview.src = URL.createObjectURL(file);
+          preview.classList.remove('hidden');
+          preview.previousElementSibling?.classList.add('hidden');
+        });
+      });
+
+      // Doble submit = dos devocionales iguales. Pasa seguido con conexiones lentas.
+      document.querySelectorAll<HTMLFormElement>('form').forEach((element) => {
+        element.addEventListener('submit', () => {
+          // El setTimeout no es decorativo: varios formularios mandan la acción
+          // en el `value` del botón, y si se deshabilita dentro del handler el
+          // navegador lo excluye del envío. Recién en el próximo tick el form
+          // ya se serializó.
+          window.setTimeout(() => {
+            element.querySelectorAll<HTMLButtonElement>('button[type="submit"]').forEach((button) => {
+              button.disabled = true;
+            });
+          }, 0);
+        });
+      });
+    </script>
+  </body>
+</html>

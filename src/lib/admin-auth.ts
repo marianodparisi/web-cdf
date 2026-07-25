@@ -191,6 +191,102 @@ export const authenticateAdmin = async (identifier: string, password: string) =>
   };
 };
 
+export interface AdminUser {
+  id: number;
+  username: string;
+  email: string | null;
+  role: AdminRole;
+  sections: string[];
+}
+
+export const listAdminUsers = async (): Promise<AdminUser[]> => {
+  await ensureAdminSchema();
+
+  const db = getPool();
+  const [users] = await db.execute<mysql.RowDataPacket[]>(
+    'SELECT id, username, email, role FROM admin_users ORDER BY username'
+  );
+  const [sections] = await db.execute<mysql.RowDataPacket[]>(
+    'SELECT user_id, section_key FROM user_sections'
+  );
+
+  return users.map((user) => ({
+    id: Number(user.id),
+    username: String(user.username),
+    email: user.email ? String(user.email) : null,
+    role: user.role === 'admin' ? 'admin' : 'editor',
+    sections: sections
+      .filter((section) => Number(section.user_id) === Number(user.id))
+      .map((section) => String(section.section_key)),
+  }));
+};
+
+export const createAdminUser = async (input: {
+  username: string;
+  email: string | null;
+  password: string;
+  role: AdminRole;
+  sections: string[];
+}) => {
+  await ensureAdminSchema();
+
+  const db = getPool();
+  const passwordHash = await bcrypt.hash(input.password, 10);
+
+  const [result] = await db.execute<mysql.ResultSetHeader>(
+    'INSERT INTO admin_users (username, email, password_hash, role) VALUES (?, ?, ?, ?)',
+    [input.username, input.email, passwordHash, input.role]
+  );
+
+  await replaceUserSections(result.insertId, input.role === 'admin' ? [] : input.sections);
+  return result.insertId;
+};
+
+export const replaceUserSections = async (userId: number, sections: string[]) => {
+  const db = getPool();
+  await db.execute('DELETE FROM user_sections WHERE user_id = ?', [userId]);
+
+  for (const section of sections) {
+    await db.execute(
+      'INSERT INTO user_sections (user_id, section_key) VALUES (?, ?)',
+      [userId, section]
+    );
+  }
+};
+
+export const updateAdminUser = async (
+  userId: number,
+  input: { role: AdminRole; sections: string[]; password?: string }
+) => {
+  await ensureAdminSchema();
+
+  const db = getPool();
+  await db.execute('UPDATE admin_users SET role = ? WHERE id = ?', [input.role, userId]);
+
+  if (input.password) {
+    const passwordHash = await bcrypt.hash(input.password, 10);
+    await db.execute('UPDATE admin_users SET password_hash = ? WHERE id = ?', [passwordHash, userId]);
+  }
+
+  await replaceUserSections(userId, input.role === 'admin' ? [] : input.sections);
+};
+
+export const deleteAdminUser = async (userId: number) => {
+  await ensureAdminSchema();
+  await getPool().execute('DELETE FROM admin_users WHERE id = ?', [userId]);
+};
+
+/** Cuántos admins quedan. Sirve para no borrar al último y quedar afuera. */
+export const countAdmins = async () => {
+  await ensureAdminSchema();
+
+  const [rows] = await getPool().execute<mysql.RowDataPacket[]>(
+    `SELECT COUNT(*) AS total FROM admin_users WHERE role = 'admin'`
+  );
+
+  return Number(rows[0]?.total ?? 0);
+};
+
 export const getAdminSessionCookie = () => SESSION_COOKIE;
 
 export const createAdminSessionValue = (username: string) => encodeSession(username);

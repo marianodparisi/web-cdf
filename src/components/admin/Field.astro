@@ -1,0 +1,42 @@
+---
+interface Props {
+  name: string;
+  label: string;
+  value?: string;
+  hint?: string;
+  type?: 'text' | 'url';
+  rows?: number;
+  required?: boolean;
+  placeholder?: string;
+}
+
+const { name, label, value = '', hint, type = 'text', rows, required = false, placeholder } = Astro.props;
+const inputClass =
+  'w-full rounded-2xl border border-black/15 bg-white px-4 py-3 text-base text-charcoal outline-none transition-colors placeholder:text-charcoal/35 focus:border-primary focus:ring-2 focus:ring-primary/25';
+---
+
+<div class="mb-6">
+  <label class="mb-2 block text-sm font-bold text-charcoal" for={name}>
+    {label}
+    {!required && <span class="ml-1 font-normal text-charcoal/45">(opcional)</span>}
+  </label>
+  {hint && <p class="mb-2 text-sm leading-relaxed text-charcoal/60">{hint}</p>}
+  {
+    rows ? (
+      // Sin saltos de línea alrededor de `value`: lo que va entre las etiquetas
+      // de un textarea es su contenido literal, y la indentación del template
+      // terminaría metiéndose en el texto que edita la persona.
+      <textarea id={name} name={name} rows={rows} required={required} placeholder={placeholder} class={inputClass}>{value}</textarea>
+    ) : (
+      <input
+        id={name}
+        name={name}
+        type={type}
+        value={value}
+        required={required}
+        placeholder={placeholder}
+        class={inputClass}
+      />
+    )
+  }
+</div>

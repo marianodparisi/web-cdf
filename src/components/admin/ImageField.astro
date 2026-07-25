@@ -1,0 +1,51 @@
+---
+interface Props {
+  name: string;
+  label: string;
+  currentImage?: string;
+  hint?: string;
+}
+
+const {
+  name,
+  label,
+  currentImage,
+  hint = 'Se achica y se comprime sola, así que podés subir la foto tal como sale del celular.',
+} = Astro.props;
+
+const previewId = `preview-${name}`;
+---
+
+<div class="mb-6">
+  <span class="mb-2 block text-sm font-bold text-charcoal">{label}</span>
+  <p class="mb-3 text-sm leading-relaxed text-charcoal/60">{hint}</p>
+
+  <div class="flex flex-col gap-4 sm:flex-row sm:items-start">
+    <div class="relative flex h-40 w-40 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-black/10 bg-white">
+      {/* Sin foto no se renderiza un <img src="">: el navegador lo interpreta
+          como la URL de la página y la vuelve a pedir entera. */}
+      {!currentImage && <span class="material-symbols-outlined text-4xl text-charcoal/25">image</span>}
+      <img
+        id={previewId}
+        src={currentImage}
+        alt=""
+        class:list={['absolute inset-0 h-full w-full object-contain', !currentImage && 'hidden']}
+        data-empty={currentImage ? undefined : 'true'}
+      />
+    </div>
+
+    <div class="flex-1">
+      <label
+        class="inline-flex cursor-pointer items-center gap-2 rounded-full bg-charcoal px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-primary hover:text-charcoal"
+        for={name}
+      >
+        <span class="material-symbols-outlined text-lg">photo_camera</span>
+        {currentImage ? 'Cambiar la foto' : 'Elegir una foto'}
+      </label>
+      <input id={name} name={name} type="file" accept="image/*" data-preview={previewId} class="sr-only" />
+      <p class="mt-3 text-sm text-charcoal/55">
+        Si no elegís ninguna, se mantiene la que está.
+      </p>
+    </div>
+  </div>
+</div>

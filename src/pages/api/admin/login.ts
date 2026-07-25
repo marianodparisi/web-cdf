@@ -41,7 +41,8 @@ export const POST: APIRoute = async ({ request, cookies, redirect, url }) => {
       maxAge: 60 * 60 * 8,
     });
 
-    return redirect('/admin/index.html');
+    // Antes apuntaba a /admin/index.html, que era la SPA estática de Tina.
+    return redirect('/admin');
   } catch (error) {
     console.error('Admin login error:', error);
     return redirect(`/admin/login?error=${getLoginErrorCode(error)}`);
