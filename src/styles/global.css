@@ -357,6 +357,7 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 
+  /* Antes 68svh: dejaba ~400px muertos por bloque en mobile. */
   .cinematic-values-grid > article {
     min-height: 23rem;
     border-width: 0;
@@ -459,8 +460,9 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 
+  /* Antes 68svh: dejaba ~400px muertos por bloque en mobile. */
   .cinematic-values-grid > article {
-    min-height: 68svh;
+    min-height: 22rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -673,7 +675,7 @@
   }
 
   .mission-value-card {
-    min-height: 68svh;
+    min-height: 22rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -692,7 +694,7 @@
   }
 
   .evangelism-value-card {
-    min-height: 68svh;
+    min-height: 22rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
