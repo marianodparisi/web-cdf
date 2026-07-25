@@ -156,6 +156,25 @@ export const ensureAdminSchema = async () => {
     }
   }
 
+  // Las cuentas que ya existían antes de que hubiera roles quedaron en
+  // 'editor' por el DEFAULT del ALTER, y sin secciones no pueden hacer nada.
+  // Si no quedó ningún admin, se promueve al usuario del entorno: de lo
+  // contrario el panel arranca sin nadie que pueda repartir accesos.
+  const [adminCount] = await db.execute<mysql.RowDataPacket[]>(
+    `SELECT COUNT(*) AS total FROM admin_users WHERE role = 'admin'`
+  );
+
+  if (Number(adminCount[0]?.total ?? 0) === 0 && adminUsername) {
+    const [promoted] = await db.execute<mysql.ResultSetHeader>(
+      `UPDATE admin_users SET role = 'admin' WHERE username = ?`,
+      [adminUsername]
+    );
+
+    if (promoted.affectedRows > 0) {
+      console.log(`[admin] ${adminUsername} quedó como administrador.`);
+    }
+  }
+
   bootstrapped = true;
 };
 
