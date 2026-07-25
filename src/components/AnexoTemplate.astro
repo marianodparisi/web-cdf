@@ -49,10 +49,11 @@ const {
 ---
 
 <div
+  data-cinematic-page="anexo"
   class="[font-family:'Plus_Jakarta_Sans',sans-serif]"
-  style={`--annex-primary:${primaryColor};--annex-primary-dark:${primaryDarkColor};--annex-surface:${surfaceColor};--annex-surface-alt:${surfaceAltColor};--annex-outline:${outlineColor};`}
+  style={`--annex-primary:${primaryColor};--annex-primary-dark:${primaryDarkColor};--annex-surface:${surfaceColor};--annex-surface-alt:${surfaceAltColor};--annex-outline:${outlineColor};--editorial-accent:${primaryColor};--editorial-hairline:${outlineColor}33;`}
 >
-  <section class="grid min-h-[82vh] grid-cols-1 bg-[var(--annex-surface)] lg:grid-cols-2">
+  <section data-animate="reveal" class="grid min-h-[82vh] grid-cols-1 bg-[var(--annex-surface)] lg:grid-cols-2">
     <div class="flex items-center justify-center bg-[var(--annex-surface)] px-8 py-10 lg:px-16 lg:py-16">
       <div class="max-w-xl">
         <div class="mb-8 inline-flex items-center space-x-2 rounded-full border border-[color:var(--annex-outline)]/25 bg-white/70 px-4 py-2 backdrop-blur-md">
@@ -60,7 +61,7 @@ const {
           <span class="text-[10px] font-bold uppercase tracking-[0.2em] text-[#5a605e]">Bienvenido a casa</span>
         </div>
 
-        <h1 class="mb-6 text-5xl font-extrabold tracking-tighter text-[#2d3432] md:text-7xl">
+        <h1 data-cinematic-heading class="mb-6 text-5xl font-extrabold tracking-tighter text-[#2d3432] md:text-7xl">
           Sede <span class="font-medium italic text-[var(--annex-primary)]">{title}</span>
         </h1>
 
@@ -70,33 +71,35 @@ const {
 
         <a
           href="#historia"
-          class="inline-flex rounded-lg bg-gradient-to-br from-[var(--annex-primary)] to-[var(--annex-primary-dark)] px-8 py-4 font-bold text-[#fff6ed] shadow-lg shadow-[color:var(--annex-primary)]/10 transition-all hover:-translate-y-0.5"
+          style="--editorial-button-ink:#fff6ed"
+          class="editorial-button bg-gradient-to-br from-[var(--annex-primary)] to-[var(--annex-primary-dark)] text-[#fff6ed] shadow-lg shadow-[color:var(--annex-primary)]/10"
         >
-          Descubre nuestra historia
+          <span>Descubre nuestra historia</span>
+          <span class="material-symbols-outlined">arrow_outward</span>
         </a>
       </div>
     </div>
 
     <div class="relative flex h-full items-center justify-center bg-[var(--annex-surface)] px-8 py-10 lg:px-10 lg:py-12">
-      <div class="relative aspect-[4/4.2] w-full max-w-[36rem] overflow-hidden rounded-[3rem] shadow-[0_0_80px_-20px_rgba(119,90,25,0.25)]">
-        <img src={heroImage} alt={`Interior de Sede ${title}`} class="h-full w-full object-cover" />
+      <div data-animate="card" data-cinematic-card class="relative aspect-[4/4.2] w-full max-w-[36rem] overflow-hidden rounded-[3rem] shadow-[0_0_80px_-20px_rgba(119,90,25,0.25)]">
+        <img data-cinematic="image" src={heroImage} alt={`Interior de Sede ${title}`} class="h-full w-full object-cover" />
       </div>
     </div>
   </section>
 
-  <section id="historia" class="overflow-hidden bg-[var(--annex-surface-alt)] py-24 md:py-32">
+  <section id="historia" data-animate="reveal" class="overflow-hidden bg-[var(--annex-surface-alt)] py-24 md:py-32">
     <div class="mx-auto max-w-7xl px-6">
       <div class="grid grid-cols-1 items-center gap-16 md:grid-cols-12">
         <div class="order-2 md:order-1 md:col-span-7">
           <div class="space-y-8">
             <label class="text-[11px] font-extrabold uppercase tracking-[0.25em] text-[var(--annex-primary)]">Nuestra historia</label>
-            <h2 class="text-4xl font-bold leading-[1.1] tracking-tight text-[#2d3432] md:text-6xl">
+            <h2 data-cinematic-heading class="text-4xl font-bold leading-[1.1] tracking-tight text-[#2d3432] md:text-6xl">
               {storyTitle}
             </h2>
-            <div class="space-y-6 text-lg leading-relaxed text-[#5a605e]">
+            <div data-cinematic-copy class="space-y-6 text-lg leading-relaxed text-[#5a605e]">
               {storyParagraphs.map((paragraph) => <p>{paragraph}</p>)}
             </div>
-            <div class="grid grid-cols-2 gap-8 border-t border-[color:var(--annex-outline)]/20 pt-8">
+            <div data-animate="card" data-cinematic-card class="grid grid-cols-2 gap-8 border-t border-[color:var(--annex-outline)]/20 pt-8">
               <div>
                 <span class="block text-4xl font-black tracking-tighter text-[var(--annex-primary)]">{yearsValue}</span>
                 <span class="text-[10px] font-bold uppercase text-[#5a605e]">{yearsLabel}</span>
@@ -110,8 +113,8 @@ const {
         </div>
 
         <div class="relative order-1 md:order-2 md:col-span-5">
-          <div class="relative aspect-[4/5] w-full overflow-hidden rounded-t-[2rem] rounded-bl-[2rem] rounded-br-none shadow-2xl">
-            <img src={storyImage} alt={`Comunidad de ${title}`} class="h-full w-full object-cover" />
+          <div data-animate="card" data-cinematic-card class="relative aspect-[4/5] w-full overflow-hidden rounded-t-[2rem] rounded-bl-[2rem] rounded-br-none shadow-2xl">
+            <img data-cinematic="image" src={storyImage} alt={`Comunidad de ${title}`} class="h-full w-full object-cover" />
           </div>
           <div class="absolute -bottom-6 -left-6 -z-10 h-32 w-32 rounded-lg bg-[var(--annex-primary)] opacity-25"></div>
         </div>
@@ -119,12 +122,12 @@ const {
     </div>
   </section>
 
-  <section class="bg-[var(--annex-surface)] py-24 md:py-32">
+  <section data-animate="reveal" class="bg-[var(--annex-surface)] py-24 md:py-32">
     <div class="mx-auto max-w-7xl px-6">
-      <div class="grid overflow-hidden rounded-[2rem] border border-[color:var(--annex-outline)]/15 bg-[var(--annex-surface-alt)] shadow-sm lg:grid-cols-2">
+      <div data-animate="card" data-cinematic-card class="grid overflow-hidden rounded-smooth border border-[color:var(--annex-outline)]/15 bg-[var(--annex-surface-alt)] shadow-sm lg:grid-cols-2">
         <div class="flex flex-col justify-center p-12 md:p-20">
           <label class="mb-8 block text-[11px] font-extrabold uppercase tracking-[0.25em] text-[var(--annex-primary)]">Ubicación</label>
-          <h2 class="mb-8 text-4xl font-bold leading-tight tracking-tight text-[#2d3432] md:text-5xl">{locationTitle}</h2>
+          <h2 data-cinematic-heading class="mb-8 text-4xl font-bold leading-tight tracking-tight text-[#2d3432] md:text-5xl">{locationTitle}</h2>
 
           <div class="space-y-6">
             <div class="flex items-start gap-4">
@@ -168,9 +171,9 @@ const {
     </div>
   </section>
 
-  <section class="bg-[var(--annex-surface-alt)] py-20">
+  <section data-animate="reveal" class="bg-[var(--annex-surface-alt)] py-20">
     <div class="mx-auto max-w-4xl px-6">
-      <div class="rounded-[2rem] border border-[color:var(--annex-outline)]/15 bg-white/70 p-10 text-center shadow-sm backdrop-blur-sm md:p-14">
+      <div data-animate="card" data-cinematic-card class="rounded-smooth border border-[color:var(--annex-outline)]/15 bg-white/70 p-10 text-center shadow-sm backdrop-blur-sm md:p-14">
         <p class="mb-3 text-[11px] font-extrabold uppercase tracking-[0.25em] text-[var(--annex-primary)]">Llamado a la acción</p>
         <h3 class="mb-4 text-3xl font-bold tracking-tight text-[#2d3432] md:text-4xl">{ctaTitle}</h3>
         <p class="mx-auto max-w-2xl text-lg text-[#5a605e]">{ctaText}</p>

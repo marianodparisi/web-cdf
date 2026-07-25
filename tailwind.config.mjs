@@ -16,6 +16,10 @@ export default {
         body: ['DM Sans', 'sans-serif'],
       },
       borderRadius: {
+        // Escala de radios del sistema editorial. `soft` para controles e
+        // imágenes chicas, `smooth` para piezas de media grandes.
+        soft: '1rem',
+        smooth: '1.5rem',
         DEFAULT: '4px',
         xl: '1rem',
         '2xl': '1.5rem',

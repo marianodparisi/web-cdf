@@ -64,6 +64,7 @@ const annexLinks = [
     sticky ? 'sticky' : transparent ? undefined : 'relative',
   ]}
 >
+  {transparent && <div data-nav-scrim aria-hidden="true" class="pointer-events-none absolute inset-x-0 top-0 h-[7.5rem]"></div>}
   <div class:list={[
     'relative z-10 mx-auto',
     transparent ? 'w-full max-w-none pl-3 pr-4 sm:pl-4 sm:pr-6 lg:pl-6 lg:pr-8' : 'max-w-7xl px-4 sm:px-6 lg:px-8',
@@ -78,7 +79,7 @@ const annexLinks = [
                 <p data-nav-annex-text class={`font-display text-2xl leading-none tracking-tight sm:text-[2rem] ${logoTextClass}`}>{logoLabel}</p>
               </div>
             ) : (
-              <img data-nav-logo src={logoImageSrc} alt="Logo Corazon de Fuego" class="h-[5.5rem] w-auto object-contain transition-[filter] duration-300 sm:h-24" />
+              <img data-nav-logo src={logoImageSrc} alt="Logo Corazon de Fuego" class="h-12 w-auto object-contain transition-[filter] duration-300 sm:h-14" />
             )
           }
         </a>
@@ -289,6 +290,27 @@ const annexLinks = [
     transform: translateY(-1px);
   }
 
+  /* La barra transparente flota sobre el contenido que scrollea debajo. Sin este
+     velo los links se superponen con títulos y fotos y no se lee ninguno. */
+  [data-nav-scrim] {
+    opacity: 1;
+    transition: background 300ms ease;
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 100%);
+  }
+
+  nav[data-nav-transparent='true'][data-nav-surface='dark'] [data-nav-scrim] {
+    background: linear-gradient(to bottom, rgba(10, 10, 9, 0.68), rgba(10, 10, 9, 0));
+  }
+
+  nav[data-nav-transparent='true'][data-nav-surface='light'] [data-nav-scrim] {
+    background: linear-gradient(to bottom, rgba(247, 245, 240, 0.9), rgba(247, 245, 240, 0));
+  }
+
+  nav[data-mobile-menu-open='true'] [data-nav-scrim] {
+    opacity: 0;
+  }
+
   nav[data-nav-transparent='true'][data-nav-surface='dark'] [data-nav-link] {
     color: white;
   }
@@ -392,6 +414,30 @@ const annexLinks = [
   .mobile-accordion.is-open [data-accordion-icon] {
     transform: rotate(180deg);
   }
+
+  /* Al salir del hero la barra deja de flotar y toma fondo propio. Flotando
+     sobre el contenido los links se superponían con títulos y fotos.
+     Estas reglas van al final a propósito: comparten especificidad con las de
+     [data-nav-surface] y tienen que ganarles por orden. */
+  nav[data-nav-transparent='true'][data-nav-pinned='true'] {
+    background-color: rgba(255, 255, 255, 0.96);
+    border-color: rgb(243 244 246);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 1px 24px rgba(17, 17, 16, 0.06);
+  }
+
+  nav[data-nav-transparent='true'][data-nav-pinned='true'] [data-nav-link],
+  nav[data-nav-transparent='true'][data-nav-pinned='true'] [data-nav-menu-icon] {
+    color: rgb(58 58 58);
+  }
+
+  nav[data-nav-transparent='true'][data-nav-pinned='true'] [data-nav-logo] {
+    filter: none;
+  }
+
+  nav[data-nav-transparent='true'][data-nav-pinned='true'] [data-nav-scrim] {
+    opacity: 0;
+  }
 </style>
 
 <script>
@@ -460,9 +506,26 @@ const annexLinks = [
       transparentNav.dataset.navSurface = darkHits >= 2 ? 'dark' : 'light';
     };
 
-    syncTransparentNavSurface();
-    window.addEventListener('scroll', syncTransparentNavSurface, { passive: true });
-    window.addEventListener('resize', syncTransparentNavSurface);
+    // Fija la barra recién al terminar el hero. Sin hero (por si alguna página
+    // usa transparent sin uno) alcanza con haber scrolleado su propia altura.
+    const heroSection = document.querySelector('[data-animate="hero"]') as HTMLElement | null;
+
+    const syncPinnedState = () => {
+      const navHeight = transparentNav.offsetHeight;
+      const threshold = heroSection
+        ? heroSection.getBoundingClientRect().bottom + window.scrollY - navHeight
+        : navHeight;
+      transparentNav.dataset.navPinned = window.scrollY >= threshold ? 'true' : 'false';
+    };
+
+    const syncTransparentNav = () => {
+      syncTransparentNavSurface();
+      syncPinnedState();
+    };
+
+    syncTransparentNav();
+    window.addEventListener('scroll', syncTransparentNav, { passive: true });
+    window.addEventListener('resize', syncTransparentNav);
   }
 
   if (button && menu) {

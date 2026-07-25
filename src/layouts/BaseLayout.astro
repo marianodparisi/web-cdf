@@ -55,9 +55,15 @@ const { title = 'Iglesia Corazón de Fuego' } = Astro.props;
         }
 
         try {
-          const [{ gsap }, { ScrollTrigger }] = await Promise.all([
-            import('https://cdn.jsdelivr.net/npm/gsap@3.12.5/index.js'),
-            import('https://cdn.jsdelivr.net/npm/gsap@3.12.5/ScrollTrigger.js'),
+          // El contenido arranca oculto por CSS hasta que GSAP corre. Si el CDN
+          // tarda o queda colgado la página se queda en blanco, así que cortamos
+          // y mostramos todo sin animar.
+          const [{ gsap }, { ScrollTrigger }] = await Promise.race([
+            Promise.all([
+              import('https://cdn.jsdelivr.net/npm/gsap@3.12.5/index.js'),
+              import('https://cdn.jsdelivr.net/npm/gsap@3.12.5/ScrollTrigger.js'),
+            ]),
+            new Promise((_, reject) => setTimeout(() => reject(new Error('GSAP tardó demasiado')), 2500)),
           ]);
 
           gsap.registerPlugin(ScrollTrigger);
@@ -86,9 +92,9 @@ const { title = 'Iglesia Corazón de Fuego' } = Astro.props;
               {
                 y: 0,
                 autoAlpha: 1,
-                duration: 1,
-                stagger: 0.25,
-                delay: 2,
+                duration: 0.8,
+                stagger: 0.12,
+                delay: 0.45,
                 ease: 'power2.out',
               }
             );
@@ -139,20 +145,18 @@ const { title = 'Iglesia Corazón de Fuego' } = Astro.props;
             cards.forEach((card) => {
               gsap.fromTo(
                 card,
-                { y: isCinematicSection ? 64 : 44, autoAlpha: 0, scale: isCinematicSection ? 1 : 0.98 },
+                { y: isCinematicSection ? 40 : 44, autoAlpha: 0, scale: isCinematicSection ? 1 : 0.98 },
                 {
                   y: 0,
                   autoAlpha: 1,
                   scale: 1,
-                  duration: isCinematicSection ? 1.15 : 0.8,
-                  ease: 'power2.out',
+                  duration: isCinematicSection ? 0.85 : 0.8,
+                  ease: 'power3.out',
                   immediateRender: false,
                   scrollTrigger: {
                     trigger: card,
-                    start: isCinematicSection ? 'top 91%' : 'top 92%',
-                    end: isCinematicSection ? 'top 56%' : undefined,
-                    scrub: isCinematicSection ? 0.75 : false,
-                    once: !isCinematicSection,
+                    start: 'top 88%',
+                    once: true,
                   },
                 }
               );
@@ -292,12 +296,12 @@ const { title = 'Iglesia Corazón de Fuego' } = Astro.props;
                 {
                   y: 0,
                   clipPath: 'inset(0 0 0% 0)',
-                  ease: 'none',
+                  duration: 1.1,
+                  ease: 'power3.out',
                   scrollTrigger: {
                     trigger: heading,
-                    start: 'top 88%',
-                    end: 'top 55%',
-                    scrub: 0.75,
+                    start: 'top 85%',
+                    once: true,
                   },
                 }
               );
@@ -312,13 +316,13 @@ const { title = 'Iglesia Corazón de Fuego' } = Astro.props;
                 {
                   y: 0,
                   autoAlpha: 1,
-                  stagger: 0.12,
-                  ease: 'none',
+                  stagger: 0.08,
+                  duration: 0.8,
+                  ease: 'power3.out',
                   scrollTrigger: {
                     trigger: copyBlock,
-                    start: 'top 90%',
-                    end: 'top 42%',
-                    scrub: 0.85,
+                    start: 'top 88%',
+                    once: true,
                   },
                 }
               );
@@ -331,12 +335,12 @@ const { title = 'Iglesia Corazón de Fuego' } = Astro.props;
                 {
                   y: 0,
                   clipPath: 'inset(0 0 0% 0)',
-                  ease: 'none',
+                  duration: 1.05,
+                  ease: 'power3.out',
                   scrollTrigger: {
                     trigger: mediaFrame,
-                    start: 'top 92%',
-                    end: 'top 48%',
-                    scrub: 0.9,
+                    start: 'top 88%',
+                    once: true,
                   },
                 }
               );
