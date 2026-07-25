@@ -2,6 +2,7 @@ import type { APIRoute } from 'astro';
 import type { SermonSeries } from '../../../data/series';
 import { seriesCollection } from '../../../lib/content/collections';
 import { UploadError, saveUploadedImage } from '../../../lib/content/uploads';
+import { scheduleOrphanSweep } from '../../../lib/content/orphans';
 import { backTo, canEdit, getSession } from '../../../lib/admin-guard';
 
 const PATH = '/admin/series';
@@ -49,6 +50,7 @@ export const POST: APIRoute = async (context) => {
       session.username
     );
 
+    scheduleOrphanSweep();
     return backTo(PATH, { ok: 'Se borró.' });
   }
 
@@ -120,5 +122,6 @@ export const POST: APIRoute = async (context) => {
     session.username
   );
 
+  scheduleOrphanSweep();
   return backTo(PATH, { ok: 'Se guardó. Ya se ve en el inicio.' });
 };

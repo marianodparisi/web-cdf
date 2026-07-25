@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { announcementsCollection } from '../../../lib/content/collections';
 import { UploadError, saveUploadedImage } from '../../../lib/content/uploads';
+import { scheduleOrphanSweep } from '../../../lib/content/orphans';
 import { backTo, canEdit, getSession } from '../../../lib/admin-guard';
 
 const PATH = '/admin/anuncios';
@@ -49,5 +50,6 @@ export const POST: APIRoute = async (context) => {
     session.username
   );
 
+  scheduleOrphanSweep();
   return backTo(PATH, { ok: 'Se guardó. Ya se ve en el inicio.' });
 };

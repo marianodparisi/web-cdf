@@ -1,6 +1,7 @@
 import type { APIRoute } from 'astro';
 import { ministriesCollection } from '../../../lib/content/collections';
 import { UploadError, saveUploadedImage } from '../../../lib/content/uploads';
+import { scheduleOrphanSweep } from '../../../lib/content/orphans';
 import { backTo, canEdit, getSession } from '../../../lib/admin-guard';
 import { ministrySectionKey } from '../../../lib/content/sections';
 
@@ -56,5 +57,6 @@ export const POST: APIRoute = async (context) => {
     session.username
   );
 
+  scheduleOrphanSweep();
   return backTo(path, { ok: 'Se guardó. Ya se ve en el sitio.' });
 };

@@ -6,6 +6,7 @@ import {
   textToParagraphs,
 } from '../../../lib/content/collections';
 import { UploadError, saveUploadedImage } from '../../../lib/content/uploads';
+import { scheduleOrphanSweep } from '../../../lib/content/orphans';
 import { backTo, canEdit, getSession } from '../../../lib/admin-guard';
 
 const LIST_PATH = '/admin/devocionales';
@@ -28,6 +29,7 @@ export const POST: APIRoute = async (context) => {
       session.username
     );
 
+    scheduleOrphanSweep();
     return backTo(LIST_PATH, { ok: 'Se borró.' });
   }
 
@@ -105,5 +107,6 @@ export const POST: APIRoute = async (context) => {
     return [created, ...posts];
   }, session.username);
 
+  scheduleOrphanSweep();
   return backTo(LIST_PATH, { ok: existing ? 'Se guardó. Ya se ve en el sitio.' : 'Se publicó. Ya se ve en el sitio.' });
 };
