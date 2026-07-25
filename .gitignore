@@ -21,6 +21,16 @@ package-lock.json
 # do not commit .env files or any files that end with `.env`
 *.env
 
+# El patron de arriba solo matchea archivos TERMINADOS en `.env`, asi que
+# `.env.local` quedaba fuera con AUTH_SECRET y la password de MySQL adentro.
+.env
+.env.*
+!.env.example
+!.env.hostinger.example
+
+# Contenido, historial e imagenes del panel. Viven fuera del repo a proposito.
+.data/
+
 packages/astro/src/**/*.prebuilt.ts
 packages/astro/src/**/*.prebuilt-dev.ts
 !packages/astro/vendor/vite/dist

@@ -1,18 +1,19 @@
 ---
 import Footer from '../../components/Footer.astro';
 import Navbar from '../../components/Navbar.astro';
-import { devotionalPosts } from '../../data/devotionals';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getDevotionals } from '../../lib/content/collections';
 
 // Se mantiene para cuando la ruta se prerenderice. Con salida `server` Astro lo
 // ignora y `Astro.props` llega vacío, así que el post se resuelve desde el
 // parámetro: de lo contrario toda la sección devuelve 500.
-export function getStaticPaths() {
-  return devotionalPosts.map((post) => ({
+export async function getStaticPaths() {
+  return (await getDevotionals()).map((post) => ({
     params: { slug: post.slug },
   }));
 }
 
+const devotionalPosts = await getDevotionals();
 const post = devotionalPosts.find((item) => item.slug === Astro.params.slug);
 
 if (!post) {

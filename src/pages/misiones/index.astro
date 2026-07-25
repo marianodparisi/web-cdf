@@ -135,11 +135,18 @@ const getLocalMissionDate = (date: string) => new Date(`${date}T12:00:00`);
   <Footer />
 
   <script>
-    const missionVideos = [...document.querySelectorAll('.mission-video')];
-    const videoStates = new WeakMap();
-    let pointerPosition = null;
+    interface MissionVideoState {
+      card: Element;
+      hovered: boolean;
+      focused: boolean;
+      pinned: boolean;
+    }
 
-    const loadMissionVideo = (video) => {
+    const missionVideos = [...document.querySelectorAll<HTMLVideoElement>('.mission-video')];
+    const videoStates = new WeakMap<HTMLVideoElement, MissionVideoState>();
+    let pointerPosition: { x: number; y: number } | null = null;
+
+    const loadMissionVideo = (video: HTMLVideoElement) => {
       if (!video.dataset.src || video.dataset.loaded === 'true') return;
 
       const source = document.createElement('source');
@@ -150,16 +157,16 @@ const getLocalMissionDate = (date: string) => new Date(`${date}T12:00:00`);
       video.load();
     };
 
-    const playMissionVideo = (video) => {
+    const playMissionVideo = (video: HTMLVideoElement) => {
       loadMissionVideo(video);
       video.play().catch(() => {});
     };
 
-    const pauseMissionVideo = (video) => {
+    const pauseMissionVideo = (video: HTMLVideoElement) => {
       video.pause();
     };
 
-    const updateMissionVideo = (video) => {
+    const updateMissionVideo = (video: HTMLVideoElement) => {
       const state = videoStates.get(video);
       if (!state) return;
 
@@ -187,22 +194,23 @@ const getLocalMissionDate = (date: string) => new Date(`${date}T12:00:00`);
     missionVideos.forEach((video) => {
       const card = video.closest('.mission-card');
       if (!card) return;
-      videoStates.set(video, { card, hovered: false, focused: false, pinned: false });
+      const state: MissionVideoState = { card, hovered: false, focused: false, pinned: false };
+      videoStates.set(video, state);
 
       card.addEventListener('mouseenter', () => {
-        videoStates.get(video).hovered = true;
+        state.hovered = true;
         updateMissionVideo(video);
       });
       card.addEventListener('mouseleave', () => {
-        videoStates.get(video).hovered = false;
+        state.hovered = false;
         updateMissionVideo(video);
       });
       card.addEventListener('focusin', () => {
-        videoStates.get(video).focused = true;
+        state.focused = true;
         updateMissionVideo(video);
       });
       card.addEventListener('focusout', () => {
-        videoStates.get(video).focused = false;
+        state.focused = false;
         updateMissionVideo(video);
       });
     });
@@ -220,7 +228,7 @@ const getLocalMissionDate = (date: string) => new Date(`${date}T12:00:00`);
       const observer = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
-            const video = entry.target.querySelector('.mission-video');
+            const video = entry.target.querySelector<HTMLVideoElement>('.mission-video');
             if (!video) return;
             const state = videoStates.get(video);
             if (!state) return;

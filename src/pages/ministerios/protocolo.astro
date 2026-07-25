@@ -2,10 +2,10 @@
 import Footer from '../../components/Footer.astro';
 import MinistryTemplate from '../../components/MinistryTemplate.astro';
 import Navbar from '../../components/Navbar.astro';
-import { ministries } from '../../data/ministries';
+import { getMinistryBySlug } from '../../lib/content/collections';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
-const ministry = ministries.find((item) => item.slug === 'protocolo');
+const ministry = await getMinistryBySlug('protocolo');
 if (!ministry) throw new Error('Ministerio protocolo no encontrado');
 ---
 

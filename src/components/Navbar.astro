@@ -1,5 +1,5 @@
 ---
-import { ministries } from '../data/ministries';
+import { getMinistries } from '../lib/content/collections';
 
 interface Props {
   sticky?: boolean;
@@ -24,7 +24,7 @@ const {
   logoTextClass = 'text-charcoal',
   logoAccentClass = 'text-primary',
 } = Astro.props as Props;
-const navbarMinistries = ministries.filter((ministry) => ministry.slug !== 'evangelismo');
+const navbarMinistries = (await getMinistries()).filter((ministry) => ministry.slug !== 'evangelismo');
 const annexLinks = [
   {
     href: '/anexos/ramos-mejia',

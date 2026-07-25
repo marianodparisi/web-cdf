@@ -1,6 +1,6 @@
 # Memoria del proyecto — Web Corazón de Fuego
 
-Última actualización: 18 de julio de 2026.
+Última actualización: 25 de julio de 2026.
 
 ## Objetivo
 
@@ -26,10 +26,39 @@ Sitio web de Iglesia Corazón de Fuego. La experiencia debe comunicar presencia,
 - Astro `^7.0.6`.
 - Salida SSR/server con `@astrojs/node` en modo standalone.
 - Tailwind CSS 3 mediante `@astrojs/tailwind`.
-- TinaCMS mediante `@tinacms/astro` y archivos en `tina/`.
+- Panel de administración propio. TinaCMS fue eliminado del repo (ver más abajo).
+- MySQL sólo para usuarios y permisos del panel. El contenido no vive ahí.
+- `sharp` para comprimir las imágenes que se suben desde el panel.
 - GSAP + ScrollTrigger se cargan desde CDN en `src/layouts/BaseLayout.astro`.
 - Tipografías: Inter para display y DM Sans para cuerpo.
 - El build ejecuta `astro build` y luego copia `hostinger-entry.js` a `dist/index.js`.
+
+## CMS
+
+TinaCMS se sacó por completo el 25 de julio de 2026. Editaba una sola página
+demo (`/tinacms-demo`) y para eso arrastraba MongoDB, un PAT de GitHub, un
+proxy GraphQL propio y 9.7 MB de bundle versionado en `public/admin/`. Todo el
+contenido real estaba hardcodeado. No volver a introducirlo.
+
+En su lugar hay un panel propio sobre la auth que ya existía:
+
+- El contenido son archivos JSON en disco, en `CDF_DATA_DIR` (fuera de `dist/`,
+  que se borra en cada deploy). El backup es copiar `content/` por FTP.
+- `src/lib/content/store.ts`: escritura atómica (temporal + rename), cache
+  validado contra el `mtime` — así una edición hecha directo por FTP se ve sin
+  reiniciar — y copia con fecha de cada guardado en `history/`.
+- `src/lib/content/collections.ts`: las colecciones y los helpers de slug y
+  párrafos. Los archivos de `src/data/` quedan como semilla y respaldo; si un
+  JSON se corrompe el sitio los muestra en lugar de caerse. No borrarlos.
+- `src/lib/content/sections.ts`: catálogo de permisos. Los ministerios se abren
+  uno por uno (`ministerio:kids`) para que cada líder vea sólo lo suyo.
+- Roles en MySQL: `admin_users.role` y la tabla `user_sections`. La cookie sólo
+  lleva el usuario; rol y secciones se leen de la base en cada request del
+  panel, así revocar un acceso tiene efecto al instante.
+- Los slugs no se editan nunca: son las URLs públicas.
+
+Falta construir: la UI del panel, la subida de imágenes y la gestión de
+usuarios.
 
 ## Archivos centrales
 
@@ -37,10 +66,12 @@ Sitio web de Iglesia Corazón de Fuego. La experiencia debe comunicar presencia,
 - `src/components/Navbar.astro`: navegación responsive y cambio automático de contraste según `data-nav-surface-zone`.
 - `src/components/Footer.astro`: pie global.
 - `src/styles/global.css`: Tailwind y sistema visual compartido.
-- `src/data/`: contenido estructurado de misiones, evangelismo, ministerios y devocionales.
+- `src/data/`: semilla y respaldo del contenido (misiones, evangelismo, ministerios, devocionales, series y anuncios). Las páginas ya no lo importan directo; leen por `src/lib/content/`.
+- `src/lib/content/`: almacén en disco, colecciones y permisos por sección.
+- `src/lib/admin-auth.ts`: usuarios, roles y sesión del panel.
 - `src/pages/`: rutas Astro.
 - `public/`: imágenes, videos, marcas y assets del sitio.
-- `astro.config.mjs`: SSR standalone, Tina, Tailwind y alias del cliente Tina.
+- `astro.config.mjs`: SSR standalone y Tailwind.
 
 ## Dirección visual aprobada
 

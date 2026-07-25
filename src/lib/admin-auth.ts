@@ -8,11 +8,21 @@ const SESSION_MAX_AGE = 60 * 60 * 8;
 let pool: mysql.Pool | null = null;
 let bootstrapped = false;
 
+export type AdminRole = 'admin' | 'editor';
+
+export interface AdminSession {
+  username: string;
+  role: AdminRole;
+  sections: string[];
+  expiresAt: number;
+}
+
 type AdminUserRow = {
   id: number;
   username: string;
   email: string | null;
   password_hash: string;
+  role: AdminRole;
 };
 
 const readEnv = (name: string) => {
@@ -59,6 +69,11 @@ const encodeSession = (username: string) => {
   return `${payload}.${createSessionSignature(payload)}`;
 };
 
+/**
+ * La cookie solo dice quién sos y hasta cuándo. El rol y las secciones NO van
+ * acá: se leen de MySQL en cada request del panel, así sacarle el acceso a
+ * alguien tiene efecto al instante y no dentro de ocho horas.
+ */
 const decodeSession = (value?: string) => {
   if (!value) return null;
 
@@ -79,6 +94,17 @@ const decodeSession = (value?: string) => {
   }
 };
 
+/** MySQL no tiene `ADD COLUMN IF NOT EXISTS`, así que se pregunta primero. */
+const hasColumn = async (db: mysql.Pool, table: string, column: string) => {
+  const [rows] = await db.execute<mysql.RowDataPacket[]>(
+    `SELECT 1 FROM information_schema.COLUMNS
+     WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ? LIMIT 1`,
+    [table, column]
+  );
+
+  return rows.length > 0;
+};
+
 export const ensureAdminSchema = async () => {
   if (bootstrapped) return;
 
@@ -91,6 +117,23 @@ export const ensureAdminSchema = async () => {
       email VARCHAR(191) NULL UNIQUE,
       password_hash VARCHAR(255) NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `);
+
+  if (!(await hasColumn(db, 'admin_users', 'role'))) {
+    await db.execute(
+      `ALTER TABLE admin_users ADD COLUMN role VARCHAR(16) NOT NULL DEFAULT 'editor'`
+    );
+  }
+
+  // Qué puede tocar cada editor. Un admin no necesita filas acá: llega a todo.
+  await db.execute(`
+    CREATE TABLE IF NOT EXISTS user_sections (
+      user_id INT NOT NULL,
+      section_key VARCHAR(64) NOT NULL,
+      PRIMARY KEY (user_id, section_key),
+      CONSTRAINT fk_user_sections_user FOREIGN KEY (user_id)
+        REFERENCES admin_users (id) ON DELETE CASCADE
     )
   `);
 
@@ -107,7 +150,7 @@ export const ensureAdminSchema = async () => {
     if (rows.length === 0) {
       const passwordHash = await bcrypt.hash(adminPassword, 10);
       await db.execute(
-        'INSERT INTO admin_users (username, email, password_hash) VALUES (?, ?, ?)',
+        `INSERT INTO admin_users (username, email, password_hash, role) VALUES (?, ?, ?, 'admin')`,
         [adminUsername, adminEmail, passwordHash]
       );
     }
@@ -116,12 +159,21 @@ export const ensureAdminSchema = async () => {
   bootstrapped = true;
 };
 
+const readSections = async (db: mysql.Pool, userId: number) => {
+  const [rows] = await db.execute<mysql.RowDataPacket[]>(
+    'SELECT section_key FROM user_sections WHERE user_id = ?',
+    [userId]
+  );
+
+  return rows.map((row) => String(row.section_key));
+};
+
 export const authenticateAdmin = async (identifier: string, password: string) => {
   await ensureAdminSchema();
 
   const db = getPool();
   const [rows] = await db.execute<mysql.RowDataPacket[] & AdminUserRow[]>(
-    'SELECT id, username, email, password_hash FROM admin_users WHERE username = ? OR email = ? LIMIT 1',
+    'SELECT id, username, email, password_hash, role FROM admin_users WHERE username = ? OR email = ? LIMIT 1',
     [identifier, identifier]
   );
 
@@ -135,6 +187,7 @@ export const authenticateAdmin = async (identifier: string, password: string) =>
     id: user.id,
     username: user.username,
     email: user.email,
+    role: user.role === 'admin' ? ('admin' as const) : ('editor' as const),
   };
 };
 
@@ -142,4 +195,41 @@ export const getAdminSessionCookie = () => SESSION_COOKIE;
 
 export const createAdminSessionValue = (username: string) => encodeSession(username);
 
+/** Chequeo barato de firma y vencimiento. No dice nada de permisos. */
 export const verifyAdminSessionValue = (value?: string) => decodeSession(value);
+
+/**
+ * Sesión completa para las rutas del panel: valida la cookie y trae rol y
+ * secciones de la base. Devuelve null si el usuario ya no existe, con lo cual
+ * borrar una cuenta también corta su sesión abierta.
+ */
+export const loadAdminSession = async (value?: string): Promise<AdminSession | null> => {
+  const decoded = decodeSession(value);
+  if (!decoded) return null;
+
+  try {
+    await ensureAdminSchema();
+
+    const db = getPool();
+    const [rows] = await db.execute<mysql.RowDataPacket[] & AdminUserRow[]>(
+      'SELECT id, username, email, password_hash, role FROM admin_users WHERE username = ? LIMIT 1',
+      [decoded.username]
+    );
+
+    const user = rows[0];
+    if (!user) return null;
+
+    const role = user.role === 'admin' ? ('admin' as const) : ('editor' as const);
+
+    return {
+      username: user.username,
+      role,
+      sections: role === 'admin' ? [] : await readSections(db, user.id),
+      expiresAt: decoded.expiresAt,
+    };
+  } catch (error) {
+    // Si MySQL no responde no se puede saber qué permisos tiene: se cierra.
+    console.error('[admin] no se pudieron cargar los permisos de la sesión:', error);
+    return null;
+  }
+};

@@ -1,10 +1,11 @@
 ---
 import Footer from '../../components/Footer.astro';
 import Navbar from '../../components/Navbar.astro';
-import { ministries } from '../../data/ministries';
+import { getMinistries } from '../../lib/content/collections';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 const logoSlugs = new Set(['gold', 'kids', 'arde']);
+const ministries = await getMinistries();
 ---
 
 <BaseLayout title="Ministerios | Iglesia Corazon de Fuego">

@@ -1,9 +1,10 @@
 ---
 import Footer from '../../components/Footer.astro';
 import Navbar from '../../components/Navbar.astro';
-import { devotionalPosts } from '../../data/devotionals';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getDevotionals } from '../../lib/content/collections';
 
+const devotionalPosts = await getDevotionals();
 const currentPost = devotionalPosts[0];
 const previousPosts = devotionalPosts.slice(1);
 

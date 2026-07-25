@@ -2,92 +2,21 @@
 import Footer from '../components/Footer.astro';
 import Hero from '../components/Hero.astro';
 import Navbar from '../components/Navbar.astro';
-import { devotionalPosts } from '../data/devotionals';
-import { ministries } from '../data/ministries';
+import { seriesPlaylistUrl } from '../data/series';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { getAnnouncements, getDevotionals, getMinistries, getSeries } from '../lib/content/collections';
 
 const logoSlugs = new Set(['gold', 'kids', 'arde']);
+
+const [devotionalPosts, ministries, sermonSeries, announcements] = await Promise.all([
+  getDevotionals(),
+  getMinistries(),
+  getSeries(),
+  getAnnouncements(),
+]);
+
 const currentDevotionalPost = devotionalPosts[0];
-const seriesPlaylistUrl = 'https://www.youtube.com/@Coraz%C3%B3ndeFuego/playlists';
-const sermonSeries = [
-  {
-    title: 'Éxodo',
-    subtitle: 'El camino hacia la libertad',
-    label: 'Serie actual',
-    image: '/series/exododesktop.jpg',
-    mobileImage: '/series/exodomobile.jpg',
-    href: 'https://www.youtube.com/playlist?list=PLbq3XgHcmjEtwhYdGCqO8PqbFY7EMFI5p',
-    description:
-      'Un recorrido por el libro de Éxodo para ver la fidelidad de Dios, la libertad y el camino hacia su propósito.',
-  },
-  {
-    title: 'Sanados',
-    subtitle: 'Restauración para el corazón',
-    label: 'Serie anterior',
-    image: '/sanadosvertical.jpg',
-    href: 'https://www.youtube.com/playlist?list=PLbq3XgHcmjEv4unRsnKoJVVnt9yLDdv4T',
-    description: 'Una serie para recibir sanidad, libertad y restauración en Jesús.',
-  },
-  {
-    title: 'Descanso',
-    subtitle: 'Serie febrero 2026',
-    label: 'Serie anterior',
-    image: '/descansovertical.jpg',
-    href: 'https://www.youtube.com/playlist?list=PLbq3XgHcmjEuy20aDEPjbTu6MUZhOCUqG',
-    description: 'Una serie para volver al ritmo de Dios y aprender a descansar en su presencia.',
-  },
-  {
-    title: 'Pertenecer',
-    subtitle: 'Una casa, una familia, un propósito',
-    label: 'Serie anterior',
-    image: '/pertenecervertical.jpg',
-    href: 'https://www.youtube.com/playlist?list=PLbq3XgHcmjEt1a2mr2d-g7-z6tzo7C-HP',
-    description: 'Una serie sobre identidad, familia espiritual y el llamado a caminar juntos.',
-  },
-  {
-    title: 'Enviame',
-    subtitle: 'Disponibles para responder al llamado',
-    label: 'Serie anterior',
-    image: '/enviamevertical.jpg',
-    href: seriesPlaylistUrl,
-    description: 'Una serie sobre disponibilidad, obediencia y misión.',
-  },
-  {
-    title: 'Gozo',
-    subtitle: 'La alegría que nace en Dios',
-    label: 'Serie anterior',
-    image: '/gozovertical.jpg',
-    href: seriesPlaylistUrl,
-    description: 'Una serie para redescubrir el gozo verdadero en Cristo.',
-  },
-];
 const [currentSeries, ...recentSeries] = sermonSeries;
-const announcements = [
-  {
-    href: '/ministerios/gold',
-    eyebrow: 'Destacado',
-    title: 'Encuentro GOLD',
-    description: 'Un tiempo especial para compartir palabra, compañerismo y crecimiento.',
-    image: '/ministries/gold/goldanuncio.jpg',
-    alt: 'Anuncio GOLD',
-  },
-  {
-    href: '/ministerios/arde',
-    eyebrow: 'Campa ARDE',
-    title: 'Campamento ARDE',
-    description: 'Una experiencia para adolescentes con amigos, palabra y dias que no se olvidan facil.',
-    image: '/ministries/arde/campaarde.jpg',
-    alt: 'Campamento ARDE',
-  },
-  {
-    href: '/ministerios/kids',
-    eyebrow: 'Campa Kids',
-    title: 'Campamento Kids',
-    description: 'Una aventura para que los chicos aprendan, jueguen y vivan la fe con alegria.',
-    image: '/ministries/kids/campakids.jpg',
-    alt: 'Campa Kids',
-  },
-];
 const getYouTubeEmbedUrl = (videoUrl?: string) => {
   if (!videoUrl) return null;
   try {
@@ -148,38 +77,42 @@ const currentDevotionalEmbedUrl = getYouTubeEmbedUrl(currentDevotionalPost?.vide
           </h2>
         </div>
 
-        <a
-          data-animate="card"
-          data-cinematic-card
-          href={currentSeries.href}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={`Ver serie ${currentSeries.title}`}
-          class="group relative block"
-        >
-          <div class="relative h-[24rem] overflow-hidden rounded-smooth sm:h-[30rem] lg:h-[34rem]">
-            <picture>
-              {currentSeries.mobileImage && <source media="(max-width: 767px)" srcset={currentSeries.mobileImage} />}
-              <img
-                data-cinematic="image"
-                src={currentSeries.image}
-                alt={`Serie ${currentSeries.title}`}
-                class="absolute inset-0 h-full w-full object-cover object-center [filter:brightness(0.7)_saturate(0.72)_contrast(1.1)]"
-              />
-            </picture>
-          </div>
-          <div class="relative mt-8 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-            <div class="max-w-2xl">
-              <p class="mb-4 text-[0.65rem] font-bold uppercase tracking-[0.26em] text-primary">{currentSeries.label} · Abril</p>
-              <h3 class="font-display text-3xl font-semibold leading-tight text-white sm:text-4xl lg:text-5xl">{currentSeries.title}</h3>
-              <p class="mt-4 text-sm leading-relaxed text-white/65 sm:text-base">{currentSeries.description}</p>
+        {/* Las series se editan desde el panel, así que la lista puede quedar
+            vacía. Sin esta guarda el inicio rompe entero. */}
+        {currentSeries && (
+          <a
+            data-animate="card"
+            data-cinematic-card
+            href={currentSeries.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`Ver serie ${currentSeries.title}`}
+            class="group relative block"
+          >
+            <div class="relative h-[24rem] overflow-hidden rounded-smooth sm:h-[30rem] lg:h-[34rem]">
+              <picture>
+                {currentSeries.mobileImage && <source media="(max-width: 767px)" srcset={currentSeries.mobileImage} />}
+                <img
+                  data-cinematic="image"
+                  src={currentSeries.image}
+                  alt={`Serie ${currentSeries.title}`}
+                  class="absolute inset-0 h-full w-full object-cover object-center [filter:brightness(0.7)_saturate(0.72)_contrast(1.1)]"
+                />
+              </picture>
             </div>
-            <span class="editorial-link shrink-0 text-white">
-              Ver en YouTube
-              <span class="material-symbols-outlined text-sm">arrow_outward</span>
-            </span>
-          </div>
-        </a>
+            <div class="relative mt-8 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+              <div class="max-w-2xl">
+                <p class="mb-4 text-[0.65rem] font-bold uppercase tracking-[0.26em] text-primary">{currentSeries.label} · Abril</p>
+                <h3 class="font-display text-3xl font-semibold leading-tight text-white sm:text-4xl lg:text-5xl">{currentSeries.title}</h3>
+                <p class="mt-4 text-sm leading-relaxed text-white/65 sm:text-base">{currentSeries.description}</p>
+              </div>
+              <span class="editorial-link shrink-0 text-white">
+                Ver en YouTube
+                <span class="material-symbols-outlined text-sm">arrow_outward</span>
+              </span>
+            </div>
+          </a>
+        )}
 
         <div class="mt-14 md:mt-20">
           <div class="mb-7 flex items-end justify-between gap-6 border-t border-white/10 pt-7">
