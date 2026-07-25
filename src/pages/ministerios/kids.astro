@@ -7,8 +7,8 @@ import Navbar from '../../components/Navbar.astro';
 <BaseLayout title="Kids | Iglesia Corazon de Fuego">
   <Navbar sticky={false} />
 
-  <main class="kids-page">
-    <section class="kids-hero">
+  <main data-cinematic-page="kids" class="kids-page">
+    <section data-animate="reveal" class="kids-hero">
       <div class="kids-hero-glow kids-hero-glow-right"></div>
       <div class="kids-hero-glow kids-hero-glow-left"></div>
 
@@ -19,7 +19,7 @@ import Navbar from '../../components/Navbar.astro';
             <span>NUEVA AVENTURA DISPONIBLE</span>
           </div>
 
-          <h1 class="kids-title">
+          <h1 data-cinematic-heading class="kids-title">
             ¡Bienvenido al lugar <span>más divertido!</span>
           </h1>
 
@@ -36,7 +36,7 @@ import Navbar from '../../components/Navbar.astro';
         </div>
 
         <div class="kids-hero-media">
-          <div class="kids-hero-card">
+          <div data-animate="card" data-cinematic-card class="kids-hero-card">
             <img
               alt="Campa Kids"
               src="/ministries/kids/campakids.jpg"
@@ -54,7 +54,7 @@ import Navbar from '../../components/Navbar.astro';
       </div>
     </section>
 
-    <section class="kids-age-section">
+    <section data-animate="reveal" class="kids-age-section">
       <div class="kids-shell">
         <div class="kids-section-heading">
           <h2>Salitas</h2>
@@ -62,7 +62,7 @@ import Navbar from '../../components/Navbar.astro';
         </div>
 
         <div class="kids-age-grid">
-          <article class="kids-age-card kids-age-card-blue">
+          <article data-animate="card" data-cinematic-card class="kids-age-card kids-age-card-blue">
             <div class="kids-age-image">
               <img
                 alt="Toddlers playing"
@@ -76,7 +76,7 @@ import Navbar from '../../components/Navbar.astro';
             </div>
           </article>
 
-          <article class="kids-age-card kids-age-card-pink">
+          <article data-animate="card" data-cinematic-card class="kids-age-card kids-age-card-pink">
             <div class="kids-age-image">
               <img
                 alt="Older kids activity"
@@ -90,7 +90,7 @@ import Navbar from '../../components/Navbar.astro';
             </div>
           </article>
 
-          <article class="kids-age-card kids-age-card-yellow">
+          <article data-animate="card" data-cinematic-card class="kids-age-card kids-age-card-yellow">
             <div class="kids-age-image">
               <img
                 alt="Kids group activity"
@@ -107,7 +107,7 @@ import Navbar from '../../components/Navbar.astro';
       </div>
     </section>
 
-    <section class="kids-parents-section">
+    <section data-animate="reveal" class="kids-parents-section">
       <div class="kids-shell kids-parents-grid">
         <div class="kids-parents-copy">
           <span class="kids-parents-badge">Equipo y dinámica</span>
@@ -125,7 +125,7 @@ import Navbar from '../../components/Navbar.astro';
               </div>
             </article>
 
-            <article class="kids-parent-list-blue">
+            <article data-animate="card" data-cinematic-card class="kids-parent-list-blue">
               <span class="material-symbols-outlined">groups</span>
               <div>
                 <h5>Ayudantes y apoyo</h5>
@@ -133,7 +133,7 @@ import Navbar from '../../components/Navbar.astro';
               </div>
             </article>
 
-            <article class="kids-parent-list-yellow">
+            <article data-animate="card" data-cinematic-card class="kids-parent-list-yellow">
               <span class="material-symbols-outlined">schedule</span>
               <div>
                 <h5>Desarrollo de la reunión</h5>

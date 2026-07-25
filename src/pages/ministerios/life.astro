@@ -17,7 +17,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   <div class="bg-[#fff8f6] text-[#2c160e] [font-family:'Plus_Jakarta_Sans',sans-serif]">
     <Navbar sticky={false} />
 
-    <main class="relative overflow-hidden">
+    <main data-cinematic-page="life" class="relative overflow-hidden">
       <section class="relative flex min-h-[calc(100vh-5rem)] items-center justify-center overflow-hidden px-6 py-12 md:py-24">
         <div class="absolute inset-0">
           <div class="absolute inset-0 bg-gradient-to-b from-black/45 via-black/20 to-[#fff8f6]"></div>
@@ -63,7 +63,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         </div>
       </section>
 
-      <section id="quienes-somos" class="bg-[#fff8f6] px-6 py-24 md:px-12">
+      <section data-animate="reveal" id="quienes-somos" class="bg-[#fff8f6] px-6 py-24 md:px-12">
         <div class="mx-auto grid max-w-7xl grid-cols-1 items-center gap-16 lg:grid-cols-2">
           <div class="relative">
             <div class="absolute -left-12 -top-12 h-48 w-48 rounded-full bg-[#fc6018]/10 blur-3xl"></div>
@@ -107,7 +107,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         </div>
       </section>
 
-      <section id="cuando-nos-reunimos" class="bg-[#fff1ed] px-6 py-24 md:px-12">
+      <section data-animate="reveal" id="cuando-nos-reunimos" class="bg-[#fff1ed] px-6 py-24 md:px-12">
         <div class="mx-auto mb-16 max-w-5xl text-center">
           <span class="text-sm font-bold uppercase tracking-widest text-[#a83900]">Nuestro Ritmo</span>
           <h2 class="mt-4 text-4xl font-extrabold text-[#2c160e] md:text-5xl">¿Cuándo nos reunimos?</h2>
@@ -155,7 +155,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         </div>
       </section>
 
-      <section id="para-quien-es" class="bg-[#fff8f6] px-6 py-24 md:px-12">
+      <section data-animate="reveal" id="para-quien-es" class="bg-[#fff8f6] px-6 py-24 md:px-12">
         <div class="mx-auto flex max-w-7xl flex-col gap-16 lg:flex-row-reverse lg:items-center">
           <div class="lg:w-1/2">
             <div class="relative">
@@ -206,7 +206,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         </div>
       </section>
 
-      <section id="contacto" class="overflow-hidden bg-[#fff8f6] px-6 py-24 md:px-12">
+      <section data-animate="reveal" id="contacto" class="overflow-hidden bg-[#fff8f6] px-6 py-24 md:px-12">
         <div class="relative mx-auto max-w-4xl">
           <div class="absolute left-1/2 top-0 -z-10 h-full w-[120%] -translate-x-1/2 rounded-[4rem] bg-gradient-to-br from-[#a60f0f] via-[#7d0004] to-[#fc6018] opacity-10 blur-3xl"></div>
           <div class="flex flex-col items-center gap-8 rounded-[2rem] border border-[#e4beb9]/40 bg-[#ffdbd0]/35 p-12 text-center shadow-[0_24px_48px_-12px_rgba(44,22,14,0.08)] backdrop-blur-sm md:p-20">
