@@ -65,10 +65,10 @@ const annexLinks = [
   ]}
 >
   {transparent && <div data-nav-scrim aria-hidden="true" class="pointer-events-none absolute inset-x-0 top-0 h-[7.5rem]"></div>}
-  <div class:list={[
-    'relative z-10 mx-auto',
-    transparent ? 'w-full max-w-none pl-3 pr-4 sm:pl-4 sm:pr-6 lg:pl-6 lg:pr-8' : 'max-w-7xl px-4 sm:px-6 lg:px-8',
-  ]}>
+  {/* Mismo contenedor que el contenido de las paginas (max-w-[90rem] +
+      px-5/6/8), asi el logo alinea con los titulos. Antes variaba segun si la
+      barra era transparente: 24px en home contra 105px en el resto. */}
+  <div class="relative z-10 mx-auto w-full max-w-[90rem] px-5 sm:px-6 lg:px-8">
     <div class="flex justify-between items-center h-20">
       <div class="flex-shrink-0 flex items-center gap-3">
         <a href="/" class="inline-flex items-center gap-3">
