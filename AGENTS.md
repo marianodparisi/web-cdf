@@ -7,6 +7,9 @@ Reglas esenciales:
 - Trabajar dentro de la única distribución Debian de WSL, en `/home/cdf/web-cdf`.
 - Cargar nvm y usar Node `v24.12.0` antes de ejecutar npm.
 - No iniciar, detener ni reiniciar el servidor del puerto `4321` salvo pedido explícito.
+- No reintroducir TinaCMS ni ningún CMS externo. El panel es propio y vive en `/admin`; el porqué está en la memoria.
+- Tratar `.env*` como sensible: no leerlo, mostrarlo ni versionarlo.
+- Ejecutar `npm run check` además del build; tiene que quedar en 0 errores.
 - Preservar cambios ajenos en el worktree; no limpiar ni restaurar archivos fuera del alcance solicitado.
 - Mantener los textos y las imágenes asignadas a cada sección, salvo autorización explícita para cambiarlos.
 - Seguir el sistema visual editorial, ARK minimalista, soft-brutalist, premium agency y motion-first documentado en la memoria.

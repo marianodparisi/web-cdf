@@ -19,7 +19,35 @@ Sitio web de Iglesia Corazón de Fuego. La experiencia debe comunicar presencia,
   source ~/.nvm/nvm.sh && nvm use 24.12.0 >/dev/null && npm run build
   ```
 
-- Astro 7 no funciona con el Node 18 del sistema.
+- Astro 7 exige Node `>=22.12.0` según su campo `engines`. No funciona con el Node 18 del sistema.
+- `dist/` y `.astro/` no se versionan. `dist/` lo genera el build; lo que hubo versionado alguna vez eran HTML de cuando el sitio era estático.
+- Al clonar en limpio hay que correr `npm run build` antes de esperar un `dist/`.
+
+## Deploy
+
+- **Hostinger compila en el servidor.** No se sube `dist/` por FTP: el servidor
+  hace `npm install` y `npm run build`. Verificado el 25 de julio de 2026.
+- Consecuencias comprobadas de eso:
+  - `astro build` **limpia `dist/` antes de compilar**. Se probó plantando una
+    SPA falsa y un archivo huérfano en `dist/client/`: los borró a los dos. No
+    hay que limpiar restos de deploys viejos a mano.
+  - `sharp` es dependencia nativa, pero como `npm install` corre en el
+    servidor, se baja los binarios de linux que correspondan. No subir un
+    `node_modules` armado en Windows.
+  - `astro` está en `dependencies`, así que el build funciona con
+    `npm install --production`. `@astrojs/check` y `typescript` son
+    devDependencies y sólo hacen falta para `npm run check`.
+  - **El build no necesita ninguna variable de entorno.** Se compiló con el
+    entorno vacío y salió bien, sin tocar MySQL ni crear el directorio de
+    datos. Si el build falla, es Node o `npm install`, nunca configuración.
+- Las variables tienen que estar en el entorno de **ejecución**, no sólo en el
+  del build. Si Hostinger los separa, van en los dos: un build exitoso con un
+  login que falla con `db-connection` es exactamente ese error.
+- `CDF_DATA_DIR` en producción: `/home/u857415758/cdf-data`. Fuera de `dist/`
+  para que el build no se lleve el contenido, y fuera de `public_html` para
+  que no sea navegable por web. La carpeta se crea sola.
+- El usuario de Hostinger (`u857415758`) se dedujo del nombre de la base
+  `u857415758_cdfweb`.
 
 ## Stack
 
@@ -57,8 +85,82 @@ En su lugar hay un panel propio sobre la auth que ya existía:
   panel, así revocar un acceso tiene efecto al instante.
 - Los slugs no se editan nunca: son las URLs públicas.
 
-Falta construir: la UI del panel, la subida de imágenes y la gestión de
-usuarios.
+### El panel
+
+Está construido y verificado contra la base real. Vive en `/admin`, protegido
+por `src/middleware.ts`. Son páginas Astro con formularios HTML comunes que
+postean a endpoints en `src/pages/api/admin/`. **No usa framework de cliente
+ni build propio**, y esa simplicidad es deliberada: el público son voluntarios
+que no manejan computadoras.
+
+- `src/layouts/AdminLayout.astro`: cascarón, carteles de éxito y error por
+  querystring (`?ok=` / `?error=`), aviso antes de perder lo escrito, vista
+  previa de la foto elegida y bloqueo de doble submit.
+- `src/components/admin/Field.astro` y `ImageField.astro`.
+- `src/lib/admin-guard.ts`: `getSession`, `canEdit`, `denyRedirect`, `backTo`.
+- Secciones: devocionales (alta, edición, borrado, orden), anuncios, series,
+  ministerios y usuarios. El tablero muestra sólo lo que esa persona puede
+  editar.
+
+Criterios de UX que conviene no romper:
+
+- Todo en castellano y sin jerga. Nada de "colección", "slug" ni "publicar".
+- Una pantalla por tarea real, no un explorador de contenido.
+- Los párrafos se editan como un textarea separado por líneas en blanco. **No
+  hace falta editor rich-text**: el contenido ya es `string[]` de párrafos, y
+  meter uno sería la mayor fuente de complejidad del panel.
+- Cada formulario avisa qué va a pasar ("Ya se ve en el sitio").
+
+### Trampas encontradas, no volver a pisarlas
+
+- Los botones de submit se deshabilitan en el **próximo tick**, no dentro del
+  handler. Varios formularios mandan la acción en el `value` del botón y un
+  botón deshabilitado se excluye del envío: "Borrar" terminaba guardando.
+- Un `<input type="hidden" name="accion">` junto a botones que también mandan
+  `accion` hace que `formData.get()` devuelva el del hidden. La acción va en
+  los botones.
+- El `<textarea>` no lleva saltos de línea alrededor del valor: lo que va
+  entre las etiquetas es contenido literal y la indentación del template se le
+  mete al texto.
+- Nunca renderizar `<img src="">`: el navegador lo resuelve como la URL de la
+  página y la vuelve a pedir entera.
+- El sitio público tiene que tolerar contenido incompleto o vacío. El inicio
+  filtra las series sin portada ni link, y `currentSeries` va detrás de una
+  guarda porque borrar todas las series rompía la home.
+
+### Imágenes
+
+- `src/lib/content/uploads.ts`. `rotate()` **primero**, si no las fotos de
+  celular quedan acostadas. Resize a 1600px, WebP 80, se descartan el original
+  y los metadatos (traen GPS). El nombre es el hash del contenido, así que la
+  misma foto subida dos veces es un solo archivo y se puede cachear para
+  siempre.
+- Las sirve `src/pages/uploads/[...file].ts` desde `CDF_DATA_DIR`, con guarda
+  contra path traversal. **No van en `public/`**: el build limpia `dist/` y se
+  llevaría puestas todas las fotos cargadas.
+- `src/lib/content/orphans.ts` borra las que dejan de estar en uso. Junta las
+  referencias de las cuatro colecciones antes de borrar nada, porque al ser
+  hashes una imagen puede estar compartida. Tiene ventana de una hora (una foto
+  recién subida todavía no está referenciada) y se cancela si el contenido no
+  se puede leer (si no, borraría todas las fotos del sitio). Busca en todos los
+  strings, no en una lista de campos, para que un campo nuevo quede cubierto
+  solo.
+
+### Seguridad
+
+- `AUTH_SECRET` firma las cookies de sesión (HMAC-SHA256 sobre el payload). El
+  payload es base64 legible, **no está encriptado**: no meter nada sensible
+  ahí. Si el secreto se filtra o queda sin definir, cualquiera se fabrica una
+  cookie de admin y el chequeo de contraseña nunca corre. En producción tiene
+  que ser aleatorio y distinto al de desarrollo.
+- Los permisos se verifican **en cada endpoint**, no sólo en las pantallas. Se
+  probó con POSTs directos como editor limitado: borrar un devocional, editar
+  un anuncio, editar un ministerio ajeno y auto-promoverse a admin. Los cuatro
+  rechazados. Al tocar el panel, mantener esa doble verificación.
+- Cambiar una contraseña **no** invalida la sesión abierta (dura hasta 8 h).
+  Para cortar el acceso al instante hay que sacarle el acceso desde el panel:
+  el usuario se busca en la base en cada request y si no está, la sesión muere.
+- No se puede borrar ni bajar a editor al último administrador.
 
 ## Archivos centrales
 
@@ -167,22 +269,69 @@ Paleta editorial vigente:
 
 ## Páginas todavía no migradas completamente
 
-- Inicio.
-- Anexos/sedes.
-- Institucionales.
-- Ministerios.
-- Devocionales.
-- Contacto y otras rutas auxiliares.
+Los commits `41a5f32`, `066943f` y `b0f3093` (25 de julio de 2026) extendieron
+el sistema editorial a inicio, anexos, institucionales, ministerios,
+devocionales y contacto. **Esa migración no fue verificada visualmente por
+quien escribe esta sección**, así que la lista de pendientes hay que
+reconfirmarla antes de darla por cerrada.
 
-Al migrarlas, reutilizar el sistema existente y evitar duplicar reglas con nombres específicos cuando convenga extraer primitivas editoriales compartidas.
+Al migrar lo que falte, reutilizar el sistema existente y evitar duplicar
+reglas con nombres específicos cuando convenga extraer primitivas editoriales
+compartidas. `src/styles/global.css` ya tiene bloques casi repetidos por página
+(`nosotros-cinematic`, `missions-cinematic`, `evangelism-cinematic`,
+`home-cinematic`) que piden esa extracción.
+
+## Pendiente
+
+### Deploy del panel — lo único que bloquea
+
+1. **Node ≥ 22.12 en hPanel.** Con 18 o 20 el build falla o rompe en runtime.
+2. Variables en el entorno de ejecución: `AUTH_SECRET` (aleatorio y distinto al
+   de desarrollo), `CDF_DATA_DIR=/home/u857415758/cdf-data`, las `MYSQL_*` y
+   las `ADMIN_*`.
+3. Dump de `admin_users` antes del primer login.
+4. **Primer login en producción.** Es el único camino que no se probó de
+   verdad: en desarrollo la base estaba vacía, en producción ya tiene datos.
+   `ensureAdminSchema()` agrega `role` con default `editor`, y el arreglo de
+   `fca3328` promueve a `ADMIN_USERNAME` si no queda ningún admin.
+   - Si aparece el tablero con las tarjetas, salió bien.
+   - Si aparece "todavía no tenés ninguna sección asignada", la promoción no
+     agarró. Se arregla con
+     `UPDATE admin_users SET role='admin' WHERE username='mparisi';`
+5. Borrar de hPanel las variables que quedaron de Tina: `MONGODB_URI`,
+   `MONGODB_DB_NAME`, `GITHUB_OWNER`, `GITHUB_REPO`,
+   `GITHUB_PERSONAL_ACCESS_TOKEN`, `NEXT_PUBLIC_TINA_*`, `TINA_TOKEN`,
+   `TINA_PUBLIC_IS_LOCAL`.
+6. **Revocar el PAT de GitHub.** Ya no lo usa nada, y estuvo meses en un
+   `.env.local` que el `.gitignore` no cubría.
+
+### Ideas que quedaron conversadas pero sin hacer
+
+- Textos editoriales de las páginas editables desde el panel. Es el paso más
+  invasivo: hay que sacar el copy de los `.astro` sin romper el sistema visual.
+  El usuario lo puso como prioridad menor que devocionales y ministerios.
+- Restaurar una versión desde `history/`. Las copias con fecha ya se guardan en
+  cada escritura; falta la pantalla que las liste y permita volver atrás.
+- `astro check` reporta 7 hints de "declarado y nunca usado" sobre
+  `denyRedirect` en las páginas de `/admin`. Son falsos: el language server no
+  ve los usos que están después de un `return` temprano en el frontmatter. No
+  perder tiempo "arreglándolos".
 
 ## Estado y precauciones del repositorio
 
-- El worktree puede contener cambios previos y artefactos generados por Astro/Tina.
 - No usar `git reset --hard`, `git checkout --` ni limpiezas destructivas.
 - No revertir archivos que no pertenezcan al pedido actual.
-- `dist/` y `.astro/` pueden cambiar al compilar; no asumir que sus diferencias deben eliminarse.
+- `dist/` y `.astro/` ya no se versionan (commit `9c9ffea`). Al 25 de julio de
+  2026 el worktree quedó limpio; si aparecen diferencias raras, no asumir que
+  hay que borrarlas.
+- Tratar `.env*` como sensible: no leerlo, mostrarlo ni versionarlo. El
+  `.gitignore` traía `*.env`, que sólo matchea archivos **terminados** en
+  `.env` y dejaba `.env.local` afuera. Ya está corregido.
 - Advertencia de build conocida: Astro ignora `getStaticPaths()` en `src/pages/devocional/[slug].astro` porque la ruta es dinámica bajo salida server. No bloquea el build.
+- Para verificar sin credenciales, el endpoint de login distingue los casos por
+  el código de error del redirect: `db-auth` (usuario/password o whitelist),
+  `db-connection` (no llega al host), `1` (conecta bien, credenciales
+  inexistentes).
 
 ## Criterio de terminado
 
