@@ -141,6 +141,47 @@ Criterios de UX que conviene no romper:
   filtra las series sin portada ni link, y `currentSeries` va detrás de una
   guarda porque borrar todas las series rompía la home.
 
+### Ministerios: la ficha y los datos de cada uno
+
+Separación hecha el 26 de julio de 2026. `Ministry` tiene dos mitades y hay que
+mantenerlas separadas:
+
+- **La ficha** (`name`, `area`, `image`, `excerpt`) se ve en el navbar, en el
+  inicio y en el listado de `/ministerios`. No es del ministerio solo, así que
+  **sólo la edita un admin**. El chequeo vive también en
+  `api/admin/ministerios.ts`, no sólo en el formulario: un editor puede mandar
+  un POST a mano. Si no es admin, esos campos se toman de lo que ya está
+  guardado y el archivo del logo ni se mira.
+- **Lo demás** lo edita quien lidera: los textos largos y los datos que cambian
+  seguido (`meetingDay`, `meetingHours`, `place`, `mapUrl`, `noticeTitle`,
+  `noticeText`, `whatsapp`, `instagram`, `photo`). Son **todos opcionales**: el
+  JSON que ya está en disco no los tiene y cada página esconde el bloque entero
+  cuando vienen vacíos, en lugar de dejar un hueco.
+
+`src/lib/content/ministry-details.ts` arma los href. Acepta lo que una persona
+escribiría de verdad — un número suelto, `@usuario`, un link pegado sin
+`https://` — porque quien carga esto no es programador. Un link sin esquema el
+navegador lo toma como ruta interna y el botón termina en un 404.
+
+Las diez páginas leen del store. Las cinco que usan `MinistryTemplate` reciben
+`ministry={ministry}` y muestran una banda de novedad y otra de datos prácticos
+que aparecen sólo si hay algo cargado. Las cuatro con diseño propio (`arde`,
+`kids`, `life`, `gold`) usan los mismos campos dentro de su propio maquetado: no
+se les impuso un componente compartido a propósito, porque cada una tiene una
+estética distinta.
+
+Detalles que conviene no repisar:
+
+- En `arde` el mismo dato se mostraba en tres lugares (dos badges y la tabla de
+  horarios) y el link de Maps en otros tres. Ahora salen todos de un campo. La
+  píldora chica del hero muestra sólo la hora: es angosta y el día ya se lee en
+  Horarios.
+- `.kids-badge` lleva `text-transform: uppercase` en CSS. Antes el texto estaba
+  escrito en mayúscula a mano dentro del HTML, y quien carga el aviso escribe
+  normal.
+- Los botones de WhatsApp de `life` y `gold` apuntaban a `https://wa.me/` sin
+  número. Mientras no haya un número cargado el botón no se muestra.
+
 ### Imágenes
 
 - `src/lib/content/uploads.ts`. `rotate()` **primero**, si no las fotos de
@@ -316,34 +357,18 @@ git** — los únicos `.env*` versionados alguna vez son los dos `.example`
 (commits `91c597d` y `4ad5203`) y no hay ningún `ghp_` ni `github_pat_` en
 ningún commit. Es higiene, no urgencia.
 
-### Lo próximo: slots por ministerio
+### Contenido que quedó desprolijo y hay que resolver con el usuario
 
-Decidido el 26 de julio de 2026 y todavía sin hacer. Hoy el formulario de
-ministerios está invertido: deja editar `name`, `area`, `image` y `excerpt` —
-identidad y tarjeta de `/ministerios`, que se ven en el navbar y en la home — y
-no deja tocar nada de lo que sí cambia dentro de la página del ministerio. Un
-líder no tiene que poder cambiar el logo ni el nombre.
-
-Lo acordado:
-
-- `name`, `area`, `image` y `excerpt` pasan a ser sólo de admin.
-- Cada ministerio suma un set chico y fijo de slots, iguales para los diez, que
-  cada página renderiza con su propio diseño y oculta si están vacíos: día y
-  hora, dónde (texto + link de mapa), aviso de la próxima actividad, contacto
-  (WhatsApp e Instagram) y foto de la última actividad.
-- El alcance del editor queda contenido a su propia página. No toca navbar,
-  home ni el listado.
-
-Datos duplicados que hay que unificar al hacerlo: "Sab 18:00" está escrito tres
-veces en `arde.astro` (líneas 34, 49 y 108) y el link de Maps otras tres (95,
-124 y 140). `life.astro:221` y `gold.astro:228` tienen `href="https://wa.me/"`
-sin número: los botones de WhatsApp no llevan a ningún lado.
-
-Sólo cuatro de las diez páginas de ministerio leen del store
-(`alabanza-y-adoracion`, `carcelario`, `multimedia`, `protocolo`). Las otras
-seis están hardcodeadas, así que hoy guardar en el panel no cambia la página.
-`schedule` y `participation` ya existen en los datos y se guardan, pero ninguna
-página bespoke los muestra.
+- **`life` y `gold` se contradicen con su ficha.** En `src/data/ministries.ts`
+  Life figura como ministerio de jóvenes de 13 a 25 y Gold como ministerio de
+  mujeres, pero las dos páginas hablan de matrimonios y parejas. La tarjeta del
+  listado y la página dicen cosas distintas. Hay que preguntar cuál es la
+  correcta; no inventarla.
+- Dos ministerios tienen la foto de ficha apuntando a un `lh3.googleusercontent`
+  externo (`carcelario` y `firmes-y-adelante`). Son URLs de terceros que pueden
+  caerse solas. Conviene subir esas fotos desde el panel.
+- `gold` tenía "Próximo encuentro: Octubre 24" escrito a mano. Se sacó al pasar
+  a los campos editables: hoy no se muestra hasta que alguien cargue día y hora.
 
 ### Ideas que quedaron conversadas pero sin hacer
 
