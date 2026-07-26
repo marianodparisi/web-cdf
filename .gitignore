@@ -31,6 +31,13 @@ package-lock.json
 # Contenido, historial e imagenes del panel. Viven fuera del repo a proposito.
 .data/
 
+# Salida del build. Se genera con `npm run build` y se sube por FTP; lo que
+# habia versionado eran HTML de cuando el sitio era estatico, de otro build.
+dist/
+
+# Cache y tipos que Astro regenera en cada build.
+.astro/
+
 packages/astro/src/**/*.prebuilt.ts
 packages/astro/src/**/*.prebuilt-dev.ts
 !packages/astro/vendor/vite/dist
