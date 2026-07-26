@@ -1,4 +1,13 @@
 ---
+import type { Ministry } from '../data/ministries';
+import {
+  externalHref,
+  hasNotice,
+  hasSchedule,
+  instagramHref,
+  whatsappHref,
+} from '../lib/content/ministry-details';
+
 interface Props {
   title: string;
   tagline: string;
@@ -12,6 +21,8 @@ interface Props {
   participationText: string;
   scheduleTitle: string;
   scheduleText: string;
+  /** Los datos prácticos que carga quien lidera el ministerio. */
+  ministry?: Ministry;
 }
 
 const {
@@ -27,6 +38,7 @@ const {
   participationText,
   scheduleTitle,
   scheduleText,
+  ministry,
 } = Astro.props as Props;
 
 const pillars = [
@@ -34,6 +46,19 @@ const pillars = [
   { label: participationTitle, text: participationText, index: '02' },
   { label: scheduleTitle, text: scheduleText, index: '03' },
 ];
+
+const mapHref = externalHref(ministry?.mapUrl);
+const whatsapp = whatsappHref(ministry?.whatsapp);
+const instagram = instagramHref(ministry?.instagram);
+const meetingText = [ministry?.meetingDay, ministry?.meetingHours].filter(Boolean).join(' · ');
+
+// La banda de datos prácticos existe sólo si hay algo que mostrar. Un
+// ministerio que todavía no cargó nada se ve igual que antes, sin huecos.
+const showDetails = Boolean(
+  ministry &&
+    (hasSchedule(ministry) || ministry.place || mapHref || whatsapp || instagram)
+);
+const showNotice = Boolean(ministry && hasNotice(ministry));
 ---
 
 <main data-cinematic-page="ministerio" class="bg-[#11110f]">
@@ -64,6 +89,34 @@ const pillars = [
       </div>
     </div>
   </section>
+
+  {
+    showNotice && (
+      <section data-animate="reveal" class="border-y border-primary/25 bg-[#f3ede1] py-10 md:py-14">
+        <div class="mx-auto grid max-w-[90rem] grid-cols-1 items-center gap-8 px-5 sm:px-6 lg:grid-cols-[1.4fr_0.6fr] lg:px-8">
+          <div data-cinematic-copy>
+            <p class="text-[0.62rem] font-bold uppercase tracking-[0.22em] text-primary">Novedad</p>
+            <p class="mt-4 font-display text-2xl font-semibold leading-tight tracking-tight text-charcoal sm:text-3xl">
+              {ministry?.noticeTitle}
+            </p>
+            {ministry?.noticeText && (
+              <p class="mt-4 max-w-2xl text-base leading-relaxed text-charcoal/70">{ministry.noticeText}</p>
+            )}
+          </div>
+
+          {ministry?.photo && (
+            <div data-animate="card" data-cinematic-card class="overflow-hidden rounded-smooth">
+              <img
+                src={ministry.photo}
+                alt=""
+                class="h-48 w-full object-cover sm:h-56"
+              />
+            </div>
+          )}
+        </div>
+      </section>
+    )
+  }
 
   <section data-animate="reveal" class="cinematic-light-section relative bg-[#e9e4da] py-20 md:py-28">
     <div class="mx-auto grid max-w-[90rem] grid-cols-1 gap-12 px-5 sm:px-6 lg:grid-cols-[0.85fr_1.15fr] lg:items-center lg:gap-20 lg:px-8">
@@ -99,4 +152,63 @@ const pillars = [
       }
     </div>
   </section>
+
+  {
+    showDetails && (
+      <section data-animate="reveal" class="cinematic-light-section bg-[#e9e4da] py-20 md:py-24">
+        <div class="mx-auto max-w-[90rem] px-5 sm:px-6 lg:px-8">
+          <p class="text-[0.62rem] font-bold uppercase tracking-[0.22em] text-primary">En concreto</p>
+
+          <div
+            data-cinematic-copy
+            class="mt-10 grid grid-cols-1 gap-10 border-t border-charcoal/15 pt-10 sm:grid-cols-2 lg:grid-cols-3"
+          >
+            {meetingText && (
+              <div>
+                <p class="text-xs font-bold uppercase tracking-[0.18em] text-charcoal/45">Cuándo</p>
+                <p class="mt-3 font-display text-xl font-semibold text-charcoal">{meetingText}</p>
+              </div>
+            )}
+
+            {(ministry?.place || mapHref) && (
+              <div>
+                <p class="text-xs font-bold uppercase tracking-[0.18em] text-charcoal/45">Dónde</p>
+                {ministry?.place && (
+                  <p class="mt-3 whitespace-pre-line text-base leading-relaxed text-charcoal/75">
+                    {ministry.place}
+                  </p>
+                )}
+                {mapHref && (
+                  <a class="editorial-link mt-4 text-charcoal" href={mapHref} target="_blank" rel="noopener noreferrer">
+                    Ver en el mapa
+                    <span class="material-symbols-outlined text-sm">arrow_outward</span>
+                  </a>
+                )}
+              </div>
+            )}
+
+            {(whatsapp || instagram) && (
+              <div>
+                <p class="text-xs font-bold uppercase tracking-[0.18em] text-charcoal/45">Contacto</p>
+                <div class="mt-3 flex flex-col items-start gap-3">
+                  {whatsapp && (
+                    <a class="editorial-link text-charcoal" href={whatsapp} target="_blank" rel="noopener noreferrer">
+                      Escribir por WhatsApp
+                      <span class="material-symbols-outlined text-sm">arrow_outward</span>
+                    </a>
+                  )}
+                  {instagram && (
+                    <a class="editorial-link text-charcoal" href={instagram} target="_blank" rel="noopener noreferrer">
+                      Instagram
+                      <span class="material-symbols-outlined text-sm">arrow_outward</span>
+                    </a>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+    )
+  }
 </main>

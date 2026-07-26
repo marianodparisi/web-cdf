@@ -1,7 +1,16 @@
 ---
 import Footer from '../../components/Footer.astro';
 import Navbar from '../../components/Navbar.astro';
+import { getMinistryBySlug } from '../../lib/content/collections';
+import { externalHref, hasSchedule, placeLines } from '../../lib/content/ministry-details';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const ministry = await getMinistryBySlug('arde');
+if (!ministry) throw new Error('Ministerio arde no encontrado');
+
+const mapHref = externalHref(ministry.mapUrl);
+const address = placeLines(ministry.place);
+const showSchedule = hasSchedule(ministry);
 ---
 
 <BaseLayout title="Arde | Iglesia Corazon de Fuego">
@@ -31,7 +40,8 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         <div class="w-1/3 h-full organic-card bg-cover bg-center -rotate-6 shadow-xl border-4 border-white" style="background-image: url('/ministries/arde/ardehero.png');"></div>
         <div class="w-2/5 h-[110%] organic-card bg-arde-yellow flex flex-col justify-center p-4 z-10 shadow-2xl border-4 border-white text-arde-orange">
           <span class="font-semibold text-xs opacity-90">Proximo Evento</span>
-          <span class="text-[10px] font-bold">Sab 18:00</span>
+          {ministry.meetingDay && <span class="text-[11px] font-bold leading-tight">{ministry.meetingDay}</span>}
+          {ministry.meetingHours && <span class="text-[10px] font-semibold leading-tight opacity-90">{ministry.meetingHours}</span>}
         </div>
         <a href="https://www.instagram.com/p/DUvsY8Bjlwk/" target="_blank" rel="noopener noreferrer" class="w-1/3 h-full organic-card overflow-hidden rotate-6 shadow-xl border-4 border-white block">
           <img alt="Serie" class="w-full h-full object-cover" src="/ministries/arde/serie.png" />
@@ -46,7 +56,12 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         <div class="hero-card bg-arde-yellow p-5 sm:p-8 asymmetric-grid-item text-arde-orange h-[180px] sm:h-[220px] flex flex-col justify-center">
           <div class="flex justify-between items-center mb-6">
             <span class="font-semibold opacity-90">Proximo Evento</span>
-            <span class="bg-white/20 px-3 py-1 rounded-full text-xs font-bold">Sab 18:00</span>
+            {/* Sólo la hora: es una píldora angosta y el día ya se lee en Horarios. */}
+            {showSchedule && (
+              <span class="bg-white/20 px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap">
+                {ministry.meetingHours || ministry.meetingDay}
+              </span>
+            )}
           </div>
           <div class="flex items-end gap-2 h-20 mb-6">
             <div class="w-8 bg-white/40 rounded-lg h-1/2"></div>
@@ -92,9 +107,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
           <span class="px-4 py-2 rounded-full bg-white text-arde-dark font-semibold border border-[#f3c6b5]">Adolescentes 11 a 18</span>
           <span class="px-4 py-2 rounded-full bg-white text-arde-dark font-semibold border border-[#f3c6b5]">Amigos + fe + diversion</span>
         </div>
-        <a href="https://maps.app.goo.gl/nbkxbz89Rt92Aqx78" target="_blank" rel="noopener noreferrer" class="inline-flex w-fit items-center justify-center bg-arde-orange text-white px-7 sm:px-9 py-4 pill-capsule font-bold text-base sm:text-lg shadow-[0_18px_40px_-18px_rgba(232,93,53,0.9)]">
-          Quiero info del campa
-        </a>
+        {mapHref && (
+          <a href={mapHref} target="_blank" rel="noopener noreferrer" class="inline-flex w-fit items-center justify-center bg-arde-orange text-white px-7 sm:px-9 py-4 pill-capsule font-bold text-base sm:text-lg shadow-[0_18px_40px_-18px_rgba(232,93,53,0.9)]">
+            Quiero info del campa
+          </a>
+        )}
       </div>
     </div>
   </section>
@@ -103,10 +120,12 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     <div class="flex-1 border-4 border-arde-dark p-6 sm:p-12 asymmetric-grid-item">
       <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-6 sm:mb-8 font-['Poppins']">Horarios</h2>
       <ul class="space-y-6">
-        <li class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 border-b border-gray-100 pb-4">
-          <span class="font-bold text-lg sm:text-xl text-arde-orange">Sabados</span>
-          <span class="text-gray-500 text-base sm:text-lg">18:00 - 20:00 hs</span>
-        </li>
+        {showSchedule && (
+          <li class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 border-b border-gray-100 pb-4">
+            <span class="font-bold text-lg sm:text-xl text-arde-orange">{ministry.meetingDay}</span>
+            <span class="text-gray-500 text-base sm:text-lg">{ministry.meetingHours}</span>
+          </li>
+        )}
         <li class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 border-b border-gray-100 pb-4">
           <span class="font-bold text-lg sm:text-xl">Edad</span>
           <span class="text-gray-500 text-base sm:text-lg">11 a 18 anos</span>
@@ -116,14 +135,22 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
     <div class="flex-1 bg-arde-orange p-6 sm:p-12 asymmetric-grid-item text-white flex flex-col justify-between">
       <div>
         <h2 class="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-4 font-['Poppins']">Ubicacion</h2>
-        <p class="text-base sm:text-xl opacity-90 leading-relaxed mb-6 sm:mb-8">
-          Av. Pres. Peron 251 <br />
-          B1706 Villa Sarmiento, Provincia de Buenos Aires
-        </p>
+        {address.length > 0 && (
+          <p class="text-base sm:text-xl opacity-90 leading-relaxed mb-6 sm:mb-8">
+            {address.map((line, index) => (
+              <Fragment>
+                {index > 0 && <br />}
+                {line}
+              </Fragment>
+            ))}
+          </p>
+        )}
       </div>
-      <a href="https://maps.app.goo.gl/nbkxbz89Rt92Aqx78" target="_blank" rel="noopener noreferrer" class="bg-white text-arde-dark px-8 sm:px-10 py-4 sm:py-5 pill-capsule font-bold text-base sm:text-lg text-center">
-        Ver en Google Maps
-      </a>
+      {mapHref && (
+        <a href={mapHref} target="_blank" rel="noopener noreferrer" class="bg-white text-arde-dark px-8 sm:px-10 py-4 sm:py-5 pill-capsule font-bold text-base sm:text-lg text-center">
+          Ver en Google Maps
+        </a>
+      )}
     </div>
   </section>
 
@@ -137,9 +164,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         <p class="text-base sm:text-lg md:text-xl text-gray-300 mb-8 sm:mb-12 max-w-2xl mx-auto">
           No importa de donde vengas o en que creas, aqui siempre hay un lugar para ti.
         </p>
-        <a href="https://maps.app.goo.gl/nbkxbz89Rt92Aqx78" target="_blank" rel="noopener noreferrer" class="bg-white text-arde-dark text-base sm:text-xl px-8 sm:px-12 py-5 sm:py-6 pill-capsule font-bold inline-block">
-          Quiero ser parte ahora
-        </a>
+        {mapHref && (
+          <a href={mapHref} target="_blank" rel="noopener noreferrer" class="bg-white text-arde-dark text-base sm:text-xl px-8 sm:px-12 py-5 sm:py-6 pill-capsule font-bold inline-block">
+            Quiero ser parte ahora
+          </a>
+        )}
       </div>
     </div>
   </section>

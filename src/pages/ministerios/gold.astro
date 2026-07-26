@@ -1,7 +1,15 @@
 ---
 import Footer from '../../components/Footer.astro';
 import Navbar from '../../components/Navbar.astro';
+import { getMinistryBySlug } from '../../lib/content/collections';
+import { whatsappHref } from '../../lib/content/ministry-details';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const ministry = await getMinistryBySlug('gold');
+if (!ministry) throw new Error('Ministerio gold no encontrado');
+
+const whatsapp = whatsappHref(ministry.whatsapp);
+const nextMeeting = [ministry.meetingDay, ministry.meetingHours].filter(Boolean).join(' · ');
 ---
 
 <BaseLayout title="Gold | Iglesia Corazón de Fuego">
@@ -224,15 +232,21 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
             Estamos listos para caminar junto a ustedes en la construcción de un matrimonio que brille con luz propia. El pacto es eterno, la jornada es gloriosa.
           </p>
           <div class="inline-flex flex-col items-center gap-4 sm:flex-row">
-            <a
-              href="https://wa.me/"
-              class="rounded-xl bg-gradient-to-br from-[#7b5800] to-[#e1aa36] px-12 py-5 [font-family:'Plus_Jakarta_Sans',sans-serif] text-sm font-bold uppercase tracking-widest text-white shadow-[0_20px_40px_-15px_rgba(123,88,0,0.3)] transition-all hover:shadow-[0_25px_50px_-12px_rgba(123,88,0,0.4)]"
-            >
-              Inscribirse ahora
-            </a>
-            <div class="[font-family:'Plus_Jakarta_Sans',sans-serif] px-8 py-5 text-sm font-bold uppercase tracking-widest text-[#4d4635]">
-              Próximo encuentro: Octubre 24
-            </div>
+            {whatsapp && (
+              <a
+                href={whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="rounded-xl bg-gradient-to-br from-[#7b5800] to-[#e1aa36] px-12 py-5 [font-family:'Plus_Jakarta_Sans',sans-serif] text-sm font-bold uppercase tracking-widest text-white shadow-[0_20px_40px_-15px_rgba(123,88,0,0.3)] transition-all hover:shadow-[0_25px_50px_-12px_rgba(123,88,0,0.4)]"
+              >
+                Inscribirse ahora
+              </a>
+            )}
+            {nextMeeting && (
+              <div class="[font-family:'Plus_Jakarta_Sans',sans-serif] px-8 py-5 text-sm font-bold uppercase tracking-widest text-[#4d4635]">
+                Próximo encuentro: {nextMeeting}
+              </div>
+            )}
           </div>
         </div>
       </section>

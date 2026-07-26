@@ -1,7 +1,16 @@
 ---
 import Footer from '../../components/Footer.astro';
 import Navbar from '../../components/Navbar.astro';
+import { getMinistryBySlug } from '../../lib/content/collections';
+import { hasSchedule, instagramHref, whatsappHref } from '../../lib/content/ministry-details';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const ministry = await getMinistryBySlug('life');
+if (!ministry) throw new Error('Ministerio life no encontrado');
+
+const whatsapp = whatsappHref(ministry.whatsapp);
+const instagram = instagramHref(ministry.instagram);
+const meetingText = [ministry.meetingDay, ministry.meetingHours].filter(Boolean).join(' a las ');
 ---
 
 <BaseLayout title="Life | Iglesia Corazón de Fuego">
@@ -120,31 +129,32 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
         <div class="mx-auto max-w-7xl">
           <div class="overflow-hidden rounded-[1.75rem] bg-white shadow-[0_24px_48px_-12px_rgba(44,22,14,0.08)] lg:flex">
             <div class="flex flex-1 flex-col justify-center gap-8 p-10 lg:p-16">
-              <div class="flex items-start gap-6">
-                <div class="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-[#a83900]/10 text-[#a83900]">
-                  <span class="material-symbols-outlined text-3xl">calendar_today</span>
+              {hasSchedule(ministry) && (
+                <div class="flex items-start gap-6">
+                  <div class="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-[#a83900]/10 text-[#a83900]">
+                    <span class="material-symbols-outlined text-3xl">calendar_today</span>
+                  </div>
+                  <div>
+                    <h4 class="mb-2 text-xl font-bold text-[#2c160e]">Reuniones Semanales</h4>
+                    <p class="text-[#5b403d]">
+                      {meetingText}. Alternamos entre estudios bíblicos, cenas en casas y actividades
+                      recreativas.
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h4 class="mb-2 text-xl font-bold text-[#2c160e]">Reuniones Semanales</h4>
-                  <p class="text-[#5b403d]">
-                    Cada viernes a las 7:30 PM. Alternamos entre estudios bíblicos, cenas en casas y actividades
-                    recreativas.
-                  </p>
-                </div>
-              </div>
+              )}
 
-              <div class="flex items-start gap-6">
-                <div class="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-[#ffba38]/25 text-[#513700]">
-                  <span class="material-symbols-outlined text-3xl">location_on</span>
+              {ministry.place && (
+                <div class="flex items-start gap-6">
+                  <div class="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-2xl bg-[#ffba38]/25 text-[#513700]">
+                    <span class="material-symbols-outlined text-3xl">location_on</span>
+                  </div>
+                  <div>
+                    <h4 class="mb-2 text-xl font-bold text-[#2c160e]">Dónde nos juntamos</h4>
+                    <p class="whitespace-pre-line text-[#5b403d]">{ministry.place}</p>
+                  </div>
                 </div>
-                <div>
-                  <h4 class="mb-2 text-xl font-bold text-[#2c160e]">Ubicación Flexible</h4>
-                  <p class="text-[#5b403d]">
-                    Nos gusta la variedad. A veces en el salón parroquial, a veces en el hogar de una pareja
-                    anfitriona.
-                  </p>
-                </div>
-              </div>
+              )}
 
             </div>
 
@@ -217,8 +227,11 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
             </p>
 
             <div class="flex w-full flex-col justify-center gap-4 sm:flex-row">
+              {whatsapp && (
               <a
-                href="https://wa.me/"
+                href={whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
                 class="flex items-center justify-center gap-2 rounded-2xl bg-[#25D366] px-10 py-5 text-xl font-bold text-white shadow-xl transition-colors hover:bg-[#1fb457]"
               >
                 <svg class="h-6 w-6" viewBox="0 0 24 24" aria-hidden="true">
@@ -229,8 +242,10 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                 </svg>
                 WhatsApp
               </a>
+              )}
+              {instagram && (
               <a
-                href="https://www.instagram.com/corazondefuegoiglesia/"
+                href={instagram}
                 target="_blank"
                 rel="noopener noreferrer"
                 class="flex items-center justify-center gap-2 rounded-2xl border border-[#e4beb9] bg-white px-10 py-5 text-xl font-bold text-[#2c160e] shadow-lg transition-colors hover:bg-[#fff1ed]"
@@ -243,6 +258,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
                 </svg>
                 Instagram
               </a>
+              )}
             </div>
           </div>
         </div>

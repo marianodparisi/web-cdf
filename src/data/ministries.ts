@@ -1,12 +1,31 @@
 export interface Ministry {
+  // --- Ficha: sólo la edita un administrador. Se ve en el navbar, en la home y
+  // en el listado de /ministerios, así que no es del ministerio solo.
   slug: string;
   name: string;
   area: string;
   image: string;
   excerpt: string;
+
+  // --- Lo que edita quien lidera el ministerio, dentro de su propia página.
   description: string;
   participation: string;
   schedule: string;
+
+  /**
+   * Datos que cambian seguido. Son todos opcionales a propósito: el contenido
+   * que ya está guardado en disco no los tiene, y cada página esconde el bloque
+   * entero cuando vienen vacíos en lugar de mostrar un hueco.
+   */
+  meetingDay?: string;
+  meetingHours?: string;
+  place?: string;
+  mapUrl?: string;
+  noticeTitle?: string;
+  noticeText?: string;
+  whatsapp?: string;
+  instagram?: string;
+  photo?: string;
 }
 
 export const ministries: Ministry[] = [
@@ -21,6 +40,10 @@ export const ministries: Ministry[] = [
     participation:
       'Si tenes entre 13 y 25 anos, podes sumarte en cualquier encuentro. Tambien hay equipos de servicio, discipulado y acompanamiento pastoral.',
     schedule: 'Reuniones semanales y encuentros especiales durante el mes.',
+    meetingDay: 'Cada viernes',
+    meetingHours: '19:30',
+    place: 'A veces en el salon, a veces en el hogar de una pareja anfitriona.',
+    instagram: 'https://www.instagram.com/corazondefuegoiglesia/',
   },
   {
     slug: 'gold',
@@ -33,6 +56,7 @@ export const ministries: Ministry[] = [
     participation:
       'Todas las mujeres pueden participar. Contamos con reuniones generales, grupos pequenos y actividades especiales para acompanar cada proceso.',
     schedule: 'Encuentros periodicos, talleres y jornadas de oracion.',
+    instagram: 'https://www.instagram.com/corazondefuegoiglesia/',
   },
   {
     slug: 'kids',
@@ -45,6 +69,7 @@ export const ministries: Ministry[] = [
     participation:
       'Los ninos pueden integrarse durante las reuniones generales. Tambien recibimos voluntarios con corazon pastoral para servir en el equipo.',
     schedule: 'Actividades para ninos durante los servicios y eventos familiares.',
+    noticeTitle: 'Nueva aventura disponible',
   },
   {
     slug: 'arde',
@@ -57,6 +82,10 @@ export const ministries: Ministry[] = [
     participation:
       'Cualquier persona con deseo de compartir su fe puede sumarse. Brindamos capacitacion practica y acompanamiento para cada salida.',
     schedule: 'Salidas regulares, acciones comunitarias y campanas especiales.',
+    meetingDay: 'Sabados',
+    meetingHours: '18:00 a 20:00 hs',
+    place: 'Av. Pres. Peron 251\nB1706 Villa Sarmiento, Provincia de Buenos Aires',
+    mapUrl: 'https://maps.app.goo.gl/nbkxbz89Rt92Aqx78',
   },
   {
     slug: 'carcelario',

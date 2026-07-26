@@ -12,6 +12,7 @@ if (!ministry) throw new Error('Ministerio de alabanza no encontrado');
 <BaseLayout title="Alabanza y Adoración | Iglesia Corazón de Fuego">
   <Navbar />
   <MinistryTemplate
+    ministry={ministry}
     title={ministry.name}
     tagline={ministry.excerpt}
     heroImage={ministry.image}

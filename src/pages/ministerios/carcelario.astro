@@ -12,6 +12,7 @@ if (!ministry) throw new Error('Ministerio carcelario no encontrado');
 <BaseLayout title="Ministerio Carcelario | Iglesia Corazón de Fuego">
   <Navbar />
   <MinistryTemplate
+    ministry={ministry}
     title={ministry.name}
     tagline={ministry.excerpt}
     heroImage={ministry.image}
