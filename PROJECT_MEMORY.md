@@ -101,6 +101,19 @@ que no manejan computadoras.
 - Secciones: devocionales (alta, edición, borrado, orden), anuncios, series,
   ministerios y usuarios. El tablero muestra sólo lo que esa persona puede
   editar.
+- `src/pages/admin/mi-cuenta.astro`: cada persona ve qué puede editar y se
+  cambia la contraseña sola. Pide la contraseña actual además de la cookie: una
+  sesión olvidada abierta en un teléfono ajeno no tiene que poder quedarse con
+  la cuenta. Se entra desde el nombre de usuario en el header.
+- `admin_users.last_login_at` se escribe en cada login exitoso y la pantalla de
+  usuarios muestra "Nunca entró al panel". Sirve para ver qué accesos se
+  crearon y quedaron sin estrenar. Si el UPDATE falla, el login sigue igual: es
+  un dato de gestión, no parte de la autenticación.
+- **Las secciones asignadas se guardan también para los admins**, aunque no las
+  usen (`loadAdminSession` les devuelve `[]`). Antes se borraban al promover a
+  alguien, y si más adelante volvía a editor reaparecía sin ningún acceso y sin
+  registro de lo que tenía. No volver a filtrar por rol en
+  `createAdminUser`/`updateAdminUser`.
 
 Criterios de UX que conviene no romper:
 
@@ -283,33 +296,66 @@ compartidas. `src/styles/global.css` ya tiene bloques casi repetidos por página
 
 ## Pendiente
 
-### Deploy del panel — lo único que bloquea
+### Deploy del panel — hecho
 
-1. **Node ≥ 22.12 en hPanel.** Con 18 o 20 el build falla o rompe en runtime.
-2. Variables en el entorno de ejecución: `AUTH_SECRET` (aleatorio y distinto al
-   de desarrollo), `CDF_DATA_DIR=/home/u857415758/cdf-data`, las `MYSQL_*` y
-   las `ADMIN_*`.
-3. Dump de `admin_users` antes del primer login.
-4. **Primer login en producción.** Es el único camino que no se probó de
-   verdad: en desarrollo la base estaba vacía, en producción ya tiene datos.
-   `ensureAdminSchema()` agrega `role` con default `editor`, y el arreglo de
-   `fca3328` promueve a `ADMIN_USERNAME` si no queda ningún admin.
-   - Si aparece el tablero con las tarjetas, salió bien.
-   - Si aparece "todavía no tenés ninguna sección asignada", la promoción no
-     agarró. Se arregla con
-     `UPDATE admin_users SET role='admin' WHERE username='mparisi';`
-5. Borrar de hPanel las variables que quedaron de Tina: `MONGODB_URI`,
-   `MONGODB_DB_NAME`, `GITHUB_OWNER`, `GITHUB_REPO`,
-   `GITHUB_PERSONAL_ACCESS_TOKEN`, `NEXT_PUBLIC_TINA_*`, `TINA_TOKEN`,
-   `TINA_PUBLIC_IS_LOCAL`.
-6. **Revocar el PAT de GitHub.** Ya no lo usa nada, y estuvo meses en un
-   `.env.local` que el `.gitignore` no cubría.
+El 26 de julio de 2026 el panel quedó funcionando en producción: variables
+cargadas en el entorno de ejecución, primer login probado y andando, y las
+variables viejas de Tina borradas de hPanel. Node ≥ 22.12 quedó configurado.
+
+Si alguna vez hay que rehacerlo, lo que importaba era: `AUTH_SECRET` (aleatorio
+y distinto al de desarrollo), `CDF_DATA_DIR=/home/u857415758/cdf-data`, las
+`MYSQL_*` y las `ADMIN_*`, en el entorno de **ejecución** y no solo el de build.
+Si el tablero apareciera vacío con "todavía no tenés ninguna sección asignada",
+la promoción automática a admin no agarró y se arregla con
+`UPDATE admin_users SET role='admin' WHERE username='mparisi';`
+
+Queda pendiente **revocar el PAT de GitHub** en
+`github.com/settings/tokens`. No hay endpoint de API para borrar un PAT propio:
+es un click en la web. Se verificó que el token **nunca entró al historial de
+git** — los únicos `.env*` versionados alguna vez son los dos `.example`
+(commits `91c597d` y `4ad5203`) y no hay ningún `ghp_` ni `github_pat_` en
+ningún commit. Es higiene, no urgencia.
+
+### Lo próximo: slots por ministerio
+
+Decidido el 26 de julio de 2026 y todavía sin hacer. Hoy el formulario de
+ministerios está invertido: deja editar `name`, `area`, `image` y `excerpt` —
+identidad y tarjeta de `/ministerios`, que se ven en el navbar y en la home — y
+no deja tocar nada de lo que sí cambia dentro de la página del ministerio. Un
+líder no tiene que poder cambiar el logo ni el nombre.
+
+Lo acordado:
+
+- `name`, `area`, `image` y `excerpt` pasan a ser sólo de admin.
+- Cada ministerio suma un set chico y fijo de slots, iguales para los diez, que
+  cada página renderiza con su propio diseño y oculta si están vacíos: día y
+  hora, dónde (texto + link de mapa), aviso de la próxima actividad, contacto
+  (WhatsApp e Instagram) y foto de la última actividad.
+- El alcance del editor queda contenido a su propia página. No toca navbar,
+  home ni el listado.
+
+Datos duplicados que hay que unificar al hacerlo: "Sab 18:00" está escrito tres
+veces en `arde.astro` (líneas 34, 49 y 108) y el link de Maps otras tres (95,
+124 y 140). `life.astro:221` y `gold.astro:228` tienen `href="https://wa.me/"`
+sin número: los botones de WhatsApp no llevan a ningún lado.
+
+Sólo cuatro de las diez páginas de ministerio leen del store
+(`alabanza-y-adoracion`, `carcelario`, `multimedia`, `protocolo`). Las otras
+seis están hardcodeadas, así que hoy guardar en el panel no cambia la página.
+`schedule` y `participation` ya existen en los datos y se guardan, pero ninguna
+página bespoke los muestra.
 
 ### Ideas que quedaron conversadas pero sin hacer
 
 - Textos editoriales de las páginas editables desde el panel. Es el paso más
   invasivo: hay que sacar el copy de los `.astro` sin romper el sistema visual.
   El usuario lo puso como prioridad menor que devocionales y ministerios.
+- Del panel de usuarios quedaron afuera a propósito, por prioridad: cambiar la
+  contraseña **no** cierra las sesiones abiertas (se arreglaría con una columna
+  `password_changed_at` y un `issuedAt` en el payload de la cookie); el email y
+  el usuario no se pueden editar después de crear la cuenta; y los cambios de
+  acceso no quedan registrados — las ediciones de contenido sí son atribuibles
+  por `history/`, pero "quién le dio admin a quién" no.
 - Restaurar una versión desde `history/`. Las copias con fecha ya se guardan en
   cada escritura; falta la pantalla que las liste y permita volver atrás.
 - `astro check` reporta 7 hints de "declarado y nunca usado" sobre

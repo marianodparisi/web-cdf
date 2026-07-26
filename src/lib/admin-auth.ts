@@ -25,6 +25,16 @@ type AdminUserRow = {
   role: AdminRole;
 };
 
+/** mysql2 devuelve DATETIME como `Date`, pero según el driver puede venir string. */
+const toDate = (value: unknown): Date | null => {
+  if (value instanceof Date) return value;
+  if (typeof value === 'string') {
+    const parsed = new Date(value);
+    return Number.isNaN(parsed.getTime()) ? null : parsed;
+  }
+  return null;
+};
+
 const readEnv = (name: string) => {
   const metaEnv = (import.meta as ImportMeta & { env?: Record<string, string | undefined> }).env;
   return metaEnv?.[name] ?? process.env[name];
@@ -126,6 +136,12 @@ export const ensureAdminSchema = async () => {
     );
   }
 
+  // Para saber si una cuenta se usó alguna vez. Un admin puede crear diez
+  // accesos y no tener forma de ver cuáles quedaron sin estrenar.
+  if (!(await hasColumn(db, 'admin_users', 'last_login_at'))) {
+    await db.execute(`ALTER TABLE admin_users ADD COLUMN last_login_at DATETIME NULL`);
+  }
+
   // Qué puede tocar cada editor. Un admin no necesita filas acá: llega a todo.
   await db.execute(`
     CREATE TABLE IF NOT EXISTS user_sections (
@@ -187,20 +203,31 @@ const readSections = async (db: mysql.Pool, userId: number) => {
   return rows.map((row) => String(row.section_key));
 };
 
-export const authenticateAdmin = async (identifier: string, password: string) => {
+/** Busca por usuario o por email, que son las dos formas de entrar. */
+const findAdminUser = async (identifier: string) => {
   await ensureAdminSchema();
 
-  const db = getPool();
-  const [rows] = await db.execute<mysql.RowDataPacket[] & AdminUserRow[]>(
+  const [rows] = await getPool().execute<mysql.RowDataPacket[] & AdminUserRow[]>(
     'SELECT id, username, email, password_hash, role FROM admin_users WHERE username = ? OR email = ? LIMIT 1',
     [identifier, identifier]
   );
 
-  const user = rows[0];
+  return rows[0] ?? null;
+};
+
+export const authenticateAdmin = async (identifier: string, password: string) => {
+  const user = await findAdminUser(identifier);
   if (!user) return null;
 
   const matches = await bcrypt.compare(password, user.password_hash);
   if (!matches) return null;
+
+  // Dato de gestión, no parte de la autenticación: si falla, el login sigue.
+  try {
+    await getPool().execute('UPDATE admin_users SET last_login_at = NOW() WHERE id = ?', [user.id]);
+  } catch (error) {
+    console.error('[admin] no se pudo registrar el último ingreso:', error);
+  }
 
   return {
     id: user.id,
@@ -210,12 +237,39 @@ export const authenticateAdmin = async (identifier: string, password: string) =>
   };
 };
 
+/**
+ * Cambio de contraseña hecho por la propia persona. Pide la actual a propósito:
+ * la cookie sola no alcanza, porque una sesión olvidada abierta en un teléfono
+ * ajeno no tiene que poder quedarse con la cuenta.
+ */
+export const changeOwnPassword = async (
+  username: string,
+  currentPassword: string,
+  newPassword: string
+) => {
+  const user = await findAdminUser(username);
+  if (!user) return 'not-found' as const;
+
+  const matches = await bcrypt.compare(currentPassword, user.password_hash);
+  if (!matches) return 'wrong-password' as const;
+
+  const passwordHash = await bcrypt.hash(newPassword, 10);
+  await getPool().execute('UPDATE admin_users SET password_hash = ? WHERE id = ?', [
+    passwordHash,
+    user.id,
+  ]);
+
+  return 'ok' as const;
+};
+
 export interface AdminUser {
   id: number;
   username: string;
   email: string | null;
   role: AdminRole;
   sections: string[];
+  /** `null` significa que la cuenta se creó y nunca se usó. */
+  lastLoginAt: Date | null;
 }
 
 export const listAdminUsers = async (): Promise<AdminUser[]> => {
@@ -223,7 +277,7 @@ export const listAdminUsers = async (): Promise<AdminUser[]> => {
 
   const db = getPool();
   const [users] = await db.execute<mysql.RowDataPacket[]>(
-    'SELECT id, username, email, role FROM admin_users ORDER BY username'
+    'SELECT id, username, email, role, last_login_at FROM admin_users ORDER BY username'
   );
   const [sections] = await db.execute<mysql.RowDataPacket[]>(
     'SELECT user_id, section_key FROM user_sections'
@@ -237,6 +291,7 @@ export const listAdminUsers = async (): Promise<AdminUser[]> => {
     sections: sections
       .filter((section) => Number(section.user_id) === Number(user.id))
       .map((section) => String(section.section_key)),
+    lastLoginAt: toDate(user.last_login_at),
   }));
 };
 
@@ -257,7 +312,7 @@ export const createAdminUser = async (input: {
     [input.username, input.email, passwordHash, input.role]
   );
 
-  await replaceUserSections(result.insertId, input.role === 'admin' ? [] : input.sections);
+  await replaceUserSections(result.insertId, input.sections);
   return result.insertId;
 };
 
@@ -287,7 +342,11 @@ export const updateAdminUser = async (
     await db.execute('UPDATE admin_users SET password_hash = ? WHERE id = ?', [passwordHash, userId]);
   }
 
-  await replaceUserSections(userId, input.role === 'admin' ? [] : input.sections);
+  // Las secciones se guardan también para un admin, aunque no las use: llega a
+  // todo igual (`loadAdminSession` le devuelve `[]`). Antes se borraban, y si
+  // más adelante volvía a editor reaparecía sin ningún acceso y sin registro de
+  // lo que tenía asignado.
+  await replaceUserSections(userId, input.sections);
 };
 
 export const deleteAdminUser = async (userId: number) => {

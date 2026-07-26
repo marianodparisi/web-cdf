@@ -14,6 +14,13 @@ const groups = ['Contenido', 'Ministerios'] as const;
 
 const inputClass =
   'w-full rounded-2xl border border-black/15 bg-white px-4 py-3 text-base outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/25';
+
+// Sin `timeZone`: el DATETIME viene sin zona y se muestra tal cual lo guardó la
+// base, que es la hora que la persona tiene en la cabeza.
+const dateFormatter = new Intl.DateTimeFormat('es-AR', {
+  dateStyle: 'medium',
+  timeStyle: 'short',
+});
 ---
 
 <AdminLayout title="Personas con acceso" backHref="/admin" backLabel="Volver al panel" session={session}>
@@ -90,7 +97,7 @@ const inputClass =
         <form method="POST" action="/api/admin/usuarios" class="rounded-2xl border border-black/10 bg-white p-6 sm:p-8">
           <input type="hidden" name="id" value={String(user.id)} />
 
-          <div class="mb-5 flex flex-wrap items-baseline gap-3">
+          <div class="mb-2 flex flex-wrap items-baseline gap-3">
             <span class="font-display text-lg font-semibold">{user.username}</span>
             {user.email && <span class="text-sm text-charcoal/55">{user.email}</span>}
             {user.username === session.username && (
@@ -99,6 +106,12 @@ const inputClass =
               </span>
             )}
           </div>
+
+          <p class="mb-5 text-sm text-charcoal/55">
+            {user.lastLoginAt
+              ? `Última vez que entró: ${dateFormatter.format(user.lastLoginAt)}`
+              : 'Nunca entró al panel.'}
+          </p>
 
           <fieldset class="mb-5">
             <label class="mb-4 flex items-center gap-3">
@@ -111,6 +124,11 @@ const inputClass =
               />
               <span>Es administrador</span>
             </label>
+
+            <p class="mb-4 text-sm text-charcoal/60">
+              Un administrador entra a todo. Lo que marques abajo queda guardado igual, por si más adelante
+              vuelve a ser editor.
+            </p>
 
             {groups.map((group) => (
               <div class="mb-4">

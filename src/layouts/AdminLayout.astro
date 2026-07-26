@@ -43,7 +43,12 @@ const errorMessage = Astro.url.searchParams.get('error');
           <span class="hidden text-sm font-bold uppercase tracking-[0.18em] text-charcoal sm:inline">Panel</span>
         </a>
         <div class="flex items-center gap-3">
-          <span class="hidden text-sm text-charcoal/60 sm:inline">{session.username}</span>
+          <a
+            href="/admin/mi-cuenta"
+            class="text-sm font-semibold text-charcoal/70 transition-colors hover:text-primary"
+          >
+            {session.username}
+          </a>
           <a
             href="/api/admin/logout"
             class="rounded-full border border-black/10 px-4 py-2 text-sm font-semibold text-charcoal transition-colors hover:bg-black/5"
