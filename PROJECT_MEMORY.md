@@ -388,6 +388,116 @@ ningún commit. Es higiene, no urgencia.
   ve los usos que están después de un `return` temprano en el frontmatter. No
   perder tiempo "arreglándolos".
 
+## Maqueta de rediseño — `/maqueta`
+
+Propuesta de rediseño completa, en clave clara, que convive con el sitio sin
+tocarlo. Commit `5e2ed7b`. Referencia visual pedida por el usuario:
+`https://austinstone.org`.
+
+Es descartable a propósito: ninguna ruta del sitio la referencia y todo su CSS
+va prefijado con `.as`. Se borra sin dejar rastro si no convence.
+
+### Qué contiene
+
+26 páginas navegables entre sí:
+
+- `/maqueta` — home.
+- `/maqueta/[slug]` — los nueve ministerios.
+- `/maqueta/anexos/[slug]` — las cinco sedes.
+- `/maqueta/institucional/[slug]` — IETE y Discipulados.
+- `/maqueta/nosotros`, `/maqueta/misiones`, `/maqueta/evangelismo`, `/maqueta/contacto`.
+- `/maqueta/devocional` y `/maqueta/devocional/[slug]`.
+
+### Archivos
+
+- `src/layouts/MaquetaLayout.astro` — nav, footer y datos compartidos.
+- `src/styles/maqueta.css` — el sistema de diseño entero.
+- `src/scripts/maqueta-ui.js` — reveals, rotador, pestañas, nav y menú mobile.
+- `src/data/maqueta-anexos.ts` — datos de sedes extraídos de `src/pages/anexos/*.astro`,
+  donde hoy viven como props sueltas de `AnexoTemplate`.
+
+### Tokens, medidos y no estimados
+
+Todos salen de abrir las dos páginas en el navegador y comparar
+`getComputedStyle`, no de mirarlas a ojo. A 1440px:
+
+- Display: `7rem/7.6rem` w700 ls `-1px`. A 390px: `4rem/4.6rem`.
+- H1 de sección: `3rem/3.6rem` w600 ls normal. A 390px: `2.4rem/3rem`.
+- Eyebrow: `0.95rem/2rem` w500 ls `2px`, uppercase, **tinta plena, no gris**.
+- Link de nav: `1rem/1.7rem` w600 ls `0.1px`, **caja normal, no versalita**.
+- Meta de tarjeta: `1rem/1.4rem` w500 ls `1.2px` uppercase.
+- Botón: radio `100px`, `16px 32px`, `.8rem` w600 ls `2px`. Small: `12px 24px`, `.7rem` ls `3px`.
+- Sección: `padding: 120px` parejo; `80px` en tablet; `48px` en mobile.
+- Nav: `fixed`, `z-index 2000`, alto `120px`, padding lateral `72px`.
+- Marquee: `40s linear infinite`, `translateX(0 → -50%)`, piezas cuadradas, radio `12px`.
+- Colores: `#282828` tinta, `#f4f4f4` fondo claro, `#737373` cuerpo, `#94979e29` hairline.
+- Acento: se mantuvo el dorado `#c5a059` de la casa en lugar del celeste de la referencia.
+
+Dos desvíos deliberados respecto de la referencia:
+
+- `backdrop-filter: blur(12px)` en el nav en vez de `blur(5px)`. A pedido del
+  usuario: sobre video en movimiento, 5px es imperceptible.
+- Tipografía `Nunito Sans` en lugar de Proxima Nova, que es licenciada.
+
+### Tipografía: por qué Nunito Sans
+
+Medido con el navegador, a 16px w600, sobre la cadena `Ministerios Nosotros`:
+
+| Fuente | Ancho | Δ | Altura-x | Mayúscula |
+| --- | --- | --- | --- | --- |
+| Proxima Nova (ref) | 146.66 | — | 8 | 11 |
+| Nunito Sans | 149.75 | +2.1 % | 8 | 11 |
+| Figtree | 150.83 | +2.9 % | 8 | 11 |
+| Mulish | 152.66 | +4.1 % | 8 | 11 |
+| Hind | 145.95 | −0.5 % | 8 | 10 |
+
+Nunito Sans es la libre que más se acerca conservando ambas alturas. Hind gana
+en ancho pero pierde la altura de mayúscula.
+
+### Trampas encontradas, no volver a pisarlas
+
+- **Especificidad de los resets.** Escribir `.as a`, `.as p`, `.as h1`, `.as button`
+  da `0,1,1` y le gana a cualquier clase propia `0,1,0`. Rompió el color de los
+  botones (tinta oscura sobre pastilla oscura), el peso de los títulos y el
+  interlineado del cuerpo. Los resets van con `:where()`, que aporta cero.
+- **Reveals que dejan la página invisible.** El contenido arranca en `opacity: 0`.
+  Con `threshold: 0.12`, un bloque más alto que el viewport nunca lo cumple y
+  queda oculto para siempre. Va `threshold: 0` más una red de seguridad a los 4 s.
+- **Nav sobre fondos claros.** El punto de corte se calculaba con `.as-hero`. Las
+  internas no lo tienen, así que la barra quedaba transparente con tinta blanca
+  sobre blanco. Sin hero oscuro, la barra arranca sólida.
+- **`scroll-margin-top` a mano.** El nav mide `121px` en desktop y `106px` en
+  mobile. El JS publica el alto real en `--as-nav-h` y el CSS lo usa.
+- **`ministry.image` no siempre es foto.** La mitad de los ministerios tiene
+  logo; a sangre en el marquee se ve roto. Hay una lista aparte de fotografías.
+- **`getStaticPaths` en SSR.** Es código muerto y ensucia el build. Las rutas
+  dinámicas de la maqueta leen `Astro.params`.
+
+### Verificación
+
+Se usó Playwright con el Chromium ya descargado en
+`~/.cache/ms-playwright/chromium-1223/chrome-linux64/chrome` (la versión de
+Playwright pide una más nueva; hay que pasar `executablePath`).
+
+- `networkidle` no sirve en páginas con video en loop: nunca se cumple. Usar
+  `domcontentloaded` más una espera explícita.
+- Playwright dibuja los elementos `position: fixed` en su posición de scroll
+  cuando se captura la página entera. El nav aparece en el medio de la captura;
+  es un artefacto, no un bug.
+- Chequear siempre: elementos en `opacity: 0`, palabras del reveal sin animar,
+  `scrollWidth` contra el viewport, errores de consola y requests fallidos.
+
+### Pendiente de la maqueta
+
+- **Fotografía.** Se repiten seis fotos en 26 páginas. Es el techo real de la
+  propuesta y es trabajo de la iglesia, no del código.
+- Los formularios van con `action="#"`. Al promover hay que apuntarlos al
+  endpoint real.
+- El nav de la maqueta apunta a páginas de la maqueta. Para comparar contra
+  producción, abrir las dos en pestañas.
+- Si se aprueba, el color por ministerio pasa a ser un campo `color` en
+  `src/data/ministries.ts` y lo consumen también el navbar y `MinistryTemplate`.
+
 ## Estado y precauciones del repositorio
 
 - No usar `git reset --hard`, `git checkout --` ni limpiezas destructivas.
