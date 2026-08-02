@@ -1,0 +1,313 @@
+---
+/**
+ * MAQUETA — páginas "Educativos" (IETE y Discipulados).
+ *
+ * El contenido sale de las páginas reales que ya existen en el sitio:
+ *   src/pages/institucional/iete.astro
+ *   src/pages/institucional/discipulados.astro
+ * Sólo cambia el envoltorio visual, no el texto.
+ */
+import MaquetaLayout from '../../../layouts/MaquetaLayout.astro';
+
+const { slug } = Astro.params;
+
+const paginas = {
+  iete: {
+    name: 'IETE',
+    kicker: 'Programa de certificación',
+    color: '#224d98',
+    logo: '/educativos/ietelogo.png',
+    lead: 'Si tu sueño es servir en la iglesia, este lugar también es para ti.',
+    statement: 'Formación integral para líderes cristianos en el mundo actual.',
+    image: '/sedes/nosotros2.JPG',
+    quees: [
+      'IETE es un programa de certificación diseñado para personas que están considerando integrarse al ministerio como pastores, misioneros o líderes dentro de su iglesia local.',
+      'También es una certificación ideal para quienes ya están activos en el ministerio y desean fortalecer su formación bíblica y su liderazgo.',
+    ],
+    ejes: [
+      'Teología sistemática',
+      'Liderazgo de iglesia para la actualidad',
+      'Cultura del Reino',
+      'Plantación de iglesias',
+      'Salud integral del ministro',
+    ],
+    ejesTitulo: 'Áreas del programa',
+    columnas: [
+      {
+        n: '01',
+        label: 'Sensibilidad pastoral',
+        title: 'Capaces de acompañar.',
+        text: 'Escuchar, comprender y acompañar a las personas con sensibilidad pastoral.',
+      },
+      {
+        n: '02',
+        label: 'Pertenencia',
+        title: 'Arraigados en la iglesia local.',
+        text: 'Comprometidos con servir junto a su comunidad.',
+      },
+      {
+        n: '03',
+        label: 'Convicción',
+        title: 'Con fundamentos sólidos.',
+        text: 'Firmes en la verdad bíblica, con argumentos sólidos y una fe bien fundamentada.',
+      },
+      {
+        n: '04',
+        label: 'Diálogo',
+        title: 'Preparados para el mundo actual.',
+        text: 'Conversaciones reales con la cultura contemporánea sin perder la esencia del Evangelio.',
+      },
+    ],
+    datos: [
+      { icon: 'schedule', label: 'Duración', value: 'Un año y medio aprox.' },
+      { icon: 'laptop', label: 'Modalidad', value: '100% en línea' },
+      { icon: 'person', label: 'Edad sugerida', value: 'Desde los 18 años' },
+    ],
+    paraQuien: [
+      'Personas que sienten un llamado al ministerio',
+      'Personas activas en el ministerio',
+      'Líderes de equipos dentro de su iglesia local',
+      'Personas que desean plantar iglesias',
+      'Personas que desean crecer en su liderazgo',
+      'Líderes en distintos ámbitos que desean expandir su conocimiento bíblico',
+    ],
+    presenciales: ['Retiro de sanidad', 'Viaje misionero', 'Conferencia presencial', 'Masterclass especial'],
+    ctaTitle: 'Quiero conocer más sobre IETE',
+    ctaText: 'Déjanos tus datos y te compartimos información sobre el programa, la modalidad y el proceso de inscripción.',
+  },
+
+  discipulados: {
+    name: 'Discipulados',
+    kicker: 'Formación inicial',
+    color: '#487a7c',
+    logo: null,
+    lead: 'Un espacio para dar tus primeros pasos firmes en el Evangelio.',
+    statement: 'Formación inicial, cercana y práctica.',
+    image: '/ministries/life/life1.jpg',
+    quees: [
+      'Es un estudio pensado para acompañar a quienes están comenzando en la fe. Buscamos que cada persona pueda entender las bases del Evangelio y afirmar su relación con Jesús.',
+      'No es un espacio académico como IETE, sino una instancia de formación inicial, cercana y práctica para crecer paso a paso dentro de la vida cristiana.',
+    ],
+    ejes: [
+      'La Biblia — cómo leerla, entenderla y tomarla como base para la vida diaria.',
+      'El Evangelio — la obra de Jesús, la salvación y una nueva vida en Cristo.',
+      'Vida cristiana — oración, obediencia, comunión y crecimiento personal.',
+      'Iglesia y servicio — cómo integrarse a la comunidad y caminar con propósito.',
+    ],
+    ejesTitulo: '¿Qué se trabaja?',
+    columnas: [
+      {
+        n: '01',
+        label: 'Enfoque',
+        title: 'Fundamentos de la fe',
+        text: 'Estudiamos la Biblia desde una base clara y pastoral para que cada nuevo creyente entienda el mensaje del Evangelio y pueda afirmarse en su nueva vida en Cristo.',
+      },
+      {
+        n: '02',
+        label: 'Modalidad',
+        title: 'Clases los sábados',
+        text: 'Las clases se desarrollan los sábados, en un formato simple y accesible, para avanzar semana a semana en temas centrales de la vida cristiana.',
+      },
+      {
+        n: '03',
+        label: 'Acompañamiento',
+        title: 'Profesores diferentes',
+        text: 'Cada etapa cuenta con distintos profesores, aportando perspectivas complementarias y ayudando a que el proceso sea más dinámico y enriquecedor.',
+      },
+    ],
+    datos: [
+      { icon: 'event', label: 'Cuándo', value: 'Sábados' },
+      { icon: 'groups', label: 'Formato', value: 'Clases presenciales' },
+      { icon: 'person', label: 'Para quién', value: 'Quienes están comenzando' },
+    ],
+    paraQuien: [
+      'Si recibiste a Jesús hace poco',
+      'Si estás empezando a conocer la Biblia',
+      'Si necesitás ordenar tus bases en la fe',
+    ],
+    presenciales: [] as string[],
+    ctaTitle: 'Quiero sumarme a Discipulados',
+    ctaText: 'Si querés comenzar, conocer los horarios o recibir más información sobre las clases de los sábados, dejanos tus datos y nos comunicamos con vos.',
+  },
+} as const;
+
+const pagina = paginas[slug as keyof typeof paginas];
+if (!pagina) return Astro.redirect('/maqueta');
+
+const otroSlug = slug === 'iete' ? 'discipulados' : 'iete';
+const otro = paginas[otroSlug];
+
+const jumpLinks = [
+  { label: 'Qué es', href: '#que-es' },
+  { label: 'Enfoque', href: '#enfoque' },
+  { label: 'Información', href: '#info' },
+  { label: 'Inscripción', href: '#inscripcion' },
+];
+---
+
+<MaquetaLayout title={`${pagina.name} · Maqueta · Corazón de Fuego`}>
+  <div class="as-ministry" style={`--m: ${pagina.color}`}>
+    <header class="as-mhero">
+      <div class="as-mhero__copy">
+        <p class="as-eyebrow" data-reveal>{pagina.kicker}</p>
+        <h1 class="as-display" data-reveal="words">{pagina.name}</h1>
+        <p class="as-mhero__lead" data-reveal>{pagina.lead}</p>
+        <div class="as-button-group" data-reveal data-reveal-delay="120">
+          <a class="as-button as-button--ministry" href="#inscripcion">Solicitar información</a>
+          <a class="as-button as-button--ghost" href="#que-es">¿Qué es {pagina.name}?</a>
+        </div>
+      </div>
+      <div class="as-mhero__media" data-reveal>
+        <img src={pagina.image} alt={pagina.name} />
+      </div>
+    </header>
+
+    <nav class="as-jump" aria-label="Secciones de la página">
+      <div class="as-jump__inner">{jumpLinks.map((l) => <a href={l.href}>{l.label}</a>)}</div>
+    </nav>
+
+    <section class="as-section as-section--dark as-statement" id="que-es">
+      <div class="as-wrap">
+        <p class="as-eyebrow as-eyebrow--light" data-reveal>¿Qué es {pagina.name}?</p>
+        <h2 class="as-statement__text" data-reveal="words">{pagina.statement}</h2>
+      </div>
+    </section>
+
+    <section class="as-section as-section--light">
+      <div class="as-wrap as-split">
+        <div>
+          {pagina.quees.map((p, i) => (
+            <p class="as-lead" style={i > 0 ? 'margin-top:1.25rem' : ''} data-reveal data-reveal-delay={i * 90}>
+              {p}
+            </p>
+          ))}
+        </div>
+        <div data-reveal data-reveal-delay="120">
+          <p class="as-eyebrow">{pagina.ejesTitulo}</p>
+          <ul class="as-list">
+            {pagina.ejes.map((e) => (
+              <li>{e}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="as-section" id="enfoque">
+      <div class="as-wrap">
+        <div class="as-head">
+          <div>
+            <p class="as-eyebrow" data-reveal>Nuestra visión de formación</p>
+            <h2 class="as-h1" data-reveal="words">Qué líderes queremos formar.</h2>
+          </div>
+        </div>
+        <div class={`as-cols${pagina.columnas.length === 4 ? ' as-cols--4' : ''}`}>
+          {pagina.columnas.map((c, i) => (
+            <div class="as-col" data-reveal data-reveal-delay={i * 100}>
+              <span class="as-col__n">{c.n}</span>
+              <p class="as-col__label">{c.label}</p>
+              <h3>{c.title}</h3>
+              <p>{c.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="as-section as-section--light" id="info">
+      <div class="as-wrap">
+        <div class="as-head">
+          <div>
+            <p class="as-eyebrow" data-reveal>Información general</p>
+            <h2 class="as-h1" data-reveal="words">¿Para quién es?</h2>
+          </div>
+        </div>
+
+        <div class="as-split">
+          <ul class="as-list" data-reveal>
+            {pagina.paraQuien.map((p) => (
+              <li>{p}</li>
+            ))}
+          </ul>
+          {pagina.presenciales.length > 0 && (
+            <div data-reveal data-reveal-delay="100">
+              <p class="as-eyebrow">Experiencias presenciales</p>
+              <ul class="as-list">
+                {pagina.presenciales.map((p) => (
+                  <li>{p}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+
+        <div class="as-meta" data-reveal>
+          {pagina.datos.map((d) => (
+            <div class="as-meta__item">
+              <span class="material-symbols-outlined">{d.icon}</span>
+              <div><strong>{d.label}</strong><p>{d.value}</p></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ INSCRIPCIÓN ══════════ Mismos campos que la página real. -->
+    <section class="as-section" id="inscripcion">
+      <div class="as-wrap as-split">
+        <div>
+          <p class="as-eyebrow" data-reveal>Solicitar información</p>
+          <h2 class="as-h1" data-reveal="words">{pagina.ctaTitle}</h2>
+          <p class="as-lead" style="margin-top:1.25rem" data-reveal>{pagina.ctaText}</p>
+        </div>
+
+        {/* `action="#"`: la maqueta no envía. Al promoverla va al endpoint real. */}
+        <form class="as-form" action="#" method="post" data-reveal data-reveal-delay="100">
+          <label class="as-field">
+            <span>WhatsApp</span>
+            <input type="tel" name="whatsapp" placeholder="10 dígitos" required />
+          </label>
+          <label class="as-field">
+            <span>Correo electrónico *</span>
+            <input type="email" name="email" placeholder="tu@correo.com" required />
+          </label>
+          <label class="as-field">
+            <span>Nombres *</span>
+            <input type="text" name="nombres" placeholder="Tus nombres" required />
+          </label>
+          <div class="as-form__row">
+            <label class="as-field">
+              <span>Primer apellido *</span>
+              <input type="text" name="apellido1" placeholder="Primer apellido" required />
+            </label>
+            <label class="as-field">
+              <span>Segundo apellido</span>
+              <input type="text" name="apellido2" placeholder="Segundo apellido" />
+            </label>
+          </div>
+          <label class="as-check">
+            <input type="checkbox" name="privacidad" required />
+            <span>Acepto el aviso de privacidad y protección de datos personales.</span>
+          </label>
+          <button class="as-button as-button--ministry" type="submit">Enviar solicitud</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="as-section as-section--dark as-cta">
+      <div class="as-wrap">
+        <h2 class="as-display" data-reveal="words">Da el próximo paso.</h2>
+        <p data-reveal>Escribinos y te contamos cuándo abre la próxima inscripción.</p>
+        <div class="as-button-group" data-reveal data-reveal-delay="120">
+          <a class="as-button as-button--white" href="/maqueta/contacto">Escribinos</a>
+        </div>
+
+        <a class="as-next" href={`/maqueta/institucional/${otroSlug}`}>
+          <span>También te puede interesar</span>
+          <strong>{otro.name}</strong>
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </a>
+      </div>
+    </section>
+  </div>
+</MaquetaLayout>

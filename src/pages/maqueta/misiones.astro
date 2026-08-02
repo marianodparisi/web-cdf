@@ -1,0 +1,147 @@
+---
+/**
+ * MAQUETA — "Misiones", con la estructura de sus páginas de iniciativa
+ * (For the Nations). Los destinos salen de `src/data/missions.ts`.
+ */
+import MaquetaLayout from '../../layouts/MaquetaLayout.astro';
+import { missions } from '../../data/missions';
+
+const proximas = missions.filter((m) => m.stage === 'Proxima');
+const realizadas = missions.filter((m) => m.stage !== 'Proxima');
+
+const tabs = [
+  { id: 'proximas', label: 'Próximas', items: proximas },
+  { id: 'realizadas', label: 'Realizadas', items: realizadas },
+];
+
+const jumpLinks = [
+  { label: 'Sobre', href: '#sobre' },
+  { label: 'Destinos', href: '#destinos' },
+  { label: 'Participar', href: '#participar' },
+];
+
+const columnas = [
+  { n: '01', title: 'Ir', text: 'Salidas cortas para servir junto a iglesias locales que ya están sembrando en la región.' },
+  { n: '02', title: 'Sostener', text: 'Acompañamos con oración y con recursos a quienes están en el campo todo el año.' },
+  { n: '03', title: 'Enviar', text: 'Formamos y enviamos equipos de la casa, con respaldo pastoral antes, durante y después.' },
+];
+
+const destacada = missions[0];
+---
+
+<MaquetaLayout title="Misiones · Maqueta · Corazón de Fuego">
+  <div class="as-ministry" style="--m: #35b887">
+    <header class="as-hero as-hero--inner">
+      <div class="as-hero__bg">
+        {destacada?.video ? (
+          <video autoplay muted loop playsinline preload="metadata" poster={destacada.image}>
+            <source src={destacada.video} type="video/mp4" />
+          </video>
+        ) : (
+          <img src={destacada?.image} alt="" />
+        )}
+        <div class="as-hero__veil"></div>
+      </div>
+      <div class="as-hero__grid">
+        <div class="as-hero__content">
+          <p class="as-eyebrow as-eyebrow--light" data-reveal>Misiones</p>
+          <h1 class="as-display" data-reveal="words">Hasta lo último de la tierra.</h1>
+          <p class="as-hero__lead" data-reveal>
+            Salimos a servir, anunciar y acompañar junto a iglesias que ya están trabajando en cada región.
+          </p>
+          <div class="as-hero__actions" data-reveal data-reveal-delay="140">
+            <a class="as-button as-button--white" href="#destinos">Ver destinos</a>
+            <a class="as-button as-button--ghost-white" href="#participar">Quiero ir</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <nav class="as-jump" aria-label="Secciones de la página">
+      <div class="as-jump__inner">{jumpLinks.map((l) => <a href={l.href}>{l.label}</a>)}</div>
+    </nav>
+
+    <section class="as-section as-section--dark as-statement" id="sobre">
+      <div class="as-wrap">
+        <p class="as-eyebrow as-eyebrow--light" data-reveal>Nuestra visión</p>
+        <h2 class="as-statement__text" data-reveal="words">
+          Una iglesia que alcanza, forma y envía.
+        </h2>
+      </div>
+    </section>
+
+    <section class="as-section as-section--light" id="participar">
+      <div class="as-wrap">
+        <div class="as-head">
+          <div>
+            <p class="as-eyebrow" data-reveal>Cómo participamos</p>
+            <h2 class="as-h1" data-reveal="words">Tres formas de sumarte.</h2>
+          </div>
+          <a class="as-button as-button--small as-button--ministry" href="/contact">Escribinos</a>
+        </div>
+        <div class="as-cols">
+          {columnas.map((c, i) => (
+            <div class="as-col" data-reveal data-reveal-delay={i * 110}>
+              <span class="as-col__n">{c.n}</span>
+              <h3>{c.title}</h3>
+              <p>{c.text}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Destinos: cada misión como escena alternada, texto e imagen. -->
+    <section class="as-section" id="destinos">
+      <div class="as-wrap">
+        <h2 class="as-h1" data-reveal="words">Destinos</h2>
+        <div class="as-tabs" data-tabs>
+          <div class="as-tabs__menu">
+            {tabs.map((t, i) => (
+              <button class={`as-tabs__link${i === 0 ? ' is-active' : ''}`} type="button" data-tab={t.id}>
+                {t.label}
+              </button>
+            ))}
+          </div>
+          {tabs.map((t, i) => (
+            <div class={`as-tabs__panel${i === 0 ? ' is-active' : ''}`} data-panel={t.id}>
+              {t.items.length === 0 ? (
+                <p class="as-lead">No hay misiones cargadas en esta categoría todavía.</p>
+              ) : (
+                <div class="as-scenes">
+                  {t.items.map((m, j) => (
+                    <article class="as-scene" data-reveal data-reveal-delay={j * 90}>
+                      <div class="as-scene__media">
+                        <img src={m.image} alt={m.place} loading="lazy" />
+                      </div>
+                      <div class="as-scene__copy">
+                        <p class="as-eyebrow">{m.country} · {m.stage}</p>
+                        <h3>{m.place}</h3>
+                        <p>{m.summary}</p>
+                        <p class="as-scene__focus">
+                          <span class="material-symbols-outlined">target</span>
+                          {m.focus}
+                        </p>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="as-section as-section--dark as-cta">
+      <div class="as-wrap">
+        <h2 class="as-display" data-reveal="words">¿Querés ir?</h2>
+        <p data-reveal>Escribinos y te contamos cómo prepararte para la próxima salida.</p>
+        <div class="as-button-group" data-reveal data-reveal-delay="120">
+          <a class="as-button as-button--white" href="/contact">Escribinos</a>
+          <a class="as-button as-button--ghost-white" href="/maqueta/evangelismo">Ver Evangelismo</a>
+        </div>
+      </div>
+    </section>
+  </div>
+</MaquetaLayout>

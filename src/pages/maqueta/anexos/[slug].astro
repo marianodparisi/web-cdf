@@ -1,0 +1,190 @@
+---
+/**
+ * MAQUETA — página de sede, con la estructura de las páginas de congregación
+ * de austinstone.org adaptada a los datos que ya tienen los anexos.
+ *
+ * El contenido sale de `src/data/maqueta-anexos.ts`, que a su vez se extrajo de
+ * las cinco páginas reales de `src/pages/anexos/`. Cada sede conserva su color.
+ */
+import MaquetaLayout from '../../../layouts/MaquetaLayout.astro';
+import { maquetaAnexos } from '../../../data/maqueta-anexos';
+import { getMinistries } from '../../../lib/content/collections';
+
+const { slug } = Astro.params;
+
+const index = maquetaAnexos.findIndex((a) => a.slug === slug);
+const anexo = maquetaAnexos[index];
+if (!anexo) return Astro.redirect('/maqueta');
+
+const next = maquetaAnexos[(index + 1) % maquetaAnexos.length];
+const ministries = await getMinistries();
+
+const jumpLinks = [
+  { label: 'Historia', href: '#historia' },
+  { label: 'Horarios', href: '#horarios' },
+  { label: 'Cómo llegar', href: '#llegar' },
+  { label: 'Ministerios', href: '#ministerios' },
+];
+
+const fotos = ['/sedes/nosotros1.JPG', '/sedes/nosotros2.JPG', '/sedes/nosotros3.JPG'];
+---
+
+<MaquetaLayout title={`Sede ${anexo.name} · Maqueta · Corazón de Fuego`}>
+  <div class="as-ministry" style={`--m: ${anexo.color}`}>
+    <!-- ══════════ HERO ══════════ Foto a sangre con el nombre de la sede. -->
+    <header class="as-hero as-hero--inner">
+      <div class="as-hero__bg">
+        <img src={anexo.heroImage} alt={`Sede ${anexo.name}`} />
+        <div class="as-hero__veil"></div>
+      </div>
+      <div class="as-hero__grid">
+        <div class="as-hero__content">
+          <p class="as-eyebrow as-eyebrow--light" data-reveal>Nuestras sedes</p>
+          <h1 class="as-display" data-reveal="words">{anexo.name}</h1>
+          <p class="as-hero__lead" data-reveal>{anexo.subtitle}</p>
+          <div class="as-hero__actions" data-reveal data-reveal-delay="140">
+            <a class="as-button as-button--white" href="#llegar">Cómo llegar</a>
+            <a class="as-button as-button--ghost-white" href="#horarios">Ver horarios</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <nav class="as-jump" aria-label="Secciones de la página">
+      <div class="as-jump__inner">
+        {jumpLinks.map((l) => <a href={l.href}>{l.label}</a>)}
+      </div>
+    </nav>
+
+    <!-- ══════════ HISTORIA ══════════ Split con las cifras de la sede. -->
+    <section class="as-section" id="historia">
+      <div class="as-wrap as-split">
+        <div>
+          <p class="as-eyebrow" data-reveal>Nuestra historia</p>
+          <h2 class="as-h1" data-reveal="words">{anexo.storyTitle}</h2>
+          <div class="as-stats" data-reveal data-reveal-delay="120">
+            <div class="as-stat">
+              <strong>{anexo.yearsValue}</strong>
+              <span>{anexo.yearsLabel}</span>
+            </div>
+            <div class="as-stat">
+              <strong>{anexo.localValue}</strong>
+              <span>{anexo.localLabel}</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          {anexo.storyParagraphs.map((p, i) => (
+            <p class="as-lead" style={i > 0 ? 'margin-top:1.25rem' : ''} data-reveal data-reveal-delay={i * 90}>
+              {p}
+            </p>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ IMAGEN ══════════ -->
+    <section class="as-section as-section--photos">
+      <div class="as-wrap">
+        <div class="as-image as-image--wide" data-reveal>
+          <img src={anexo.storyImage} alt={`Sede ${anexo.name}`} loading="lazy" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ HORARIOS Y UBICACIÓN ══════════ -->
+    <section class="as-section as-section--light" id="horarios">
+      <div class="as-wrap as-split">
+        <div>
+          <p class="as-eyebrow" data-reveal>Horarios</p>
+          <h2 class="as-h2" data-reveal="words">Cuándo nos reunimos.</h2>
+          <div class="as-times" data-reveal data-reveal-delay="100">
+            {anexo.meetingsLines.map((linea) => {
+              const [dia, hora] = linea.split('—').map((s) => s.trim());
+              return (
+                <div class="as-time">
+                  <span class="as-time__day">{dia}</span>
+                  {hora && <span class="as-time__hour">{hora}</span>}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <div id="llegar">
+          <p class="as-eyebrow" data-reveal>Cómo llegar</p>
+          <h2 class="as-h2" data-reveal="words">{anexo.locationTitle}</h2>
+          <div class="as-address" data-reveal data-reveal-delay="100">
+            <span class="material-symbols-outlined">location_on</span>
+            <div>
+              {anexo.addressLines.map((l) => (
+                <p>{l}</p>
+              ))}
+            </div>
+          </div>
+          <div class="as-button-group" data-reveal>
+            <a
+              class="as-button as-button--small as-button--ministry"
+              href={`https://www.google.com/maps/search/${encodeURIComponent(anexo.addressLines.join(' '))}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Abrir en Maps
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ MINISTERIOS ══════════ -->
+    <section class="as-section" id="ministerios">
+      <div class="as-wrap">
+        <div class="as-head">
+          <div>
+            <p class="as-eyebrow" data-reveal>Ministerios</p>
+            <h2 class="as-h1" data-reveal="words">Áreas que funcionan en la sede.</h2>
+          </div>
+          <a class="as-button as-button--small" href="/maqueta#ministerios">Ver todos</a>
+        </div>
+        <div class="as-sedes" data-reveal>
+          {ministries.slice(0, 6).map((m) => (
+            <a class="as-sede" href={`/maqueta/${m.slug}`}>
+              <h4>{m.name}</h4>
+              <p>{m.area}</p>
+              <span class="as-sede__arrow material-symbols-outlined">arrow_forward</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ FOTOS ══════════ -->
+    <section class="as-section as-section--photos">
+      <div class="as-wrap as-photos">
+        {fotos.map((src, i) => (
+          <div class="as-photo" data-reveal data-reveal-delay={i * 80}>
+            <img src={src} alt="" loading="lazy" />
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- ══════════ CIERRE ══════════ -->
+    <section class="as-section as-section--dark as-cta">
+      <div class="as-wrap">
+        <h2 class="as-display" data-reveal="words">{anexo.ctaTitle}</h2>
+        <p data-reveal>{anexo.ctaText}</p>
+        <div class="as-button-group" data-reveal data-reveal-delay="120">
+          <a class="as-button as-button--white" href="/contact">Escribinos</a>
+          <a class="as-button as-button--ghost-white" href="/maqueta#primera-vez">Tu primera vez</a>
+        </div>
+
+        <a class="as-next" href={`/maqueta/anexos/${next.slug}`}>
+          <span>Siguiente sede</span>
+          <strong>{next.name}</strong>
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </a>
+      </div>
+    </section>
+  </div>
+</MaquetaLayout>

@@ -1,0 +1,133 @@
+---
+/**
+ * MAQUETA — "Contacto". Formulario a la izquierda y datos de la casa a la
+ * derecha, con la geometría de campos y botones del sistema.
+ *
+ * Los datos son los que ya están en `src/pages/contact.astro`.
+ */
+import MaquetaLayout from '../../layouts/MaquetaLayout.astro';
+import { maquetaAnexos } from '../../data/maqueta-anexos';
+
+const direccion = ['Leandro N. Alem 467', 'Ramos Mejía, Buenos Aires'];
+const email = 'info@corazondefuego.com';
+
+const horarios = [
+  { day: 'Viernes', time: '20:00' },
+  { day: 'Sábados', time: '20:00' },
+  { day: 'Domingos', time: '09:30 y 11:00' },
+];
+
+const mapsHref = `https://www.google.com/maps/search/${encodeURIComponent(direccion.join(' '))}`;
+---
+
+<MaquetaLayout title="Contacto · Maqueta · Corazón de Fuego">
+  <div class="as-ministry" style="--m: #c5a059">
+    <header class="as-mhero">
+      <div class="as-mhero__copy">
+        <p class="as-eyebrow" data-reveal>Contacto</p>
+        <h1 class="as-display" data-reveal="words">Hablemos.</h1>
+        <p class="as-mhero__lead" data-reveal>
+          Escribinos por lo que necesites: una consulta, un pedido de oración o
+          simplemente para saber cómo venir por primera vez.
+        </p>
+      </div>
+      <div class="as-mhero__media" data-reveal>
+        <img src="/sedes/nosotros1.JPG" alt="Iglesia Corazón de Fuego" />
+      </div>
+    </header>
+
+    <!-- ══════════ FORMULARIO + DATOS ══════════ -->
+    <section class="as-section as-section--light">
+      <div class="as-wrap as-split">
+        <div>
+          <p class="as-eyebrow" data-reveal>Formulario</p>
+          <h2 class="as-h2" data-reveal="words">Completá tus datos.</h2>
+          <p class="as-lead" style="margin-top:1rem" data-reveal>
+            Nos contactamos con vos a la brevedad.
+          </p>
+
+          {/* `action="#"` igual que la página real: la maqueta no envía nada.
+              Al promoverla hay que apuntarla al endpoint de verdad. */}
+          <form class="as-form" action="#" method="post" data-reveal data-reveal-delay="100">
+            <label class="as-field">
+              <span>Nombre</span>
+              <input type="text" name="nombre" placeholder="Tu nombre" required />
+            </label>
+            <label class="as-field">
+              <span>Correo electrónico</span>
+              <input type="email" name="email" placeholder="tuemail@ejemplo.com" required />
+            </label>
+            <label class="as-field">
+              <span>Mensaje</span>
+              <textarea name="mensaje" rows="5" placeholder="Contanos cómo podemos ayudarte" required></textarea>
+            </label>
+            <button class="as-button as-button--ministry" type="submit">Enviar mensaje</button>
+          </form>
+        </div>
+
+        <div>
+          <p class="as-eyebrow" data-reveal>Dónde estamos</p>
+          <h2 class="as-h2" data-reveal="words">Sede central.</h2>
+
+          <div class="as-address" data-reveal data-reveal-delay="80">
+            <span class="material-symbols-outlined">location_on</span>
+            <div>{direccion.map((l) => <p>{l}</p>)}</div>
+          </div>
+
+          <div class="as-address" data-reveal data-reveal-delay="120">
+            <span class="material-symbols-outlined">mail</span>
+            <div><p><a href={`mailto:${email}`} class="as-maillink">{email}</a></p></div>
+          </div>
+
+          <div class="as-button-group" data-reveal data-reveal-delay="160">
+            <a class="as-button as-button--small" href={mapsHref} target="_blank" rel="noopener noreferrer">
+              Abrir en Maps
+            </a>
+          </div>
+
+          <p class="as-eyebrow" style="margin-top:3rem" data-reveal>Reuniones</p>
+          <div class="as-times" data-reveal data-reveal-delay="80">
+            {horarios.map((h) => (
+              <div class="as-time">
+                <span class="as-time__day">{h.day}</span>
+                <span class="as-time__hour">{h.time}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ OTRAS SEDES ══════════ -->
+    <section class="as-section">
+      <div class="as-wrap">
+        <div class="as-head">
+          <div>
+            <p class="as-eyebrow" data-reveal>Otras sedes</p>
+            <h2 class="as-h1" data-reveal="words">También estamos acá.</h2>
+          </div>
+        </div>
+        <div class="as-sedes" data-reveal>
+          {maquetaAnexos.map((a) => (
+            <a class="as-sede" href={`/maqueta/anexos/${a.slug}`}>
+              <h4>{a.name}</h4>
+              <p>{a.addressLines[0] ?? a.yearsLabel}</p>
+              <span class="as-sede__arrow material-symbols-outlined">arrow_forward</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="as-section as-section--dark as-cta">
+      <div class="as-wrap">
+        <h2 class="as-display" data-reveal="words">Vení este fin de semana.</h2>
+        <p data-reveal>No hace falta avisar. Te esperamos en la puerta.</p>
+        <div class="as-button-group" data-reveal data-reveal-delay="120">
+          <a class="as-button as-button--white" href="/maqueta#primera-vez">Tu primera vez</a>
+          <a class="as-button as-button--ghost-white" href="/maqueta/nosotros">Conocenos</a>
+        </div>
+      </div>
+    </section>
+  </div>
+</MaquetaLayout>

@@ -1,0 +1,563 @@
+---
+/**
+ * MAQUETA — réplica estructural del layout de austinstone.org.
+ *
+ * Copia el *sistema de diseño* medido sobre su CSS real: escala tipográfica,
+ * tokens de color, geometría de botones, padding de secciones, el orden de los
+ * bloques y sus efectos. El contenido es de Corazón de Fuego, tomado de las
+ * páginas que ya existen en el sitio.
+ *
+ * Página descartable: no importa Navbar ni Footer del sitio, no usa las clases
+ * `cinematic-*`, y ninguna otra ruta la referencia. Todo su CSS va prefijado
+ * con `.as` para no filtrar nada a producción.
+ *
+ * Tokens medidos sobre su hoja de estilos:
+ *   display super  7rem/7.6rem · display 5rem/5.6rem · h1 de sección 3rem/3.6rem w600
+ *   .button        radius 100px · padding 16px 32px · .8rem w600 · uppercase · ls 2px
+ *   .section       padding 7.5rem 7.5rem 0 (5rem tablet)
+ *   .marquee       animation 40s linear infinite · translateX(0 → -50%) · radius 12px
+ *   .play-circle   50px dark en hero · 64px white en piezas grandes
+ *   velo del hero  #28282840 sobre la foto
+ *   dark #282828 · fill-light #f4f4f4 · body #737373 · pinstripe #94979e29
+ *
+ * Los `reveal-block` de ellos son interacciones de Webflow (IX2). Acá se
+ * resuelven con IntersectionObserver, más liviano y sin dependencias.
+ *
+ * Pendiente tuyo: fotografía de comunidad y, si conseguís la licencia,
+ * Proxima Nova en lugar de Nunito Sans.
+ */
+import MaquetaLayout, { sedes } from '../layouts/MaquetaLayout.astro';
+import { seriesPlaylistUrl } from '../data/series';
+import { getAnnouncements, getDevotionals, getMinistries, getSeries } from '../lib/content/collections';
+
+const [devotionalPosts, ministries, sermonSeries, announcements] = await Promise.all([
+  getDevotionals(),
+  getMinistries(),
+  getSeries(),
+  getAnnouncements(),
+]);
+
+const publishedSeries = sermonSeries.filter((series) => series.image && series.href);
+const [currentSeries, ...recentSeries] = publishedSeries;
+
+const heroRotation = ['Una Iglesia', 'Una Familia', 'Una Casa'];
+
+/** Color propio de cada ministerio. Al promover esto pasa a ministries.ts. */
+const ministryColors: Record<string, string> = {
+  life: '#48c2c5',
+  gold: '#c5a059',
+  kids: '#e31b48',
+  arde: '#e8642b',
+  carcelario: '#487a7c',
+  'alabanza-y-adoracion': '#224d98',
+  multimedia: '#6b4fbb',
+  protocolo: '#085e42',
+  'firmes-y-adelante': '#c43b46',
+};
+// Los logos no toleran recorte: van contenidos sobre fondo propio.
+const logoSlugs = new Set(['gold', 'kids', 'arde']);
+
+/** Los tres pilares, con el texto que ya vive en /nosotros. */
+const pilares = [
+  {
+    n: '01',
+    title: 'Darle a Dios el lugar central.',
+    text: 'Nuestra primera respuesta es ministrar al Señor con gratitud, reverencia y alabanza.',
+  },
+  {
+    n: '02',
+    title: 'Ponernos de acuerdo con su voluntad.',
+    text: 'Intercedemos por nuestras familias, la ciudad y todo lo que Dios desea transformar.',
+  },
+  {
+    n: '03',
+    title: 'Caminar como discípulos de Jesús.',
+    text: 'Crecemos en comunidad para vivir la fe con carácter, convicción y servicio.',
+  },
+];
+
+/** Horarios reales de la casa, tal como están hoy en el Hero del sitio. */
+const horarios = [
+  { day: 'Viernes', time: '20:00', kind: 'Reunión' },
+  { day: 'Sábados', time: '20:00', kind: 'Reunión' },
+  { day: 'Domingos', time: '09:30', kind: 'Primera reunión' },
+  { day: 'Domingos', time: '11:00', kind: 'Segunda reunión' },
+];
+
+/** Qué esperar la primera vez: el bloque que resuelve la duda del visitante. */
+const primeraVez = [
+  {
+    icon: 'waving_hand',
+    title: 'Te esperamos en la puerta',
+    text: 'El equipo de Protocolo te recibe, te ubica y te acompaña. No vas a tener que averiguar nada solo.',
+  },
+  {
+    icon: 'checkroom',
+    title: 'Vení como estés',
+    text: 'No hay código de vestimenta. Vas a encontrar gente de todas las edades y de todos los recorridos.',
+  },
+  {
+    icon: 'child_care',
+    title: 'Tus hijos tienen lugar',
+    text: 'Kids funciona en paralelo a la reunión, con equipo propio y actividades por edad.',
+  },
+  {
+    icon: 'schedule',
+    title: 'Dura alrededor de 90 minutos',
+    text: 'Adoración, la Palabra y un tiempo de oración. Después nos quedamos a tomar algo.',
+  },
+];
+
+
+
+const agenda = [
+  { d: '17', m: 'Oct', full: '17 de octubre, 2026', kind: 'Evento', title: 'Noche de Alabanza' },
+  { d: '25', m: 'Ago', full: '25 de agosto, 2026', kind: 'Evento', title: 'Encuentro de Jóvenes · Life' },
+  { d: '30', m: 'Ago', full: '30 de agosto, 2026', kind: 'Programa', title: 'Discipulado — nueva cohorte' },
+  { d: '09', m: 'Sep', full: '9 de septiembre, 2026', kind: 'Formación', title: 'IETE — inicio de cuatrimestre' },
+];
+
+const mediaTabs = [
+  { id: 'series', label: 'Series' },
+  { id: 'devocional', label: 'Devocional' },
+  { id: 'anuncios', label: 'Anuncios' },
+];
+
+
+/**
+ * Fotos reales de la casa. `ministry.image` no sirve acá: la mitad de los
+ * ministerios tiene logo en vez de foto, y un logo a sangre en el marquee o en
+ * la sección oscura se ve roto. Estas son las únicas fotografías de comunidad
+ * que hay hoy en /public — el reemplazo por material propio es lo primero que
+ * hay que hacer si esto avanza.
+ */
+const fotos = [
+  '/sedes/nosotros1.JPG',
+  '/ministries/life/life1.jpg',
+  '/sedes/nosotros2.JPG',
+  '/ministries/life/life3.jpg',
+  '/sedes/nosotros3.JPG',
+  '/ministries/life/life2.jpeg',
+  '/ministries/life/life4.jpeg',
+];
+---
+
+<MaquetaLayout title="Maqueta · Iglesia Corazón de Fuego">
+    <!-- ══════════ HERO ══════════
+         Foto a sangre + velo #28282840, display de 7rem con línea rotativa y la
+         tarjeta del último mensaje con su botón play de 50px. -->
+    <header class="as-hero">
+      <div class="as-hero__bg">
+        {/* El mismo video que ya usa el Hero del sitio. `poster` evita el
+            rectángulo negro mientras carga, y en móviles donde el autoplay
+            queda bloqueado se ve la imagen en vez de un hueco. */}
+        <video
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="metadata"
+          poster={currentSeries?.image}
+        >
+          <source src="/home/hero-v1-compressed.mp4" type="video/mp4" />
+        </video>
+        <div class="as-hero__veil"></div>
+      </div>
+
+      <div class="as-hero__grid">
+        <div class="as-hero__content">
+          <h1 class="as-display as-display--super" data-reveal="words">Somos</h1>
+          <div class="as-rotator" data-rotator>
+            {heroRotation.map((line, index) => (
+              <h2 class={`as-display as-display--super as-rotator__line${index === 0 ? ' is-active' : ''}`}>{line}</h2>
+            ))}
+          </div>
+          <h2 class="as-display as-display--super" data-reveal="words" data-reveal-delay="120">Corazón de Fuego</h2>
+
+          <p class="as-hero__lead" data-reveal>
+            Te esperamos este fin de semana en cualquiera de nuestras sedes.
+            Viernes y sábados 20 hs · Domingos 9:30 y 11:00 hs.
+          </p>
+
+          <div class="as-hero__actions" data-reveal data-reveal-delay="140">
+            <a class="as-button as-button--white" href="#primera-vez">Visitanos</a>
+            <a class="as-button as-button--ghost-white" href="#participar">Participar</a>
+          </div>
+        </div>
+
+        {currentSeries && (
+          <a class="as-hero__sermon" href={currentSeries.href} target="_blank" rel="noopener noreferrer" data-reveal data-reveal-delay="220">
+            <div class="as-hero__sermon-image">
+              <img src={currentSeries.image} alt={currentSeries.title} />
+              <span class="as-play as-play--home">
+                <span class="as-play__circle">
+                  <span class="material-symbols-outlined">play_arrow</span>
+                </span>
+              </span>
+            </div>
+            <span class="as-hero__sermon-link">
+              Ver el último mensaje
+              <span class="material-symbols-outlined">arrow_forward</span>
+            </span>
+          </a>
+        )}
+      </div>
+    </header>
+
+    <!-- ══════════ BIENVENIDA ══════════
+         El bloque que va entre el hero y el carousel: grilla de 6 columnas, el
+         texto ocupa las primeras cuatro y los botones bajan a la derecha. -->
+    <section class="as-section as-section--intro">
+      <div class="as-wrap">
+        <div class="as-grid6">
+          <div class="as-grid6__eyebrow">
+            <h6 class="as-eyebrow" data-reveal>Bienvenido a Corazón de Fuego</h6>
+          </div>
+          <div class="as-grid6__lead">
+            <h2 class="as-h1" data-reveal="words">
+              Una comunidad para encontrarte con Dios, crecer y servir.
+            </h2>
+          </div>
+          <div class="as-grid6__actions">
+            <p data-reveal>
+              Creemos que la iglesia es una familia espiritual llamada a revelar a Cristo con
+              palabras, obras y una vida rendida a Dios.
+            </p>
+            <div class="as-button-group" data-reveal data-reveal-delay="120">
+              <a class="as-button" href="#primera-vez">Visitanos</a>
+              <a class="as-button as-button--ghost" href="/nosotros">Sobre nosotros</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ MARQUEE ══════════ 40s lineal, translateX(0 → -50%). -->
+    <section class="as-marquee" data-reveal>
+      <div class="as-marquee__track">
+        {
+          [...fotos, ...fotos].map((src) => (
+            <div class="as-marquee__item">
+              <img src={src} alt="" loading="lazy" />
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <!-- ══════════ PILARES ══════════ Los tres verbos de la casa. -->
+    <section class="as-section as-section--light">
+      <div class="as-wrap">
+        <div class="as-head">
+          <div>
+            <h6 class="as-eyebrow" data-reveal>Quiénes somos</h6>
+            <h2 class="as-h1" data-reveal="words">Adoración que se vuelve vida.</h2>
+          </div>
+          <a class="as-button as-button--small" href="/nosotros">Conocé nuestra historia</a>
+        </div>
+
+        <div class="as-pilares">
+          {
+            pilares.map((pilar, index) => (
+              <div class="as-pilar" data-reveal data-reveal-delay={index * 110}>
+                <span class="as-pilar__n">{pilar.n}</span>
+                <h3>{pilar.title}</h3>
+                <p>{pilar.text}</p>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ PRIMERA VEZ ══════════
+         Horarios a la izquierda, qué esperar a la derecha. Es el bloque que más
+         preguntas resuelve y el que hoy no existe en el sitio. -->
+    <section class="as-section" id="primera-vez">
+      <div class="as-wrap">
+        <div class="as-visit">
+          <div class="as-visit__times">
+            <h6 class="as-eyebrow" data-reveal>Horarios</h6>
+            <h2 class="as-h2" data-reveal="words">Cuándo nos reunimos.</h2>
+            <div class="as-times">
+              {
+                horarios.map((h, index) => (
+                  <div class="as-time" data-reveal data-reveal-delay={index * 70}>
+                    <span class="as-time__day">{h.day}</span>
+                    <span class="as-time__hour">{h.time}</span>
+                    <span class="as-time__kind">{h.kind}</span>
+                  </div>
+                ))
+              }
+            </div>
+            <div class="as-button-group" data-reveal>
+              <a class="as-button as-button--small" href="/contact">Cómo llegar</a>
+            </div>
+          </div>
+
+          <div class="as-visit__expect">
+            <h6 class="as-eyebrow" data-reveal>Tu primera vez</h6>
+            <h2 class="as-h2" data-reveal="words">Qué podés esperar.</h2>
+            <div class="as-expect">
+              {
+                primeraVez.map((item, index) => (
+                  <div class="as-expect__item" data-reveal data-reveal-delay={index * 90}>
+                    <span class="material-symbols-outlined as-expect__icon">{item.icon}</span>
+                    <div>
+                      <h3>{item.title}</h3>
+                      <p>{item.text}</p>
+                    </div>
+                  </div>
+                ))
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ MINISTERIOS ══════════
+         Cada tarjeta lleva el color propio del ministerio y entra a su página
+         interna. Es lo que conecta el home con /maqueta/{slug}. -->
+    <section class="as-section as-section--light" id="ministerios">
+      <div class="as-wrap">
+        <div class="as-head">
+          <div>
+            <p class="as-eyebrow" data-reveal>Ministerios</p>
+            <h2 class="as-h1" data-reveal="words">Encontrá tu lugar para servir y crecer.</h2>
+          </div>
+        </div>
+
+        <div class="as-ministries">
+          {
+            ministries.map((ministry, i) => (
+              <a
+                class="as-mcard"
+                href={`/maqueta/${ministry.slug}`}
+                style={`--m: ${ministryColors[ministry.slug] ?? '#282828'}`}
+                data-reveal
+                data-reveal-delay={i * 60}
+              >
+                <div class={`as-mcard__media${logoSlugs.has(ministry.slug) ? ' is-logo' : ''}`}>
+                  <img src={ministry.image} alt={`Ministerio ${ministry.name}`} loading="lazy" />
+                </div>
+                <div class="as-mcard__body">
+                  <p class="as-mcard__area">{ministry.area}</p>
+                  <h3>{ministry.name}</h3>
+                  <span class="as-item__view">Conocer</span>
+                </div>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ SEDES ══════════ Grilla de 6 con hairlines. -->
+    <section class="as-section as-section--light">
+      <div class="as-wrap">
+        <div class="as-head">
+          <div>
+            <h6 class="as-eyebrow" data-reveal>Sedes</h6>
+            <h2 class="as-h1" data-reveal="words">Una iglesia en varias ciudades.</h2>
+          </div>
+          <a class="as-button as-button--small" href="/anexos">Ver todas</a>
+        </div>
+
+        <div class="as-sedes" data-reveal>
+          {
+            sedes.map((sede) => (
+              <a class="as-sede" href={sede.href}>
+                <h4>{sede.name}</h4>
+                <p>{sede.region}</p>
+                <span class="as-sede__arrow material-symbols-outlined">arrow_forward</span>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ AGENDA ══════════ -->
+    <section class="as-section" id="agenda">
+      <div class="as-wrap">
+        <div class="as-head">
+          <div>
+            <h2 class="as-h1" data-reveal="words">Qué está pasando</h2>
+            <p class="as-head__lead" data-reveal>
+              Caminemos juntos. Mirá las próximas clases, eventos y encuentros de la casa.
+            </p>
+          </div>
+          <a class="as-button as-button--small" href="#participar">Participar</a>
+        </div>
+
+        <div class="as-agenda">
+          {
+            agenda.map((item, index) => (
+              <a class="as-event" href="#" data-reveal data-reveal-delay={index * 70}>
+                <span class="as-event__badge">
+                  <strong>{item.m}</strong>
+                  <em>{item.d}</em>
+                </span>
+                <span class="as-event__body">
+                  <span class="as-event__meta">
+                    {item.full} · {item.kind}
+                  </span>
+                  <span class="as-event__title">{item.title}</span>
+                </span>
+                <span class="material-symbols-outlined as-event__arrow">arrow_forward</span>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ SERIE ACTUAL ══════════ -->
+    {currentSeries && (
+      <section class="as-section as-section--light" id="series">
+        <div class="as-wrap">
+          <div class="as-split as-split--reverse">
+            <div>
+              <h6 class="as-eyebrow" data-reveal>Serie actual</h6>
+              <h2 class="as-h1" data-reveal="words">{currentSeries.title}</h2>
+              <p class="as-head__lead" data-reveal>{currentSeries.description}</p>
+              <div class="as-button-group" data-reveal data-reveal-delay="120">
+                <a class="as-button as-button--small" href={seriesPlaylistUrl} target="_blank" rel="noopener noreferrer">
+                  Explorar la serie
+                </a>
+              </div>
+            </div>
+            <a class="as-image as-image--landscape" href={currentSeries.href} target="_blank" rel="noopener noreferrer" data-reveal>
+              <img src={currentSeries.image} alt={currentSeries.title} loading="lazy" />
+              <span class="as-play">
+                <span class="as-play__circle as-play__circle--large">
+                  <span class="material-symbols-outlined">play_arrow</span>
+                </span>
+              </span>
+            </a>
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- ══════════ SOS BIENVENIDO ══════════
+         Oscura, sin padding inferior: las fotos escalonadas se apoyan en el borde. -->
+    <section class="as-section as-section--dark" id="participar">
+      <div class="as-wrap">
+        <div class="as-welcome">
+          <div class="as-welcome__copy">
+            <h2 class="as-display" data-reveal="words">Acá sos bienvenido.</h2>
+            <p data-reveal>
+              ¿Recién empezás a conocer la fe? ¿Hace años que seguís a Jesús? ¿O estás en algún
+              punto intermedio? Vengas de donde vengas, tenés lugar en esta casa.
+            </p>
+            <div class="as-button-group" data-reveal data-reveal-delay="120">
+              <a class="as-button as-button--white" href="#primera-vez">Visitanos</a>
+              <a class="as-button as-button--ghost-white" href="/contact">Escribinos</a>
+            </div>
+          </div>
+          <div class="as-welcome__images" data-reveal>
+            {
+              fotos.slice(0, 3).map((src) => (
+                <div class="as-welcome__image">
+                  <img src={src} alt="" loading="lazy" />
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ CONTENIDO / TABS ══════════ -->
+    <section class="as-section as-section--light">
+      <div class="as-wrap">
+        <h6 class="as-eyebrow" data-reveal>Lo último</h6>
+        <h2 class="as-h2" data-reveal="words">
+          Contenido sobre vida cristiana, formación y aliento bíblico para tu semana.
+        </h2>
+
+        <div class="as-tabs" data-tabs>
+          <div class="as-tabs__menu">
+            {
+              mediaTabs.map((tab, index) => (
+                <button class={`as-tabs__link${index === 0 ? ' is-active' : ''}`} type="button" data-tab={tab.id}>
+                  {tab.label}
+                </button>
+              ))
+            }
+          </div>
+
+          <div class="as-tabs__panel is-active" data-panel="series">
+            <div class="as-collection">
+              {
+                recentSeries.slice(0, 3).map((series) => (
+                  <a class="as-item" href={series.href} target="_blank" rel="noopener noreferrer">
+                    <div class="as-image as-image--square">
+                      <img src={series.image} alt={series.title} loading="lazy" />
+                    </div>
+                    <p class="as-item__meta">Serie</p>
+                    <h3 class="as-item__title">{series.title}</h3>
+                    <span class="as-item__view">Ver</span>
+                  </a>
+                ))
+              }
+            </div>
+            <a class="as-button" href={seriesPlaylistUrl} target="_blank" rel="noopener noreferrer">Ver todas las series</a>
+          </div>
+
+          <div class="as-tabs__panel" data-panel="devocional">
+            <div class="as-collection">
+              {
+                devotionalPosts.slice(0, 3).map((post) => (
+                  <a class="as-item" href="/devocional">
+                    <div class="as-image as-image--square">
+                      <img src={post.image} alt={post.title} loading="lazy" />
+                    </div>
+                    <p class="as-item__meta">{post.weekLabel}</p>
+                    <h3 class="as-item__title">{post.title}</h3>
+                    <span class="as-item__view">Ver</span>
+                  </a>
+                ))
+              }
+            </div>
+            <a class="as-button" href="/devocional">Ver todos los devocionales</a>
+          </div>
+
+          <div class="as-tabs__panel" data-panel="anuncios">
+            <div class="as-collection">
+              {
+                announcements.slice(0, 3).map((item) => (
+                  <a class="as-item" href={item.href}>
+                    <div class="as-image as-image--square as-image--contain">
+                      <img src={item.image} alt={item.alt} loading="lazy" />
+                    </div>
+                    <p class="as-item__meta">{item.eyebrow}</p>
+                    <h3 class="as-item__title">{item.title}</h3>
+                    <span class="as-item__view">Ver</span>
+                  </a>
+                ))
+              }
+            </div>
+            <a class="as-button" href="#agenda">Ver todos los anuncios</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ RADIO ══════════ Banda angosta, el proyecto que viene. -->
+    <section class="as-section as-section--dark as-section--radio" id="radio">
+      <div class="as-wrap as-radio">
+        <div>
+          <h6 class="as-eyebrow as-eyebrow--light" data-reveal>Radio Corazón</h6>
+          <h2 class="as-h1" data-reveal="words">La frecuencia del cielo.</h2>
+          <p data-reveal>24/7 conectados con vos.</p>
+        </div>
+        <div class="as-radio__side" data-reveal data-reveal-delay="120">
+          <span class="as-tag">Próximamente</span>
+          <div class="as-wave"><span></span><span></span><span></span><span></span><span></span></div>
+        </div>
+      </div>
+    </section>
+</MaquetaLayout>

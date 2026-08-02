@@ -1,0 +1,232 @@
+---
+/**
+ * Layout de la MAQUETA. Contiene el nav, el footer, el sistema de diseño y los
+ * comportamientos, para que el home y las páginas internas compartan todo en
+ * lugar de duplicarlo.
+ *
+ * Es descartable como el resto de la maqueta: ninguna ruta del sitio real lo
+ * usa, y todo su CSS va prefijado con `.as`.
+ */
+import BaseLayout from './BaseLayout.astro';
+import { getMinistries } from '../lib/content/collections';
+import '../styles/maqueta.css';
+
+interface Props {
+  title?: string;
+}
+
+const { title = 'Maqueta · Iglesia Corazón de Fuego' } = Astro.props;
+
+const ministries = await getMinistries();
+
+export const sedes = [
+  { name: 'Sede Central', region: 'Ramos Mejía · Buenos Aires', href: '/anexos' },
+  { name: 'Ramos Mejía', region: 'Buenos Aires', href: '/maqueta/anexos/ramos-mejia' },
+  { name: 'Rojas', region: 'Buenos Aires', href: '/maqueta/anexos/rojas' },
+  { name: 'Santos Vega', region: 'Buenos Aires', href: '/maqueta/anexos/santos-vega' },
+  { name: 'Villa Minetti', region: 'Santa Fe', href: '/maqueta/anexos/villa-minetti' },
+  { name: 'El Palito', region: 'Santa Fe', href: '/maqueta/anexos/palito' },
+];
+
+/**
+ * Secciones calcadas del Navbar real del sitio (src/components/Navbar.astro):
+ * tres links sueltos — Nosotros, Misiones, Evangelismo — y tres desplegables:
+ * Nuestras Sedes, Educativos y Ministerios. Se respetan los mismos nombres y
+ * destinos para que la maqueta se pueda comparar contra dev sin traducir nada.
+ */
+const megaMenu = [
+  { label: 'Nosotros', href: '/maqueta/nosotros' },
+  { label: 'Misiones', href: '/maqueta/misiones' },
+  { label: 'Evangelismo', href: '/maqueta/evangelismo' },
+  {
+    label: 'Nuestras Sedes',
+    items: [
+      { kicker: 'Anexo', title: 'Ramos Mejía', href: '/maqueta/anexos/ramos-mejia' },
+      { kicker: 'Anexo', title: 'Rojas', href: '/maqueta/anexos/rojas' },
+      { kicker: 'Anexo', title: 'Villa Minetti', href: '/maqueta/anexos/villa-minetti' },
+      { kicker: 'Anexo', title: 'Palito', href: '/maqueta/anexos/palito' },
+      { kicker: 'Anexo', title: 'Santos Vega', href: '/maqueta/anexos/santos-vega' },
+    ],
+  },
+  {
+    label: 'Educativos',
+    items: [
+      { kicker: 'Formación', title: 'IETE', href: '/maqueta/institucional/iete' },
+      { kicker: 'Formación', title: 'Discipulados', href: '/maqueta/institucional/discipulados' },
+    ],
+  },
+  {
+    label: 'Ministerios',
+    // El Navbar real excluye 'evangelismo' porque ya tiene su link propio.
+    items: ministries
+      .filter((ministry) => ministry.slug !== 'evangelismo')
+      .map((ministry) => ({
+        kicker: ministry.area,
+        title: ministry.name,
+        href: `/maqueta/${ministry.slug}`,
+      })),
+  },
+];
+
+const footerColumns = [
+  {
+    header: 'Iglesia',
+    links: [
+      { label: 'Nosotros', href: '/maqueta/nosotros' },
+      { label: 'Contacto', href: '/maqueta/contacto' },
+      { label: 'Ofrendar', href: '#' },
+    ],
+  },
+  { header: 'Sedes', links: sedes.map((sede) => ({ label: sede.name, href: sede.href })) },
+  {
+    header: 'Participar',
+    links: [
+      { label: 'Discipulados', href: '/maqueta/institucional/discipulados' },
+      { label: 'Misiones', href: '/maqueta/misiones' },
+      { label: 'Evangelismo', href: '/maqueta/evangelismo' },
+      { label: 'Voluntariado', href: '#' },
+    ],
+  },
+  {
+    header: 'Contenido',
+    links: [
+      { label: 'Series', href: '/maqueta#series' },
+      { label: 'Devocional', href: '/maqueta/devocional' },
+      { label: 'Radio Corazón', href: '/maqueta#radio' },
+    ],
+  },
+  {
+    header: 'Ministerios',
+    links: ministries.map((ministry) => ({ label: ministry.name, href: `/maqueta/${ministry.slug}` })),
+  },
+  {
+    header: 'Institucional',
+    links: [
+      { label: 'IETE', href: '/maqueta/institucional/iete' },
+      { label: 'Anexos', href: '/anexos' },
+    ],
+  },
+];
+---
+
+<BaseLayout title={title}>
+  <link
+    slot="head"
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800&display=swap"
+  />
+
+  <div class="as">
+    <!-- ══════════ NAV ══════════ -->
+    <header class="as-nav">
+      <div class="as-nav__inner">
+        <a class="as-nav__logo" href="/maqueta">
+          <img src="/brand/favico.png" alt="" width="36" height="36" />
+          <span>Corazón de Fuego</span>
+        </a>
+
+        <nav class="as-nav__menu">
+          {
+            megaMenu.map((group) =>
+              group.items ? (
+                <div class="as-nav__group">
+                  <button class="as-nav__item" type="button">
+                    {group.label}
+                    <span class="material-symbols-outlined">expand_more</span>
+                  </button>
+                  <div class="as-dropdown">
+                    <div class="as-dropdown__grid">
+                      {group.items.map((item) => (
+                        <a class="as-dropdown__link" href={item.href}>
+                          <span class="as-dropdown__kicker">{item.kicker}</span>
+                          <span class="as-dropdown__title">{item.title}</span>
+                          <span class="as-dropdown__explore">
+                            Explorar
+                            <span class="material-symbols-outlined">arrow_forward</span>
+                          </span>
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <a class="as-nav__item" href={group.href}>
+                  {group.label}
+                </a>
+              )
+            )
+          }
+        </nav>
+
+        <div class="as-nav__utils">
+          <a class="as-button as-button--small" href="#primera-vez">Visitanos</a>
+          <button class="as-burger" type="button" aria-label="Menú" aria-expanded="false">
+            <span></span><span></span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Panel mobile: mismo contenido del mega-menú, apilado. -->
+      <div class="as-mobile">
+        {
+          megaMenu.map((group) => (
+            <div class="as-mobile__group">
+              {group.items ? (
+                <>
+                  <p class="as-mobile__header">{group.label}</p>
+                  {group.items.map((item) => (
+                    <a class="as-mobile__link" href={item.href}>
+                      {item.title}
+                    </a>
+                  ))}
+                </>
+              ) : (
+                <a class="as-mobile__link" href={group.href}>
+                  {group.label}
+                </a>
+              )}
+            </div>
+          ))
+        }
+      </div>
+    </header>
+
+    <slot />
+
+    <!-- ══════════ FOOTER ══════════ -->
+    <footer class="as-footer">
+      <div class="as-wrap">
+        <div class="as-footer__top">
+          <a class="as-nav__logo" href="/maqueta">
+            <img src="/brand/favico.png" alt="" width="40" height="40" />
+            <span>Corazón de Fuego</span>
+          </a>
+          <a class="as-button as-button--ghost-white as-button--small" href="#primera-vez">Visitanos</a>
+        </div>
+
+        <div class="as-footer__grid">
+          {
+            footerColumns.map((column) => (
+              <div>
+                <h5 class="as-footer__header">{column.header}</h5>
+                {column.links.map((link) => (
+                  <a class="as-footer__link" href={link.href}>
+                    {link.label}
+                  </a>
+                ))}
+              </div>
+            ))
+          }
+        </div>
+
+        <div class="as-footer__legal">
+          <span>© {new Date().getFullYear()} Iglesia Corazón de Fuego</span>
+          <span>Maqueta de rediseño · no es el sitio público</span>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+</BaseLayout>
+
+<script src="../scripts/maqueta-ui.js"></script>

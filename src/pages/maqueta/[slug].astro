@@ -1,0 +1,379 @@
+---
+/**
+ * MAQUETA — página interna de ministerio, calcada de la estructura de
+ * austinstone.org/kids y adaptada a los datos de `src/data/ministries.ts`.
+ *
+ * Orden de bloques del original:
+ *   hero partido (logo + display + botones) · fila de jump-links ·
+ *   franja oscura de declaración · "¿qué es?" · bloque de columnas ·
+ *   grilla de fotos · agenda con pestañas · sedes con pestañas ·
+ *   contenido reciente · preguntas frecuentes · CTA oscuro · siguiente
+ *
+ * Cada ministerio lleva su color propio, como hacen ellos con `.button.ministry`.
+ */
+import MaquetaLayout, { sedes } from '../../layouts/MaquetaLayout.astro';
+import { getMinistries, getSeries, getAnnouncements } from '../../lib/content/collections';
+
+/* El sitio corre en SSR con el adaptador de node, así que el slug llega por la
+   URL y no hace falta `getStaticPaths`: ahí sería código muerto y además hace
+   ruido en el build. */
+const { slug } = Astro.params;
+const [ministries, sermonSeries, announcements] = await Promise.all([
+  getMinistries(),
+  getSeries(),
+  getAnnouncements(),
+]);
+
+const index = ministries.findIndex((m) => m.slug === slug);
+const ministry = ministries[index];
+if (!ministry) return Astro.redirect('/maqueta');
+
+// El siguiente de la lista, para el link de "próximo" del pie.
+const next = ministries[(index + 1) % ministries.length];
+
+/** Mismo mapa de color que usa el listado. Al promover esto pasa a ministries.ts. */
+const ministryColors: Record<string, string> = {
+  life: '#48c2c5',
+  gold: '#c5a059',
+  kids: '#e31b48',
+  arde: '#e8642b',
+  carcelario: '#487a7c',
+  'alabanza-y-adoracion': '#224d98',
+  multimedia: '#6b4fbb',
+  protocolo: '#085e42',
+  'firmes-y-adelante': '#c43b46',
+};
+const color = ministryColors[ministry.slug] ?? '#282828';
+
+// Los logos no toleran recorte: van contenidos sobre fondo propio.
+const esLogo = ['gold', 'kids', 'arde'].includes(ministry.slug);
+
+/** Fotos de comunidad. Igual que en el home, `ministry.image` suele ser logo. */
+const fotos = [
+  '/sedes/nosotros1.JPG',
+  '/ministries/life/life1.jpg',
+  '/sedes/nosotros2.JPG',
+  '/ministries/life/life3.jpg',
+  '/sedes/nosotros3.JPG',
+  '/ministries/life/life2.jpeg',
+];
+
+const jumpLinks = [
+  { label: 'Sobre', href: '#sobre' },
+  { label: 'Qué hacemos', href: '#que-hacemos' },
+  { label: 'Participar', href: '#participar' },
+  { label: 'Sedes', href: '#sedes' },
+  { label: 'Contenido', href: '#contenido' },
+];
+
+/* Su bloque de tres columnas debajo del "qué es". Se arma con los datos que
+   tenga cargados el ministerio y se esconde el que venga vacío. */
+const columnas = [
+  ministry.schedule && { n: '01', title: 'Cuándo nos reunimos', text: ministry.schedule },
+  ministry.participation && { n: '02', title: 'Cómo participar', text: ministry.participation },
+  ministry.place && { n: '03', title: 'Dónde', text: ministry.place },
+].filter(Boolean) as { n: string; title: string; text: string }[];
+
+const agendaTabs = [
+  { id: 'encuentros', label: 'Encuentros' },
+  { id: 'formacion', label: 'Formación' },
+  { id: 'servir', label: 'Servir' },
+];
+
+const agenda: Record<string, { d: string; m: string; full: string; kind: string; title: string }[]> = {
+  encuentros: [
+    { d: '17', m: 'Oct', full: '17 de octubre, 2026', kind: 'Encuentro', title: `Reunión de ${ministry.name}` },
+    { d: '25', m: 'Ago', full: '25 de agosto, 2026', kind: 'Encuentro', title: 'Noche de Alabanza' },
+  ],
+  formacion: [
+    { d: '09', m: 'Sep', full: '9 de septiembre, 2026', kind: 'Formación', title: 'IETE — inicio de cuatrimestre' },
+  ],
+  servir: [
+    { d: '30', m: 'Ago', full: '30 de agosto, 2026', kind: 'Servir', title: 'Jornada de servicio' },
+  ],
+};
+
+const faqs = [
+  {
+    q: '¿Tengo que anotarme para venir?',
+    a: 'No hace falta. Vení el día de la reunión y el equipo te recibe en la entrada.',
+  },
+  {
+    q: '¿Qué edad hace falta para participar?',
+    a: `${ministry.name} es parte del área de ${ministry.area}. Si tenés dudas sobre si es tu espacio, escribinos y te orientamos.`,
+  },
+  {
+    q: '¿Puedo servir en el equipo?',
+    a: 'Sí. Se empieza acompañando una reunión y después el líder del área te propone dónde sumarte.',
+  },
+  {
+    q: '¿Se reúnen en todas las sedes?',
+    a: 'Consultá el bloque de sedes: no todos los ministerios funcionan en todos los anexos.',
+  },
+];
+
+const publishedSeries = sermonSeries.filter((s) => s.image && s.href).slice(0, 3);
+const contenidoTabs = [
+  { id: 'series', label: 'Series' },
+  { id: 'anuncios', label: 'Anuncios' },
+];
+
+const whatsappHref = ministry.whatsapp
+  ? `https://wa.me/${ministry.whatsapp.replace(/\D/g, '')}`
+  : '/contact';
+---
+
+<MaquetaLayout title={`${ministry.name} · Maqueta · Corazón de Fuego`}>
+  <div class="as-ministry" style={`--m: ${color}`}>
+    <!-- ══════════ HERO PARTIDO ══════════
+         Copy a la izquierda, imagen a la derecha ocupando media pantalla. -->
+    <header class="as-mhero">
+      <div class="as-mhero__copy">
+        <p class="as-eyebrow" data-reveal>{ministry.area}</p>
+        <h1 class="as-display" data-reveal="words">{ministry.name}</h1>
+        <p class="as-mhero__lead" data-reveal>{ministry.excerpt}</p>
+        <div class="as-button-group" data-reveal data-reveal-delay="120">
+          <a class="as-button as-button--ministry" href="#participar">Quiero participar</a>
+          <a class="as-button as-button--ghost" href="#faq">Preguntas frecuentes</a>
+        </div>
+      </div>
+      <div class={`as-mhero__media${esLogo ? ' is-logo' : ''}`} data-reveal>
+        <img src={ministry.photo || ministry.image} alt={ministry.name} />
+      </div>
+    </header>
+
+    <!-- Fila de anclas internas, como su jump-link row. -->
+    <nav class="as-jump" aria-label="Secciones de la página">
+      <div class="as-jump__inner">
+        {jumpLinks.map((l) => <a href={l.href}>{l.label}</a>)}
+      </div>
+    </nav>
+
+    <!-- ══════════ DECLARACIÓN ══════════ Franja oscura, una sola idea. -->
+    <section class="as-section as-section--dark as-statement" id="sobre">
+      <div class="as-wrap">
+        <p class="as-eyebrow as-eyebrow--light" data-reveal>{ministry.name} en Corazón de Fuego</p>
+        <h2 class="as-statement__text" data-reveal="words">{ministry.excerpt}</h2>
+      </div>
+    </section>
+
+    <!-- ══════════ QUÉ ES ══════════ -->
+    <section class="as-section as-section--light" id="que-hacemos">
+      <div class="as-wrap as-split">
+        <h2 class="as-h1" data-reveal="words">¿Qué es {ministry.name}?</h2>
+        <div>
+          <p class="as-lead" data-reveal>{ministry.description}</p>
+          {ministry.noticeTitle && (
+            <div class="as-notice" data-reveal data-reveal-delay="120">
+              <p class="as-notice__title">{ministry.noticeTitle}</p>
+              {ministry.noticeText && <p>{ministry.noticeText}</p>}
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ COLUMNAS ══════════ Horario, participación y lugar. -->
+    {columnas.length > 0 && (
+      <section class="as-section" id="participar">
+        <div class="as-wrap">
+          <div class="as-head">
+            <div>
+              <p class="as-eyebrow" data-reveal>Participar</p>
+              <h2 class="as-h1" data-reveal="words">Cómo sumarte.</h2>
+            </div>
+            <a class="as-button as-button--small as-button--ministry" href={whatsappHref} target="_blank" rel="noopener noreferrer">
+              Escribinos
+            </a>
+          </div>
+          <div class="as-cols">
+            {columnas.map((c, i) => (
+              <div class="as-col" data-reveal data-reveal-delay={i * 110}>
+                <span class="as-col__n">{c.n}</span>
+                <h3>{c.title}</h3>
+                <p>{c.text}</p>
+              </div>
+            ))}
+          </div>
+
+          {(ministry.meetingDay || ministry.meetingHours) && (
+            <div class="as-meta" data-reveal>
+              {ministry.meetingDay && (
+                <div class="as-meta__item">
+                  <span class="material-symbols-outlined">event</span>
+                  <div><strong>Día</strong><p>{ministry.meetingDay}</p></div>
+                </div>
+              )}
+              {ministry.meetingHours && (
+                <div class="as-meta__item">
+                  <span class="material-symbols-outlined">schedule</span>
+                  <div><strong>Horario</strong><p>{ministry.meetingHours}</p></div>
+                </div>
+              )}
+              {ministry.place && (
+                <div class="as-meta__item">
+                  <span class="material-symbols-outlined">location_on</span>
+                  <div><strong>Lugar</strong><p>{ministry.place}</p></div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </section>
+    )}
+
+    <!-- ══════════ FOTOS ══════════ Grilla escalonada, sin padding superior. -->
+    <section class="as-section as-section--photos">
+      <div class="as-wrap as-photos">
+        {fotos.slice(0, 6).map((src, i) => (
+          <div class="as-photo" data-reveal data-reveal-delay={i * 70}>
+            <img src={src} alt="" loading="lazy" />
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- ══════════ AGENDA CON PESTAÑAS ══════════ -->
+    <section class="as-section as-section--light">
+      <div class="as-wrap">
+        <h2 class="as-h1" data-reveal="words">Próximas fechas</h2>
+        <div class="as-tabs" data-tabs>
+          <div class="as-tabs__menu">
+            {agendaTabs.map((t, i) => (
+              <button class={`as-tabs__link${i === 0 ? ' is-active' : ''}`} type="button" data-tab={t.id}>
+                {t.label}
+              </button>
+            ))}
+          </div>
+          {agendaTabs.map((t, i) => (
+            <div class={`as-tabs__panel${i === 0 ? ' is-active' : ''}`} data-panel={t.id}>
+              <div class="as-agenda">
+                {agenda[t.id].map((item) => (
+                  <a class="as-event" href="#">
+                    <span class="as-event__badge">
+                      <strong>{item.m}</strong>
+                      <em>{item.d}</em>
+                    </span>
+                    <span class="as-event__body">
+                      <span class="as-event__meta">{item.full} · {item.kind}</span>
+                      <span class="as-event__title">{item.title}</span>
+                    </span>
+                    <span class="material-symbols-outlined as-event__arrow">arrow_forward</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ SEDES ══════════ -->
+    <section class="as-section" id="sedes">
+      <div class="as-wrap">
+        <div class="as-head">
+          <div>
+            <p class="as-eyebrow" data-reveal>Sedes</p>
+            <h2 class="as-h1" data-reveal="words">Dónde encontrarnos.</h2>
+          </div>
+          <a class="as-button as-button--small" href="/anexos">Ver todas</a>
+        </div>
+        <div class="as-sedes" data-reveal>
+          {sedes.map((sede) => (
+            <a class="as-sede" href={sede.href}>
+              <h4>{sede.name}</h4>
+              <p>{sede.region}</p>
+              <span class="as-sede__arrow material-symbols-outlined">arrow_forward</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ CONTENIDO RECIENTE ══════════ -->
+    <section class="as-section as-section--light" id="contenido">
+      <div class="as-wrap">
+        <h2 class="as-h1" data-reveal="words">Contenido reciente</h2>
+        <div class="as-tabs" data-tabs>
+          <div class="as-tabs__menu">
+            {contenidoTabs.map((t, i) => (
+              <button class={`as-tabs__link${i === 0 ? ' is-active' : ''}`} type="button" data-tab={t.id}>
+                {t.label}
+              </button>
+            ))}
+          </div>
+          <div class="as-tabs__panel is-active" data-panel="series">
+            <div class="as-collection">
+              {publishedSeries.map((s) => (
+                <a class="as-item" href={s.href} target="_blank" rel="noopener noreferrer">
+                  <div class="as-image as-image--square"><img src={s.image} alt={s.title} loading="lazy" /></div>
+                  <p class="as-item__meta">Serie</p>
+                  <h3 class="as-item__title">{s.title}</h3>
+                  <span class="as-item__view">Ver</span>
+                </a>
+              ))}
+            </div>
+          </div>
+          <div class="as-tabs__panel" data-panel="anuncios">
+            <div class="as-collection">
+              {announcements.slice(0, 3).map((a) => (
+                <a class="as-item" href={a.href}>
+                  <div class="as-image as-image--square as-image--contain"><img src={a.image} alt={a.alt} loading="lazy" /></div>
+                  <p class="as-item__meta">{a.eyebrow}</p>
+                  <h3 class="as-item__title">{a.title}</h3>
+                  <span class="as-item__view">Ver</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ FAQ ══════════ Acordeón con <details>, sin JS. -->
+    <section class="as-section" id="faq">
+      <div class="as-wrap as-split as-split--faq">
+        <h2 class="as-h1" data-reveal="words">Preguntas frecuentes</h2>
+        <div class="as-faq" data-reveal>
+          {faqs.map((f) => (
+            <details class="as-faq__item">
+              <summary>
+                {f.q}
+                <span class="material-symbols-outlined">add</span>
+              </summary>
+              <p>{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ CTA + SIGUIENTE ══════════ -->
+    <section class="as-section as-section--dark as-cta">
+      <div class="as-wrap">
+        <h2 class="as-display" data-reveal="words">Te esperamos.</h2>
+        <p data-reveal>Vení a conocernos o escribinos y te contamos cómo empezar.</p>
+        <div class="as-button-group" data-reveal data-reveal-delay="120">
+          <a class="as-button as-button--white" href={whatsappHref} target="_blank" rel="noopener noreferrer">Escribinos</a>
+          <a class="as-button as-button--ghost-white" href="/maqueta#primera-vez">Visitanos</a>
+        </div>
+
+        {ministry.instagram && (
+          <div class="as-follow" data-reveal>
+            <p class="as-eyebrow as-eyebrow--light">Seguinos</p>
+            <a class="as-follow__link" href={ministry.instagram} target="_blank" rel="noopener noreferrer">
+              Instagram
+              <span class="material-symbols-outlined">arrow_outward</span>
+            </a>
+          </div>
+        )}
+
+        <a class="as-next" href={`/maqueta/${next.slug}`}>
+          <span>Siguiente ministerio</span>
+          <strong>{next.name}</strong>
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </a>
+      </div>
+    </section>
+  </div>
+</MaquetaLayout>
