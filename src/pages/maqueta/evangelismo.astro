@@ -6,12 +6,6 @@
 import MaquetaLayout from '../../layouts/MaquetaLayout.astro';
 import { evangelismFronts } from '../../data/evangelism';
 
-const jumpLinks = [
-  { label: 'Sobre', href: '#sobre' },
-  { label: 'Frentes', href: '#frentes' },
-  { label: 'Participar', href: '#participar' },
-];
-
 const columnas = [
   { n: '01', title: 'Salir', text: 'Vamos donde está la gente: hospitales, plazas, barrios y cárceles.' },
   { n: '02', title: 'Acompañar', text: 'No es una visita suelta: sostenemos el vínculo y volvemos.' },
@@ -40,10 +34,6 @@ const columnas = [
         </div>
       </div>
     </header>
-
-    <nav class="as-jump" aria-label="Secciones de la página">
-      <div class="as-jump__inner">{jumpLinks.map((l) => <a href={l.href}>{l.label}</a>)}</div>
-    </nav>
 
     <section class="as-section as-section--dark as-statement" id="sobre">
       <div class="as-wrap">

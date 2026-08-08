@@ -58,14 +58,6 @@ const fotos = [
   '/ministries/life/life2.jpeg',
 ];
 
-const jumpLinks = [
-  { label: 'Sobre', href: '#sobre' },
-  { label: 'Qué hacemos', href: '#que-hacemos' },
-  { label: 'Participar', href: '#participar' },
-  { label: 'Sedes', href: '#sedes' },
-  { label: 'Contenido', href: '#contenido' },
-];
-
 /* Su bloque de tres columnas debajo del "qué es". Se arma con los datos que
    tenga cargados el ministerio y se esconde el que venga vacío. */
 const columnas = [
@@ -143,12 +135,6 @@ const whatsappHref = ministry.whatsapp
     </header>
 
     <!-- Fila de anclas internas, como su jump-link row. -->
-    <nav class="as-jump" aria-label="Secciones de la página">
-      <div class="as-jump__inner">
-        {jumpLinks.map((l) => <a href={l.href}>{l.label}</a>)}
-      </div>
-    </nav>
-
     <!-- ══════════ DECLARACIÓN ══════════ Franja oscura, una sola idea. -->
     <section class="as-section as-section--dark as-statement" id="sobre">
       <div class="as-wrap">
@@ -355,7 +341,7 @@ const whatsappHref = ministry.whatsapp
         <p data-reveal>Vení a conocernos o escribinos y te contamos cómo empezar.</p>
         <div class="as-button-group" data-reveal data-reveal-delay="120">
           <a class="as-button as-button--white" href={whatsappHref} target="_blank" rel="noopener noreferrer">Escribinos</a>
-          <a class="as-button as-button--ghost-white" href="/maqueta#primera-vez">Visitanos</a>
+          <a class="as-button as-button--ghost-white" href="https://maps.app.goo.gl/mEVMgoTXbV3BULVq8" target="_blank" rel="noopener noreferrer">Visitanos</a>
         </div>
 
         {ministry.instagram && (

@@ -429,7 +429,8 @@ Todos salen de abrir las dos páginas en el navegador y comparar
 - Botón: radio `100px`, `16px 32px`, `.8rem` w600 ls `2px`. Small: `12px 24px`, `.7rem` ls `3px`.
 - Sección: `padding: 120px` parejo; `80px` en tablet; `48px` en mobile.
 - Nav: `fixed`, `z-index 2000`, alto `120px`, padding lateral `72px`.
-- Marquee: `40s linear infinite`, `translateX(0 → -50%)`, piezas cuadradas, radio `12px`.
+- Marquee: `40s linear infinite`, `translateX(0 → -50%)`, radio `12px`. Las piezas
+  ya no son cuadradas: ver "Segunda pasada" más abajo.
 - Colores: `#282828` tinta, `#f4f4f4` fondo claro, `#737373` cuerpo, `#94979e29` hairline.
 - Acento: se mantuvo el dorado `#c5a059` de la casa en lugar del celeste de la referencia.
 
@@ -487,10 +488,70 @@ Playwright pide una más nueva; hay que pasar `executablePath`).
 - Chequear siempre: elementos en `opacity: 0`, palabras del reveal sin animar,
   `scrollWidth` contra el viewport, errores de consola y requests fallidos.
 
+### Segunda pasada: podar el home y acercarlo a la referencia
+
+El home medía `9260px` contra `6135px` de austinstone. Quedó en `5740px`, con
+cinco secciones menos: Quiénes somos, Horarios / Tu primera vez, Sedes, Acá sos
+bienvenido y las pestañas de contenido.
+
+Orden actual: hero, bienvenida, marquee, serie actual, anuncios, ministerios,
+devocional, radio.
+
+- **Serie actual.** Copiado de la referencia con medidas del navegador, no a ojo:
+  imagen a la izquierda ocupando `2.2fr` contra `1fr` del texto, `16/9`, y un
+  `margin-left: -48px` que la corre hasta los `72px` del padding lateral del nav.
+  El párrafo describe la costumbre de la casa —una serie nueva por mes—, no la
+  serie del momento: así el bloque no depende de que alguien escriba una bajada
+  distinta cada mes.
+- **Marquee.** Piezas de ancho fijo `30em` que alternan `4/3` y `16/9`. La
+  referencia usa slots cuadrados con `contain` porque sus fotos alternan retrato
+  y apaisada; las de la casa son todas `4:3`, así que `contain` dejaría bandas.
+  La alternancia va por índice de foto y **no** por `nth-child`: el track es la
+  lista duplicada y la animación corta en `-50%`, así que las dos mitades tienen
+  que ser idénticas o el loop pega un salto.
+- **Ministerios en carousel.** Fila única con `overflow-x` + `scroll-snap`
+  nativo, sin librería: anda con el dedo aunque el JS no cargue, y las flechas
+  aparecen recién en `768px`. Resolvió de paso que nueve ítems en columnas pares
+  siempre dejaban una tarjeta huérfana.
+- **Radio.** Era `--dark`, el mismo `#282828` del footer, así que se fundían en
+  un bloque y quedaban 200px muertos en el medio. Ahora es un panel `#1a1a1a`
+  sobre la página clara que se descuelga `5rem` adentro del footer. El padding
+  extra del footer va con `.as-section--radio + .as-footer`, o sea sólo donde la
+  radio lo precede.
+- **Un solo navbar.** El sub-nav sticky `.as-jump` salió de las seis páginas
+  internas: se pegaba bajo el nav principal y quedaban dos barras apiladas. El
+  hero interno pasó de `68vh` a pantalla completa.
+
+### Mapa de destinos de `/maqueta/misiones`
+
+`src/data/maqueta-mapa.ts`. Natural Earth 110m (dominio público, vía
+`world-atlas`) convertido **una sola vez** de TopoJSON a paths SVG con
+proyección equirectangular. No hay librería de mapas ni tiles: un mapa con
+tiles depende de un servidor externo en cada carga. Son 33 KB estáticos.
+
+Si hay que regenerarlo, los dos problemas que ya se resolvieron:
+
+- **Rayas que barren el mapa entero.** Los anillos que cruzan el antimeridiano
+  —Eurasia por Chukotka, Fiji, la isla de Wrangel— tienen puntos seguidos en
+  `179°` y `-179°`, y en plano eso se dibuja como una línea de lado a lado. Hay
+  que partir el trazo cuando el salto de longitud pasa los `180°`.
+- **Recorte a `84°N` / `58°S`** para sacar la Antártida, que no aporta y empuja
+  el resto hacia arriba.
+
+La ficha flota sobre el mapa anclada al punto de su marcador. Su posición
+horizontal va con `clamp(140px, var(--x), calc(100% - 140px))`, así un destino
+futuro cerca de un borde no se sale. **Las fichas son hermanas del lienzo, no
+hijas**: los marcadores se posicionan en `%` sobre el lienzo, así que cualquier
+cosa que entre en su flujo lo estira y manda los puntos fuera del mapa.
+
 ### Pendiente de la maqueta
 
 - **Fotografía.** Se repiten seis fotos en 26 páginas. Es el techo real de la
   propuesta y es trabajo de la iglesia, no del código.
+- `public/series/seriealma.png` pesa `1.4 MB` sin optimizar. El proyecto ya
+  tiene `sharp`.
+- Las fotos de las fichas del mapa son las URLs externas de Google que trae
+  `src/data/missions.ts`: placeholders, no material propio.
 - Los formularios van con `action="#"`. Al promover hay que apuntarlos al
   endpoint real.
 - El nav de la maqueta apunta a páginas de la maqueta. Para comparar contra

@@ -26,19 +26,19 @@
  * Pendiente tuyo: fotografía de comunidad y, si conseguís la licencia,
  * Proxima Nova en lugar de Nunito Sans.
  */
-import MaquetaLayout, { sedes } from '../layouts/MaquetaLayout.astro';
+import MaquetaLayout from '../layouts/MaquetaLayout.astro';
 import { seriesPlaylistUrl } from '../data/series';
-import { getAnnouncements, getDevotionals, getMinistries, getSeries } from '../lib/content/collections';
+import { getDevotionals, getMinistries, getSeries } from '../lib/content/collections';
 
-const [devotionalPosts, ministries, sermonSeries, announcements] = await Promise.all([
+const [devotionalPosts, ministries, sermonSeries] = await Promise.all([
   getDevotionals(),
   getMinistries(),
   getSeries(),
-  getAnnouncements(),
 ]);
 
-const publishedSeries = sermonSeries.filter((series) => series.image && series.href);
-const [currentSeries, ...recentSeries] = publishedSeries;
+/* Sólo hace falta la serie en curso: el listado de series salió del home junto
+   con las pestañas. */
+const [currentSeries] = sermonSeries.filter((series) => series.image && series.href);
 
 const heroRotation = ['Una Iglesia', 'Una Familia', 'Una Casa'];
 
@@ -57,7 +57,10 @@ const ministryColors: Record<string, string> = {
 // Los logos no toleran recorte: van contenidos sobre fondo propio.
 const logoSlugs = new Set(['gold', 'kids', 'arde']);
 
-
+/* Al sacar el bloque de horarios y primera vez, los CTA de "Visitanos" se
+   quedaron sin destino interno. Van todos acá: es la respuesta concreta a
+   "quiero ir", que era lo que esa sección resolvía. */
+const mapsUrl = 'https://maps.app.goo.gl/mEVMgoTXbV3BULVq8';
 
 const agenda = [
   { d: '17', m: 'Oct', full: '17 de octubre, 2026', kind: 'Evento', title: 'Noche de Alabanza' },
@@ -65,13 +68,6 @@ const agenda = [
   { d: '30', m: 'Ago', full: '30 de agosto, 2026', kind: 'Programa', title: 'Discipulado — nueva cohorte' },
   { d: '09', m: 'Sep', full: '9 de septiembre, 2026', kind: 'Formación', title: 'IETE — inicio de cuatrimestre' },
 ];
-
-const mediaTabs = [
-  { id: 'series', label: 'Series' },
-  { id: 'devocional', label: 'Devocional' },
-  { id: 'anuncios', label: 'Anuncios' },
-];
-
 
 /**
  * Fotos reales de la casa. `ministry.image` no sirve acá: la mitad de los
@@ -124,13 +120,11 @@ const fotos = [
           <h2 class="as-display as-display--super" data-reveal="words" data-reveal-delay="120">Corazón de Fuego</h2>
 
           <p class="as-hero__lead" data-reveal>
-            Te esperamos este fin de semana en cualquiera de nuestras sedes.
-            Viernes y sábados 20 hs · Domingos 9:30 y 11:00 hs.
+            Te esperamos este fin de semana. Viernes y sábados 20 hs · Domingos 9:30 y 11 hs.
           </p>
 
           <div class="as-hero__actions" data-reveal data-reveal-delay="140">
-            <a class="as-button as-button--white" href="#primera-vez">Visitanos</a>
-            <a class="as-button as-button--ghost-white" href="#participar">Participar</a>
+            <a class="as-button as-button--white" href={mapsUrl} target="_blank" rel="noopener noreferrer">Visitanos</a>
           </div>
         </div>
 
@@ -173,7 +167,7 @@ const fotos = [
               palabras, obras y una vida rendida a Dios.
             </p>
             <div class="as-button-group" data-reveal data-reveal-delay="120">
-              <a class="as-button" href="#primera-vez">Visitanos</a>
+              <a class="as-button" href={mapsUrl} target="_blank" rel="noopener noreferrer">Visitanos</a>
               <a class="as-button as-button--ghost" href="/nosotros">Sobre nosotros</a>
             </div>
           </div>
@@ -185,8 +179,8 @@ const fotos = [
     <section class="as-marquee" data-reveal>
       <div class="as-marquee__track">
         {
-          [...fotos, ...fotos].map((src) => (
-            <div class="as-marquee__item">
+          [...fotos, ...fotos].map((src, i) => (
+            <div class={`as-marquee__item as-marquee__item--${i % fotos.length % 2 === 0 ? '4x3' : '16x9'}`}>
               <img src={src} alt="" loading="lazy" />
             </div>
           ))
@@ -194,61 +188,17 @@ const fotos = [
       </div>
     </section>
 
-    <!-- ══════════ NOVEDADES ══════════
-         Mismo reparto que el "What's Happening" de austinstone: a la izquierda
-         título, bajada y CTA; a la derecha la lista con filete entre eventos.
-         Reemplaza a los horarios, que ya estaban en el hero. -->
-    <section class="as-section as-section--light" id="agenda">
-      <div class="as-wrap">
-        <div class="as-visit">
-          <div>
-            <h2 class="as-h1" data-reveal="words">Qué está pasando</h2>
-            <p class="as-head__lead" data-reveal>
-              Caminemos juntos. Mirá las próximas clases, eventos y encuentros de la casa.
-            </p>
-            <div class="as-button-group" data-reveal>
-              <a class="as-button as-button--small" href="#participar">Participar</a>
-            </div>
-          </div>
-
-          <div class="as-agenda">
-            {
-              agenda.map((item, index) => (
-                <a class="as-event" href="#" data-reveal data-reveal-delay={index * 70}>
-                  <span class="as-event__badge">
-                    <strong>{item.m}</strong>
-                    <em>{item.d}</em>
-                  </span>
-                  <span class="as-event__body">
-                    <span class="as-event__meta">
-                      {item.full} · {item.kind}
-                    </span>
-                    <span class="as-event__title">{item.title}</span>
-                  </span>
-                  <span class="material-symbols-outlined as-event__arrow">arrow_forward</span>
-                </a>
-              ))
-            }
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- ══════════ SERIE ACTUAL ══════════
-         Mismo reparto que el bloque de sermon series de austinstone: el arte
-         ocupa dos de tres columnas y sangra hacia el borde; el texto queda en
-         la tercera, con kicker, título, bajada y pastilla. -->
+         Abre el cuerpo de la página: es lo que está pasando ahora. Los fondos
+         alternan de acá hasta el final —light, base, light, dark, light, dark—
+         para que ningún par de secciones vecinas se funda en un solo bloque. -->
     {currentSeries && (
-      <section class="as-section" id="series">
+      <section class="as-section as-section--light" id="series">
         <div class="as-wrap">
-          <div class="as-serie">
-            <a
-              class="as-image as-serie__media"
-              href={currentSeries.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              data-reveal
-            >
+          {/* La imagen va primera en el markup, no dada vuelta por CSS: en la
+              referencia manda ella, y en mobile también tiene que abrir. */}
+          <div class="as-split as-split--serie">
+            <a class="as-image as-image--16x9" href={currentSeries.href} target="_blank" rel="noopener noreferrer" data-reveal>
               <img src={currentSeries.image} alt={currentSeries.title} loading="lazy" />
               <span class="as-play">
                 <span class="as-play__circle as-play__circle--large">
@@ -256,11 +206,17 @@ const fotos = [
                 </span>
               </span>
             </a>
-
-            <div class="as-serie__copy">
+            <div>
               <h6 class="as-eyebrow" data-reveal>Serie actual</h6>
               <h2 class="as-h1" data-reveal="words">{currentSeries.title}</h2>
-              <p class="as-head__lead" data-reveal>{currentSeries.description}</p>
+              {/* Como en la referencia, el párrafo no describe esta serie sino
+                  la costumbre de la casa: explica qué es una serie y por qué
+                  hay una nueva cada vez que volvés. Así el bloque no depende de
+                  que alguien escriba una bajada distinta cada mes. */}
+              <p class="as-head__lead" data-reveal>
+                Cada mes abrimos una serie nueva: varias semanas seguidas sobre un mismo tema
+                o un libro de la Biblia. Todas quedan grabadas y ordenadas por serie en YouTube.
+              </p>
               <div class="as-button-group" data-reveal data-reveal-delay="120">
                 <a class="as-button as-button--small" href={seriesPlaylistUrl} target="_blank" rel="noopener noreferrer">
                   Explorar la serie
@@ -272,6 +228,40 @@ const fotos = [
       </section>
     )}
 
+    <!-- ══════════ ANUNCIOS ══════════ Va entre la serie y los ministerios. -->
+    <section class="as-section" id="agenda">
+      <div class="as-wrap">
+        <div class="as-head">
+          <div>
+            <h2 class="as-h1" data-reveal="words">Qué está pasando</h2>
+            <p class="as-head__lead" data-reveal>
+              Caminemos juntos. Mirá las próximas clases, eventos y encuentros de la casa.
+            </p>
+          </div>
+        </div>
+
+        <div class="as-agenda">
+          {
+            agenda.map((item, index) => (
+              <a class="as-event" href="#" data-reveal data-reveal-delay={index * 70}>
+                <span class="as-event__badge">
+                  <strong>{item.m}</strong>
+                  <em>{item.d}</em>
+                </span>
+                <span class="as-event__body">
+                  <span class="as-event__meta">
+                    {item.full} · {item.kind}
+                  </span>
+                  <span class="as-event__title">{item.title}</span>
+                </span>
+                <span class="material-symbols-outlined as-event__arrow">arrow_forward</span>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
     <!-- ══════════ MINISTERIOS ══════════
          Cada tarjeta lleva el color propio del ministerio y entra a su página
          interna. Es lo que conecta el home con /maqueta/{slug}. -->
@@ -282,17 +272,28 @@ const fotos = [
             <p class="as-eyebrow" data-reveal>Ministerios</p>
             <h2 class="as-h1" data-reveal="words">Encontrá tu lugar para servir y crecer.</h2>
           </div>
+          {/* Sólo aparecen en desktop: en mobile el gesto es el dedo. */}
+          <div class="as-ministries-nav" data-carousel-nav>
+            <button type="button" data-dir="-1" aria-label="Ministerios anteriores">
+              <span class="material-symbols-outlined">arrow_back</span>
+            </button>
+            <button type="button" data-dir="1" aria-label="Ministerios siguientes">
+              <span class="material-symbols-outlined">arrow_forward</span>
+            </button>
+          </div>
         </div>
 
-        <div class="as-ministries">
+        {/* El reveal va en la fila, no en cada tarjeta: adentro de un scroller
+            horizontal el IntersectionObserver no ve las que están corridas
+            —las tapa el `overflow` del contenedor— y se quedaban en
+            `opacity: 0` para siempre. */}
+        <div class="as-ministries" data-carousel data-reveal>
           {
-            ministries.map((ministry, i) => (
+            ministries.map((ministry) => (
               <a
                 class="as-mcard"
                 href={`/maqueta/${ministry.slug}`}
                 style={`--m: ${ministryColors[ministry.slug] ?? '#282828'}`}
-                data-reveal
-                data-reveal-delay={i * 60}
               >
                 <div class={`as-mcard__media${logoSlugs.has(ministry.slug) ? ' is-logo' : ''}`}>
                   <img src={ministry.image} alt={`Ministerio ${ministry.name}`} loading="lazy" />
@@ -309,26 +310,36 @@ const fotos = [
       </div>
     </section>
 
-    <!-- ══════════ SEDES ══════════ Grilla de 6 con hairlines.
-         Blanca: ministerios ya es gris y dos grises seguidas se leen como un
-         solo bloque. Igual que en austinstone, los fondos alternan. -->
+    <!-- ══════════ DEVOCIONAL ══════════
+         Era un bloque de pestañas con Series, Devocional y Anuncios. Quedó sólo
+         devocional, así que va derecho: con una sola solapa el menú de tabs no
+         decide nada y el JS de `[data-tabs]` no tiene a quién alternar.
+         Fondo base: Ministerios arriba y Radio abajo ya traen el suyo. -->
     <section class="as-section">
+      {/* Con un solo devocional, el título a todo el ancho y la tarjeta sola
+          abajo dejaban medio bloque vacío. A dos columnas —título y botón a la
+          izquierda, la pieza a la derecha— la fila cierra. */}
       <div class="as-wrap">
-        <div class="as-head">
+        <div class="as-split as-split--devocional">
           <div>
-            <h6 class="as-eyebrow" data-reveal>Sedes</h6>
-            <h2 class="as-h1" data-reveal="words">Una iglesia en varias ciudades.</h2>
+            <h6 class="as-eyebrow" data-reveal>Devocional</h6>
+            <h2 class="as-h2" data-reveal="words">
+              Contenido sobre vida cristiana, formación y aliento bíblico para tu semana.
+            </h2>
+            <div class="as-button-group" data-reveal data-reveal-delay="120">
+              <a class="as-button as-button--small" href="/devocional">Ver todos los devocionales</a>
+            </div>
           </div>
-          <a class="as-button as-button--small" href="/anexos">Ver todas</a>
-        </div>
 
-        <div class="as-sedes" data-reveal>
           {
-            sedes.map((sede) => (
-              <a class="as-sede" href={sede.href}>
-                <h4>{sede.name}</h4>
-                <p>{sede.region}</p>
-                <span class="as-sede__arrow material-symbols-outlined">arrow_forward</span>
+            devotionalPosts.slice(0, 1).map((post) => (
+              <a class="as-item" href="/devocional" data-reveal data-reveal-delay="80">
+                <div class="as-image as-image--16x9">
+                  <img src={post.image} alt={post.title} loading="lazy" />
+                </div>
+                <p class="as-item__meta">{post.weekLabel}</p>
+                <h3 class="as-item__title">{post.title}</h3>
+                <span class="as-item__view">Ver</span>
               </a>
             ))
           }
@@ -336,113 +347,9 @@ const fotos = [
       </div>
     </section>
 
-    <!-- ══════════ SOS BIENVENIDO ══════════
-         Oscura, sin padding inferior: las fotos escalonadas se apoyan en el borde. -->
-    <section class="as-section as-section--dark" id="participar">
-      <div class="as-wrap">
-        <div class="as-welcome">
-          <div class="as-welcome__copy">
-            <h2 class="as-display" data-reveal="words">Acá sos bienvenido.</h2>
-            <p data-reveal>
-              ¿Recién empezás a conocer la fe? ¿Hace años que seguís a Jesús? ¿O estás en algún
-              punto intermedio? Vengas de donde vengas, tenés lugar en esta casa.
-            </p>
-            <div class="as-button-group" data-reveal data-reveal-delay="120">
-              <a class="as-button as-button--white" href="#primera-vez">Visitanos</a>
-              <a class="as-button as-button--ghost-white" href="/contact">Escribinos</a>
-            </div>
-          </div>
-          <div class="as-welcome__images" data-reveal>
-            {
-              fotos.slice(0, 3).map((src) => (
-                <div class="as-welcome__image">
-                  <img src={src} alt="" loading="lazy" />
-                </div>
-              ))
-            }
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ══════════ CONTENIDO / TABS ══════════ -->
-    <section class="as-section as-section--light">
-      <div class="as-wrap">
-        <h6 class="as-eyebrow" data-reveal>Lo último</h6>
-        <h2 class="as-h2" data-reveal="words">
-          Contenido sobre vida cristiana, formación y aliento bíblico para tu semana.
-        </h2>
-
-        <div class="as-tabs" data-tabs>
-          <div class="as-tabs__menu">
-            {
-              mediaTabs.map((tab, index) => (
-                <button class={`as-tabs__link${index === 0 ? ' is-active' : ''}`} type="button" data-tab={tab.id}>
-                  {tab.label}
-                </button>
-              ))
-            }
-          </div>
-
-          <div class="as-tabs__panel is-active" data-panel="series">
-            <div class="as-collection">
-              {
-                recentSeries.slice(0, 3).map((series) => (
-                  <a class="as-item" href={series.href} target="_blank" rel="noopener noreferrer">
-                    <div class="as-image as-image--square">
-                      <img src={series.image} alt={series.title} loading="lazy" />
-                    </div>
-                    <p class="as-item__meta">Serie</p>
-                    <h3 class="as-item__title">{series.title}</h3>
-                    <span class="as-item__view">Ver</span>
-                  </a>
-                ))
-              }
-            </div>
-            <a class="as-button" href={seriesPlaylistUrl} target="_blank" rel="noopener noreferrer">Ver todas las series</a>
-          </div>
-
-          <div class="as-tabs__panel" data-panel="devocional">
-            <div class="as-collection">
-              {
-                devotionalPosts.slice(0, 3).map((post) => (
-                  <a class="as-item" href="/devocional">
-                    <div class="as-image as-image--square">
-                      <img src={post.image} alt={post.title} loading="lazy" />
-                    </div>
-                    <p class="as-item__meta">{post.weekLabel}</p>
-                    <h3 class="as-item__title">{post.title}</h3>
-                    <span class="as-item__view">Ver</span>
-                  </a>
-                ))
-              }
-            </div>
-            <a class="as-button" href="/devocional">Ver todos los devocionales</a>
-          </div>
-
-          <div class="as-tabs__panel" data-panel="anuncios">
-            <div class="as-collection">
-              {
-                announcements.slice(0, 3).map((item) => (
-                  <a class="as-item" href={item.href}>
-                    <div class="as-image as-image--square as-image--contain">
-                      <img src={item.image} alt={item.alt} loading="lazy" />
-                    </div>
-                    <p class="as-item__meta">{item.eyebrow}</p>
-                    <h3 class="as-item__title">{item.title}</h3>
-                    <span class="as-item__view">Ver</span>
-                  </a>
-                ))
-              }
-            </div>
-            <a class="as-button" href="#agenda">Ver todos los anuncios</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ══════════ RADIO ══════════ Banda angosta, el proyecto que viene. -->
-    <section class="as-section as-section--dark as-section--radio" id="radio">
+    <!-- ══════════ RADIO ══════════ El proyecto que viene. Panel propio, no
+         sección oscura a sangre: ver el porqué en `.as-radio` del CSS. -->
+    <section class="as-section as-section--radio" id="radio">
       <div class="as-wrap as-radio">
         <div>
           <h6 class="as-eyebrow as-eyebrow--light" data-reveal>Radio Corazón</h6>

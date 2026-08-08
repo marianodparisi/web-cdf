@@ -137,12 +137,6 @@ if (!pagina) return Astro.redirect('/maqueta');
 const otroSlug = slug === 'iete' ? 'discipulados' : 'iete';
 const otro = paginas[otroSlug];
 
-const jumpLinks = [
-  { label: 'Qué es', href: '#que-es' },
-  { label: 'Enfoque', href: '#enfoque' },
-  { label: 'Información', href: '#info' },
-  { label: 'Inscripción', href: '#inscripcion' },
-];
 ---
 
 <MaquetaLayout title={`${pagina.name} · Maqueta · Corazón de Fuego`}>
@@ -161,10 +155,6 @@ const jumpLinks = [
         <img src={pagina.image} alt={pagina.name} />
       </div>
     </header>
-
-    <nav class="as-jump" aria-label="Secciones de la página">
-      <div class="as-jump__inner">{jumpLinks.map((l) => <a href={l.href}>{l.label}</a>)}</div>
-    </nav>
 
     <section class="as-section as-section--dark as-statement" id="que-es">
       <div class="as-wrap">

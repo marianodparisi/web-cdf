@@ -19,13 +19,6 @@ if (!anexo) return Astro.redirect('/maqueta');
 const next = maquetaAnexos[(index + 1) % maquetaAnexos.length];
 const ministries = await getMinistries();
 
-const jumpLinks = [
-  { label: 'Historia', href: '#historia' },
-  { label: 'Horarios', href: '#horarios' },
-  { label: 'Cómo llegar', href: '#llegar' },
-  { label: 'Ministerios', href: '#ministerios' },
-];
-
 const fotos = ['/sedes/nosotros1.JPG', '/sedes/nosotros2.JPG', '/sedes/nosotros3.JPG'];
 ---
 
@@ -49,12 +42,6 @@ const fotos = ['/sedes/nosotros1.JPG', '/sedes/nosotros2.JPG', '/sedes/nosotros3
         </div>
       </div>
     </header>
-
-    <nav class="as-jump" aria-label="Secciones de la página">
-      <div class="as-jump__inner">
-        {jumpLinks.map((l) => <a href={l.href}>{l.label}</a>)}
-      </div>
-    </nav>
 
     <!-- ══════════ HISTORIA ══════════ Split con las cifras de la sede. -->
     <section class="as-section" id="historia">
@@ -176,7 +163,7 @@ const fotos = ['/sedes/nosotros1.JPG', '/sedes/nosotros2.JPG', '/sedes/nosotros3
         <p data-reveal>{anexo.ctaText}</p>
         <div class="as-button-group" data-reveal data-reveal-delay="120">
           <a class="as-button as-button--white" href="/contact">Escribinos</a>
-          <a class="as-button as-button--ghost-white" href="/maqueta#primera-vez">Tu primera vez</a>
+          <a class="as-button as-button--ghost-white" href="https://maps.app.goo.gl/mEVMgoTXbV3BULVq8" target="_blank" rel="noopener noreferrer">Tu primera vez</a>
         </div>
 
         <a class="as-next" href={`/maqueta/anexos/${next.slug}`}>
