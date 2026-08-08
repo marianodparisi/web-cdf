@@ -104,6 +104,20 @@
       sync();
     });
 
+    /* ── Miniatura de YouTube ───────────────────────────────────────────
+       `maxresdefault` solo existe si el video se subió en HD. Si da 404, se
+       pasa a `mqdefault`, que existe siempre y también es 16:9, así que no hay
+       salto de layout. El `data-fallback` se limpia para no entrar en bucle si
+       la segunda también falla. */
+    document.querySelectorAll('img[data-fallback]').forEach((img) => {
+      img.addEventListener('error', () => {
+        const alterna = img.getAttribute('data-fallback');
+        if (!alterna) return;
+        img.removeAttribute('data-fallback');
+        img.src = alterna;
+      });
+    });
+
     /* ── Mapa de destinos ───────────────────────────────────────────────
        Un solo destino activo a la vez: se sincroniza el punto del mapa con su
        ficha. Escucha hover, foco de teclado y click, porque en mobile no hay

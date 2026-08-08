@@ -29,16 +29,43 @@
 import MaquetaLayout from '../layouts/MaquetaLayout.astro';
 import { seriesPlaylistUrl } from '../data/series';
 import { getDevotionals, getMinistries, getSeries } from '../lib/content/collections';
+import { getEstadoVivos } from '../lib/youtube';
 
-const [devotionalPosts, ministries, sermonSeries] = await Promise.all([
+const [devotionalPosts, ministries, sermonSeries, vivos] = await Promise.all([
   getDevotionals(),
   getMinistries(),
   getSeries(),
+  /* Va en el mismo `Promise.all` para que su latencia se solape con la del
+     contenido en vez de sumarse. Devuelve null si falla: el hero sigue con el
+     arte de la serie. */
+  getEstadoVivos(),
 ]);
 
 /* Sólo hace falta la serie en curso: el listado de series salió del home junto
    con las pestañas. */
 const [currentSeries] = sermonSeries.filter((series) => series.image && series.href);
+
+/* La tarjeta del hero se resuelve acá y no en el markup para no encadenar
+   `??` sobre dos objetos que pueden faltar por separado: YouTube puede no
+   responder, y `ultimoVivo.title` puede venir null aunque el resto exista. */
+const ultimoVivo = vivos.ultima;
+const tarjetaHero = ultimoVivo
+  ? {
+      href: ultimoVivo.url,
+      image: ultimoVivo.thumbnail,
+      fallback: ultimoVivo.thumbnailFallback,
+      alt: ultimoVivo.title ?? 'Último mensaje',
+      isLive: ultimoVivo.isLive,
+    }
+  : currentSeries
+    ? {
+        href: currentSeries.href,
+        image: currentSeries.image,
+        fallback: undefined,
+        alt: currentSeries.title,
+        isLive: false,
+      }
+    : null;
 
 const heroRotation = ['Una Iglesia', 'Una Familia', 'Una Casa'];
 
@@ -128,10 +155,29 @@ const fotos = [
           </div>
         </div>
 
-        {currentSeries && (
-          <a class="as-hero__sermon" href={currentSeries.href} target="_blank" rel="noopener noreferrer" data-reveal data-reveal-delay="220">
+        {/* La tarjeta muestra el último vivo de YouTube, resuelto en el
+            servidor. Si YouTube no responde, `ultimoVivo` viene null y cae al
+            arte de la serie: el hero nunca queda vacío por un tercero. */}
+        {tarjetaHero && (
+          <a
+            class="as-hero__sermon"
+            href={tarjetaHero.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-reveal
+            data-reveal-delay="220"
+          >
             <div class="as-hero__sermon-image">
-              <img src={currentSeries.image} alt={currentSeries.title} />
+              {/* `maxresdefault` solo existe si subieron en HD; si falta, el
+                  onerror pasa a `mqdefault`, que siempre está y es 16:9 igual,
+                  así que no hay salto de layout. */}
+              <img src={tarjetaHero.image} alt={tarjetaHero.alt} data-fallback={tarjetaHero.fallback} />
+              {tarjetaHero.isLive && (
+                <span class="as-vivo">
+                  <span class="as-vivo__punto"></span>
+                  En vivo
+                </span>
+              )}
               <span class="as-play as-play--home">
                 <span class="as-play__circle">
                   <span class="material-symbols-outlined">play_arrow</span>
@@ -139,7 +185,7 @@ const fotos = [
               </span>
             </div>
             <span class="as-hero__sermon-link">
-              Ver el último mensaje
+              {tarjetaHero.isLive ? 'Ver la transmisión' : 'Ver el último mensaje'}
               <span class="material-symbols-outlined">arrow_forward</span>
             </span>
           </a>

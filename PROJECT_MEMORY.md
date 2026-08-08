@@ -544,6 +544,54 @@ futuro cerca de un borde no se sale. **Las fichas son hermanas del lienzo, no
 hijas**: los marcadores se posicionan en `%` sobre el lienzo, así que cualquier
 cosa que entre en su flujo lo estira y manda los puntos fuera del mapa.
 
+### Ultimo vivo de YouTube en el hero
+
+`src/lib/youtube.ts`. Resuelve en el servidor que transmision mostrar, sin API
+key. Necesita `YOUTUBE_HANDLE` en el entorno; sin eso el hero cae al arte de la
+serie.
+
+Tres estados, y el del medio es el que importa:
+
+- **Al aire ahora** → la transmision en curso, con cartel EN VIVO.
+- **Hay una programada** → **se la saltea** y se muestra la anterior. Un vivo
+  agendado todavia no paso nada; mostrarlo como "ultimo mensaje" es mentir.
+- **Nada programado** → el ultimo vivo hecho.
+
+El estado sale de dos banderas explicitas del HTML, `isLiveNow` e `isUpcoming`,
+y **no** de comparar `scheduledStartTime` contra el reloj: un vivo que arranca
+tarde ya paso su hora y seguiria figurando como programado.
+
+De donde sale cada cosa:
+
+- `/@handle/live` devuelve la transmision destacada —la de ahora, o la proxima,
+  o la ultima— con las dos banderas. Una sola request.
+- `/@handle/streams` se pide **solo** si la destacada resulto ser una
+  programada: es el unico caso donde hay que buscar la anterior.
+
+Decisiones que conviene no revertir sin motivo:
+
+- **No se lee texto en español.** La pestaña dice "Transmitido hace 6 dias",
+  pero eso cambia con el idioma del servidor. Se usan los ids en orden de
+  documento, que la pestaña ya entrega de mas nuevo a mas viejo.
+- **No se parsea el `ytInitialData` entero**: es cerca de un mega de JSON para
+  sacar dos datos.
+- **Cache de 90 s**, no de media hora: si arrancan la transmision, el sitio
+  tiene que enterarse rapido. Se cachea tambien el fallo, para que una caida de
+  YouTube no se convierta en un home lento.
+- **Timeout de 4 s** y fallback al arte de la serie. El hero no puede quedar
+  vacio por un tercero.
+- La miniatura es `maxresdefault` con `onerror` a `mqdefault`: la primera solo
+  existe si subieron en HD, y las dos son 16:9, asi que no hay salto de layout.
+- `YOUTUBE_HANDLE` se normaliza: aguanta con arroba, sin arroba, ya
+  percent-encoded o con barra final.
+
+**Esto lee HTML, no una API con contrato.** Se eligieron las senales mas
+estables que hay —`canonical`, `og:title` y `og:image` son meta tags estandar—
+y si las banderas del JSON desaparecen degrada a mostrar la destacada sin
+cartel, en vez de romper. Si algun dia hace falta mas (contar espectadores,
+listar programados), ahi si conviene la Data API v3: pide key y `search.list`
+gasta 100 de las 10.000 unidades diarias por consulta.
+
 ### Pendiente de la maqueta
 
 - **Fotografía.** Se repiten seis fotos en 26 páginas. Es el techo real de la

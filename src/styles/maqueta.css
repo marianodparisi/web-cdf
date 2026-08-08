@@ -516,6 +516,29 @@
   .as-split--serie .as-play { inset: auto auto 1.5rem 1.5rem; }
   .as-play--home { inset: auto auto 0.6rem 0.6rem; }
 
+  /* Cartel de EN VIVO sobre la miniatura del hero. Rojo plano y no el dorado de
+     la casa: es un estado, no una decoración de marca, y tiene que leerse como
+     el mismo código que usa YouTube. */
+  .as-vivo {
+    position: absolute;
+    top: 0.6rem;
+    left: 0.6rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    background: #e62117;
+    color: #fff;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+  }
+  .as-vivo__punto { width: 6px; height: 6px; border-radius: 50%; background: #fff; animation: as-vivo-late 1.6s ease-in-out infinite; }
+  @keyframes as-vivo-late { 0%, 100% { opacity: 1; } 50% { opacity: 0.25; } }
+  @media (prefers-reduced-motion: reduce) { .as-vivo__punto { animation: none; } }
+
   .as-image { position: relative; overflow: hidden; background: var(--lightest-gray); display: block; border-radius: 12px; }
   .as-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1); }
   .as-image--landscape { aspect-ratio: 4 / 3; }
