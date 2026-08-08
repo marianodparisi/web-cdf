@@ -5,20 +5,17 @@
  */
 import MaquetaLayout from '../../layouts/MaquetaLayout.astro';
 import { missions } from '../../data/missions';
+import { mapaMundi, coordenadas, proyectar } from '../../data/maqueta-mapa';
 
-const proximas = missions.filter((m) => m.stage === 'Proxima');
-const realizadas = missions.filter((m) => m.stage !== 'Proxima');
-
-const tabs = [
-  { id: 'proximas', label: 'Próximas', items: proximas },
-  { id: 'realizadas', label: 'Realizadas', items: realizadas },
-];
-
-const jumpLinks = [
-  { label: 'Sobre', href: '#sobre' },
-  { label: 'Destinos', href: '#destinos' },
-  { label: 'Participar', href: '#participar' },
-];
+/* Sólo las misiones que tienen coordenada cargada entran al mapa; el resto
+   sigue apareciendo abajo en las pestañas. */
+const destinos = missions
+  .filter((m) => coordenadas[m.slug])
+  .map((m) => ({
+    ...m,
+    ...proyectar(coordenadas[m.slug][0], coordenadas[m.slug][1]),
+    year: new Date(m.startDate).getFullYear(),
+  }));
 
 const columnas = [
   { n: '01', title: 'Ir', text: 'Salidas cortas para servir junto a iglesias locales que ya están sembrando en la región.' },
@@ -57,10 +54,6 @@ const destacada = missions[0];
       </div>
     </header>
 
-    <nav class="as-jump" aria-label="Secciones de la página">
-      <div class="as-jump__inner">{jumpLinks.map((l) => <a href={l.href}>{l.label}</a>)}</div>
-    </nav>
-
     <section class="as-section as-section--dark as-statement" id="sobre">
       <div class="as-wrap">
         <p class="as-eyebrow as-eyebrow--light" data-reveal>Nuestra visión</p>
@@ -95,41 +88,62 @@ const destacada = missions[0];
     <section class="as-section" id="destinos">
       <div class="as-wrap">
         <h2 class="as-h1" data-reveal="words">Destinos</h2>
-        <div class="as-tabs" data-tabs>
-          <div class="as-tabs__menu">
-            {tabs.map((t, i) => (
-              <button class={`as-tabs__link${i === 0 ? ' is-active' : ''}`} type="button" data-tab={t.id}>
-                {t.label}
-              </button>
-            ))}
-          </div>
-          {tabs.map((t, i) => (
-            <div class={`as-tabs__panel${i === 0 ? ' is-active' : ''}`} data-panel={t.id}>
-              {t.items.length === 0 ? (
-                <p class="as-lead">No hay misiones cargadas en esta categoría todavía.</p>
-              ) : (
-                <div class="as-scenes">
-                  {t.items.map((m, j) => (
-                    <article class="as-scene" data-reveal data-reveal-delay={j * 90}>
-                      <div class="as-scene__media">
-                        <img src={m.image} alt={m.place} loading="lazy" />
-                      </div>
-                      <div class="as-scene__copy">
-                        <p class="as-eyebrow">{m.country} · {m.stage}</p>
-                        <h3>{m.place}</h3>
-                        <p>{m.summary}</p>
-                        <p class="as-scene__focus">
-                          <span class="material-symbols-outlined">target</span>
-                          {m.focus}
-                        </p>
-                      </div>
-                    </article>
-                  ))}
-                </div>
-              )}
+
+        {/* Mapa: SVG estático, sin librería ni tiles. Los puntos son botones
+            posicionados en % sobre el lienzo, así siguen al mapa cuando escala.
+            Responden a hover, foco de teclado y tap: en mobile no hay hover y
+            el tap tiene que alcanzar. */}
+        {destinos.length > 0 && (
+          <div class="as-mapa" data-mapa data-reveal>
+            <div class="as-mapa__lienzo">
+              <svg
+                class="as-mapa__svg"
+                viewBox={`0 0 ${mapaMundi.width} ${mapaMundi.height}`}
+                role="img"
+                aria-label="Mapa con los destinos de misiones"
+              >
+                <path d={mapaMundi.path} />
+              </svg>
+
+              {destinos.map((d, i) => (
+                <button
+                  type="button"
+                  class={`as-mapa__punto${i === 0 ? ' is-active' : ''}`}
+                  style={`left: ${d.x}%; top: ${d.y}%`}
+                  data-destino={d.slug}
+                  aria-label={`${d.place}, ${d.country}, ${d.year}`}
+                >
+                  <span class="as-mapa__pulso"></span>
+                  <span class="as-mapa__rotulo">{d.place}</span>
+                </button>
+              ))}
             </div>
-          ))}
-        </div>
+
+            {/* Las fichas son hermanas del lienzo, no hijas: los marcadores se
+                posicionan en % sobre el lienzo, así que si la ficha entrara en
+                su flujo —como pasa en mobile— lo estiraría y mandaría los
+                puntos fuera del mapa. Se anclan al mismo punto que su marcador
+                con el `--x`, para que el dato aparezca donde está mirando el
+                ojo y no en un panel al costado. */}
+            {destinos.map((d, i) => (
+                <article
+                  class={`as-mapa__ficha${i === 0 ? ' is-active' : ''}`}
+                  style={`--x: ${d.x}%; --y: ${d.y}%`}
+                  data-ficha={d.slug}
+                >
+                  <div class="as-image as-image--16x9">
+                    <img src={d.image} alt={d.place} loading="lazy" />
+                  </div>
+                  <div class="as-mapa__ficha-cuerpo">
+                    <p class="as-mapa__meta">{d.country} · {d.year} · {d.stage}</p>
+                    <h3 class="as-mapa__lugar">{d.place}</h3>
+                    <p class="as-mapa__foco">{d.focus}</p>
+                  </div>
+                </article>
+              ))}
+          </div>
+        )}
+
       </div>
     </section>
 

@@ -69,10 +69,12 @@
     .as-display--super { font-size: 6rem; line-height: 6.6rem; }
     .as-h1 { font-size: 2.8rem; line-height: 3.4rem; }
   }
-  /* Medido en su sitio a 390px: super 64px/73.6px · h1 38.4px/48px. */
+  /* Medido en su sitio a 390px: super 64px/73.6px · h1 38.4px/48px. El super
+     baja a 52px: a 64px el hero entero comía los 844px justos del viewport y
+     no quedaba nada asomando que invitara a bajar. */
   @media (max-width: 767px) {
     .as-display { font-size: 2.85rem; line-height: 3.3rem; }
-    .as-display--super { font-size: 4rem; line-height: 4.6rem; }
+    .as-display--super { font-size: 3.25rem; line-height: 3.9rem; }
     .as-h1 { font-size: 2.4rem; line-height: 3rem; }
     .as-h2 { font-size: 1.9rem; line-height: 2.4rem; }
   }
@@ -139,18 +141,23 @@
   .as-section--dark { background: var(--dark); color: var(--white); padding-bottom: 0; }
   .as-section--dark p { color: rgba(255, 255, 255, 0.72); }
   .as-section--dark .as-h1, .as-section--dark .as-h2 { color: var(--white); }
-  .as-section--radio { padding-bottom: 120px; }
+  /* El panel se apoya sobre el borde de abajo y de ahí se descuelga al footer,
+     así que la sección no pone padding inferior propio. */
+  .as-section--radio { padding-bottom: 0; }
+  /* Sólo donde la radio precede al footer: le deja aire al panel que lo pisa,
+     para que no caiga sobre el logo. */
+  .as-section--radio + .as-footer { padding-top: 9rem; }
 
   @media (max-width: 991px) {
     .as-section { padding: 80px; }
-    .as-section--radio { padding-bottom: 80px; }
+    .as-section--radio { padding-bottom: 0; }
   }
   /* Su padding en mobile es 48px parejo en los cuatro lados, incluso en
      pantallas de 390px. Deja el contenido angosto, pero es su decisión y acá
      se replica tal cual. Si se quiere más aire, es este único valor. */
   @media (max-width: 767px) {
     .as-section { padding: 48px; }
-    .as-section--radio { padding-bottom: 48px; }
+    .as-section--radio { padding-bottom: 0; }
   }
 
   .as-wrap { position: relative; z-index: 10; width: 100%; margin: 0 auto; }
@@ -159,6 +166,14 @@
      barra. El alto no se hardcodea: el JS publica el real en `--as-nav-h`, así
      sigue siendo correcto si cambia el padding o el logo. */
   .as [id] { scroll-margin-top: calc(var(--as-nav-h, 120px) + 16px); }
+
+  /* Ese offset sirve para anclas sueltas dentro de un bloque, pero en una
+     sección entera dejaba asomando la franja de la sección anterior. Como la
+     sección ya trae 120px de padding propio —igual que el alto del nav— puede
+     frenar a ras del viewport: el nav se apoya sobre ese padding y el contenido
+     igual arranca libre. En mobile el padding es menor que el nav, pero el nav
+     se esconde al bajar, así que tampoco tapa nada al llegar. */
+  .as-section[id] { scroll-margin-top: 0; }
 
   .as-head {
     display: flex;
@@ -234,7 +249,7 @@
     top: 100%;
     left: -1.5rem;
     z-index: 20;
-    min-width: 30rem;
+    min-width: calc(var(--cols, 2) * 15rem);
     padding-top: 1rem;
     opacity: 0;
     visibility: hidden;
@@ -243,31 +258,31 @@
   }
   .as-nav__group:hover .as-dropdown,
   .as-nav__group:focus-within .as-dropdown { opacity: 1; visibility: visible; transform: translateY(0); }
+  /* Los dos últimos grupos del nav caen tan a la derecha que un panel anclado
+     a la izquierda se sale del viewport: "Alabanza y Adoración" quedaba
+     cortada por el borde. Anclados a la derecha del disparador entran. */
+  .as-nav__group:nth-last-of-type(-n + 2) .as-dropdown { left: auto; right: -1.5rem; }
+
+  /* Antes esto era `gap: 1px` sobre un fondo gris: las líneas eran el fondo del
+     grid asomando entre las celdas. Se veía como una planilla, y donde no
+     llegaba un ítem quedaba un rectángulo gris huérfano. Ahora es un panel
+     blanco y las celdas se separan solas al pasar el mouse. */
   .as-dropdown__grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1px;
-    background: var(--line);
+    grid-template-columns: repeat(var(--cols, 2), 1fr);
+    gap: 0.25rem;
+    padding: 0.75rem;
+    background: var(--white);
     border: 1px solid var(--line);
+    border-radius: 14px;
     box-shadow: 0 24px 60px rgb(0 0 0 / 0.1);
   }
-  .as-dropdown__link { display: flex; flex-direction: column; gap: 0.2rem; background: var(--white); padding: 1.15rem 1.35rem; transition: background 0.2s; }
+  .as-dropdown__link { display: flex; flex-direction: column; gap: 0.2rem; padding: 0.9rem 1rem; border-radius: 10px; transition: background 0.2s; }
   .as-dropdown__link:hover { background: var(--lightest-gray); }
   .as-dropdown__kicker { font-size: 0.62rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--body); }
+  /* El "Explorar" de cada celda salió: repetido nueve veces no informaba nada,
+     y en un panel donde todo es un link es evidente que se puede entrar. */
   .as-dropdown__title { font-size: 1rem; font-weight: 700; }
-  .as-dropdown__explore {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    margin-top: 0.35rem;
-    font-size: 0.66rem;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    color: var(--accent);
-  }
-  .as-dropdown__explore .material-symbols-outlined { font-size: 0.9rem; transition: transform 0.25s; }
-  .as-dropdown__link:hover .as-dropdown__explore .material-symbols-outlined { transform: translateX(3px); }
 
   .as-burger { display: flex; flex-direction: column; gap: 5px; padding: 0.4rem; }
   .as-burger span { display: block; width: 22px; height: 2px; background: var(--dark); transition: transform 0.3s; }
@@ -290,6 +305,10 @@
     .as-burger, .as-nav .as-mobile, .as-nav.is-open .as-mobile { display: none; }
   }
   @media (max-width: 1099px) { .as-nav__utils .as-nav__item--plain { display: none; } }
+  /* Con la hamburguesa en pantalla, el botón dejaba 16px entre el logo y él:
+     la barra quedaba llena de punta a punta. En mobile el CTA queda sólo en el
+     footer; el panel desplegable no lo trae. */
+  @media (max-width: 767px) { .as-nav__utils .as-button { display: none; } }
   @media (max-width: 767px) { .as-mobile { padding: 1.25rem; } }
 
   /* ── Hero ──────────────────────────────────────────────────────────── */
@@ -335,10 +354,16 @@
   }
   .as-rotator__line.is-active { opacity: 1; transform: translateY(0); }
   @media (max-width: 991px) { .as-rotator { height: 6.6rem; } }
-  @media (max-width: 767px) { .as-rotator { height: 3.6rem; } }
+  /* Igual al `line-height` del super, no menos: con 3.6rem contra una línea de
+     4.6rem la línea rotativa quedaba recortada contra la de abajo. */
+  @media (max-width: 767px) { .as-rotator { height: 3.9rem; } }
 
   .as-hero__sermon { display: inline-flex; flex-direction: column; gap: 0.9rem; width: fit-content; }
   .as-hero__sermon-image { position: relative; width: 15rem; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 12px; }
+  @media (max-width: 767px) {
+    .as-hero__sermon-image { width: 11rem; }
+    .as-hero__lead { font-size: 0.94rem; line-height: 1.55rem; }
+  }
   .as-hero__sermon-image img { width: 100%; height: 100%; object-fit: cover; }
   .as-hero__sermon-link {
     display: inline-flex;
@@ -384,8 +409,11 @@
   }
 
   /* ── Marquee ───────────────────────────────────────────────────────── */
-  .as-marquee { position: relative; z-index: 1; width: 100%; height: 30em; overflow: hidden; }
-  @media (max-width: 991px) { .as-marquee { height: 24em; font-size: 0.7em; } }
+  /* Sin alto fijo: ahora lo define la pieza más alta (la 4/3), si no quedaban
+     120px de banda muerta arriba y abajo. En mobile achica por `font-size`,
+     que es de donde sale el ancho de las piezas. */
+  .as-marquee { position: relative; z-index: 1; width: 100%; overflow: hidden; }
+  @media (max-width: 991px) { .as-marquee { font-size: 0.7em; } }
   .as-marquee__track {
     display: flex;
     align-items: center;
@@ -396,9 +424,20 @@
     will-change: transform;
     animation: as-marquee-horizontal 40s linear infinite;
   }
-  .as-marquee:hover .as-marquee__track { animation-play-state: paused; }
-  /* Sus piezas del marquee son cuadradas: 480x480 con el wrapper en 480px. */
-  .as-marquee__item { flex: 0 0 auto; aspect-ratio: 1; height: 100%; overflow: hidden; border-radius: 12px; }
+  /* Sus slots son cuadrados de 480x480, pero con `object-fit: contain` y fotos
+     de origen que alternan retrato (1080x1350) y apaisada (1080x608): lo que se
+     ve son formas distintas, no cuadrados. Acá las fotos propias son casi todas
+     apaisadas, así que `contain` dejaría bandas grises; se consigue el mismo
+     ritmo alternando la caja —4/3 y 16/9— y recortando con `cover`.
+     La alternancia va por índice de foto, no por `nth-child`: el track es la
+     lista duplicada y la animación corta en -50%, así que las dos mitades
+     tienen que ser idénticas o el loop pega un salto.
+     Lo que se fija es el ancho (30em = 480px, su medida), no el alto: así las
+     piezas quedan todas del mismo ancho y el ratio sólo cambia la altura, que
+     es de dónde sale el escalonado de su tira. */
+  .as-marquee__item { flex: 0 0 auto; width: 30em; overflow: hidden; border-radius: 12px; }
+  .as-marquee__item--4x3 { aspect-ratio: 4 / 3; }
+  .as-marquee__item--16x9 { aspect-ratio: 16 / 9; }
   .as-marquee__item img { width: 100%; height: 100%; object-fit: cover; }
   @keyframes as-marquee-horizontal { from { transform: translateX(0); } to { transform: translateX(calc(-50% - 0.625rem)); } }
   @media (prefers-reduced-motion: reduce) { .as-marquee__track { animation: none; } }
@@ -430,9 +469,13 @@
   .as-expect__item p { margin-top: 0.4rem; font-size: 0.92rem; }
 
   /* ── Sedes ─────────────────────────────────────────────────────────── */
+  /* `auto-fit`, no `repeat(6, 1fr)`: con seis columnas fijas y cinco sedes
+     quedaba una celda vacía al final, y como las líneas de esta grilla son su
+     fondo gris asomando por el `gap` de 1px, ese hueco se veía como un cuadro
+     gris suelto. `auto-fit` colapsa las pistas que sobran, así entran las que
+     haya y llenan la fila. */
   .as-sedes { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
-  @media (min-width: 768px) { .as-sedes { grid-template-columns: repeat(3, 1fr); } }
-  @media (min-width: 1100px) { .as-sedes { grid-template-columns: repeat(6, 1fr); } }
+  @media (min-width: 768px) { .as-sedes { grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); } }
   .as-sede { position: relative; background: var(--white); padding: 1.6rem 1.35rem 2.6rem; transition: background 0.3s; }
   .as-sede:hover { background: var(--lightest-gray); }
   .as-sede h4 { font-size: 1rem; font-weight: 700; }
@@ -447,10 +490,37 @@
   .as-split--reverse .as-image { order: -1; }
   @media (min-width: 992px) { .as-split--reverse .as-image { order: 0; } }
 
+  /* ── Split de la serie actual ───────────────────────────────────────────
+     Calcado de la referencia, con las medidas tomadas del navegador a 1440:
+     imagen de 893x536 pegada al borde izquierdo del viewport, texto de 347 a
+     la derecha, 80px de calle. Sobre el ancho de contenido de 1200 eso da
+     773 + 80 + 347, o sea 2.2fr / 1fr. Va como modificador y no tocando
+     `.as-split`, que lo comparten otras doce páginas. */
+  @media (min-width: 992px) {
+    /* Doble clase a propósito: más abajo hay otro `.as-split` global con la
+       misma especificidad que, por orden, le ganaba a este modificador. */
+    .as-split.as-split--serie { grid-template-columns: 2.2fr 1fr; align-items: center; }
+    /* La imagen se come parte del padding de la sección. Es lo que saca al
+       bloque de la grilla y lo vuelve una pieza gráfica en vez de dos columnas
+       iguales; sin esto el 2.2fr solo se lee como desbalance.
+       La referencia la pega al borde del viewport; acá frena antes, a los 72px
+       del padding lateral del nav, así el canto de la foto cae en la misma
+       vertical que el logo. De ahí el -48px: 72 - 120 de `.as-section`. */
+    .as-split--serie .as-image { margin-left: -48px; }
+  }
+
+  /* El arte de serie trae el título quemado y centrado, así que el play no
+     puede ir en el medio: se le monta encima. Va abajo a la izquierda porque
+     el sello de la serie —el "AGO '26" de Alma— ocupa la esquina derecha.
+     Misma razón en la tarjeta del hero, que muestra el mismo arte más chico. */
+  .as-split--serie .as-play { inset: auto auto 1.5rem 1.5rem; }
+  .as-play--home { inset: auto auto 0.6rem 0.6rem; }
+
   .as-image { position: relative; overflow: hidden; background: var(--lightest-gray); display: block; border-radius: 12px; }
   .as-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1); }
   .as-image--landscape { aspect-ratio: 4 / 3; }
   .as-image--square { aspect-ratio: 1; }
+  .as-image--16x9 { aspect-ratio: 16 / 9; }
   /* Los flyers vienen de redes con el texto al borde: contener, no recortar. */
   .as-image--contain img { object-fit: contain; }
   a.as-image:hover img, a:hover .as-image img { transform: scale(1.04); }
@@ -498,9 +568,22 @@
   .as-tabs__panel { display: none; }
   .as-tabs__panel.is-active { display: block; }
 
-  /* Su grilla de 3 usa 80px de gap, no 40. */
+  /* Su grilla de 3 usa 80px de gap, no 40. En el home se alinea con la de
+     ministerios —mismo tope, mismo gap, mismo auto-fill— para que las fotos de
+     las dos midan igual de ancho y sólo cambie el alto según el ratio. */
   .as-collection { display: grid; gap: 2.5rem; margin-bottom: 3rem; }
+  /* Cuando la colección cuelga directo del título, sin el bloque de pestañas
+     en el medio, se queda sin los 3rem que aportaba `.as-tabs`. */
+  .as-h2 + .as-collection { margin-top: 3rem; }
   @media (min-width: 768px) { .as-collection { grid-template-columns: repeat(3, 1fr); gap: 80px; } }
+  /* El bloque de devocional va a dos columnas con la tarjeta más chica que el
+     texto: a 1fr/1fr una sola pieza de 16:9 quedaba enorme al lado de tres
+     renglones. Doble clase por el mismo motivo que en `--serie`: más abajo hay
+     otro `.as-split` global que le gana por orden. */
+  @media (min-width: 992px) {
+    .as-split.as-split--devocional { grid-template-columns: 1.15fr 1fr; align-items: center; }
+  }
+  .as-split--devocional .as-button-group { margin-top: 2rem; }
   /* Medido: 16px/22.4px w500 ls1.2px. No es una versalita diminuta. */
   .as-item__meta { margin-top: 1rem; font-size: 1rem; line-height: 1.4rem; font-weight: 500; letter-spacing: 1.2px; text-transform: uppercase; color: var(--body); }
   .as-item__title { margin-top: 0.5rem; font-size: 1.35rem; font-weight: 700; line-height: 1.3; }
@@ -518,8 +601,31 @@
   .as-item:hover .as-item__view { color: var(--accent); }
 
   /* ── Radio ─────────────────────────────────────────────────────────── */
-  .as-radio { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 2rem; }
-  .as-radio p { margin-top: 1rem; }
+  /* ── Panel de radio ─────────────────────────────────────────────────────
+     Antes la sección era `--dark`, del mismo `#282828` que el footer: los dos
+     se fundían en un solo bloque y quedaban 200px muertos entre el copy y el
+     logo (120 de padding de la sección + 80 del footer, sin ningún borde).
+     Ahora es un panel con sus propios cantos apoyado sobre la página clara, y
+     pisa el footer. El cruce se ve por diferencia de tono —`#1a1a1a` contra el
+     `#282828` del footer—, sin filete: es sutil a propósito. */
+  .as-radio {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
+    padding: 3.5rem;
+    background: #1a1a1a;
+    border-radius: 16px;
+    color: var(--white);
+    /* Lo que mete el panel adentro del footer. */
+    margin-bottom: -5rem;
+  }
+  .as-radio .as-h1 { color: var(--white); }
+  .as-radio p { margin-top: 1rem; color: rgba(255, 255, 255, 0.72); }
+  @media (max-width: 767px) { .as-radio { padding: 2rem; margin-bottom: -3rem; } }
   .as-radio__side { display: flex; align-items: center; gap: 1.25rem; }
   .as-tag {
     display: inline-flex;
@@ -531,13 +637,30 @@
     text-transform: uppercase;
     color: var(--accent);
   }
-  .as-wave { display: flex; align-items: flex-end; gap: 3px; height: 1.4rem; }
-  .as-wave span { display: block; width: 3px; border-radius: 3px; background: var(--accent); animation: as-wave 1s infinite ease-in-out alternate; }
-  .as-wave span:nth-child(1), .as-wave span:nth-child(5) { height: 6px; }
-  .as-wave span:nth-child(2) { height: 12px; animation-delay: 0.2s; }
-  .as-wave span:nth-child(3) { height: 18px; animation-delay: 0.4s; }
-  .as-wave span:nth-child(4) { height: 14px; animation-delay: 0.6s; }
+  /* La onda escalaba desde el centro de cada barra —el `transform-origin` por
+     defecto—, así que al crecer se iban también para abajo y se despegaban de
+     la base: parecían latir sueltas en vez de apoyarse. Con origen abajo se
+     comportan como un ecualizador. El alto del contenedor sale de la barra más
+     alta ya escalada (18 × 1.45 = 26), si no la 3 se salía. */
+  .as-wave { display: flex; align-items: flex-end; gap: 3px; height: 1.75rem; }
+  .as-wave span {
+    display: block;
+    width: 3px;
+    border-radius: 3px;
+    background: var(--accent);
+    transform-origin: bottom;
+    animation: as-wave 1s infinite ease-in-out alternate;
+  }
+  /* Duraciones distintas por barra: con las cinco en 1s el dibujo se repetía
+     igual todo el tiempo. Y la 5 llevaba el delay de la 1, así que las puntas
+     iban clavadas en fase y se leía como un espejo, no como una onda. */
+  .as-wave span:nth-child(1) { height: 6px; animation-duration: 1s; }
+  .as-wave span:nth-child(2) { height: 12px; animation-delay: 0.18s; animation-duration: 1.15s; }
+  .as-wave span:nth-child(3) { height: 18px; animation-delay: 0.36s; animation-duration: 0.9s; }
+  .as-wave span:nth-child(4) { height: 14px; animation-delay: 0.54s; animation-duration: 1.25s; }
+  .as-wave span:nth-child(5) { height: 8px; animation-delay: 0.72s; animation-duration: 1.05s; }
   @keyframes as-wave { from { transform: scaleY(1); } to { transform: scaleY(1.45); } }
+  @media (prefers-reduced-motion: reduce) { .as-wave span { animation: none; } }
 
   /* ── Footer ────────────────────────────────────────────────────────── */
   .as-footer { background: var(--dark); color: var(--white); padding: 5rem 7.5rem 2.5rem; }
@@ -589,25 +712,8 @@
 .as-button--ministry { background: var(--m); color: var(--white); }
 .as-button--ministry:hover { background: var(--dark); color: var(--white); }
 
-/* ── Jump links ───────────────────────────────────────────────────────
-   Fila de anclas internas. Se pega debajo del nav al scrollear. */
-.as-jump { position: sticky; top: var(--as-nav-h, 120px); z-index: 40; background: var(--white); border-block: 1px solid var(--line); }
-.as-jump__inner { display: flex; gap: 2rem; overflow-x: auto; padding: 1rem 120px; scrollbar-width: none; }
-.as-jump__inner::-webkit-scrollbar { display: none; }
-.as-jump a {
-  white-space: nowrap;
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--body);
-  padding: 0.35rem 0;
-  border-bottom: 2px solid transparent;
-  transition: color 0.2s, border-color 0.2s;
-}
-.as-jump a:hover { color: var(--m); border-bottom-color: var(--m); }
-@media (max-width: 991px) { .as-jump__inner { padding: 1rem 80px; } }
-@media (max-width: 767px) { .as-jump__inner { padding: 0.85rem 48px; gap: 1.5rem; } }
+/* El sub-nav de anclas (`.as-jump`) salió de las seis páginas internas: se
+   pegaba debajo del nav y quedaban dos barras apiladas. Un solo navbar. */
 
 /* ── Declaración ──────────────────────────────────────────────────────
    Una sola frase grande sobre fondo oscuro. Peso medio, no bold: es una
@@ -716,8 +822,49 @@
 /* ── Grilla de ministerios del home ───────────────────────────────────
    Cada tarjeta lleva su `--m`. La franja de color se estira en hover: es la
    firma del ministerio y el aviso de que la tarjeta lleva a otra página. */
-.as-ministries { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
-@media (min-width: 768px) { .as-ministries { grid-template-columns: repeat(3, 1fr); gap: 2rem; } }
+/* Una sola fila que se desliza, en desktop y en mobile. Con nueve ministerios
+   cualquier grilla armaba un bloque alto —el 3x3 medía 1036px— y con columnas
+   pares siempre quedaba una tarjeta huérfana. En fila eso no existe: entran
+   los que entren y el resto se corre.
+   El scroll es nativo con `scroll-snap`, no una librería: la respuesta al dedo
+   es la del sistema y sigue andando aunque el JS no cargue. */
+.as-ministries {
+  display: flex;
+  gap: 1.25rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  /* El hover levanta la tarjeta 3px y le pone sombra; sin este aire el
+     contenedor con overflow se los corta. */
+  padding: 6px 0 14px;
+  scrollbar-width: none;
+}
+.as-ministries::-webkit-scrollbar { display: none; }
+/* `flex-basis` fijo, no `1fr`: en un scroller las tarjetas no se reparten el
+   ancho, lo definen. En mobile 76% deja asomando la siguiente, que es lo que
+   avisa que la fila sigue. */
+.as-ministries .as-mcard { flex: 0 0 76%; min-width: 0; scroll-snap-align: start; }
+@media (min-width: 768px) { .as-ministries { gap: 2rem; } .as-ministries .as-mcard { flex-basis: 280px; } }
+@media (prefers-reduced-motion: reduce) { .as-ministries { scroll-behavior: auto; } }
+
+/* Flechas: sólo donde no hay gesto táctil. Con `:disabled` en las puntas, para
+   que se vea cuándo la fila se terminó. */
+.as-ministries-nav { display: none; gap: 0.5rem; }
+@media (min-width: 768px) { .as-ministries-nav { display: flex; } }
+.as-ministries-nav button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--white);
+  color: var(--dark);
+  transition: border-color 0.2s, background 0.2s, opacity 0.2s;
+}
+.as-ministries-nav button:hover:not(:disabled) { border-color: var(--dark); background: var(--dark); color: var(--white); }
+.as-ministries-nav button:disabled { opacity: 0.35; cursor: default; }
 .as-mcard {
   display: flex;
   flex-direction: column;
@@ -728,7 +875,12 @@
   transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
 }
 .as-mcard:hover { border-color: var(--m); box-shadow: 0 14px 38px rgb(0 0 0 / 0.08); transform: translateY(-3px); }
-.as-mcard__media { position: relative; aspect-ratio: 4 / 3; background: var(--lightest-gray); }
+/* El `aspect-ratio` solo no alcanzaba: como ítem de un flex column, el
+   `min-height: auto` deja que la imagen imponga su alto natural, así que los
+   logos verticales estiraban la tarjeta hasta 667px y arrastraban a toda la
+   fila. Con `min-height: 0` manda el ratio, y la imagen se ancla absoluta
+   adentro para llenarlo sin volver a empujar. */
+.as-mcard__media { position: relative; aspect-ratio: 16 / 9; min-height: 0; background: var(--lightest-gray); }
 .as-mcard__media::after {
   content: '';
   position: absolute;
@@ -740,21 +892,35 @@
   transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .as-mcard:hover .as-mcard__media::after { transform: scaleX(1); }
-.as-mcard__media img { width: 100%; height: 100%; object-fit: cover; }
+.as-mcard__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .as-mcard__media.is-logo { background: color-mix(in srgb, var(--m) 8%, #fff); }
 .as-mcard__media.is-logo img { object-fit: contain; padding: 1.5rem; }
-.as-mcard__body { display: flex; flex-direction: column; flex: 1; padding: 1.25rem 1.35rem 1.5rem; }
+/* Cuerpo compacto: eran 133px para tres líneas cortas. */
+.as-mcard__body { display: flex; flex-direction: column; flex: 1; padding: 1rem 1.1rem 1.15rem; }
 .as-mcard__area { font-size: 0.65rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: var(--m); }
-.as-mcard__body h3 { margin-top: 0.4rem; font-size: 1.35rem; font-weight: 700; line-height: 1.3; }
-.as-mcard__body .as-item__view { margin-top: auto; padding-top: 1rem; align-self: flex-start; }
+.as-mcard__body h3 { margin-top: 0.35rem; font-size: 1.15rem; font-weight: 700; line-height: 1.3; }
+.as-mcard__body .as-item__view { margin-top: auto; padding-top: 0.75rem; align-self: flex-start; }
 .as-mcard:hover .as-item__view { color: var(--m); }
+
+/* En mobile la tarjeta mide 137px y el media 135x76. Con los 24px de padding
+   por lado, al logo le quedaban 28px de alto: Gold no se leía. Y el título a
+   1.15rem mandaba "Alabanza y Adoración" a tres renglones dentro de esa caja.
+   Los dos valores bajan sólo acá; en desktop la caja da de sobra. */
+@media (max-width: 767px) {
+  .as-mcard__media.is-logo img { padding: 0.55rem; }
+  .as-mcard__body { padding: 0.8rem 0.85rem 0.9rem; }
+  .as-mcard__body h3 { font-size: 1rem; }
+  .as-mcard__area { font-size: 0.6rem; letter-spacing: 1.5px; }
+}
 
 /* ── Hero de página interna ───────────────────────────────────────────
    Más bajo que el del home: acá el hero presenta, no impacta. */
-.as-hero--inner { min-height: 68vh; min-height: 68svh; align-items: center; }
+/* Pantalla completa, igual que el del home. Antes eran 68vh: la página abría
+   con el hero cortado y la sección siguiente asomando, que es lo que lo hacía
+   ver distinto al resto. */
+.as-hero--inner { min-height: 100vh; min-height: 100svh; align-items: center; }
 .as-hero--inner .as-hero__grid { grid-template-columns: 1fr; }
 .as-hero--inner .as-display { max-width: 18ch; }
-@media (max-width: 767px) { .as-hero--inner { min-height: 72svh; } }
 
 /* ── Cifras de sede ──────────────────────────────────────────────── */
 .as-stats { display: flex; flex-wrap: wrap; gap: 3rem; margin-top: 2.5rem; }
@@ -768,6 +934,131 @@
 
 .as-image--wide { aspect-ratio: 21 / 9; }
 @media (max-width: 767px) { .as-image--wide { aspect-ratio: 4 / 3; } }
+
+/* ── Mapa de destinos ─────────────────────────────────────────────────
+   Mapamundi de la sección Destinos. El SVG es estático (ver
+   `src/data/maqueta-mapa.ts`): sin librería de mapas ni tiles de un servidor
+   externo, así que no depende de red ni suma dependencias. */
+/* `relative` acá y no en el lienzo: las fichas se posicionan contra `.as-mapa`,
+   que en desktop mide exactamente lo que el lienzo porque las fichas están
+   fuera de flujo. Así los % de la ficha y los del marcador comparten caja. */
+.as-mapa { position: relative; margin: 3rem 0 4rem; }
+
+/* El lienzo es la caja de referencia de los puntos: van en `position:absolute`
+   con `left/top` en porcentaje, que es el mismo sistema del viewBox. Por eso
+   siguen al mapa cuando escala, sin recalcular nada en JS. */
+.as-mapa__lienzo { position: relative; }
+.as-mapa__svg { display: block; width: 100%; height: auto; }
+/* Sobre fondo blanco el `--lightest-gray` (#f4f4f4) casi no se veía; el mapa
+   tiene que leerse como una silueta, no desaparecer. En secciones `--light`,
+   que ya son #f4f4f4, la tierra baja otro escalón para seguir despegándose. */
+.as-mapa__svg path { fill: #e2e2e2; stroke: #d2d2d2; stroke-width: 0.5; }
+.as-section--light .as-mapa__svg path { fill: #dcdcdc; stroke: #cbcbcb; }
+
+.as-mapa__punto {
+  position: absolute;
+  /* `left/top` marcan el centro exacto de la coordenada; el translate corre el
+     botón para que ese centro caiga en el medio y no en su esquina. */
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.as-mapa__pulso {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--m, var(--accent));
+  box-shadow: 0 0 0 0 color-mix(in srgb, var(--m, var(--accent)) 55%, transparent);
+  transition: transform 0.25s ease;
+}
+.as-mapa__punto:hover .as-mapa__pulso,
+.as-mapa__punto:focus-visible .as-mapa__pulso,
+.as-mapa__punto.is-active .as-mapa__pulso { transform: scale(1.35); }
+/* El halo late sólo en el punto activo: con los dos latiendo a la vez el mapa
+   se volvía ruido y no señalaba nada. */
+.as-mapa__punto.is-active .as-mapa__pulso { animation: as-latido 2.4s ease-out infinite; }
+@keyframes as-latido {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--m, var(--accent)) 55%, transparent); }
+  70%, 100% { box-shadow: 0 0 0 16px transparent; }
+}
+@media (prefers-reduced-motion: reduce) { .as-mapa__punto.is-active .as-mapa__pulso { animation: none; } }
+
+.as-mapa__rotulo {
+  position: absolute;
+  top: 100%;
+  white-space: nowrap;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--dark);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.as-mapa__punto:hover .as-mapa__rotulo,
+.as-mapa__punto:focus-visible .as-mapa__rotulo,
+.as-mapa__punto.is-active .as-mapa__rotulo { opacity: 1; }
+
+/* La ficha flota sobre el mapa, anclada al mismo punto que su marcador.
+   Se abre hacia arriba porque los destinos caen en la mitad de abajo; el
+   `clamp` la mantiene adentro del lienzo si el punto está cerca de un borde,
+   sin tener que calcular nada en JS. */
+.as-mapa__ficha {
+  position: absolute;
+  left: clamp(140px, var(--x), calc(100% - 140px));
+  top: var(--y);
+  z-index: 3;
+  width: 268px;
+  transform: translate(-50%, calc(-100% - 26px)) scale(0.96);
+  transform-origin: bottom center;
+  background: var(--white);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 18px 50px rgb(0 0 0 / 0.16);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.28s ease, transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.28s;
+}
+.as-mapa__ficha.is-active {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, calc(-100% - 26px)) scale(1);
+}
+.as-mapa__ficha .as-image { border-radius: 0; }
+.as-mapa__ficha-cuerpo { padding: 1rem 1.15rem 1.2rem; }
+.as-mapa__meta { font-size: 0.68rem; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; color: var(--body); }
+.as-mapa__lugar { margin-top: 0.3rem; font-size: 1.35rem; font-weight: 700; line-height: 1.2; }
+.as-mapa__foco { margin-top: 0.35rem; font-size: 0.9rem; line-height: 1.45; }
+
+/* En mobile el lienzo mide ~294px: una ficha flotante de 268px lo taparía
+   entero. Ahí baja y se apoya debajo del mapa, en flujo normal. */
+@media (max-width: 767px) {
+  /* Nada de padding en el lienzo: su alto es la referencia de los marcadores,
+     que van en %. Con 24px de más, los puntos se corrían fuera del mapa. El
+     aire lo pone la ficha con su propio margen. */
+  .as-mapa__ficha {
+    position: relative;
+    left: auto;
+    top: auto;
+    width: 100%;
+    margin-top: 1.75rem;
+    transform: none;
+    box-shadow: none;
+    border: 1px solid var(--line);
+  }
+  .as-mapa__ficha.is-active { transform: none; }
+  /* Fuera de flujo las inactivas, para que no empujen a la activa. */
+  .as-mapa__ficha:not(.is-active) { display: none; }
+  .as-mapa__ficha-cuerpo { padding: 1rem 0 0; }
+  .as-mapa__ficha { border: 0; }
+  .as-mapa__ficha .as-image { border-radius: 12px; }
+}
 
 /* ── Escenas alternadas (misiones y evangelismo) ──────────────────────
    Filas de imagen + texto que invierten el orden una sí y una no, como

@@ -9,13 +9,6 @@ import { getMinistries } from '../../lib/content/collections';
 
 const ministries = await getMinistries();
 
-const jumpLinks = [
-  { label: 'Quiénes somos', href: '#quienes' },
-  { label: 'Nuestra historia', href: '#historia' },
-  { label: 'Sedes', href: '#sedes' },
-  { label: 'Ministerios', href: '#ministerios' },
-];
-
 const pilares = [
   {
     n: '01',
@@ -61,16 +54,12 @@ const fotos = [
             Adoramos, oramos y caminamos juntos para conocer a Jesús y encender una generación que viva para Él.
           </p>
           <div class="as-hero__actions" data-reveal data-reveal-delay="140">
-            <a class="as-button as-button--white" href="/maqueta#primera-vez">Visitanos</a>
+            <a class="as-button as-button--white" href="https://maps.app.goo.gl/mEVMgoTXbV3BULVq8" target="_blank" rel="noopener noreferrer">Visitanos</a>
             <a class="as-button as-button--ghost-white" href="#historia">Nuestra historia</a>
           </div>
         </div>
       </div>
     </header>
-
-    <nav class="as-jump" aria-label="Secciones de la página">
-      <div class="as-jump__inner">{jumpLinks.map((l) => <a href={l.href}>{l.label}</a>)}</div>
-    </nav>
 
     <section class="as-section as-section--dark as-statement" id="quienes">
       <div class="as-wrap">
@@ -178,7 +167,7 @@ const fotos = [
         <h2 class="as-display" data-reveal="words">Te esperamos.</h2>
         <p data-reveal>Vení a conocernos este fin de semana en cualquiera de nuestras sedes.</p>
         <div class="as-button-group" data-reveal data-reveal-delay="120">
-          <a class="as-button as-button--white" href="/maqueta#primera-vez">Tu primera vez</a>
+          <a class="as-button as-button--white" href="https://maps.app.goo.gl/mEVMgoTXbV3BULVq8" target="_blank" rel="noopener noreferrer">Tu primera vez</a>
           <a class="as-button as-button--ghost-white" href="/contact">Contactanos</a>
         </div>
       </div>

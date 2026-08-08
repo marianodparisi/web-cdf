@@ -134,16 +134,15 @@ const footerColumns = [
                     {group.label}
                     <span class="material-symbols-outlined">expand_more</span>
                   </button>
-                  <div class="as-dropdown">
+                  {/* Las columnas salen de cuántos ítems hay: con nueve
+                      ministerios, dos columnas daban cinco filas y una celda
+                      suelta al final. */}
+                  <div class="as-dropdown" style={`--cols: ${group.items.length > 6 ? 3 : 2}`}>
                     <div class="as-dropdown__grid">
                       {group.items.map((item) => (
                         <a class="as-dropdown__link" href={item.href}>
                           <span class="as-dropdown__kicker">{item.kicker}</span>
                           <span class="as-dropdown__title">{item.title}</span>
-                          <span class="as-dropdown__explore">
-                            Explorar
-                            <span class="material-symbols-outlined">arrow_forward</span>
-                          </span>
                         </a>
                       ))}
                     </div>
@@ -159,7 +158,7 @@ const footerColumns = [
         </nav>
 
         <div class="as-nav__utils">
-          <a class="as-button as-button--small" href="#primera-vez">Visitanos</a>
+          <a class="as-button as-button--small" href="https://maps.app.goo.gl/mEVMgoTXbV3BULVq8" target="_blank" rel="noopener noreferrer">Visitanos</a>
           <button class="as-burger" type="button" aria-label="Menú" aria-expanded="false">
             <span></span><span></span>
           </button>
@@ -201,7 +200,7 @@ const footerColumns = [
             <img src="/brand/favico.png" alt="" width="40" height="40" />
             <span>Corazón de Fuego</span>
           </a>
-          <a class="as-button as-button--ghost-white as-button--small" href="#primera-vez">Visitanos</a>
+          <a class="as-button as-button--ghost-white as-button--small" href="https://maps.app.goo.gl/mEVMgoTXbV3BULVq8" target="_blank" rel="noopener noreferrer">Visitanos</a>
         </div>
 
         <div class="as-footer__grid">
