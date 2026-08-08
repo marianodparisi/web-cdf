@@ -264,20 +264,29 @@ const currentDevotionalEmbedUrl = getYouTubeEmbedUrl(currentDevotionalPost?.vide
       </section>
     )}
 
-    <section data-animate="reveal" class="cinematic-light-section relative bg-[#e9e4da] py-20 md:py-32" id="ministerios">
+    {/* Bloque secundario del inicio: son nueve areas y ninguna es la entrada
+        principal del visitante nuevo. Va compacto a proposito, con la ficha de
+        cada ministerio cargando el peso. */}
+    <section data-animate="reveal" class="cinematic-light-section relative bg-[#e9e4da] py-16 md:py-20" id="ministerios">
       <div class="mx-auto max-w-[90rem] px-5 sm:px-6 lg:px-8">
-        <div class="mb-12 max-w-3xl md:mb-16">
-          <p class="mb-5 flex items-center gap-3 text-xs font-bold uppercase tracking-[0.24em] text-primary">
-            <span class="tabular-nums">05</span>
-            <span class="h-px w-8 bg-primary/60"></span>
-            Ministerios
-          </p>
-          <h2 data-cinematic-heading class="font-display text-4xl font-semibold leading-[1.04] tracking-tight text-charcoal sm:text-5xl lg:text-6xl">
-            Áreas donde servimos y crecemos juntos.
-          </h2>
+        <div class="mb-8 flex flex-wrap items-end justify-between gap-6 md:mb-10">
+          <div class="max-w-2xl">
+            <p class="mb-4 flex items-center gap-3 text-xs font-bold uppercase tracking-[0.24em] text-primary">
+              <span class="tabular-nums">05</span>
+              <span class="h-px w-8 bg-primary/60"></span>
+              Ministerios
+            </p>
+            <h2 data-cinematic-heading class="font-display text-3xl font-semibold leading-[1.06] tracking-tight text-charcoal sm:text-4xl">
+              Áreas donde servimos y crecemos juntos.
+            </h2>
+          </div>
+          <a href="/ministerios" class="editorial-link text-charcoal">
+            Ver todos
+            <span class="material-symbols-outlined">arrow_outward</span>
+          </a>
         </div>
 
-        <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5 lg:gap-5">
+        <div class="grid grid-cols-3 gap-4 sm:grid-cols-4 lg:grid-cols-6 xl:grid-cols-9 lg:gap-5">
           {
             ministries.map((ministry) => (
               <a
@@ -286,7 +295,7 @@ const currentDevotionalEmbedUrl = getYouTubeEmbedUrl(currentDevotionalPost?.vide
                 class="group flex flex-col"
                 href={`/ministerios/${ministry.slug}`}
               >
-                <div class={`relative aspect-[4/5] overflow-hidden rounded-soft ${logoSlugs.has(ministry.slug) ? 'bg-white p-5' : ''}`}>
+                <div class={`relative aspect-square overflow-hidden rounded-soft ${logoSlugs.has(ministry.slug) ? 'bg-white p-3' : ''}`}>
                   <img
                     alt={`Ministerio ${ministry.name}`}
                     class={
@@ -297,9 +306,9 @@ const currentDevotionalEmbedUrl = getYouTubeEmbedUrl(currentDevotionalPost?.vide
                     src={ministry.image}
                   />
                 </div>
-                <div class="pt-4">
-                  <h3 class="font-display text-lg leading-tight text-charcoal transition-colors group-hover:text-primary">{ministry.name}</h3>
-                  <p class="mt-1 text-[0.6rem] font-bold uppercase tracking-[0.2em] text-charcoal/45">{ministry.area}</p>
+                <div class="pt-3">
+                  <h3 class="font-display text-sm leading-tight text-charcoal transition-colors group-hover:text-primary">{ministry.name}</h3>
+                  <p class="mt-1 text-[0.55rem] font-bold uppercase tracking-[0.18em] text-charcoal/45">{ministry.area}</p>
                 </div>
               </a>
             ))
