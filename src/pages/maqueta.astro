@@ -57,57 +57,6 @@ const ministryColors: Record<string, string> = {
 // Los logos no toleran recorte: van contenidos sobre fondo propio.
 const logoSlugs = new Set(['gold', 'kids', 'arde']);
 
-/** Los tres pilares, con el texto que ya vive en /nosotros. */
-const pilares = [
-  {
-    n: '01',
-    title: 'Darle a Dios el lugar central.',
-    text: 'Nuestra primera respuesta es ministrar al Señor con gratitud, reverencia y alabanza.',
-  },
-  {
-    n: '02',
-    title: 'Ponernos de acuerdo con su voluntad.',
-    text: 'Intercedemos por nuestras familias, la ciudad y todo lo que Dios desea transformar.',
-  },
-  {
-    n: '03',
-    title: 'Caminar como discípulos de Jesús.',
-    text: 'Crecemos en comunidad para vivir la fe con carácter, convicción y servicio.',
-  },
-];
-
-/** Horarios reales de la casa, tal como están hoy en el Hero del sitio. */
-const horarios = [
-  { day: 'Viernes', time: '20:00', kind: 'Reunión' },
-  { day: 'Sábados', time: '20:00', kind: 'Reunión' },
-  { day: 'Domingos', time: '09:30', kind: 'Primera reunión' },
-  { day: 'Domingos', time: '11:00', kind: 'Segunda reunión' },
-];
-
-/** Qué esperar la primera vez: el bloque que resuelve la duda del visitante. */
-const primeraVez = [
-  {
-    icon: 'waving_hand',
-    title: 'Te esperamos en la puerta',
-    text: 'El equipo de Protocolo te recibe, te ubica y te acompaña. No vas a tener que averiguar nada solo.',
-  },
-  {
-    icon: 'checkroom',
-    title: 'Vení como estés',
-    text: 'No hay código de vestimenta. Vas a encontrar gente de todas las edades y de todos los recorridos.',
-  },
-  {
-    icon: 'child_care',
-    title: 'Tus hijos tienen lugar',
-    text: 'Kids funciona en paralelo a la reunión, con equipo propio y actividades por edad.',
-  },
-  {
-    icon: 'schedule',
-    title: 'Dura alrededor de 90 minutos',
-    text: 'Adoración, la Palabra y un tiempo de oración. Después nos quedamos a tomar algo.',
-  },
-];
-
 
 
 const agenda = [
@@ -245,76 +194,83 @@ const fotos = [
       </div>
     </section>
 
-    <!-- ══════════ PILARES ══════════ Los tres verbos de la casa. -->
-    <section class="as-section as-section--light">
-      <div class="as-wrap">
-        <div class="as-head">
-          <div>
-            <h6 class="as-eyebrow" data-reveal>Quiénes somos</h6>
-            <h2 class="as-h1" data-reveal="words">Adoración que se vuelve vida.</h2>
-          </div>
-          <a class="as-button as-button--small" href="/nosotros">Conocé nuestra historia</a>
-        </div>
-
-        <div class="as-pilares">
-          {
-            pilares.map((pilar, index) => (
-              <div class="as-pilar" data-reveal data-reveal-delay={index * 110}>
-                <span class="as-pilar__n">{pilar.n}</span>
-                <h3>{pilar.title}</h3>
-                <p>{pilar.text}</p>
-              </div>
-            ))
-          }
-        </div>
-      </div>
-    </section>
-
-    <!-- ══════════ PRIMERA VEZ ══════════
-         Horarios a la izquierda, qué esperar a la derecha. Es el bloque que más
-         preguntas resuelve y el que hoy no existe en el sitio. -->
-    <section class="as-section" id="primera-vez">
+    <!-- ══════════ NOVEDADES ══════════
+         Mismo reparto que el "What's Happening" de austinstone: a la izquierda
+         título, bajada y CTA; a la derecha la lista con filete entre eventos.
+         Reemplaza a los horarios, que ya estaban en el hero. -->
+    <section class="as-section as-section--light" id="agenda">
       <div class="as-wrap">
         <div class="as-visit">
-          <div class="as-visit__times">
-            <h6 class="as-eyebrow" data-reveal>Horarios</h6>
-            <h2 class="as-h2" data-reveal="words">Cuándo nos reunimos.</h2>
-            <div class="as-times">
-              {
-                horarios.map((h, index) => (
-                  <div class="as-time" data-reveal data-reveal-delay={index * 70}>
-                    <span class="as-time__day">{h.day}</span>
-                    <span class="as-time__hour">{h.time}</span>
-                    <span class="as-time__kind">{h.kind}</span>
-                  </div>
-                ))
-              }
-            </div>
+          <div>
+            <h2 class="as-h1" data-reveal="words">Qué está pasando</h2>
+            <p class="as-head__lead" data-reveal>
+              Caminemos juntos. Mirá las próximas clases, eventos y encuentros de la casa.
+            </p>
             <div class="as-button-group" data-reveal>
-              <a class="as-button as-button--small" href="/contact">Cómo llegar</a>
+              <a class="as-button as-button--small" href="#participar">Participar</a>
             </div>
           </div>
 
-          <div class="as-visit__expect">
-            <h6 class="as-eyebrow" data-reveal>Tu primera vez</h6>
-            <h2 class="as-h2" data-reveal="words">Qué podés esperar.</h2>
-            <div class="as-expect">
-              {
-                primeraVez.map((item, index) => (
-                  <div class="as-expect__item" data-reveal data-reveal-delay={index * 90}>
-                    <span class="material-symbols-outlined as-expect__icon">{item.icon}</span>
-                    <div>
-                      <h3>{item.title}</h3>
-                      <p>{item.text}</p>
-                    </div>
-                  </div>
-                ))
-              }
-            </div>
+          <div class="as-agenda">
+            {
+              agenda.map((item, index) => (
+                <a class="as-event" href="#" data-reveal data-reveal-delay={index * 70}>
+                  <span class="as-event__badge">
+                    <strong>{item.m}</strong>
+                    <em>{item.d}</em>
+                  </span>
+                  <span class="as-event__body">
+                    <span class="as-event__meta">
+                      {item.full} · {item.kind}
+                    </span>
+                    <span class="as-event__title">{item.title}</span>
+                  </span>
+                  <span class="material-symbols-outlined as-event__arrow">arrow_forward</span>
+                </a>
+              ))
+            }
           </div>
         </div>
       </div>
     </section>
+
+    <!-- ══════════ SERIE ACTUAL ══════════
+         Mismo reparto que el bloque de sermon series de austinstone: el arte
+         ocupa dos de tres columnas y sangra hacia el borde; el texto queda en
+         la tercera, con kicker, título, bajada y pastilla. -->
+    {currentSeries && (
+      <section class="as-section" id="series">
+        <div class="as-wrap">
+          <div class="as-serie">
+            <a
+              class="as-image as-serie__media"
+              href={currentSeries.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-reveal
+            >
+              <img src={currentSeries.image} alt={currentSeries.title} loading="lazy" />
+              <span class="as-play">
+                <span class="as-play__circle as-play__circle--large">
+                  <span class="material-symbols-outlined">play_arrow</span>
+                </span>
+              </span>
+            </a>
+
+            <div class="as-serie__copy">
+              <h6 class="as-eyebrow" data-reveal>Serie actual</h6>
+              <h2 class="as-h1" data-reveal="words">{currentSeries.title}</h2>
+              <p class="as-head__lead" data-reveal>{currentSeries.description}</p>
+              <div class="as-button-group" data-reveal data-reveal-delay="120">
+                <a class="as-button as-button--small" href={seriesPlaylistUrl} target="_blank" rel="noopener noreferrer">
+                  Explorar la serie
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    )}
 
     <!-- ══════════ MINISTERIOS ══════════
          Cada tarjeta lleva el color propio del ministerio y entra a su página
@@ -353,8 +309,10 @@ const fotos = [
       </div>
     </section>
 
-    <!-- ══════════ SEDES ══════════ Grilla de 6 con hairlines. -->
-    <section class="as-section as-section--light">
+    <!-- ══════════ SEDES ══════════ Grilla de 6 con hairlines.
+         Blanca: ministerios ya es gris y dos grises seguidas se leen como un
+         solo bloque. Igual que en austinstone, los fondos alternan. -->
+    <section class="as-section">
       <div class="as-wrap">
         <div class="as-head">
           <div>
@@ -377,69 +335,6 @@ const fotos = [
         </div>
       </div>
     </section>
-
-    <!-- ══════════ AGENDA ══════════ -->
-    <section class="as-section" id="agenda">
-      <div class="as-wrap">
-        <div class="as-head">
-          <div>
-            <h2 class="as-h1" data-reveal="words">Qué está pasando</h2>
-            <p class="as-head__lead" data-reveal>
-              Caminemos juntos. Mirá las próximas clases, eventos y encuentros de la casa.
-            </p>
-          </div>
-          <a class="as-button as-button--small" href="#participar">Participar</a>
-        </div>
-
-        <div class="as-agenda">
-          {
-            agenda.map((item, index) => (
-              <a class="as-event" href="#" data-reveal data-reveal-delay={index * 70}>
-                <span class="as-event__badge">
-                  <strong>{item.m}</strong>
-                  <em>{item.d}</em>
-                </span>
-                <span class="as-event__body">
-                  <span class="as-event__meta">
-                    {item.full} · {item.kind}
-                  </span>
-                  <span class="as-event__title">{item.title}</span>
-                </span>
-                <span class="material-symbols-outlined as-event__arrow">arrow_forward</span>
-              </a>
-            ))
-          }
-        </div>
-      </div>
-    </section>
-
-    <!-- ══════════ SERIE ACTUAL ══════════ -->
-    {currentSeries && (
-      <section class="as-section as-section--light" id="series">
-        <div class="as-wrap">
-          <div class="as-split as-split--reverse">
-            <div>
-              <h6 class="as-eyebrow" data-reveal>Serie actual</h6>
-              <h2 class="as-h1" data-reveal="words">{currentSeries.title}</h2>
-              <p class="as-head__lead" data-reveal>{currentSeries.description}</p>
-              <div class="as-button-group" data-reveal data-reveal-delay="120">
-                <a class="as-button as-button--small" href={seriesPlaylistUrl} target="_blank" rel="noopener noreferrer">
-                  Explorar la serie
-                </a>
-              </div>
-            </div>
-            <a class="as-image as-image--landscape" href={currentSeries.href} target="_blank" rel="noopener noreferrer" data-reveal>
-              <img src={currentSeries.image} alt={currentSeries.title} loading="lazy" />
-              <span class="as-play">
-                <span class="as-play__circle as-play__circle--large">
-                  <span class="material-symbols-outlined">play_arrow</span>
-                </span>
-              </span>
-            </a>
-          </div>
-        </div>
-      </section>
-    )}
 
     <!-- ══════════ SOS BIENVENIDO ══════════
          Oscura, sin padding inferior: las fotos escalonadas se apoyan en el borde. -->

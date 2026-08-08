@@ -447,6 +447,22 @@
   .as-split--reverse .as-image { order: -1; }
   @media (min-width: 992px) { .as-split--reverse .as-image { order: 0; } }
 
+  /* ── Serie actual ──────────────────────────────────────────────────────
+     Medido sobre el bloque de sermon series de austinstone: grilla de 3
+     columnas con gap de 80px, el arte ocupa dos y sangra 120px hacia el
+     borde izquierdo, el texto queda en la tercera. Ratio 5/3. */
+  .as-serie { display: grid; gap: 2.5rem; align-items: center; }
+  .as-serie__media { aspect-ratio: 5 / 3; }
+  @media (min-width: 992px) {
+    .as-serie { grid-template-columns: repeat(3, 1fr); gap: 5rem; }
+    .as-serie__media { grid-column: 1 / 3; }
+    .as-serie__copy { grid-column: 3 / 4; }
+  }
+  /* La sangría entra recién cuando hay margen fuera del contenedor. */
+  @media (min-width: 1400px) {
+    .as-serie__media { margin-left: -7.5rem; border-top-left-radius: 0; border-bottom-left-radius: 0; }
+  }
+
   .as-image { position: relative; overflow: hidden; background: var(--lightest-gray); display: block; border-radius: 12px; }
   .as-image img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1); }
   .as-image--landscape { aspect-ratio: 4 / 3; }
@@ -716,8 +732,12 @@
 /* ── Grilla de ministerios del home ───────────────────────────────────
    Cada tarjeta lleva su `--m`. La franja de color se estira en hover: es la
    firma del ministerio y el aviso de que la tarjeta lleva a otra página. */
-.as-ministries { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
-@media (min-width: 768px) { .as-ministries { grid-template-columns: repeat(3, 1fr); gap: 2rem; } }
+/* `start` para que una tarjeta alta no estire a las demas de su fila. */
+.as-ministries { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; align-items: start; }
+@media (min-width: 768px) { .as-ministries { grid-template-columns: repeat(3, 1fr); gap: 1.75rem; } }
+/* Son nueve areas: a tres columnas las piezas quedaban de 534px de ancho. */
+@media (min-width: 1200px) { .as-ministries { grid-template-columns: repeat(4, 1fr); } }
+@media (min-width: 1600px) { .as-ministries { grid-template-columns: repeat(5, 1fr); } }
 .as-mcard {
   display: flex;
   flex-direction: column;
@@ -740,7 +760,12 @@
   transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .as-mcard:hover .as-mcard__media::after { transform: scaleX(1); }
-.as-mcard__media img { width: 100%; height: 100%; object-fit: cover; }
+/* Absoluta a proposito: con `height: 100%` en flujo la altura se resuelve
+   contra una altura que depende del propio aspect-ratio, la referencia es
+   circular y el navegador termina usando la proporcion intrinseca de la
+   imagen. Los logos verticales estiraban la tarjeta a 752px en vez de 399 y,
+   como la grilla estira, arrastraban a toda la fila. */
+.as-mcard__media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .as-mcard__media.is-logo { background: color-mix(in srgb, var(--m) 8%, #fff); }
 .as-mcard__media.is-logo img { object-fit: contain; padding: 1.5rem; }
 .as-mcard__body { display: flex; flex-direction: column; flex: 1; padding: 1.25rem 1.35rem 1.5rem; }
