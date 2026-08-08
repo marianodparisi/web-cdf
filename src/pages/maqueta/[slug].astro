@@ -38,15 +38,14 @@ const ministryColors: Record<string, string> = {
   kids: '#e31b48',
   arde: '#e8642b',
   carcelario: '#487a7c',
-  'alabanza-y-adoracion': '#224d98',
-  multimedia: '#6b4fbb',
-  protocolo: '#085e42',
   'firmes-y-adelante': '#c43b46',
 };
 const color = ministryColors[ministry.slug] ?? '#282828';
 
 // Los logos no toleran recorte: van contenidos sobre fondo propio.
-const esLogo = ['gold', 'kids', 'arde'].includes(ministry.slug);
+/* Mismo criterio que en el home: la imagen de `life` también es un logotipo,
+   así que no se recorta ni se le aplica el grado de color. */
+const esLogo = ['life', 'gold', 'kids', 'arde'].includes(ministry.slug);
 
 /** Fotos de comunidad. Igual que en el home, `ministry.image` suele ser logo. */
 const fotos = [

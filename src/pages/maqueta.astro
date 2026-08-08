@@ -76,13 +76,13 @@ const ministryColors: Record<string, string> = {
   kids: '#e31b48',
   arde: '#e8642b',
   carcelario: '#487a7c',
-  'alabanza-y-adoracion': '#224d98',
-  multimedia: '#6b4fbb',
-  protocolo: '#085e42',
   'firmes-y-adelante': '#c43b46',
 };
-// Los logos no toleran recorte: van contenidos sobre fondo propio.
-const logoSlugs = new Set(['gold', 'kids', 'arde']);
+/* Los logos no toleran recorte: van contenidos sobre fondo propio.
+   `life` va acá aunque el sitio real no lo marque: su imagen es el logotipo,
+   no una foto. Sin esto se recortaba contra los bordes de la tarjeta y, desde
+   que hay grado de color, además se le apagaba la marca. */
+const logoSlugs = new Set(['life', 'gold', 'kids', 'arde']);
 
 /* Al sacar el bloque de horarios y primera vez, los CTA de "Visitanos" se
    quedaron sin destino interno. Van todos acá: es la respuesta concreta a
@@ -244,14 +244,13 @@ const fotos = [
           {/* La imagen va primera en el markup, no dada vuelta por CSS: en la
               referencia manda ella, y en mobile también tiene que abrir. */}
           <div class="as-split as-split--serie">
-            <a class="as-image as-image--16x9" href={currentSeries.href} target="_blank" rel="noopener noreferrer" data-reveal>
+            {/* Pieza muda: `div` y no `a`, sin play y sin hover. El arte de la
+                serie acompaña, no invita a clickear — la única acción del
+                bloque es "Explorar la serie". Como `a.as-image:hover` no
+                matchea un div, el zoom de la imagen se apaga solo. */}
+            <div class="as-image as-image--16x9" data-reveal>
               <img src={currentSeries.image} alt={currentSeries.title} loading="lazy" />
-              <span class="as-play">
-                <span class="as-play__circle as-play__circle--large">
-                  <span class="material-symbols-outlined">play_arrow</span>
-                </span>
-              </span>
-            </a>
+            </div>
             <div>
               <h6 class="as-eyebrow" data-reveal>Serie actual</h6>
               <h2 class="as-h1" data-reveal="words">{currentSeries.title}</h2>

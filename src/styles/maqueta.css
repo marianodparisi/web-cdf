@@ -17,6 +17,18 @@
        dorado de Corazón de Fuego para no perder la marca. */
     --accent: #c5a059;
 
+    /* ── Grado de color de las fotos ──────────────────────────────────────
+       La referencia NO filtra sus imágenes: se midieron las 19 de su home y
+       las 19 dan `filter: none`, sin blend mode ni velo. El tono cálido está
+       en la fotografía misma, que es material propio y dirigido.
+       Esto es un puente hasta tener ese material: un grado parejo que le da
+       a fotos de origen y calidad dispares un aire de familia. El `sepia`
+       tira todo al mismo eje cálido y el `saturate` devuelve el color que ese
+       paso aplana, para que quede cálido y no marrón.
+       Es un solo dial: cuando lleguen las fotos buenas, se pone en `none` y
+       no hay que tocar ninguna regla. */
+    --as-grade: sepia(0.32) saturate(1.35) contrast(1.04) brightness(1.02);
+
     /* Proxima Nova es licenciada. Nunito Sans es la libre que más se le
        acerca: misma altura de x (8px) y de mayúscula (11px) a 16px, y el
        ancho de línea queda a un 2% (Mulish quedaba a 4%). */
@@ -511,9 +523,9 @@
 
   /* El arte de serie trae el título quemado y centrado, así que el play no
      puede ir en el medio: se le monta encima. Va abajo a la izquierda porque
-     el sello de la serie —el "AGO '26" de Alma— ocupa la esquina derecha.
-     Misma razón en la tarjeta del hero, que muestra el mismo arte más chico. */
-  .as-split--serie .as-play { inset: auto auto 1.5rem 1.5rem; }
+     el sello de la serie —el "AGO '26" de Alma— ocupa esa esquina derecha.
+     Sólo aplica a la tarjeta del hero: el bloque de serie actual ya no lleva
+     play, ahí la imagen es una pieza muda. */
   .as-play--home { inset: auto auto 0.6rem 0.6rem; }
 
   /* Cartel de EN VIVO sobre la miniatura del hero. Rojo plano y no el dorado de
@@ -547,6 +559,27 @@
   /* Los flyers vienen de redes con el texto al borde: contener, no recortar. */
   .as-image--contain img { object-fit: contain; }
   a.as-image:hover img, a:hover .as-image img { transform: scale(1.04); }
+
+  /* ── Dónde se aplica el grado ─────────────────────────────────────────
+     Va sólo sobre fotografía, y por lista explícita: teñir todo de una
+     rompería justo lo que no es foto. Quedan afuera a propósito los logos de
+     ministerio —Gold es dorado sobre crema y el sepia se lo come—, los flyers
+     de anuncios, que vienen diseñados con su propia paleta, y el arte de
+     serie, que ya trae su color decidido. La miniatura de YouTube del hero
+     muestra ese mismo arte, así que tampoco. */
+  .as-hero__bg img,
+  .as-hero__bg video,
+  .as-marquee__item img,
+  .as-image img,
+  .as-welcome__image img {
+    filter: var(--as-grade);
+  }
+
+  .as-image--contain img,
+  .as-split--serie .as-image img,
+  .as-hero__sermon-image img {
+    filter: none;
+  }
 
   /* ── Agenda ────────────────────────────────────────────────────────── */
   .as-agenda { border-top: 1px solid var(--line); }
@@ -1193,3 +1226,14 @@
 @media (min-width: 520px) { .as-form__row { grid-template-columns: repeat(2, 1fr); } }
 .as-check { display: flex; align-items: flex-start; gap: 0.75rem; font-size: 0.9rem; line-height: 1.5; color: var(--body); }
 .as-check input { margin-top: 0.25rem; width: 1rem; height: 1rem; accent-color: var(--m); flex: 0 0 auto; }
+
+/* Grado de color en las superficies fotográficas que viven fuera del bloque
+   `.as` de arriba (páginas internas y grilla de ministerios). Mismo dial:
+   `--as-grade`. Los logos quedan afuera, por eso el `:not(.is-logo)`. */
+.as-mcard__media:not(.is-logo) img,
+.as-mhero__media:not(.is-logo) img,
+.as-photo img,
+.as-scene__media img,
+.as-mapa__ficha img {
+  filter: var(--as-grade);
+}
