@@ -62,8 +62,15 @@ const getPool = () => {
   return pool;
 };
 
-const getSessionSecret = () =>
-  readEnv('AUTH_SECRET') || 'cdf-local-dev-auth-secret-change-in-production';
+/**
+ * Sin fallback a propósito. Antes caía a una constante escrita en el código:
+ * con esa cadena, que está publicada en el repo, cualquiera puede firmarse una
+ * cookie de sesión válida para el usuario que quiera y entrar como admin sin
+ * contraseña. Si falta la variable el panel no arranca, que es preferible a que
+ * arranque abierto. El sitio público no se ve afectado: el middleware sólo
+ * llega acá en /admin y /api/admin.
+ */
+const getSessionSecret = () => requiredEnv('AUTH_SECRET');
 
 const createSessionSignature = (payload: string) =>
   crypto.createHmac('sha256', getSessionSecret()).update(payload).digest('hex');
