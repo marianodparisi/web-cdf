@@ -26,7 +26,7 @@ const [ministries, sermonSeries, announcements] = await Promise.all([
 
 const index = ministries.findIndex((m) => m.slug === slug);
 const ministry = ministries[index];
-if (!ministry) return Astro.redirect('/maqueta');
+if (!ministry) return Astro.redirect('/');
 
 // El siguiente de la lista, para el link de "próximo" del pie.
 const next = ministries[(index + 1) % ministries.length];
@@ -97,7 +97,7 @@ const whatsappHref = ministry.whatsapp
   : '/contact';
 ---
 
-<MaquetaLayout title={`${ministry.name} · Maqueta · Corazón de Fuego`}>
+<MaquetaLayout title={`${ministry.name} · Iglesia Corazón de Fuego`}>
   <div class="as-ministry" style={`--m: ${color}`}>
     <!-- ══════════ HERO PARTIDO ══════════
          Copy a la izquierda, imagen a la derecha ocupando media pantalla. -->
@@ -287,7 +287,7 @@ const whatsappHref = ministry.whatsapp
           </div>
         )}
 
-        <a class="as-next" href={`/maqueta/${next.slug}`}>
+        <a class="as-next" href={`/ministerios/${next.slug}`}>
           <span>Siguiente ministerio</span>
           <strong>{next.name}</strong>
           <span class="material-symbols-outlined">arrow_forward</span>

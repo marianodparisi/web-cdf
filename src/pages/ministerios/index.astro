@@ -1,71 +1,63 @@
 ---
-import Footer from '../../components/Footer.astro';
-import Navbar from '../../components/Navbar.astro';
+/**
+ * Listado de ministerios.
+ *
+ * El home los muestra en una fila que se desliza, porque ahí compiten con el
+ * resto de la página. Acá es lo único que hay, así que van en grilla: se ven
+ * todos de una y no hay que arrastrar para descubrir que existe el noveno.
+ *
+ * Reusa `.as-mcard`, la misma tarjeta del home, para que sea el mismo objeto
+ * en los dos lugares y no dos cosas parecidas.
+ */
+import MaquetaLayout from '../../layouts/MaquetaLayout.astro';
 import { getMinistries } from '../../lib/content/collections';
-import BaseLayout from '../../layouts/BaseLayout.astro';
 
-const logoSlugs = new Set(['gold', 'kids', 'arde']);
 const ministries = await getMinistries();
+
+/** Mismo mapa de color que el home y la página de cada ministerio. */
+const ministryColors: Record<string, string> = {
+  life: '#48c2c5',
+  gold: '#c5a059',
+  kids: '#e31b48',
+  arde: '#e8642b',
+  carcelario: '#487a7c',
+  'firmes-y-adelante': '#c43b46',
+};
+
+// Los logos no toleran recorte: van contenidos sobre fondo propio.
+const logoSlugs = new Set(['life', 'gold', 'kids', 'arde']);
 ---
 
-<BaseLayout title="Ministerios | Iglesia Corazon de Fuego">
-  <Navbar />
-
-  <main data-cinematic-page="ministerios" class="bg-[#11110f]">
-    <section data-animate="reveal" data-nav-surface-zone="dark" class="relative overflow-hidden bg-[#151514] py-20 text-white md:py-28">
-      <div aria-hidden="true" class="cinematic-orb cinematic-orb--right"></div>
-      <div class="relative mx-auto max-w-[90rem] px-5 sm:px-6 lg:px-8">
-        <p class="mb-5 flex items-center gap-3 text-xs font-bold uppercase tracking-[0.24em] text-primary">
-          <span class="h-px w-8 bg-primary/60"></span>
-          Sección ministerios
-        </p>
-        <h1 data-cinematic-heading class="max-w-4xl font-display text-4xl font-semibold leading-[1.04] tracking-tight text-white sm:text-5xl lg:text-6xl">
-          Nuestro liderazgo y áreas de servicio.
-        </h1>
-        <p data-cinematic-copy class="mt-7 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg">
-          Conocé cada área de servicio y encontrá el lugar donde podés crecer, servir y conectar con la familia de la fe.
-        </p>
-      </div>
-    </section>
-
-    <section data-animate="reveal" class="cinematic-light-section relative bg-[#e9e4da] py-20 md:py-28">
-      <div class="mx-auto max-w-[90rem] px-5 sm:px-6 lg:px-8">
-        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 lg:gap-6">
-          {
-            ministries.map((ministry) => (
-              <a
-                data-animate="card"
-                data-cinematic-card
-                href={`/ministerios/${ministry.slug}`}
-                class="group flex flex-col"
-              >
-                <div class={`relative aspect-[16/10] overflow-hidden rounded-soft ${logoSlugs.has(ministry.slug) ? 'bg-white p-8' : ''}`}>
-                  <img
-                    src={ministry.image}
-                    alt={`Ministerio ${ministry.name}`}
-                    class={
-                      logoSlugs.has(ministry.slug)
-                        ? 'h-full w-full object-contain'
-                        : 'h-full w-full object-cover transition-[filter,transform] duration-700 ease-out [filter:saturate(0.7)_contrast(1.06)_brightness(0.94)] group-hover:scale-[1.03] group-hover:[filter:saturate(0.95)_contrast(1.02)_brightness(1)]'
-                    }
-                  />
-                </div>
-                <div class="flex flex-1 flex-col pt-6">
-                  <p class="text-[0.62rem] font-bold uppercase tracking-[0.22em] text-primary">{ministry.area}</p>
-                  <h2 class="mt-3 font-display text-2xl leading-tight text-charcoal transition-colors group-hover:text-primary">{ministry.name}</h2>
-                  <p class="mt-3 text-sm leading-relaxed text-charcoal/65">{ministry.excerpt}</p>
-                  <span class="editorial-link mt-6 text-charcoal">
-                    Ver detalle
-                    <span class="material-symbols-outlined text-sm">arrow_outward</span>
-                  </span>
-                </div>
-              </a>
-            ))
-          }
+<MaquetaLayout title="Ministerios · Iglesia Corazón de Fuego">
+  <section class="as-section as-section--light">
+    <div class="as-wrap">
+      <div class="as-head">
+        <div>
+          <p class="as-eyebrow" data-reveal>Ministerios</p>
+          <h1 class="as-h1" data-reveal="words">Encontrá tu lugar para servir y crecer.</h1>
         </div>
       </div>
-    </section>
-  </main>
 
-  <Footer />
-</BaseLayout>
+      <div class="as-ministries as-ministries--grilla" data-reveal>
+        {
+          ministries.map((ministry) => (
+            <a
+              class="as-mcard"
+              href={`/ministerios/${ministry.slug}`}
+              style={`--m: ${ministryColors[ministry.slug] ?? '#282828'}`}
+            >
+              <div class={`as-mcard__media${logoSlugs.has(ministry.slug) ? ' is-logo' : ''}`}>
+                <img src={ministry.image} alt={`Ministerio ${ministry.name}`} loading="lazy" />
+              </div>
+              <div class="as-mcard__body">
+                <p class="as-mcard__area">{ministry.area}</p>
+                <h3>{ministry.name}</h3>
+                <span class="as-item__view">Conocer</span>
+              </div>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</MaquetaLayout>

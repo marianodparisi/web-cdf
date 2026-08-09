@@ -7,7 +7,7 @@
  *   src/pages/institucional/discipulados.astro
  * Sólo cambia el envoltorio visual, no el texto.
  */
-import MaquetaLayout from '../../../layouts/MaquetaLayout.astro';
+import MaquetaLayout from '../../layouts/MaquetaLayout.astro';
 
 const { slug } = Astro.params;
 
@@ -132,14 +132,14 @@ const paginas = {
 } as const;
 
 const pagina = paginas[slug as keyof typeof paginas];
-if (!pagina) return Astro.redirect('/maqueta');
+if (!pagina) return Astro.redirect('/');
 
 const otroSlug = slug === 'iete' ? 'discipulados' : 'iete';
 const otro = paginas[otroSlug];
 
 ---
 
-<MaquetaLayout title={`${pagina.name} · Maqueta · Corazón de Fuego`}>
+<MaquetaLayout title={`${pagina.name} · Iglesia Corazón de Fuego`}>
   <div class="as-ministry" style={`--m: ${pagina.color}`}>
     <header class="as-mhero">
       <div class="as-mhero__copy">
@@ -289,10 +289,10 @@ const otro = paginas[otroSlug];
         <h2 class="as-display" data-reveal="words">Da el próximo paso.</h2>
         <p data-reveal>Escribinos y te contamos cuándo abre la próxima inscripción.</p>
         <div class="as-button-group" data-reveal data-reveal-delay="120">
-          <a class="as-button as-button--white" href="/maqueta/contacto">Escribinos</a>
+          <a class="as-button as-button--white" href="/contact">Escribinos</a>
         </div>
 
-        <a class="as-next" href={`/maqueta/institucional/${otroSlug}`}>
+        <a class="as-next" href={`/institucional/${otroSlug}`}>
           <span>También te puede interesar</span>
           <strong>{otro.name}</strong>
           <span class="material-symbols-outlined">arrow_forward</span>

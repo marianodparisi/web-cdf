@@ -1,101 +1,40 @@
 ---
-import Footer from '../../components/Footer.astro';
-import Navbar from '../../components/Navbar.astro';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+/**
+ * Listado de sedes.
+ *
+ * Reusa `.as-sedes`, la misma grilla de hairlines que ya usan las páginas
+ * internas, en vez de inventar un bloque nuevo. La lista sale de la única
+ * fuente que hay, la que exporta el layout, así que el nav, el footer y esta
+ * página no se pueden desincronizar.
+ */
+import MaquetaLayout, { sedes } from '../../layouts/MaquetaLayout.astro';
 
-// El acento de cada sede replica el que usa su propia página vía AnexoTemplate,
-// para que el índice anticipe el color con el que se van a encontrar.
-const sedes = [
-  {
-    index: '01',
-    slug: 'ramos-mejia',
-    name: 'Ramos Mejía',
-    accent: '#c5a059',
-    excerpt: 'Nuestra sede principal, un lugar de encuentro, adoracion y formacion para toda la familia.',
-  },
-  {
-    index: '02',
-    slug: 'rojas',
-    name: 'Rojas',
-    accent: '#775a19',
-    excerpt: 'Seccion base para cargar direccion, horarios y actividades de la sede de Rojas.',
-  },
-  {
-    index: '03',
-    slug: 'villa-minetti',
-    name: 'Villa Minetti',
-    accent: '#8f6b4f',
-    excerpt: 'Seccion base para presentar informacion de la sede y su equipo local.',
-  },
-  {
-    index: '04',
-    slug: 'palito',
-    name: 'Palito',
-    accent: '#b87a3c',
-    excerpt: 'Seccion base para sumar novedades, reuniones y contactos de la sede.',
-  },
-  {
-    index: '05',
-    slug: 'santos-vega',
-    name: 'Santos Vega',
-    accent: '#7d9aa0',
-    excerpt: 'Seccion base para documentar vision, reuniones y recursos de la sede.',
-  },
-];
+/* La primera entrada es "Sede Central", que apunta a este mismo listado: acá
+   sería un link a sí mismo. */
+const anexos = sedes.filter((sede) => sede.href !== '/anexos');
 ---
 
-<BaseLayout title="Nuestras Sedes | Iglesia Corazon de Fuego">
-  <Navbar />
-
-  <main data-cinematic-page="sedes" class="bg-[#11110f]">
-    <section data-animate="reveal" data-nav-surface-zone="dark" class="relative overflow-hidden bg-[#151514] py-20 text-white md:py-28">
-      <div aria-hidden="true" class="cinematic-orb cinematic-orb--right"></div>
-      <div class="relative mx-auto max-w-[90rem] px-5 sm:px-6 lg:px-8">
-        <p class="mb-5 flex items-center gap-3 text-xs font-bold uppercase tracking-[0.24em] text-primary">
-          <span class="h-px w-8 bg-primary/60"></span>
-          Nuestras sedes
-        </p>
-        <h1 data-cinematic-heading class="max-w-4xl font-display text-4xl font-semibold leading-[1.04] tracking-tight text-white sm:text-5xl lg:text-6xl">
-          La visión se expande a otras localidades.
-        </h1>
-        <p data-cinematic-copy class="mt-7 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg">
-          Cada sede tiene su propio equipo, sus horarios y su historia. Estos son los lugares donde servimos.
-        </p>
+<MaquetaLayout title="Nuestras Sedes · Iglesia Corazón de Fuego">
+  <section class="as-section">
+    <div class="as-wrap">
+      <div class="as-head">
+        <div>
+          <p class="as-eyebrow" data-reveal>Nuestras Sedes</p>
+          <h1 class="as-h1" data-reveal="words">Una iglesia en varias ciudades.</h1>
+        </div>
       </div>
-    </section>
 
-    <section data-animate="reveal" class="cinematic-light-section relative bg-[#e9e4da] py-20 md:py-28">
-      <div class="mx-auto max-w-[90rem] px-5 sm:px-6 lg:px-8">
-        <ul class="border-t border-charcoal/15">
-          {
-            sedes.map((sede) => (
-              <li>
-                <a
-                  data-animate="card"
-                  data-cinematic-card
-                  href={`/anexos/${sede.slug}`}
-                  style={`--editorial-accent:${sede.accent}`}
-                  class="group grid grid-cols-1 items-baseline gap-4 border-b border-charcoal/15 py-8 transition-colors md:grid-cols-[5rem_1fr_1.1fr_auto] md:gap-8 md:py-10"
-                >
-                  <span class="font-display text-sm font-bold tabular-nums tracking-[0.2em] text-[color:var(--editorial-accent)]">
-                    {sede.index}
-                  </span>
-                  <h2 class="font-display text-3xl leading-tight text-charcoal transition-colors group-hover:text-[color:var(--editorial-accent)] md:text-4xl">
-                    {sede.name}
-                  </h2>
-                  <p class="max-w-xl text-sm leading-relaxed text-charcoal/65">{sede.excerpt}</p>
-                  <span class="editorial-link text-charcoal md:justify-self-end">
-                    Ver sede
-                    <span class="material-symbols-outlined">arrow_outward</span>
-                  </span>
-                </a>
-              </li>
-            ))
-          }
-        </ul>
+      <div class="as-sedes" data-reveal>
+        {
+          anexos.map((sede) => (
+            <a class="as-sede" href={sede.href}>
+              <h4>{sede.name}</h4>
+              <p>{sede.region}</p>
+              <span class="as-sede__arrow material-symbols-outlined">arrow_forward</span>
+            </a>
+          ))
+        }
       </div>
-    </section>
-  </main>
-
-  <Footer />
-</BaseLayout>
+    </div>
+  </section>
+</MaquetaLayout>

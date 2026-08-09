@@ -1,246 +1,161 @@
 ---
-import Footer from '../../components/Footer.astro';
-import Navbar from '../../components/Navbar.astro';
+/**
+ * MAQUETA — "Misiones", con la estructura de sus páginas de iniciativa
+ * (For the Nations). Los destinos salen de `src/data/missions.ts`.
+ */
+import MaquetaLayout from '../../layouts/MaquetaLayout.astro';
 import { missions } from '../../data/missions';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import { mapaMundi, coordenadas, proyectar } from '../../data/maqueta-mapa';
 
-const missionsChronological = [...missions].sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime());
+/* Sólo las misiones que tienen coordenada cargada entran al mapa; el resto
+   sigue apareciendo abajo en las pestañas. */
+const destinos = missions
+  .filter((m) => coordenadas[m.slug])
+  .map((m) => ({
+    ...m,
+    ...proyectar(coordenadas[m.slug][0], coordenadas[m.slug][1]),
+    year: new Date(m.startDate).getFullYear(),
+  }));
 
-const dateFormatter = new Intl.DateTimeFormat('es-AR', {
-  month: 'long',
-  year: 'numeric',
-});
+const columnas = [
+  { n: '01', title: 'Ir', text: 'Salidas cortas para servir junto a iglesias locales que ya están sembrando en la región.' },
+  { n: '02', title: 'Sostener', text: 'Acompañamos con oración y con recursos a quienes están en el campo todo el año.' },
+  { n: '03', title: 'Enviar', text: 'Formamos y enviamos equipos de la casa, con respaldo pastoral antes, durante y después.' },
+];
 
-const getLocalMissionDate = (date: string) => new Date(`${date}T12:00:00`);
+const destacada = missions[0];
 ---
 
-<BaseLayout title="Misiones | Iglesia Corazon de Fuego">
-  <Navbar transparent />
-
-  <main data-cinematic-page="misiones" class="missions-cinematic overflow-hidden bg-white">
-  <section data-animate="hero" data-nav-surface-zone="dark" class="missions-hero relative isolate flex min-h-[42rem] items-center overflow-hidden bg-[#11110f] py-28 text-white sm:min-h-[46rem] lg:min-h-screen">
-    <div aria-hidden="true" class="cinematic-grain absolute inset-0 -z-10 opacity-25 mix-blend-soft-light"></div>
-    <div aria-hidden="true" class="missions-hero-glow absolute -right-40 top-1/4 -z-10 h-[34rem] w-[34rem] rounded-full bg-primary/10 blur-3xl"></div>
-    <div class="relative mx-auto w-full max-w-[90rem] px-5 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-end">
-        <div data-cinematic="hero-copy">
-          <span class="text-primary text-xs uppercase tracking-[0.22em] font-semibold">Misiones</span>
-          <h1 class="mt-5 max-w-4xl font-display text-5xl font-semibold leading-[0.96] tracking-[-0.045em] text-white sm:text-6xl md:text-7xl lg:text-[5.7rem]">
-            Alcanzar, servir y llevar el mensaje de Jesús.
-          </h1>
+<MaquetaLayout title="Misiones · Iglesia Corazón de Fuego">
+  <div class="as-ministry" style="--m: #35b887">
+    <header class="as-hero as-hero--inner">
+      <div class="as-hero__bg">
+        {destacada?.video ? (
+          <video autoplay muted loop playsinline preload="metadata" poster={destacada.image}>
+            <source src={destacada.video} type="video/mp4" />
+          </video>
+        ) : (
+          <img src={destacada?.image} alt="" />
+        )}
+        <div class="as-hero__veil"></div>
+      </div>
+      <div class="as-hero__grid">
+        <div class="as-hero__content">
+          <p class="as-eyebrow as-eyebrow--light" data-reveal>Misiones</p>
+          <h1 class="as-display" data-reveal="words">Hasta lo último de la tierra.</h1>
+          <p class="as-hero__lead" data-reveal>
+            Salimos a servir, anunciar y acompañar junto a iglesias que ya están trabajando en cada región.
+          </p>
+          <div class="as-hero__actions" data-reveal data-reveal-delay="140">
+            <a class="as-button as-button--white" href="#destinos">Ver destinos</a>
+            <a class="as-button as-button--ghost-white" href="#participar">Quiero ir</a>
+          </div>
         </div>
-        <div data-cinematic="hero-aside" class="space-y-5 border-l border-primary/70 pl-6 text-base leading-relaxed text-white/70 sm:text-lg lg:max-w-xl lg:justify-self-end">
-          <p>
-            Misiones expresa el corazón evangelístico de la iglesia: salir de nuestra comodidad para acompañar, predicar, servir y fortalecer personas, familias y comunidades.
-          </p>
-          <p>
-            Cada destino representa una respuesta concreta al llamado de Dios. Oramos, preparamos equipos y caminamos con iglesias locales para que el amor de Cristo llegue a más lugares.
-          </p>
+      </div>
+    </header>
+
+    <section class="as-section as-section--dark as-statement" id="sobre">
+      <div class="as-wrap">
+        <p class="as-eyebrow as-eyebrow--light" data-reveal>Nuestra visión</p>
+        <h2 class="as-statement__text" data-reveal="words">
+          Una iglesia que alcanza, forma y envía.
+        </h2>
+      </div>
+    </section>
+
+    <section class="as-section as-section--light" id="participar">
+      <div class="as-wrap">
+        <div class="as-head">
+          <div>
+            <p class="as-eyebrow" data-reveal>Cómo participamos</p>
+            <h2 class="as-h1" data-reveal="words">Tres formas de sumarte.</h2>
+          </div>
+          <a class="as-button as-button--small as-button--ministry" href="/contact">Escribinos</a>
+        </div>
+        <div class="as-cols">
+          {columnas.map((c, i) => (
+            <div class="as-col" data-reveal data-reveal-delay={i * 110}>
+              <span class="as-col__n">{c.n}</span>
+              <h3>{c.title}</h3>
+              <p>{c.text}</p>
+            </div>
+          ))}
         </div>
       </div>
-      <div data-cinematic="hero-footer" class="mt-14 flex items-center gap-3 text-[0.62rem] font-bold uppercase tracking-[0.26em] text-white/50 sm:mt-20">
-        <span class="h-px w-10 bg-primary"></span>
-        Una iglesia en movimiento
+    </section>
+
+    <!-- Destinos: cada misión como escena alternada, texto e imagen. -->
+    <section class="as-section" id="destinos">
+      <div class="as-wrap">
+        <h2 class="as-h1" data-reveal="words">Destinos</h2>
+
+        {/* Mapa: SVG estático, sin librería ni tiles. Los puntos son botones
+            posicionados en % sobre el lienzo, así siguen al mapa cuando escala.
+            Responden a hover, foco de teclado y tap: en mobile no hay hover y
+            el tap tiene que alcanzar. */}
+        {destinos.length > 0 && (
+          <div class="as-mapa" data-mapa data-reveal>
+            <div class="as-mapa__lienzo">
+              <svg
+                class="as-mapa__svg"
+                viewBox={`0 0 ${mapaMundi.width} ${mapaMundi.height}`}
+                role="img"
+                aria-label="Mapa con los destinos de misiones"
+              >
+                <path d={mapaMundi.path} />
+              </svg>
+
+              {destinos.map((d, i) => (
+                <button
+                  type="button"
+                  class={`as-mapa__punto${i === 0 ? ' is-active' : ''}`}
+                  style={`left: ${d.x}%; top: ${d.y}%`}
+                  data-destino={d.slug}
+                  aria-label={`${d.place}, ${d.country}, ${d.year}`}
+                >
+                  <span class="as-mapa__pulso"></span>
+                  <span class="as-mapa__rotulo">{d.place}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* Las fichas son hermanas del lienzo, no hijas: los marcadores se
+                posicionan en % sobre el lienzo, así que si la ficha entrara en
+                su flujo —como pasa en mobile— lo estiraría y mandaría los
+                puntos fuera del mapa. Se anclan al mismo punto que su marcador
+                con el `--x`, para que el dato aparezca donde está mirando el
+                ojo y no en un panel al costado. */}
+            {destinos.map((d, i) => (
+                <article
+                  class={`as-mapa__ficha${i === 0 ? ' is-active' : ''}`}
+                  style={`--x: ${d.x}%; --y: ${d.y}%`}
+                  data-ficha={d.slug}
+                >
+                  <div class="as-image as-image--16x9">
+                    <img src={d.image} alt={d.place} loading="lazy" />
+                  </div>
+                  <div class="as-mapa__ficha-cuerpo">
+                    <p class="as-mapa__meta">{d.country} · {d.year} · {d.stage}</p>
+                    <h3 class="as-mapa__lugar">{d.place}</h3>
+                    <p class="as-mapa__foco">{d.focus}</p>
+                  </div>
+                </article>
+              ))}
+          </div>
+        )}
+
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section data-animate="reveal" data-nav-surface-zone="dark" class="missions-values relative flex min-h-screen items-center overflow-hidden bg-[#181816] py-20 text-white md:py-28">
-    <div aria-hidden="true" class="cinematic-orb cinematic-orb--left"></div>
-    <div class="relative mx-auto w-full max-w-[90rem] px-5 sm:px-6 lg:px-8">
-      <div class="missions-values-grid grid grid-cols-1 md:grid-cols-3">
-        <article data-animate="card" data-cinematic-card data-scene-index="01" class="mission-value-card p-6 sm:p-8">
-          <p class="text-primary text-xs uppercase tracking-[0.2em] font-semibold">Propósito</p>
-          <h2 class="mt-4 font-display text-3xl text-white">Una iglesia en movimiento.</h2>
-          <p class="mt-4 text-sm leading-relaxed text-white/60">
-            Creemos que la misión nace en la adoración y se expresa en servicio. Por eso formamos equipos que anuncian el evangelio, acompañan procesos y responden a necesidades reales.
-          </p>
-        </article>
-        <article data-animate="card" data-cinematic-card data-scene-index="02" class="mission-value-card p-6 sm:p-8">
-          <p class="text-primary text-xs uppercase tracking-[0.2em] font-semibold">Equipo</p>
-          <h2 class="mt-4 font-display text-3xl text-white">Servimos juntos.</h2>
-          <p class="mt-4 text-sm leading-relaxed text-white/60">
-            Cada salida se sostiene con oración, preparación, generosidad y personas dispuestas a poner sus dones al servicio de otros.
-          </p>
-        </article>
-        <article data-animate="card" data-cinematic-card data-scene-index="03" class="mission-value-card p-6 sm:p-8">
-          <p class="text-primary text-xs uppercase tracking-[0.2em] font-semibold">Alcance</p>
-          <h2 class="mt-4 font-display text-3xl text-white">Cerca y lejos.</h2>
-          <p class="mt-4 text-sm leading-relaxed text-white/60">
-            La visión alcanza barrios, provincias y naciones. Donde Dios abre una puerta, buscamos responder con obediencia y amor.
-          </p>
-        </article>
+    <section class="as-section as-section--dark as-cta">
+      <div class="as-wrap">
+        <h2 class="as-display" data-reveal="words">¿Querés ir?</h2>
+        <p data-reveal>Escribinos y te contamos cómo prepararte para la próxima salida.</p>
+        <div class="as-button-group" data-reveal data-reveal-delay="120">
+          <a class="as-button as-button--white" href="/contact">Escribinos</a>
+          <a class="as-button as-button--ghost-white" href="/evangelismo">Ver Evangelismo</a>
+        </div>
       </div>
-    </div>
-  </section>
-
-  <section data-animate="reveal" class="missions-destinations relative bg-[#eee9df] py-20 md:py-28">
-    <div class="mx-auto max-w-[90rem] px-5 sm:px-6 lg:px-8">
-      <div class="mb-10 border-b border-charcoal/15 pb-8 md:mb-0 md:pb-10">
-        <span class="text-primary text-xs uppercase tracking-[0.22em] font-semibold">Lugares</span>
-        <h2 data-cinematic-heading class="mt-3 font-display text-4xl font-semibold tracking-tight text-charcoal sm:text-5xl lg:text-6xl">Destinos misioneros</h2>
-      </div>
-      <div>
-        {
-          missionsChronological.map((mission, index) => (
-            <article
-              data-animate="card"
-              data-mission-scene
-              data-scene-index={`0${index + 1}`}
-              class="mission-card relative grid min-h-screen grid-cols-1 items-center gap-8 border-b border-charcoal/15 py-16 md:grid-cols-[0.68fr_1.32fr] md:gap-14 md:py-24"
-            >
-              <div data-cinematic-copy class="mission-copy relative z-10">
-                <div class="mb-3 flex flex-wrap items-center gap-2">
-                  <span class="inline-flex border border-charcoal/15 bg-white/40 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-charcoal">
-                    {dateFormatter.format(getLocalMissionDate(mission.startDate))}
-                  </span>
-                </div>
-                <p class="text-[11px] uppercase tracking-[0.18em] text-gray-500">{mission.country}</p>
-                <h3 class="font-display text-4xl text-charcoal mt-2">{mission.place}</h3>
-                <p class="mt-5 text-gray-600 text-base leading-relaxed">{mission.summary}</p>
-                <p class="mt-4 text-sm leading-relaxed text-gray-600">
-                  En este destino enfocamos los esfuerzos en {mission.focus.toLowerCase()}, acompañando lo que Dios ya está haciendo y fortaleciendo el trabajo local.
-                </p>
-                <p class="mt-5 text-xs uppercase tracking-[0.18em] text-charcoal">{mission.focus}</p>
-              </div>
-              <div class="mission-media-wrap relative">
-                <div class="mission-media-frame overflow-hidden bg-charcoal">
-                  {
-                    mission.video ? (
-                      <video
-                        class="mission-video aspect-video w-full object-cover"
-                        data-cinematic="image"
-                        data-src={mission.video}
-                        poster={mission.image}
-                        muted
-                        loop
-                        playsinline
-                        preload="none"
-                        aria-label={`Video mision ${mission.place}`}
-                      />
-                    ) : (
-                      <img data-cinematic="image" src={mission.image} alt={`Mision ${mission.place}`} class="aspect-video w-full object-cover" />
-                    )
-                  }
-                </div>
-              </div>
-            </article>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-  </main>
-
-  <Footer />
-
-  <script>
-    interface MissionVideoState {
-      card: Element;
-      hovered: boolean;
-      focused: boolean;
-      pinned: boolean;
-    }
-
-    const missionVideos = [...document.querySelectorAll<HTMLVideoElement>('.mission-video')];
-    const videoStates = new WeakMap<HTMLVideoElement, MissionVideoState>();
-    let pointerPosition: { x: number; y: number } | null = null;
-
-    const loadMissionVideo = (video: HTMLVideoElement) => {
-      if (!video.dataset.src || video.dataset.loaded === 'true') return;
-
-      const source = document.createElement('source');
-      source.src = video.dataset.src;
-      source.type = 'video/mp4';
-      video.append(source);
-      video.dataset.loaded = 'true';
-      video.load();
-    };
-
-    const playMissionVideo = (video: HTMLVideoElement) => {
-      loadMissionVideo(video);
-      video.play().catch(() => {});
-    };
-
-    const pauseMissionVideo = (video: HTMLVideoElement) => {
-      video.pause();
-    };
-
-    const updateMissionVideo = (video: HTMLVideoElement) => {
-      const state = videoStates.get(video);
-      if (!state) return;
-
-      if (state.hovered || state.focused || state.pinned) {
-        playMissionVideo(video);
-        return;
-      }
-
-      pauseMissionVideo(video);
-    };
-
-    const refreshHoverFromPointer = () => {
-      if (!pointerPosition) return;
-
-      const hoveredElement = document.elementFromPoint(pointerPosition.x, pointerPosition.y);
-      missionVideos.forEach((video) => {
-        const state = videoStates.get(video);
-        if (!state) return;
-
-        state.hovered = hoveredElement ? state.card.contains(hoveredElement) : false;
-        updateMissionVideo(video);
-      });
-    };
-
-    missionVideos.forEach((video) => {
-      const card = video.closest('.mission-card');
-      if (!card) return;
-      const state: MissionVideoState = { card, hovered: false, focused: false, pinned: false };
-      videoStates.set(video, state);
-
-      card.addEventListener('mouseenter', () => {
-        state.hovered = true;
-        updateMissionVideo(video);
-      });
-      card.addEventListener('mouseleave', () => {
-        state.hovered = false;
-        updateMissionVideo(video);
-      });
-      card.addEventListener('focusin', () => {
-        state.focused = true;
-        updateMissionVideo(video);
-      });
-      card.addEventListener('focusout', () => {
-        state.focused = false;
-        updateMissionVideo(video);
-      });
-    });
-
-    window.addEventListener(
-      'pointermove',
-      (event) => {
-        pointerPosition = { x: event.clientX, y: event.clientY };
-      },
-      { passive: true }
-    );
-    window.addEventListener('scroll', refreshHoverFromPointer, { passive: true });
-
-    if ('IntersectionObserver' in window) {
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            const video = entry.target.querySelector<HTMLVideoElement>('.mission-video');
-            if (!video) return;
-            const state = videoStates.get(video);
-            if (!state) return;
-
-            state.pinned = entry.isIntersecting && entry.intersectionRatio >= 0.72;
-            updateMissionVideo(video);
-          });
-        },
-        { threshold: [0, 0.72] }
-      );
-
-      document.querySelectorAll('.mission-card').forEach((card) => observer.observe(card));
-    }
-  </script>
-</BaseLayout>
+    </section>
+  </div>
+</MaquetaLayout>

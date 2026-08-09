@@ -1,92 +1,133 @@
 ---
-import Footer from '../components/Footer.astro';
-import Navbar from '../components/Navbar.astro';
-import BaseLayout from '../layouts/BaseLayout.astro';
+/**
+ * MAQUETA — "Contacto". Formulario a la izquierda y datos de la casa a la
+ * derecha, con la geometría de campos y botones del sistema.
+ *
+ * Los datos son los que ya están en `src/pages/contact.astro`.
+ */
+import MaquetaLayout from '../layouts/MaquetaLayout.astro';
+import { maquetaAnexos } from '../data/maqueta-anexos';
 
-const fieldClass =
-  'w-full rounded-soft border border-charcoal/15 bg-white px-4 py-3 text-sm text-charcoal outline-none transition-colors placeholder:text-charcoal/35 hover:border-primary/50 focus:border-primary';
-const labelClass = 'mb-2 block text-[0.62rem] font-bold uppercase tracking-[0.22em] text-charcoal/60';
+const direccion = ['Leandro N. Alem 467', 'Ramos Mejía, Buenos Aires'];
+const email = 'info@corazondefuego.com';
+
+const horarios = [
+  { day: 'Viernes', time: '20:00' },
+  { day: 'Sábados', time: '20:00' },
+  { day: 'Domingos', time: '09:30 y 11:00' },
+];
+
+const mapsHref = `https://www.google.com/maps/search/${encodeURIComponent(direccion.join(' '))}`;
 ---
 
-<BaseLayout title="Contacto | Corazón de Fuego">
-  <Navbar />
-
-  <main data-cinematic-page="contacto" class="bg-[#11110f]">
-    <section data-animate="reveal" data-nav-surface-zone="dark" class="relative overflow-hidden bg-[#151514] py-20 text-white md:py-28">
-      <div aria-hidden="true" class="cinematic-orb cinematic-orb--right"></div>
-      <div class="relative mx-auto max-w-[90rem] px-5 sm:px-6 lg:px-8">
-        <p class="mb-5 flex items-center gap-3 text-xs font-bold uppercase tracking-[0.24em] text-primary">
-          <span class="h-px w-8 bg-primary/60"></span>
-          Estamos para ayudarte
-        </p>
-        <h1 data-cinematic-heading class="max-w-4xl font-display text-4xl font-semibold leading-[1.04] tracking-tight text-white sm:text-5xl lg:text-6xl">
-          Contacto
-        </h1>
-        <p data-cinematic-copy class="mt-7 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg">
-          Escribinos y te respondemos pronto. Si querés una visita o más información sobre reuniones y ministerios, este es el lugar correcto.
+<MaquetaLayout title="Contacto · Iglesia Corazón de Fuego">
+  <div class="as-ministry" style="--m: #c5a059">
+    <header class="as-mhero">
+      <div class="as-mhero__copy">
+        <p class="as-eyebrow" data-reveal>Contacto</p>
+        <h1 class="as-display" data-reveal="words">Hablemos.</h1>
+        <p class="as-mhero__lead" data-reveal>
+          Escribinos por lo que necesites: una consulta, un pedido de oración o
+          simplemente para saber cómo venir por primera vez.
         </p>
       </div>
-    </section>
+      <div class="as-mhero__media" data-reveal>
+        <img src="/sedes/nosotros1.JPG" alt="Iglesia Corazón de Fuego" />
+      </div>
+    </header>
 
-    <section data-animate="reveal" class="cinematic-light-section relative bg-[#e9e4da] py-20 md:py-28">
-      <div class="mx-auto grid max-w-[90rem] grid-cols-1 gap-10 px-5 sm:px-6 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16 lg:px-8">
-        <div data-animate="card" data-cinematic-card>
-          <p class="text-[0.62rem] font-bold uppercase tracking-[0.22em] text-primary">Formulario</p>
-          <h2 class="mt-4 font-display text-3xl leading-tight text-charcoal">Completá tus datos.</h2>
-          <p class="mt-3 text-sm leading-relaxed text-charcoal/65">Nos contactamos con vos a la brevedad.</p>
+    <!-- ══════════ FORMULARIO + DATOS ══════════ -->
+    <section class="as-section as-section--light">
+      <div class="as-wrap as-split">
+        <div>
+          <p class="as-eyebrow" data-reveal>Formulario</p>
+          <h2 class="as-h2" data-reveal="words">Completá tus datos.</h2>
+          <p class="as-lead" style="margin-top:1rem" data-reveal>
+            Nos contactamos con vos a la brevedad.
+          </p>
 
-          <form class="mt-9 space-y-6" action="#" method="post">
-            <div>
-              <label class={labelClass} for="nombre">Nombre</label>
-              <input id="nombre" name="nombre" type="text" required class={fieldClass} placeholder="Tu nombre" />
-            </div>
-
-            <div>
-              <label class={labelClass} for="email">Correo electrónico</label>
-              <input id="email" name="email" type="email" required class={fieldClass} placeholder="tuemail@ejemplo.com" />
-            </div>
-
-            <div>
-              <label class={labelClass} for="mensaje">Mensaje</label>
-              <textarea id="mensaje" name="mensaje" rows="6" required class={fieldClass} placeholder="Contanos cómo podemos ayudarte"></textarea>
-            </div>
-
-            <button
-              type="submit"
-              class="editorial-button w-full bg-charcoal text-white sm:w-auto"
-            >
-              <span>Enviar mensaje</span>
-              <span class="material-symbols-outlined">arrow_outward</span>
-            </button>
+          {/* `action="#"` igual que la página real: la maqueta no envía nada.
+              Al promoverla hay que apuntarla al endpoint de verdad. */}
+          <form class="as-form" action="#" method="post" data-reveal data-reveal-delay="100">
+            <label class="as-field">
+              <span>Nombre</span>
+              <input type="text" name="nombre" placeholder="Tu nombre" required />
+            </label>
+            <label class="as-field">
+              <span>Correo electrónico</span>
+              <input type="email" name="email" placeholder="tuemail@ejemplo.com" required />
+            </label>
+            <label class="as-field">
+              <span>Mensaje</span>
+              <textarea name="mensaje" rows="5" placeholder="Contanos cómo podemos ayudarte" required></textarea>
+            </label>
+            <button class="as-button as-button--ministry" type="submit">Enviar mensaje</button>
           </form>
         </div>
 
-        <aside data-cinematic-copy class="border-l-2 border-primary pl-6 sm:pl-8">
-          <p class="text-[0.62rem] font-bold uppercase tracking-[0.22em] text-primary">Hablemos</p>
-          <h2 class="mt-5 font-display text-3xl font-semibold leading-[1.06] tracking-tight text-charcoal sm:text-4xl">
-            También podés escribirnos directo.
-          </h2>
+        <div>
+          <p class="as-eyebrow" data-reveal>Dónde estamos</p>
+          <h2 class="as-h2" data-reveal="words">Sede central.</h2>
 
-          <dl class="mt-10 space-y-8 border-t border-charcoal/15 pt-8">
-            <div>
-              <dt class="text-[0.62rem] font-bold uppercase tracking-[0.22em] text-charcoal/45">Correo</dt>
-              <dd class="mt-2 break-words text-base text-charcoal/80">info@corazondefuego.com</dd>
-            </div>
-            <div>
-              <dt class="text-[0.62rem] font-bold uppercase tracking-[0.22em] text-charcoal/45">Dirección</dt>
-              <dd class="mt-2 text-base leading-relaxed text-charcoal/80">Leandro N. Alem 467<br />Ramos Mejía</dd>
-            </div>
-            <div>
-              <dt class="text-[0.62rem] font-bold uppercase tracking-[0.22em] text-charcoal/45">Reuniones</dt>
-              <dd class="mt-2 text-base leading-relaxed text-charcoal/80">
-                Viernes 20 hs · Sábados 20 hs<br />Domingos 9:30 y 11:00 hs
-              </dd>
-            </div>
-          </dl>
-        </aside>
+          <div class="as-address" data-reveal data-reveal-delay="80">
+            <span class="material-symbols-outlined">location_on</span>
+            <div>{direccion.map((l) => <p>{l}</p>)}</div>
+          </div>
+
+          <div class="as-address" data-reveal data-reveal-delay="120">
+            <span class="material-symbols-outlined">mail</span>
+            <div><p><a href={`mailto:${email}`} class="as-maillink">{email}</a></p></div>
+          </div>
+
+          <div class="as-button-group" data-reveal data-reveal-delay="160">
+            <a class="as-button as-button--small" href={mapsHref} target="_blank" rel="noopener noreferrer">
+              Abrir en Maps
+            </a>
+          </div>
+
+          <p class="as-eyebrow" style="margin-top:3rem" data-reveal>Reuniones</p>
+          <div class="as-times" data-reveal data-reveal-delay="80">
+            {horarios.map((h) => (
+              <div class="as-time">
+                <span class="as-time__day">{h.day}</span>
+                <span class="as-time__hour">{h.time}</span>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
-  </main>
 
-  <Footer />
-</BaseLayout>
+    <!-- ══════════ OTRAS SEDES ══════════ -->
+    <section class="as-section">
+      <div class="as-wrap">
+        <div class="as-head">
+          <div>
+            <p class="as-eyebrow" data-reveal>Otras sedes</p>
+            <h2 class="as-h1" data-reveal="words">También estamos acá.</h2>
+          </div>
+        </div>
+        <div class="as-sedes" data-reveal>
+          {maquetaAnexos.map((a) => (
+            <a class="as-sede" href={`/anexos/${a.slug}`}>
+              <h4>{a.name}</h4>
+              <p>{a.addressLines[0] ?? a.yearsLabel}</p>
+              <span class="as-sede__arrow material-symbols-outlined">arrow_forward</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section class="as-section as-section--dark as-cta">
+      <div class="as-wrap">
+        <h2 class="as-display" data-reveal="words">Vení este fin de semana.</h2>
+        <p data-reveal>No hace falta avisar. Te esperamos en la puerta.</p>
+        <div class="as-button-group" data-reveal data-reveal-delay="120">
+          <a class="as-button as-button--white" href="https://maps.app.goo.gl/mEVMgoTXbV3BULVq8" target="_blank" rel="noopener noreferrer">Tu primera vez</a>
+          <a class="as-button as-button--ghost-white" href="/nosotros">Conocenos</a>
+        </div>
+      </div>
+    </section>
+  </div>
+</MaquetaLayout>

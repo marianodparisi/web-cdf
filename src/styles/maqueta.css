@@ -1237,3 +1237,17 @@
 .as-mapa__ficha img {
   filter: var(--as-grade);
 }
+
+/* En el listado de ministerios no hay nada más en la página, así que se ven
+   todos de una en grilla en vez de la fila que se desliza del home. */
+.as-ministries--grilla {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  overflow: visible;
+  padding: 0;
+}
+@media (min-width: 768px) {
+  .as-ministries--grilla { grid-template-columns: repeat(3, 1fr); gap: 2rem; max-width: 920px; }
+}
+.as-ministries--grilla .as-mcard { flex-basis: auto; width: auto; }

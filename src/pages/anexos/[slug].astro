@@ -6,15 +6,15 @@
  * El contenido sale de `src/data/maqueta-anexos.ts`, que a su vez se extrajo de
  * las cinco páginas reales de `src/pages/anexos/`. Cada sede conserva su color.
  */
-import MaquetaLayout from '../../../layouts/MaquetaLayout.astro';
-import { maquetaAnexos } from '../../../data/maqueta-anexos';
-import { getMinistries } from '../../../lib/content/collections';
+import MaquetaLayout from '../../layouts/MaquetaLayout.astro';
+import { maquetaAnexos } from '../../data/maqueta-anexos';
+import { getMinistries } from '../../lib/content/collections';
 
 const { slug } = Astro.params;
 
 const index = maquetaAnexos.findIndex((a) => a.slug === slug);
 const anexo = maquetaAnexos[index];
-if (!anexo) return Astro.redirect('/maqueta');
+if (!anexo) return Astro.redirect('/');
 
 const next = maquetaAnexos[(index + 1) % maquetaAnexos.length];
 const ministries = await getMinistries();
@@ -22,7 +22,7 @@ const ministries = await getMinistries();
 const fotos = ['/sedes/nosotros1.JPG', '/sedes/nosotros2.JPG', '/sedes/nosotros3.JPG'];
 ---
 
-<MaquetaLayout title={`Sede ${anexo.name} · Maqueta · Corazón de Fuego`}>
+<MaquetaLayout title={`Sede ${anexo.name} · Iglesia Corazón de Fuego`}>
   <div class="as-ministry" style={`--m: ${anexo.color}`}>
     <!-- ══════════ HERO ══════════ Foto a sangre con el nombre de la sede. -->
     <header class="as-hero as-hero--inner">
@@ -131,11 +131,11 @@ const fotos = ['/sedes/nosotros1.JPG', '/sedes/nosotros2.JPG', '/sedes/nosotros3
             <p class="as-eyebrow" data-reveal>Ministerios</p>
             <h2 class="as-h1" data-reveal="words">Áreas que funcionan en la sede.</h2>
           </div>
-          <a class="as-button as-button--small" href="/maqueta#ministerios">Ver todos</a>
+          <a class="as-button as-button--small" href="/#ministerios">Ver todos</a>
         </div>
         <div class="as-sedes" data-reveal>
           {ministries.slice(0, 6).map((m) => (
-            <a class="as-sede" href={`/maqueta/${m.slug}`}>
+            <a class="as-sede" href={`/ministerios/${m.slug}`}>
               <h4>{m.name}</h4>
               <p>{m.area}</p>
               <span class="as-sede__arrow material-symbols-outlined">arrow_forward</span>
@@ -166,7 +166,7 @@ const fotos = ['/sedes/nosotros1.JPG', '/sedes/nosotros2.JPG', '/sedes/nosotros3
           <a class="as-button as-button--ghost-white" href="https://maps.app.goo.gl/mEVMgoTXbV3BULVq8" target="_blank" rel="noopener noreferrer">Tu primera vez</a>
         </div>
 
-        <a class="as-next" href={`/maqueta/anexos/${next.slug}`}>
+        <a class="as-next" href={`/anexos/${next.slug}`}>
           <span>Siguiente sede</span>
           <strong>{next.name}</strong>
           <span class="material-symbols-outlined">arrow_forward</span>

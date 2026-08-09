@@ -1,11 +1,15 @@
 ---
 /**
- * Layout de la MAQUETA. Contiene el nav, el footer, el sistema de diseño y los
+ * Layout del sitio. Contiene el nav, el footer, el sistema de diseño y los
  * comportamientos, para que el home y las páginas internas compartan todo en
  * lugar de duplicarlo.
  *
- * Es descartable como el resto de la maqueta: ninguna ruta del sitio real lo
- * usa, y todo su CSS va prefijado con `.as`.
+ * Nació como la maqueta de rediseño en `/maqueta` y pasó a ser el sitio: el
+ * anterior quedó completo en la rama `old-dev`.
+ *
+ * Los nombres siguen diciendo "maqueta" —este archivo, `maqueta.css`,
+ * `maqueta-ui.js`, el prefijo `.as` de las clases— porque renombrarlos es un
+ * diff enorme sin ganancia funcional. Vale hacerlo, pero aparte.
  */
 import BaseLayout from './BaseLayout.astro';
 import { getMinistries } from '../lib/content/collections';
@@ -15,17 +19,17 @@ interface Props {
   title?: string;
 }
 
-const { title = 'Maqueta · Iglesia Corazón de Fuego' } = Astro.props;
+const { title = 'Iglesia Corazón de Fuego' } = Astro.props;
 
 const ministries = await getMinistries();
 
 export const sedes = [
   { name: 'Sede Central', region: 'Ramos Mejía · Buenos Aires', href: '/anexos' },
-  { name: 'Ramos Mejía', region: 'Buenos Aires', href: '/maqueta/anexos/ramos-mejia' },
-  { name: 'Rojas', region: 'Buenos Aires', href: '/maqueta/anexos/rojas' },
-  { name: 'Santos Vega', region: 'Buenos Aires', href: '/maqueta/anexos/santos-vega' },
-  { name: 'Villa Minetti', region: 'Santa Fe', href: '/maqueta/anexos/villa-minetti' },
-  { name: 'El Palito', region: 'Santa Fe', href: '/maqueta/anexos/palito' },
+  { name: 'Ramos Mejía', region: 'Buenos Aires', href: '/anexos/ramos-mejia' },
+  { name: 'Rojas', region: 'Buenos Aires', href: '/anexos/rojas' },
+  { name: 'Santos Vega', region: 'Buenos Aires', href: '/anexos/santos-vega' },
+  { name: 'Villa Minetti', region: 'Santa Fe', href: '/anexos/villa-minetti' },
+  { name: 'El Palito', region: 'Santa Fe', href: '/anexos/palito' },
 ];
 
 /**
@@ -35,24 +39,24 @@ export const sedes = [
  * destinos para que la maqueta se pueda comparar contra dev sin traducir nada.
  */
 const megaMenu = [
-  { label: 'Nosotros', href: '/maqueta/nosotros' },
-  { label: 'Misiones', href: '/maqueta/misiones' },
-  { label: 'Evangelismo', href: '/maqueta/evangelismo' },
+  { label: 'Nosotros', href: '/nosotros' },
+  { label: 'Misiones', href: '/misiones' },
+  { label: 'Evangelismo', href: '/evangelismo' },
   {
     label: 'Nuestras Sedes',
     items: [
-      { kicker: 'Anexo', title: 'Ramos Mejía', href: '/maqueta/anexos/ramos-mejia' },
-      { kicker: 'Anexo', title: 'Rojas', href: '/maqueta/anexos/rojas' },
-      { kicker: 'Anexo', title: 'Villa Minetti', href: '/maqueta/anexos/villa-minetti' },
-      { kicker: 'Anexo', title: 'Palito', href: '/maqueta/anexos/palito' },
-      { kicker: 'Anexo', title: 'Santos Vega', href: '/maqueta/anexos/santos-vega' },
+      { kicker: 'Anexo', title: 'Ramos Mejía', href: '/anexos/ramos-mejia' },
+      { kicker: 'Anexo', title: 'Rojas', href: '/anexos/rojas' },
+      { kicker: 'Anexo', title: 'Villa Minetti', href: '/anexos/villa-minetti' },
+      { kicker: 'Anexo', title: 'Palito', href: '/anexos/palito' },
+      { kicker: 'Anexo', title: 'Santos Vega', href: '/anexos/santos-vega' },
     ],
   },
   {
     label: 'Educativos',
     items: [
-      { kicker: 'Formación', title: 'IETE', href: '/maqueta/institucional/iete' },
-      { kicker: 'Formación', title: 'Discipulados', href: '/maqueta/institucional/discipulados' },
+      { kicker: 'Formación', title: 'IETE', href: '/institucional/iete' },
+      { kicker: 'Formación', title: 'Discipulados', href: '/institucional/discipulados' },
     ],
   },
   {
@@ -63,7 +67,7 @@ const megaMenu = [
       .map((ministry) => ({
         kicker: ministry.area,
         title: ministry.name,
-        href: `/maqueta/${ministry.slug}`,
+        href: `/ministerios/${ministry.slug}`,
       })),
   },
 ];
@@ -72,8 +76,8 @@ const footerColumns = [
   {
     header: 'Iglesia',
     links: [
-      { label: 'Nosotros', href: '/maqueta/nosotros' },
-      { label: 'Contacto', href: '/maqueta/contacto' },
+      { label: 'Nosotros', href: '/nosotros' },
+      { label: 'Contacto', href: '/contact' },
       { label: 'Ofrendar', href: '#' },
     ],
   },
@@ -81,28 +85,28 @@ const footerColumns = [
   {
     header: 'Participar',
     links: [
-      { label: 'Discipulados', href: '/maqueta/institucional/discipulados' },
-      { label: 'Misiones', href: '/maqueta/misiones' },
-      { label: 'Evangelismo', href: '/maqueta/evangelismo' },
+      { label: 'Discipulados', href: '/institucional/discipulados' },
+      { label: 'Misiones', href: '/misiones' },
+      { label: 'Evangelismo', href: '/evangelismo' },
       { label: 'Voluntariado', href: '#' },
     ],
   },
   {
     header: 'Contenido',
     links: [
-      { label: 'Series', href: '/maqueta#series' },
-      { label: 'Devocional', href: '/maqueta/devocional' },
-      { label: 'Radio Corazón', href: '/maqueta#radio' },
+      { label: 'Series', href: '/#series' },
+      { label: 'Devocional', href: '/devocional' },
+      { label: 'Radio Corazón', href: '/#radio' },
     ],
   },
   {
     header: 'Ministerios',
-    links: ministries.map((ministry) => ({ label: ministry.name, href: `/maqueta/${ministry.slug}` })),
+    links: ministries.map((ministry) => ({ label: ministry.name, href: `/ministerios/${ministry.slug}` })),
   },
   {
     header: 'Institucional',
     links: [
-      { label: 'IETE', href: '/maqueta/institucional/iete' },
+      { label: 'IETE', href: '/institucional/iete' },
       { label: 'Anexos', href: '/anexos' },
     ],
   },
@@ -120,7 +124,7 @@ const footerColumns = [
     <!-- ══════════ NAV ══════════ -->
     <header class="as-nav">
       <div class="as-nav__inner">
-        <a class="as-nav__logo" href="/maqueta">
+        <a class="as-nav__logo" href="/">
           <img src="/brand/favico.png" alt="" width="36" height="36" />
           <span>Corazón de Fuego</span>
         </a>
@@ -196,7 +200,7 @@ const footerColumns = [
     <footer class="as-footer">
       <div class="as-wrap">
         <div class="as-footer__top">
-          <a class="as-nav__logo" href="/maqueta">
+          <a class="as-nav__logo" href="/">
             <img src="/brand/favico.png" alt="" width="40" height="40" />
             <span>Corazón de Fuego</span>
           </a>
@@ -220,7 +224,7 @@ const footerColumns = [
 
         <div class="as-footer__legal">
           <span>© {new Date().getFullYear()} Iglesia Corazón de Fuego</span>
-          <span>Maqueta de rediseño · no es el sitio público</span>
+          <span>Ramos Mejía · Buenos Aires</span>
         </div>
       </div>
     </footer>
