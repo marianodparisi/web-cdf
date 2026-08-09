@@ -1,72 +1,238 @@
 ---
+/**
+ * Home de producción: la holding page mientras se construye el sitio nuevo.
+ *
+ * Restilada con los tokens de la maqueta de rediseño que vive en `dev`
+ * (Nunito Sans, tinta #282828, dorado de la casa, escala display grande), para
+ * que lo primero que se ve ya anticipe hacia dónde va el sitio.
+ *
+ * Va autocontenida a propósito: `main` no tiene `maqueta.css` ni Nunito Sans
+ * cargada, y traer el sistema de diseño entero para una sola pantalla sería
+ * cargar de más. Son unas pocas reglas propias, con `<style>` de Astro, que ya
+ * scopea solo.
+ *
+ * El contenido es el mismo de antes: logo, "Próximamente", una línea y las
+ * redes. Sólo cambia cómo se ve.
+ */
 import BaseLayout from '../layouts/BaseLayout.astro';
+
+const redes = [
+  {
+    label: 'Facebook',
+    href: 'https://www.facebook.com/corazondefuegoiglesia/?locale=es_LA',
+    path: 'M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z',
+  },
+  {
+    label: 'Instagram',
+    href: 'https://www.instagram.com/corazondefuegoiglesia/',
+    path: 'M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.069-4.85.069-3.204 0-3.584-.012-4.849-.069-3.225-.149-4.771-1.664-4.919-4.919-.058-1.265-.069-1.644-.069-4.849 0-3.204.012-3.584.069-4.849.149-3.225 1.664-4.771 4.919-4.919 1.265-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z',
+  },
+  {
+    label: 'YouTube',
+    href: 'https://www.youtube.com/@Coraz%C3%B3ndeFuego',
+    path: 'M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z',
+  },
+];
 ---
 
 <BaseLayout title="Corazón de Fuego - Próximamente">
-  <main class="flex min-h-screen flex-col bg-[#111111] text-white">
-    <section class="flex flex-1 items-center justify-center px-5 py-20 text-center sm:px-6 lg:px-8">
-      <div class="mx-auto flex max-w-5xl flex-col items-center">
-        <div class="mb-8 flex flex-col items-center gap-4">
-          <img src="/logowhite.png" alt="Logo Corazón de Fuego" class="h-24 w-auto object-contain sm:h-28" />
-          <p class="text-xs font-bold uppercase tracking-[0.28em] text-primary">Corazón de Fuego</p>
-        </div>
+  <link
+    slot="head"
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&display=swap"
+  />
 
-        <h1 class="font-display text-[clamp(3.25rem,12vw,9rem)] font-extrabold uppercase leading-[0.88] tracking-tight text-white">
-          Próximamente
-        </h1>
+  <main class="soon">
+    <div class="soon__bg">
+      {/* Silencioso y en loop, igual que el hero de la maqueta. El fondo sólido
+          va debajo para que no haya un rectángulo negro mientras carga, y en
+          móviles donde el autoplay queda bloqueado tampoco se ve un hueco. */}
+      <video autoplay muted loop playsinline preload="metadata">
+        <source src="/home/hero-v1-compressed.mp4" type="video/mp4" />
+      </video>
+      <div class="soon__veil"></div>
+    </div>
 
-        <p class="mt-8 max-w-xl text-base leading-relaxed text-white/65 sm:text-lg md:text-xl">
-          Algo nuevo está naciendo.
-        </p>
+    <section class="soon__content">
+      <img class="soon__logo" src="/logowhite.png" alt="Corazón de Fuego" width="180" height="112" />
+      <p class="soon__eyebrow">Corazón de Fuego</p>
+      <h1 class="soon__title">Próximamente</h1>
+      <p class="soon__lead">Algo nuevo está naciendo.</p>
+
+      <div class="soon__social">
+        {
+          redes.map((red) => (
+            <a href={red.href} target="_blank" rel="noopener noreferrer" aria-label={red.label}>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d={red.path} /></svg>
+            </a>
+          ))
+        }
       </div>
     </section>
 
-    <footer class="border-t border-white/10 bg-[#171717] px-5 py-8 sm:px-6 lg:px-8">
-      <div class="mx-auto flex max-w-7xl flex-col items-center justify-between gap-6 text-center md:flex-row md:text-left">
-        <a class="font-display text-sm font-bold uppercase tracking-[0.22em] text-primary" href="/">
-          Corazón de Fuego
-        </a>
-
-        <div class="flex items-center gap-3">
-          <a
-            class="flex h-10 w-10 items-center justify-center rounded border border-white/20 text-white transition-colors hover:border-primary hover:text-primary"
-            href="https://www.facebook.com/corazondefuegoiglesia/?locale=es_LA"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Facebook"
-          >
-            <svg class="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
-              <path fill="currentColor" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"></path>
-            </svg>
-          </a>
-          <a
-            class="flex h-10 w-10 items-center justify-center rounded border border-white/20 text-white transition-colors hover:border-primary hover:text-primary"
-            href="https://www.instagram.com/corazondefuegoiglesia/"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Instagram"
-          >
-            <svg class="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
-              <path fill="currentColor" d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.069-4.85.069-3.204 0-3.584-.012-4.849-.069-3.225-.149-4.771-1.664-4.919-4.919-.058-1.265-.069-1.644-.069-4.849 0-3.204.012-3.584.069-4.849.149-3.225 1.664-4.771 4.919-4.919 1.265-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"></path>
-            </svg>
-          </a>
-          <a
-            class="flex h-10 w-10 items-center justify-center rounded border border-white/20 text-white transition-colors hover:border-primary hover:text-primary"
-            href="https://www.youtube.com/@Coraz%C3%B3ndeFuego"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="YouTube"
-          >
-            <svg class="h-4 w-4" viewBox="0 0 24 24" aria-hidden="true">
-              <path fill="currentColor" d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"></path>
-            </svg>
-          </a>
-        </div>
-
-        <p class="text-xs uppercase tracking-[0.16em] text-white/45">
-          © 2026 Corazón de Fuego
-        </p>
-      </div>
-    </footer>
+    <footer class="soon__foot">© 2026 Corazón de Fuego</footer>
   </main>
 </BaseLayout>
+
+<style>
+  /* Tokens tomados de la maqueta: tinta #282828, dorado de la casa y el velo
+     del hero a #28282840. */
+  .soon {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* `svh` usa el alto chico del viewport: en móviles la barra del navegador
+       no recorta el pie. `vh` queda de reserva para navegadores viejos. */
+    min-height: 100vh;
+    min-height: 100svh;
+    padding: 4rem 1.5rem 2rem;
+    background: #282828;
+    color: #fff;
+    font-family: 'Nunito Sans', Arial, sans-serif;
+    text-align: center;
+  }
+
+  .soon__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+  }
+  .soon__bg video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .soon__veil {
+    position: absolute;
+    inset: 0;
+    background: #28282840;
+  }
+
+  .soon__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 60rem;
+  }
+
+  .soon__logo {
+    width: auto;
+    height: 7rem;
+    object-fit: contain;
+  }
+
+  /* Todo lo que lleva texto declara la familia: el CSS global de la casa pisa
+     la herencia en varios elementos. */
+  .soon__eyebrow,
+  .soon__lead,
+  .soon__foot {
+    font-family: 'Nunito Sans', Arial, sans-serif;
+  }
+
+  .soon__eyebrow {
+    margin-top: 1.75rem;
+    font-size: 0.95rem;
+    line-height: 2rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #c5a059;
+  }
+
+  /* Escala display de la maqueta: 7rem/7.6rem en desktop. El mínimo es 2.75rem
+     y no 4rem porque "Próximamente" es una sola palabra de doce letras: a 4rem
+     no entra en 390px y empuja scroll horizontal. */
+  .soon__title {
+    margin-top: 0.5rem;
+    /* Explícita y no heredada: el CSS global de la casa le pone su propia
+       familia a los `h1`, y una regla directa le gana a lo que hereda. */
+    font-family: 'Nunito Sans', Arial, sans-serif;
+    font-size: clamp(2.75rem, 9vw, 7rem);
+    line-height: 1.06;
+    font-weight: 700;
+    letter-spacing: -1px;
+    overflow-wrap: anywhere;
+  }
+
+  .soon__lead {
+    margin-top: 1.5rem;
+    font-size: 1.15rem;
+    line-height: 1.9rem;
+    color: rgb(255 255 255 / 0.72);
+  }
+
+  .soon__social {
+    display: flex;
+    gap: 0.75rem;
+    margin-top: 3rem;
+  }
+  /* Pastillas redondas con el hairline de la maqueta, en vez del borde cuadrado
+     que tenía la versión anterior. */
+  .soon__social a {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border: 1px solid rgb(255 255 255 / 0.28);
+    border-radius: 100px;
+    color: #fff;
+    transition: border-color 0.25s ease, background 0.25s ease, color 0.25s ease;
+  }
+  .soon__social a:hover {
+    border-color: #c5a059;
+    background: #c5a059;
+    color: #282828;
+  }
+  .soon__social svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .soon__foot {
+    margin-top: auto;
+    padding-top: 3rem;
+    font-size: 0.72rem;
+    letter-spacing: 1.6px;
+    text-transform: uppercase;
+    color: rgb(255 255 255 / 0.45);
+  }
+
+  /* Entrada escalonada, la misma idea que los `data-reveal` de la maqueta pero
+     sin JS: acá no hay nada que esperar a que entre en viewport. */
+  .soon__logo,
+  .soon__eyebrow,
+  .soon__title,
+  .soon__lead,
+  .soon__social {
+    animation: soon-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .soon__eyebrow { animation-delay: 0.08s; }
+  .soon__title { animation-delay: 0.16s; }
+  .soon__lead { animation-delay: 0.26s; }
+  .soon__social { animation-delay: 0.36s; }
+
+  @keyframes soon-in {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .soon__logo,
+    .soon__eyebrow,
+    .soon__title,
+    .soon__lead,
+    .soon__social {
+      animation: none;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .soon { padding: 3rem 1.25rem 1.5rem; }
+    .soon__logo { height: 5.5rem; }
+    .soon__lead { font-size: 1rem; }
+  }
+</style>

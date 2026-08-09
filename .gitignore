@@ -36,3 +36,16 @@ packages/**/e2e/**/fixtures/**/.astro/
 packages/**/e2e/**/fixtures/**/env.d.ts
 examples/**/.astro/
 examples/**/env.d.ts
+# Entorno y contenido: nunca al repo.
+# `*.env` de arriba NO alcanza: no matchea `.env.local` ni `.env.hostinger`.
+.env
+.env.*
+!.env.example
+!.env.hostinger.example
+
+# Store de contenido del panel: vive en el servidor, no se versiona.
+.data/
+
+# Generados por Astro.
+.astro/
+public/.astro/
