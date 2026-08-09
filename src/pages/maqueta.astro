@@ -28,13 +28,14 @@
  */
 import MaquetaLayout from '../layouts/MaquetaLayout.astro';
 import { seriesPlaylistUrl } from '../data/series';
-import { getDevotionals, getMinistries, getSeries } from '../lib/content/collections';
+import { getAnnouncements, getDevotionals, getMinistries, getSeries } from '../lib/content/collections';
 import { getEstadoVivos } from '../lib/youtube';
 
-const [devotionalPosts, ministries, sermonSeries, vivos] = await Promise.all([
+const [devotionalPosts, ministries, sermonSeries, announcements, vivos] = await Promise.all([
   getDevotionals(),
   getMinistries(),
   getSeries(),
+  getAnnouncements(),
   /* Va en el mismo `Promise.all` para que su latencia se solape con la del
      contenido en vez de sumarse. Devuelve null si falla: el hero sigue con el
      arte de la serie. */
@@ -89,12 +90,6 @@ const logoSlugs = new Set(['life', 'gold', 'kids', 'arde']);
    "quiero ir", que era lo que esa sección resolvía. */
 const mapsUrl = 'https://maps.app.goo.gl/mEVMgoTXbV3BULVq8';
 
-const agenda = [
-  { d: '17', m: 'Oct', full: '17 de octubre, 2026', kind: 'Evento', title: 'Noche de Alabanza' },
-  { d: '25', m: 'Ago', full: '25 de agosto, 2026', kind: 'Evento', title: 'Encuentro de Jóvenes · Life' },
-  { d: '30', m: 'Ago', full: '30 de agosto, 2026', kind: 'Programa', title: 'Discipulado — nueva cohorte' },
-  { d: '09', m: 'Sep', full: '9 de septiembre, 2026', kind: 'Formación', title: 'IETE — inicio de cuatrimestre' },
-];
 
 /**
  * Fotos reales de la casa. `ministry.image` no sirve acá: la mitad de los
@@ -285,18 +280,16 @@ const fotos = [
           </div>
         </div>
 
+        {/* Los anuncios reales del panel, no una agenda de ejemplo. Antes acá
+            había cuatro eventos inventados con fechas inventadas, mientras la
+            colección `anuncios` ya existía y nadie la leía. Sin badge de fecha
+            porque un anuncio no la trae: no hay dato que poner ahí. */}
         <div class="as-agenda">
           {
-            agenda.map((item, index) => (
-              <a class="as-event" href="#" data-reveal data-reveal-delay={index * 70}>
-                <span class="as-event__badge">
-                  <strong>{item.m}</strong>
-                  <em>{item.d}</em>
-                </span>
+            announcements.map((item, index) => (
+              <a class="as-event" href={item.href} data-reveal data-reveal-delay={index * 70}>
                 <span class="as-event__body">
-                  <span class="as-event__meta">
-                    {item.full} · {item.kind}
-                  </span>
+                  <span class="as-event__meta">{item.eyebrow}</span>
                   <span class="as-event__title">{item.title}</span>
                 </span>
                 <span class="material-symbols-outlined as-event__arrow">arrow_forward</span>

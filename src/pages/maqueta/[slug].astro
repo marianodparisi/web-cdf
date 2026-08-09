@@ -48,14 +48,32 @@ const color = ministryColors[ministry.slug] ?? '#282828';
 const esLogo = ['life', 'gold', 'kids', 'arde'].includes(ministry.slug);
 
 /** Fotos de comunidad. Igual que en el home, `ministry.image` suele ser logo. */
-const fotos = [
-  '/sedes/nosotros1.JPG',
-  '/ministries/life/life1.jpg',
-  '/sedes/nosotros2.JPG',
-  '/ministries/life/life3.jpg',
-  '/sedes/nosotros3.JPG',
-  '/ministries/life/life2.jpeg',
-];
+/**
+ * Fotos propias de cada ministerio, las que ya viven en `/public/ministries`.
+ * Antes esta grilla era una sola lista fija —fotos de sedes mezcladas con las
+ * de Life— y se repetía idéntica en las nueve páginas: la de Gold mostraba
+ * gente de Life.
+ *
+ * Sólo se listan archivos que son fotografía. Quedan afuera los logotipos
+ * (`arde.png`, `gold.png`, `kids.png`, `life.png`) y el arte de serie
+ * (`arde/serie.png`), que en una grilla a sangre se ven rotos.
+ *
+ * Carcelario y Firmes y Adelante no tienen material propio todavía, así que su
+ * grilla no se muestra. Un hueco es más honesto que fotos de otro ministerio.
+ */
+const fotosPorMinisterio: Record<string, string[]> = {
+  life: [
+    '/ministries/life/life1.jpg',
+    '/ministries/life/life3.jpg',
+    '/ministries/life/life4.jpeg',
+    '/ministries/life/life2.jpeg',
+  ],
+  arde: ['/ministries/arde/ardehero.png', '/ministries/arde/arde1.png', '/ministries/arde/campaarde.jpg'],
+  gold: ['/ministries/gold/goldanuncio.jpg'],
+  kids: ['/ministries/kids/campakids.jpg'],
+};
+
+const fotos = fotosPorMinisterio[ministry.slug] ?? [];
 
 /* Su bloque de tres columnas debajo del "qué es". Se arma con los datos que
    tenga cargados el ministerio y se esconde el que venga vacío. */
@@ -65,43 +83,8 @@ const columnas = [
   ministry.place && { n: '03', title: 'Dónde', text: ministry.place },
 ].filter(Boolean) as { n: string; title: string; text: string }[];
 
-const agendaTabs = [
-  { id: 'encuentros', label: 'Encuentros' },
-  { id: 'formacion', label: 'Formación' },
-  { id: 'servir', label: 'Servir' },
-];
 
-const agenda: Record<string, { d: string; m: string; full: string; kind: string; title: string }[]> = {
-  encuentros: [
-    { d: '17', m: 'Oct', full: '17 de octubre, 2026', kind: 'Encuentro', title: `Reunión de ${ministry.name}` },
-    { d: '25', m: 'Ago', full: '25 de agosto, 2026', kind: 'Encuentro', title: 'Noche de Alabanza' },
-  ],
-  formacion: [
-    { d: '09', m: 'Sep', full: '9 de septiembre, 2026', kind: 'Formación', title: 'IETE — inicio de cuatrimestre' },
-  ],
-  servir: [
-    { d: '30', m: 'Ago', full: '30 de agosto, 2026', kind: 'Servir', title: 'Jornada de servicio' },
-  ],
-};
 
-const faqs = [
-  {
-    q: '¿Tengo que anotarme para venir?',
-    a: 'No hace falta. Vení el día de la reunión y el equipo te recibe en la entrada.',
-  },
-  {
-    q: '¿Qué edad hace falta para participar?',
-    a: `${ministry.name} es parte del área de ${ministry.area}. Si tenés dudas sobre si es tu espacio, escribinos y te orientamos.`,
-  },
-  {
-    q: '¿Puedo servir en el equipo?',
-    a: 'Sí. Se empieza acompañando una reunión y después el líder del área te propone dónde sumarte.',
-  },
-  {
-    q: '¿Se reúnen en todas las sedes?',
-    a: 'Consultá el bloque de sedes: no todos los ministerios funcionan en todos los anexos.',
-  },
-];
 
 const publishedSeries = sermonSeries.filter((s) => s.image && s.href).slice(0, 3);
 const contenidoTabs = [
@@ -125,7 +108,6 @@ const whatsappHref = ministry.whatsapp
         <p class="as-mhero__lead" data-reveal>{ministry.excerpt}</p>
         <div class="as-button-group" data-reveal data-reveal-delay="120">
           <a class="as-button as-button--ministry" href="#participar">Quiero participar</a>
-          <a class="as-button as-button--ghost" href="#faq">Preguntas frecuentes</a>
         </div>
       </div>
       <div class={`as-mhero__media${esLogo ? ' is-logo' : ''}`} data-reveal>
@@ -207,51 +189,20 @@ const whatsappHref = ministry.whatsapp
       </section>
     )}
 
-    <!-- ══════════ FOTOS ══════════ Grilla escalonada, sin padding superior. -->
-    <section class="as-section as-section--photos">
-      <div class="as-wrap as-photos">
-        {fotos.slice(0, 6).map((src, i) => (
-          <div class="as-photo" data-reveal data-reveal-delay={i * 70}>
-            <img src={src} alt="" loading="lazy" />
-          </div>
-        ))}
-      </div>
-    </section>
-
-    <!-- ══════════ AGENDA CON PESTAÑAS ══════════ -->
-    <section class="as-section as-section--light">
-      <div class="as-wrap">
-        <h2 class="as-h1" data-reveal="words">Próximas fechas</h2>
-        <div class="as-tabs" data-tabs>
-          <div class="as-tabs__menu">
-            {agendaTabs.map((t, i) => (
-              <button class={`as-tabs__link${i === 0 ? ' is-active' : ''}`} type="button" data-tab={t.id}>
-                {t.label}
-              </button>
-            ))}
-          </div>
-          {agendaTabs.map((t, i) => (
-            <div class={`as-tabs__panel${i === 0 ? ' is-active' : ''}`} data-panel={t.id}>
-              <div class="as-agenda">
-                {agenda[t.id].map((item) => (
-                  <a class="as-event" href="#">
-                    <span class="as-event__badge">
-                      <strong>{item.m}</strong>
-                      <em>{item.d}</em>
-                    </span>
-                    <span class="as-event__body">
-                      <span class="as-event__meta">{item.full} · {item.kind}</span>
-                      <span class="as-event__title">{item.title}</span>
-                    </span>
-                    <span class="material-symbols-outlined as-event__arrow">arrow_forward</span>
-                  </a>
-                ))}
-              </div>
+    <!-- ══════════ FOTOS ══════════ Grilla escalonada, sin padding superior.
+         Sólo aparece si el ministerio tiene fotos propias. -->
+    {fotos.length > 0 && (
+      <section class="as-section as-section--photos">
+        <div class="as-wrap as-photos">
+          {fotos.slice(0, 6).map((src, i) => (
+            <div class="as-photo" data-reveal data-reveal-delay={i * 70}>
+              <img src={src} alt={`${ministry.name}`} loading="lazy" />
             </div>
           ))}
         </div>
-      </div>
-    </section>
+      </section>
+    )}
+
 
     <!-- ══════════ SEDES ══════════ -->
     <section class="as-section" id="sedes">
@@ -315,23 +266,6 @@ const whatsappHref = ministry.whatsapp
       </div>
     </section>
 
-    <!-- ══════════ FAQ ══════════ Acordeón con <details>, sin JS. -->
-    <section class="as-section" id="faq">
-      <div class="as-wrap as-split as-split--faq">
-        <h2 class="as-h1" data-reveal="words">Preguntas frecuentes</h2>
-        <div class="as-faq" data-reveal>
-          {faqs.map((f) => (
-            <details class="as-faq__item">
-              <summary>
-                {f.q}
-                <span class="material-symbols-outlined">add</span>
-              </summary>
-              <p>{f.a}</p>
-            </details>
-          ))}
-        </div>
-      </div>
-    </section>
 
     <!-- ══════════ CTA + SIGUIENTE ══════════ -->
     <section class="as-section as-section--dark as-cta">
