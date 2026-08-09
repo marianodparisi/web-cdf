@@ -35,6 +35,14 @@
 /** El estado de "en vivo" tiene que llegar rapido: no sirve enterarse a la media hora. */
 const TTL_MS = 90 * 1000;
 
+/**
+ * Un fallo se cachea mucho menos que un exito. Antes se guardaban los dos 90 s
+ * y un timeout pasajero —el tipico del arranque en frio, justo despues de un
+ * deploy— dejaba la pagina un minuto y medio mostrando el arte de la serie en
+ * lugar de la transmision.
+ */
+const TTL_FALLO_MS = 10 * 1000;
+
 /** Si YouTube tarda, la pagina sigue sin el bloque. Nunca la bloquea. */
 const TIMEOUT_MS = 4000;
 
@@ -66,7 +74,7 @@ const readEnv = (name: string) => {
   return metaEnv?.[name] ?? process.env[name];
 };
 
-let cache: { at: number; estado: EstadoVivos } | null = null;
+let cache: { at: number; ttl: number; estado: EstadoVivos } | null = null;
 
 const entidades: Record<string, string> = {
   '&amp;': '&',
@@ -172,19 +180,36 @@ async function resolver(handle: string): Promise<EstadoVivos> {
 }
 
 /**
+ * Ultimo estado que resolvio bien. Sobrevive a los fallos posteriores: una vez
+ * que se supo cual es la transmision, un traspie de red no puede hacer que la
+ * pagina vuelva atras al arte de la serie. Como mucho queda desactualizado unos
+ * segundos, que es mucho mejor que parpadear entre una cosa y la otra.
+ */
+let ultimoExito: EstadoVivos | null = null;
+
+/**
  * Estado de las transmisiones. `ultima` nunca es una programada. Devuelve todo
- * en null si no hay `YOUTUBE_HANDLE` o si YouTube no responde: quien lo llama
- * tiene que poder seguir sin esto.
+ * en null si no hay `YOUTUBE_HANDLE`, o si YouTube no responde y ademas nunca
+ * respondio antes: quien lo llama tiene que poder seguir sin esto.
  */
 export async function getEstadoVivos(): Promise<EstadoVivos> {
-  if (cache && Date.now() - cache.at < TTL_MS) return cache.estado;
+  if (cache && Date.now() - cache.at < cache.ttl) return cache.estado;
 
   const handle = readEnv('YOUTUBE_HANDLE');
   if (!handle) return VACIO;
 
   const estado = await resolver(handle);
-  /* Se cachea igual cuando falla: reintentar en cada visita convertiria una
-     caida de YouTube en un home lento. */
-  cache = { at: Date.now(), estado };
-  return estado;
+
+  if (estado.ultima) {
+    ultimoExito = estado;
+    cache = { at: Date.now(), ttl: TTL_MS, estado };
+    return estado;
+  }
+
+  /* Fallo, o el canal no tiene transmisiones. Se cachea igual —reintentar en
+     cada visita convertiria una caida de YouTube en un home lento— pero por
+     mucho menos tiempo, y devolviendo lo ultimo bueno si lo hay. */
+  const salida = ultimoExito ?? estado;
+  cache = { at: Date.now(), ttl: TTL_FALLO_MS, estado: salida };
+  return salida;
 }
