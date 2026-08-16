@@ -15,23 +15,34 @@ const paginas = {
   iete: {
     name: 'IETE',
     kicker: 'Programa de certificación',
-    color: '#224d98',
+    // Vino tomado del propio logo (color dominante del PNG), para que botones,
+    // títulos y acentos de la página coincidan con la marca IETE.
+    color: '#8e253f',
     logo: '/educativos/ietelogo.png',
     lead: 'Si tu sueño es servir en la iglesia, este lugar también es para ti.',
+    lead2:
+      'Si sentís un llamado a ser pastor o misionero, si deseás plantar iglesias, o si simplemente querés crecer para mejorar el mundo que te rodea, este espacio fue diseñado para ayudarte a dar ese siguiente paso.',
     statement: 'Formación integral para líderes cristianos en el mundo actual.',
     image: '/sedes/nosotros2.JPG',
     quees: [
       'IETE es un programa de certificación diseñado para personas que están considerando integrarse al ministerio como pastores, misioneros o líderes dentro de su iglesia local.',
       'También es una certificación ideal para quienes ya están activos en el ministerio y desean fortalecer su formación bíblica y su liderazgo.',
+      'De igual manera, el programa está abierto a personas que no necesariamente estarán en el ministerio, pero que desean crecer en su liderazgo, profundizar en su conocimiento bíblico y desarrollar herramientas para impactar positivamente su entorno.',
     ],
     ejes: [
       'Teología sistemática',
       'Liderazgo de iglesia para la actualidad',
       'Cultura del Reino',
       'Plantación de iglesias',
+      'Misiones',
       'Salud integral del ministro',
     ],
     ejesTitulo: 'Áreas del programa',
+    ejesCierre:
+      'Nuestro enfoque busca formar líderes con carácter, convicción y empatía, capaces de proclamar la verdad con argumentos sólidos y tener conversaciones reales con el mundo actual.',
+    visionTitulo: 'Formamos líderes para vivir la verdad con profundidad y cercanía.',
+    visionCierre:
+      'Creemos que el liderazgo cristiano no solo se trata de proclamar la verdad, sino también de vivirla y encarnarla en la vida cotidiana.',
     columnas: [
       {
         n: '01',
@@ -71,6 +82,7 @@ const paginas = {
       'Personas que desean crecer en su liderazgo',
       'Líderes en distintos ámbitos que desean expandir su conocimiento bíblico',
     ],
+    incluye: ['Clases en línea', 'Asesorías en tiempo real', 'Contenido formativo semanal'],
     presenciales: ['Retiro de sanidad', 'Viaje misionero', 'Conferencia presencial', 'Masterclass especial'],
     ctaTitle: 'Quiero conocer más sobre IETE',
     ctaText: 'Déjanos tus datos y te compartimos información sobre el programa, la modalidad y el proceso de inscripción.',
@@ -82,6 +94,7 @@ const paginas = {
     color: '#487a7c',
     logo: null,
     lead: 'Un espacio para dar tus primeros pasos firmes en el Evangelio.',
+    lead2: null,
     statement: 'Formación inicial, cercana y práctica.',
     image: '/ministries/life/life1.jpg',
     quees: [
@@ -95,6 +108,9 @@ const paginas = {
       'Iglesia y servicio — cómo integrarse a la comunidad y caminar con propósito.',
     ],
     ejesTitulo: '¿Qué se trabaja?',
+    ejesCierre: null,
+    visionTitulo: 'Qué buscamos en cada persona que empieza.',
+    visionCierre: null,
     columnas: [
       {
         n: '01',
@@ -125,6 +141,7 @@ const paginas = {
       'Si estás empezando a conocer la Biblia',
       'Si necesitás ordenar tus bases en la fe',
     ],
+    incluye: [] as string[],
     presenciales: [] as string[],
     ctaTitle: 'Quiero sumarme a Discipulados',
     ctaText: 'Si querés comenzar, conocer los horarios o recibir más información sobre las clases de los sábados, dejanos tus datos y nos comunicamos con vos.',
@@ -137,6 +154,14 @@ if (!pagina) return Astro.redirect('/');
 const otroSlug = slug === 'iete' ? 'discipulados' : 'iete';
 const otro = paginas[otroSlug];
 
+/**
+ * Columnas para las listas que son sección propia.
+ * Una lista de 3 en dos columnas deja un hueco y se ve suelta; una de 4 en tres
+ * columnas deja uno colgando. Se reparte según cuántos ítems haya:
+ * hasta 3 → una columna por ítem · 4 → 2×2 · 5 o más → 3 columnas.
+ */
+const columnasDeLista = (n: number) => (n <= 3 ? n : n === 4 ? 2 : 3);
+
 ---
 
 <MaquetaLayout title={`${pagina.name} · Iglesia Corazón de Fuego`}>
@@ -146,49 +171,82 @@ const otro = paginas[otroSlug];
         <p class="as-eyebrow" data-reveal>{pagina.kicker}</p>
         <h1 class="as-display" data-reveal="words">{pagina.name}</h1>
         <p class="as-mhero__lead" data-reveal>{pagina.lead}</p>
+        {pagina.lead2 && <p class="as-mhero__lead as-mhero__lead--sm" data-reveal data-reveal-delay="80">{pagina.lead2}</p>}
         <div class="as-button-group" data-reveal data-reveal-delay="120">
           <a class="as-button as-button--ministry" href="#inscripcion">Solicitar información</a>
           <a class="as-button as-button--ghost" href="#que-es">¿Qué es {pagina.name}?</a>
         </div>
       </div>
-      <div class="as-mhero__media" data-reveal>
-        <img src={pagina.image} alt={pagina.name} />
+      {/* Si la sub-marca tiene logo propio, el hero lo muestra a él y no una
+          foto genérica: el logo *es* la imagen del programa. */}
+      <div class={`as-mhero__media${pagina.logo ? ' is-logo' : ''}`} data-reveal>
+        <img src={pagina.logo ?? pagina.image} alt={pagina.logo ? `Logo ${pagina.name}` : pagina.name} />
       </div>
     </header>
 
-    <section class="as-section as-section--dark as-statement" id="que-es">
+    {/* Los datos duros (duración, modalidad, edad) van acá arriba y no al final:
+        son la primera pregunta de quien evalúa anotarse, y antes había que
+        recorrer la página entera para encontrarlos. */}
+    <section class="as-section as-section--facts">
       <div class="as-wrap">
-        <p class="as-eyebrow as-eyebrow--light" data-reveal>¿Qué es {pagina.name}?</p>
-        <h2 class="as-statement__text" data-reveal="words">{pagina.statement}</h2>
+        <div class="as-meta as-meta--top" data-reveal>
+          {pagina.datos.map((d) => (
+            <div class="as-meta__item">
+              <span class="material-symbols-outlined">{d.icon}</span>
+              <div><strong>{d.label}</strong><p>{d.value}</p></div>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
 
-    <section class="as-section as-section--light">
-      <div class="as-wrap as-split">
+    {/* La declaración y su desarrollo son la misma idea: la pregunta, la
+        respuesta de una línea y su explicación. Estaban en dos secciones, y la
+        segunda quedaba sin título y con media pantalla vacía al costado. Van
+        juntas, a dos columnas, ocupando el ancho completo. */}
+    <section class="as-section as-section--dark as-statement" id="que-es">
+      <div class="as-wrap as-statement__grid">
         <div>
+          <p class="as-eyebrow as-eyebrow--light" data-reveal>¿Qué es {pagina.name}?</p>
+          <h2 class="as-statement__text" data-reveal="words">{pagina.statement}</h2>
+        </div>
+        <div class="as-statement__body">
           {pagina.quees.map((p, i) => (
-            <p class="as-lead" style={i > 0 ? 'margin-top:1.25rem' : ''} data-reveal data-reveal-delay={i * 90}>
+            <p class="as-lead" style={i > 0 ? 'margin-top:1.5rem' : ''} data-reveal data-reveal-delay={i * 90}>
               {p}
             </p>
           ))}
         </div>
-        <div data-reveal data-reveal-delay="120">
-          <p class="as-eyebrow">{pagina.ejesTitulo}</p>
-          <ul class="as-list">
-            {pagina.ejes.map((e) => (
-              <li>{e}</li>
-            ))}
-          </ul>
-        </div>
       </div>
     </section>
 
-    <section class="as-section" id="enfoque">
+    {/* Los contenidos del programa dejan de ser una barra lateral y pasan a ser
+        una sección con título propio. */}
+    <section class="as-section" id="programa">
+      <div class="as-wrap">
+        <div class="as-head">
+          <div>
+            <p class="as-eyebrow" data-reveal>Contenidos</p>
+            <h2 class="as-h1" data-reveal="words">{pagina.ejesTitulo}</h2>
+          </div>
+        </div>
+        <ul class="as-cards" style={`--cards: ${columnasDeLista(pagina.ejes.length)}`}>
+          {pagina.ejes.map((e, i) => (
+            <li data-reveal data-reveal-delay={i * 70}>{e}</li>
+          ))}
+        </ul>
+        {pagina.ejesCierre && (
+          <p class="as-lead as-prose" style="margin-top:2.5rem" data-reveal>{pagina.ejesCierre}</p>
+        )}
+      </div>
+    </section>
+
+    <section class="as-section as-section--light" id="enfoque">
       <div class="as-wrap">
         <div class="as-head">
           <div>
             <p class="as-eyebrow" data-reveal>Nuestra visión de formación</p>
-            <h2 class="as-h1" data-reveal="words">Qué líderes queremos formar.</h2>
+            <h2 class="as-h1" data-reveal="words">{pagina.visionTitulo}</h2>
           </div>
         </div>
         <div class={`as-cols${pagina.columnas.length === 4 ? ' as-cols--4' : ''}`}>
@@ -201,10 +259,15 @@ const otro = paginas[otroSlug];
             </div>
           ))}
         </div>
+        {pagina.visionCierre && (
+          <p class="as-lead as-prose" style="margin-top:3rem" data-reveal>{pagina.visionCierre}</p>
+        )}
       </div>
     </section>
 
-    <section class="as-section as-section--light" id="info">
+    {/* "¿Para quién es?" queda sola. Antes esta sección acumulaba cuatro
+        bloques distintos bajo un título que sólo describía el primero. */}
+    <section class="as-section" id="info">
       <div class="as-wrap">
         <div class="as-head">
           <div>
@@ -212,35 +275,48 @@ const otro = paginas[otroSlug];
             <h2 class="as-h1" data-reveal="words">¿Para quién es?</h2>
           </div>
         </div>
-
-        <div class="as-split">
-          <ul class="as-list" data-reveal>
-            {pagina.paraQuien.map((p) => (
-              <li>{p}</li>
-            ))}
-          </ul>
-          {pagina.presenciales.length > 0 && (
-            <div data-reveal data-reveal-delay="100">
-              <p class="as-eyebrow">Experiencias presenciales</p>
-              <ul class="as-list">
-                {pagina.presenciales.map((p) => (
-                  <li>{p}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-
-        <div class="as-meta" data-reveal>
-          {pagina.datos.map((d) => (
-            <div class="as-meta__item">
-              <span class="material-symbols-outlined">{d.icon}</span>
-              <div><strong>{d.label}</strong><p>{d.value}</p></div>
-            </div>
+        <ul class="as-cards" style={`--cards: ${columnasDeLista(pagina.paraQuien.length)}`}>
+          {pagina.paraQuien.map((p, i) => (
+            <li data-reveal data-reveal-delay={i * 70}>{p}</li>
           ))}
-        </div>
+        </ul>
       </div>
     </section>
+
+    {(pagina.incluye.length > 0 || pagina.presenciales.length > 0) && (
+      <section class="as-section as-section--light" id="cursada">
+        <div class="as-wrap">
+          <div class="as-head">
+            <div>
+              <p class="as-eyebrow" data-reveal>Cómo se cursa</p>
+              <h2 class="as-h1" data-reveal="words">Qué incluye el programa</h2>
+            </div>
+          </div>
+          <div class="as-split">
+            {pagina.incluye.length > 0 && (
+              <div data-reveal>
+                <h3 class="as-h3">La cursada</h3>
+                <ul class="as-list as-list--lg">
+                  {pagina.incluye.map((p) => (
+                    <li>{p}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {pagina.presenciales.length > 0 && (
+              <div data-reveal data-reveal-delay="100">
+                <h3 class="as-h3">Experiencias presenciales</h3>
+                <ul class="as-list as-list--lg">
+                  {pagina.presenciales.map((p) => (
+                    <li>{p}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+    )}
 
     <!-- ══════════ INSCRIPCIÓN ══════════ Mismos campos que la página real. -->
     <section class="as-section" id="inscripcion">
