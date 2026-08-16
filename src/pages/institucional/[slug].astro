@@ -24,6 +24,11 @@ const paginas = {
       'Si sentís un llamado a ser pastor o misionero, si deseás plantar iglesias, o si simplemente querés crecer para mejorar el mundo que te rodea, este espacio fue diseñado para ayudarte a dar ese siguiente paso.',
     statement: 'Formación integral para líderes cristianos en el mundo actual.',
     image: '/sedes/nosotros2.JPG',
+    // Provisoria. El hero de IETE muestra el logo, así que `image` no llegaba
+    // a verse en ningún lado; acá al menos corta la columna de texto.
+    // No ilustra el programa: es una foto de archivo de la sede en obra. Se
+    // reemplaza en cuanto haya material propio de las clases.
+    banda: '/sedes/nosotros2.JPG',
     quees: [
       'IETE es un programa de certificación diseñado para personas que están considerando integrarse al ministerio como pastores, misioneros o líderes dentro de su iglesia local.',
       'También es una certificación ideal para quienes ya están activos en el ministerio y desean fortalecer su formación bíblica y su liderazgo.',
@@ -97,6 +102,9 @@ const paginas = {
     lead2: null,
     statement: 'Formación inicial, cercana y práctica.',
     image: '/ministries/life/life1.jpg',
+    // Distinta de la del hero: repetir la misma foto a media página no rompe
+    // nada, sólo confirma que ya la viste.
+    banda: '/ministries/life/life3.jpg',
     quees: [
       'Es un estudio pensado para acompañar a quienes están comenzando en la fe. Buscamos que cada persona pueda entender las bases del Evangelio y afirmar su relación con Jesús.',
       'No es un espacio académico como IETE, sino una instancia de formación inicial, cercana y práctica para crecer paso a paso dentro de la vida cristiana.',
@@ -222,7 +230,7 @@ const columnasDeLista = (n: number) => (n <= 3 ? n : n === 4 ? 2 : 3);
 
     {/* Los contenidos del programa dejan de ser una barra lateral y pasan a ser
         una sección con título propio. */}
-    <section class="as-section" id="programa">
+    <section class="as-section as-section--tight" id="programa">
       <div class="as-wrap">
         <div class="as-head">
           <div>
@@ -235,13 +243,25 @@ const columnasDeLista = (n: number) => (n <= 3 ? n : n === 4 ? 2 : 3);
             <li data-reveal data-reveal-delay={i * 70}>{e}</li>
           ))}
         </ul>
-        {pagina.ejesCierre && (
-          <p class="as-lead as-prose" style="margin-top:2.5rem" data-reveal>{pagina.ejesCierre}</p>
-        )}
       </div>
     </section>
 
-    <section class="as-section as-section--light" id="enfoque">
+    {/* Banda a sangre. Entre la portada y el pie no había una sola imagen:
+        seis secciones seguidas de eyebrow + título + texto, todas del mismo
+        alto. Este corte parte esa columna al medio.
+        Las dos fotos son provisorias: no hay material propio de las clases
+        todavía, así que salen de lo que ya existe en `/public`.
+        La frase de cierre de los contenidos vive acá y no como el párrafo
+        gris suelto que era antes: es la misma línea, con el peso que le
+        faltaba. Discipulados no tiene cierre, así que va sólo la foto. */}
+    <section class="as-section as-band">
+      <div class="as-band__media" data-reveal>
+        <img src={pagina.banda} alt={`${pagina.name} en Corazón de Fuego`} loading="lazy" />
+        {pagina.ejesCierre && <p class="as-band__quote">{pagina.ejesCierre}</p>}
+      </div>
+    </section>
+
+    <section class="as-section as-section--light as-section--tight" id="enfoque">
       <div class="as-wrap">
         <div class="as-head">
           <div>
@@ -267,7 +287,12 @@ const columnasDeLista = (n: number) => (n <= 3 ? n : n === 4 ? 2 : 3);
 
     {/* "¿Para quién es?" queda sola. Antes esta sección acumulaba cuatro
         bloques distintos bajo un título que sólo describía el primero. */}
-    <section class="as-section" id="info">
+    {/* Esta sección y "Contenidos" eran el mismo `.as-cards`: misma línea vino
+        arriba de cada ítem, mismo alto, seis ítems cada una. Cambiaban las
+        palabras y nada más, y era de ahí que las páginas se sentían todas
+        iguales. Son dos cosas distintas —un temario y un destinatario— y
+        ahora se leen distinto: acá una lista marcada, en dos columnas. */}
+    <section class="as-section as-section--tight" id="info">
       <div class="as-wrap">
         <div class="as-head">
           <div>
@@ -275,7 +300,7 @@ const columnasDeLista = (n: number) => (n <= 3 ? n : n === 4 ? 2 : 3);
             <h2 class="as-h1" data-reveal="words">¿Para quién es?</h2>
           </div>
         </div>
-        <ul class="as-cards" style={`--cards: ${columnasDeLista(pagina.paraQuien.length)}`}>
+        <ul class="as-list as-list--lg as-list--2">
           {pagina.paraQuien.map((p, i) => (
             <li data-reveal data-reveal-delay={i * 70}>{p}</li>
           ))}
@@ -284,7 +309,7 @@ const columnasDeLista = (n: number) => (n <= 3 ? n : n === 4 ? 2 : 3);
     </section>
 
     {(pagina.incluye.length > 0 || pagina.presenciales.length > 0) && (
-      <section class="as-section as-section--light" id="cursada">
+      <section class="as-section as-section--light as-section--tight" id="cursada">
         <div class="as-wrap">
           <div class="as-head">
             <div>

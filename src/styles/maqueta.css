@@ -1299,6 +1299,7 @@
 .as-mhero__media:not(.is-logo) img,
 .as-photo img,
 .as-scene__media img,
+.as-band__media img,
 .as-mapa__ficha img {
   filter: var(--as-grade);
 }
@@ -1316,3 +1317,64 @@
   .as-ministries--grilla { grid-template-columns: repeat(3, 1fr); gap: 2rem; max-width: 920px; }
 }
 .as-ministries--grilla .as-mcard { flex-basis: auto; width: auto; }
+
+/* ── Ritmo de las páginas de Educativos ───────────────────────────────
+   `.as-section` da 120px parejos a los cuatro lados. Con ocho secciones
+   seguidas eso medía 628-800px cada una: IETE entraba 538 palabras en
+   6306px de scroll y ninguna sección se distinguía de la anterior.
+   El molde repetido era el problema, no el texto.
+
+   `--tight` es para las secciones que sólo llevan una lista corta y hoy
+   estiran 47 palabras sobre 700px. No cambia nada más: quien necesita
+   aire (la declaración, el formulario) sigue con los 120px. */
+.as-section--tight { padding-top: 64px; padding-bottom: 64px; }
+@media (max-width: 991px) { .as-section--tight { padding-top: 48px; padding-bottom: 48px; } }
+@media (max-width: 767px) { .as-section--tight { padding-top: 32px; padding-bottom: 32px; } }
+
+/* Banda de imagen a sangre. Es el ancla visual que faltaba: de la portada
+   al pie había 5600px sin una sola imagen, que es de dónde sale la
+   sensación de PDF. Va a sangre y sin `.as-wrap` a propósito — cortar el
+   ancho completo es lo que quiebra la columna de texto. */
+.as-band { padding: 0; }
+/* 3:1 y no 21/9: a sangre en escritorio, 21/9 medía 755px de alto y la banda
+   pasaba de ser un corte a ser otra sección larga más. */
+.as-band__media { position: relative; overflow: hidden; aspect-ratio: 3 / 1; background: var(--lightest-gray); }
+/* 4:3 en mobile y no 3:2: la frase va en `position:absolute`, así que no
+   empuja la altura de la banda. A 375px medía 245px contra una banda de 250
+   — cinco píxeles de margen, y con un texto un poco más largo se desbordaba
+   por arriba. A 4:3 la banda da 281px y quedan ~65 de resguardo. */
+@media (max-width: 767px) { .as-band__media { aspect-ratio: 4 / 3; } }
+/* Son fotos grupales en 4:3 y el recorte a 3:1 se queda con una franja: los
+   valores se midieron sobre la foto, no a ojo. En life3 la gente ocupa del
+   38% al 83% de la altura, así que el centro del grupo cae en 60% — un
+   recorte centrado dejaba afuera a los que están parados atrás. */
+.as-band__media img { width: 100%; height: 100%; object-fit: cover; object-position: center 60%; display: block; }
+
+/* La frase se apoya sobre la foto. El velo va en un pseudo-elemento y no
+   sobre el `img` para no pisar el `--as-grade` que la foto ya trae. */
+.as-band__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgba(40, 40, 40, 0.78) 0%, rgba(40, 40, 40, 0.45) 45%, rgba(40, 40, 40, 0.1) 100%);
+}
+.as-band__quote {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  bottom: 0;
+  padding: 120px;
+  max-width: 40ch;
+  color: var(--white);
+  font-size: 1.8rem;
+  line-height: 1.35;
+  font-weight: 500;
+}
+@media (max-width: 991px) { .as-band__quote { padding: 80px; font-size: 1.45rem; } }
+@media (max-width: 767px) { .as-band__quote { padding: 32px; font-size: 1.1rem; max-width: none; } }
+
+/* Nota de material: en `/public/educativos` hay una sola imagen, el logo de
+   IETE. Las fotos que usan estas dos páginas salen de `sedes/` y de
+   `ministries/life/` y son provisorias — las de `sedes/` son de archivo, la
+   sede en obra, una con el sello de fecha de 2007 quemado. El día que haya
+   fotos propias de las clases se cambia la ruta en `banda` y nada más. */
