@@ -384,6 +384,8 @@
 .lz-post--logo .lz-post__img { inset: 20% 24% 42%; width: 52%; height: 38%; object-fit: contain; filter: brightness(1.05); }
 .lz-post--logo:hover .lz-post__img { transform: scale(1.04); }
 .lz-post--logo .lz-post__title { align-self: end; margin-bottom: 18px; }
+/* Sin logo ni foto: el nombre al centro, sobre el degradé solo */
+.lz-post--solo .lz-post__title { align-self: center; margin-bottom: 0; }
 
 /* Flyers de anuncios: limpios, título abajo */
 .lz-flyer { display: grid; gap: 12px; align-content: start; }

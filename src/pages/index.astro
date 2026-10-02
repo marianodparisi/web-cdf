@@ -225,8 +225,9 @@ const logoSlugs = new Set(['life', 'gold', 'kids', 'arde']);
     )}
 
     <!-- ══════════ MINISTERIOS ══════════
-         Las fotos van como los testimonios; los logos, sobre un degradé del
-         color de cada ministerio. -->
+         Todas van sobre un degradé del color de cada ministerio. Los que tienen
+         logo lo muestran; los demás, sólo el nombre: las fotos de esas fichas
+         eran imágenes externas de relleno, no material de la casa. -->
     <section class="lz-section lz-dark lz-dark--2" id="ministerios">
       <div class="lz-wrap">
         <div class="lz-head">
@@ -241,12 +242,14 @@ const logoSlugs = new Set(['life', 'gold', 'kids', 'arde']);
         <div class="lz-feed">
           {ministries.map((ministry) => (
             <a
-              class={`lz-post${logoSlugs.has(ministry.slug) ? ' lz-post--logo' : ''}`}
+              class={`lz-post lz-post--logo${logoSlugs.has(ministry.slug) ? '' : ' lz-post--solo'}`}
               href={`/ministerios/${ministry.slug}`}
               style={`--m: ${ministryColors[ministry.slug] ?? '#c5a059'}`}
               data-r
             >
-              <img class="lz-post__img" src={ministry.image} alt={`Ministerio ${ministry.name}`} loading="lazy" />
+              {logoSlugs.has(ministry.slug) && (
+                <img class="lz-post__img" src={ministry.image} alt={`Ministerio ${ministry.name}`} loading="lazy" />
+              )}
               <span class="lz-spaced lz-post__top">{ministry.area}</span>
               <span class="lz-post__title lz-post__title--big">{ministry.name}</span>
               <span class="lz-logo lz-logo--post" aria-hidden="true"><img src="/brand/logowhite.png" alt="" /></span>
