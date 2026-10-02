@@ -1,0 +1,221 @@
+---
+/**
+ * Layout "noche": el lenguaje del Instagram de la iglesia (degradés difusos
+ * oscuros, lockup en minúscula, cita en cursiva, logo con serifa).
+ *
+ * Arrancó como la maqueta `/maqueta-luz` y pasó a ser el inicio. El menú y el
+ * footer tienen los mismos destinos que `MaquetaLayout`, que sigue usándose en
+ * las páginas internas hasta que se migren a este lenguaje.
+ *
+ * No pasa por BaseLayout: no carga global.css ni GSAP. Los reveals son un
+ * IntersectionObserver liviano, con la misma red de seguridad de 4 s.
+ */
+import '../styles/noche.css';
+import { getMinistries } from '../lib/content/collections';
+
+interface Props {
+  title?: string;
+}
+
+const { title = 'Iglesia Corazón de Fuego' } = Astro.props;
+
+const ministries = await getMinistries();
+const mapsUrl = 'https://maps.app.goo.gl/mEVMgoTXbV3BULVq8';
+
+const sedes = [
+  { name: 'Sede Central', href: '/anexos' },
+  { name: 'Ramos Mejía', href: '/anexos/ramos-mejia' },
+  { name: 'Rojas', href: '/anexos/rojas' },
+  { name: 'Santos Vega', href: '/anexos/santos-vega' },
+  { name: 'Villa Minetti', href: '/anexos/villa-minetti' },
+  { name: 'El Palito', href: '/anexos/palito' },
+];
+
+/* Mismos nombres y destinos que el menú de MaquetaLayout. */
+const menu = [
+  { label: 'Nosotros', href: '/nosotros' },
+  { label: 'Misiones', href: '/misiones' },
+  { label: 'Evangelismo', href: '/evangelismo' },
+  {
+    label: 'Nuestras Sedes',
+    items: sedes.slice(1).map((sede) => ({ kicker: 'Anexo', title: sede.name, href: sede.href })),
+  },
+  {
+    label: 'Educativos',
+    items: [
+      { kicker: 'Formación', title: 'IETE', href: '/institucional/iete' },
+      { kicker: 'Formación', title: 'Discipulados', href: '/institucional/discipulados' },
+    ],
+  },
+  {
+    label: 'Ministerios',
+    items: ministries
+      .filter((ministry) => ministry.slug !== 'evangelismo')
+      .map((ministry) => ({ kicker: ministry.area, title: ministry.name, href: `/ministerios/${ministry.slug}` })),
+  },
+];
+
+const footerColumns = [
+  {
+    header: 'Iglesia',
+    links: [
+      { label: 'Nosotros', href: '/nosotros' },
+      { label: 'Contacto', href: '/contact' },
+    ],
+  },
+  { header: 'Sedes', links: sedes.map((sede) => ({ label: sede.name, href: sede.href })) },
+  {
+    header: 'Participar',
+    links: [
+      { label: 'Discipulados', href: '/institucional/discipulados' },
+      { label: 'Misiones', href: '/misiones' },
+      { label: 'Evangelismo', href: '/evangelismo' },
+    ],
+  },
+  {
+    header: 'Contenido',
+    links: [
+      { label: 'Series', href: '/#series' },
+      { label: 'Devocional', href: '/devocional' },
+      { label: 'Radio Corazón', href: '/#radio' },
+    ],
+  },
+  {
+    header: 'Ministerios',
+    links: ministries.map((ministry) => ({ label: ministry.name, href: `/ministerios/${ministry.slug}` })),
+  },
+];
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <link rel="icon" type="image/png" href="/brand/favico.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,700;0,800;0,900;1,500;1,800&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body class="lz">
+    <div class="lz-grain" aria-hidden="true"></div>
+
+    <header class="lz-nav">
+      <a class="lz-logo lz-logo--nav" href="/" aria-label="Corazón de Fuego, inicio">
+        <img src="/brand/logowhite.png" alt="" />
+      </a>
+
+      <nav class="lz-nav__links" aria-label="Principal">
+        {menu.map((group) =>
+          group.items ? (
+            <div class="lz-nav__group">
+              <button type="button" class="lz-nav__item" aria-haspopup="true">
+                {group.label}
+                <span class="lz-nav__caret" aria-hidden="true"></span>
+              </button>
+              <div class="lz-drop" style={`--cols: ${group.items.length > 6 ? 3 : 2}`}>
+                {group.items.map((item) => (
+                  <a class="lz-drop__link" href={item.href}>
+                    <span class="lz-spaced">{item.kicker}</span>
+                    <span class="lz-drop__title">{item.title}</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <a class="lz-nav__item" href={group.href}>{group.label}</a>
+          )
+        )}
+      </nav>
+
+      <div class="lz-nav__utils">
+        <a class="lz-btn lz-btn--small lz-btn--ghost" href={mapsUrl} target="_blank" rel="noopener noreferrer">Visitanos</a>
+        <button class="lz-burger" type="button" aria-label="Menú" aria-expanded="false" data-burger>
+          <span></span><span></span>
+        </button>
+      </div>
+    </header>
+
+    <div class="lz-mobile" data-mobile>
+      {menu.map((group) =>
+        group.items ? (
+          <div class="lz-mobile__group">
+            <p class="lz-spaced">{group.label}</p>
+            {group.items.map((item) => (
+              <a href={item.href}>{item.title}</a>
+            ))}
+          </div>
+        ) : (
+          <a class="lz-mobile__top" href={group.href}>{group.label}</a>
+        )
+      )}
+    </div>
+
+    <slot />
+
+    <footer class="lz-footer">
+      <div class="lz-wrap lz-footer__inner">
+        <div class="lz-logo lz-logo--footer" aria-hidden="true"><img src="/brand/logowhite.png" alt="" /></div>
+        <div class="lz-footer__grid">
+          {footerColumns.map((column) => (
+            <div>
+              <p class="lz-spaced">{column.header}</p>
+              {column.links.map((link) => (
+                <a href={link.href}>{link.label}</a>
+              ))}
+            </div>
+          ))}
+        </div>
+        <p class="lz-spaced lz-footer__legal">
+          © {new Date().getFullYear()} Iglesia Corazón de Fuego · Ramos Mejía · Buenos Aires
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      const burger = document.querySelector<HTMLButtonElement>('[data-burger]');
+      burger?.addEventListener('click', () => {
+        const open = document.body.classList.toggle('lz-menu-open');
+        burger.setAttribute('aria-expanded', String(open));
+      });
+      document.querySelectorAll('[data-mobile] a').forEach((link) =>
+        link.addEventListener('click', () => document.body.classList.remove('lz-menu-open')),
+      );
+
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const items = document.querySelectorAll<HTMLElement>('[data-r]');
+      if (reduce || !('IntersectionObserver' in window)) {
+        items.forEach((el) => el.classList.add('is-in'));
+      } else {
+        // threshold 0: un bloque más alto que el viewport nunca llega a 0.12.
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              entry.target.classList.add('is-in');
+              io.unobserve(entry.target);
+            });
+          },
+          { threshold: 0, rootMargin: '0px 0px -8% 0px' },
+        );
+        items.forEach((el) => io.observe(el));
+        setTimeout(() => items.forEach((el) => el.classList.add('is-in')), 4000);
+      }
+
+      const words = document.querySelectorAll('.lz-rotator__word');
+      if (words.length > 1 && !reduce) {
+        let current = 0;
+        setInterval(() => {
+          words[current].classList.remove('is-on');
+          current = (current + 1) % words.length;
+          words[current].classList.add('is-on');
+        }, 2800);
+      }
+    </script>
+  </body>
+</html>

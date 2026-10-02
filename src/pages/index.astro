@@ -1,32 +1,27 @@
 ---
 /**
- * MAQUETA — réplica estructural del layout de austinstone.org.
+ * MAQUETA "CLIMA" — el lenguaje del Instagram de la iglesia llevado al inicio.
  *
- * Copia el *sistema de diseño* medido sobre su CSS real: escala tipográfica,
- * tokens de color, geometría de botones, padding de secciones, el orden de los
- * bloques y sus efectos. El contenido es de Corazón de Fuego, tomado de las
- * páginas que ya existen en el sitio.
+ * Sale de mirar el feed de @corazondefuegoiglesia, no las portadas de serie:
+ *   - fondos de degradé difuso (naranja brasa, aurora turquesa, hielo, noche)
+ *     con grano fuerte;
+ *   - "devocional / semanal": palo seco negrísimo en minúscula, interletra muy
+ *     cerrada y la segunda línea corrida a la derecha;
+ *   - arriba a la izquierda una cita chiquita en cursiva, con partes en negrita
+ *     y una raya corta debajo;
+ *   - el logo con serifa "Corazón de fuego" centrado abajo;
+ *   - fotos de gente en el auditorio, cálidas y con viñeta;
+ *   - títulos en mayúscula pesada sobre foto ("PAPÁ", "REUNIÓN DE OBREROS")
+ *     con mezcla de pesos.
  *
- * Página descartable: no importa Navbar ni Footer del sitio, no usa las clases
- * `cinematic-*`, y ninguna otra ruta la referencia. Todo su CSS va prefijado
- * con `.as` para no filtrar nada a producción.
+ * Se compararon cuatro climas de degradé (brasa, aurora, hielo, noche) y se
+ * eligió noche: el fondo más oscuro de los cuatro.
  *
- * Tokens medidos sobre su hoja de estilos:
- *   display super  7rem/7.6rem · display 5rem/5.6rem · h1 de sección 3rem/3.6rem w600
- *   .button        radius 100px · padding 16px 32px · .8rem w600 · uppercase · ls 2px
- *   .section       padding 7.5rem 7.5rem 0 (5rem tablet)
- *   .marquee       animation 40s linear infinite · translateX(0 → -50%) · radius 12px
- *   .play-circle   50px dark en hero · 64px white en piezas grandes
- *   velo del hero  #28282840 sobre la foto
- *   dark #282828 · fill-light #f4f4f4 · body #737373 · pinstripe #94979e29
- *
- * Los `reveal-block` de ellos son interacciones de Webflow (IX2). Acá se
- * resuelven con IntersectionObserver, más liviano y sin dependencias.
- *
- * Pendiente tuyo: fotografía de comunidad y, si conseguís la licencia,
- * Proxima Nova en lugar de Nunito Sans.
+ * Nació como la maqueta `/maqueta-luz` y pasó a ser el inicio. Nav, footer y
+ * reveals viven en NocheLayout; los estilos, prefijados `.lz`, en noche.css.
+ * El inicio anterior (estilo austinstone) quedó en el historial de git.
  */
-import MaquetaLayout from '../layouts/MaquetaLayout.astro';
+import NocheLayout from '../layouts/NocheLayout.astro';
 import { seriesPlaylistUrl } from '../data/series';
 import { getAnnouncements, getDevotionals, getMinistries, getSeries } from '../lib/content/collections';
 import { getEstadoVivos } from '../lib/youtube';
@@ -37,40 +32,32 @@ const [devotionalPosts, ministries, sermonSeries, announcements, vivos] = await 
   getSeries(),
   getAnnouncements(),
   /* Va en el mismo `Promise.all` para que su latencia se solape con la del
-     contenido en vez de sumarse. Devuelve null si falla: el hero sigue con el
-     arte de la serie. */
+     contenido. Devuelve null si falla: el botón cae a la serie actual. */
   getEstadoVivos(),
 ]);
 
-/* Sólo hace falta la serie en curso: el listado de series salió del home junto
-   con las pestañas. */
-const [currentSeries] = sermonSeries.filter((series) => series.image && series.href);
+const visibleSeries = sermonSeries.filter((series) => series.image && series.href);
+const [currentSeries] = visibleSeries;
+const pastSeries = visibleSeries.slice(1, 4);
+const [devotional] = devotionalPosts;
 
-/* La tarjeta del hero se resuelve acá y no en el markup para no encadenar
-   `??` sobre dos objetos que pueden faltar por separado: YouTube puede no
-   responder, y `ultimoVivo.title` puede venir null aunque el resto exista. */
-const ultimoVivo = vivos.ultima;
-const tarjetaHero = ultimoVivo
-  ? {
-      href: ultimoVivo.url,
-      image: ultimoVivo.thumbnail,
-      fallback: ultimoVivo.thumbnailFallback,
-      alt: ultimoVivo.title ?? 'Último mensaje',
-      isLive: ultimoVivo.isLive,
-    }
-  : currentSeries
-    ? {
-        href: currentSeries.href,
-        image: currentSeries.image,
-        fallback: undefined,
-        alt: currentSeries.title,
-        isLive: false,
-      }
-    : null;
+/* El botón del hero lleva al último vivo de YouTube; si YouTube no responde,
+   a la serie actual, y si tampoco hay serie, a las playlists. */
+const ultimoVivo = vivos?.ultima;
+const mensajeHref = ultimoVivo?.url ?? currentSeries?.href ?? seriesPlaylistUrl;
+const mensajeLabel = ultimoVivo?.isLive ? 'Ver la transmisión' : 'Ver el último mensaje';
 
-const heroRotation = ['Una Iglesia', 'Una Familia', 'Una Casa'];
+/** "Encuentro GOLD" → ["Encuentro", "GOLD"]: liviano arriba, pesado abajo,
+    como "REUNIÓN DE / OBREROS" en el feed. */
+function splitTitle(title: string): [string, string] {
+  const words = title.trim().split(/\s+/);
+  if (words.length < 2) return ['', title];
+  return [words.slice(0, -1).join(' '), words[words.length - 1]];
+}
 
-/** Color propio de cada ministerio. Al promover esto pasa a ministries.ts. */
+const heroWords =['iglesia', 'familia', 'casa'];
+const mapsUrl = 'https://maps.app.goo.gl/mEVMgoTXbV3BULVq8';
+
 const ministryColors: Record<string, string> = {
   life: '#48c2c5',
   gold: '#c5a059',
@@ -79,325 +66,207 @@ const ministryColors: Record<string, string> = {
   carcelario: '#487a7c',
   'firmes-y-adelante': '#c43b46',
 };
-/* Los logos no toleran recorte: van contenidos sobre fondo propio.
-   `life` va acá aunque el sitio real no lo marque: su imagen es el logotipo,
-   no una foto. Sin esto se recortaba contra los bordes de la tarjeta y, desde
-   que hay grado de color, además se le apagaba la marca. */
 const logoSlugs = new Set(['life', 'gold', 'kids', 'arde']);
-
-/* Al sacar el bloque de horarios y primera vez, los CTA de "Visitanos" se
-   quedaron sin destino interno. Van todos acá: es la respuesta concreta a
-   "quiero ir", que era lo que esa sección resolvía. */
-const mapsUrl = 'https://maps.app.goo.gl/mEVMgoTXbV3BULVq8';
-
-
-/**
- * Fotos reales de la casa. `ministry.image` no sirve acá: la mitad de los
- * ministerios tiene logo en vez de foto, y un logo a sangre en el marquee o en
- * la sección oscura se ve roto. Estas son las únicas fotografías de comunidad
- * que hay hoy en /public — el reemplazo por material propio es lo primero que
- * hay que hacer si esto avanza.
- */
-const fotos = [
-  '/sedes/nosotros1.JPG',
-  '/ministries/life/life1.jpg',
-  '/sedes/nosotros2.JPG',
-  '/ministries/life/life3.jpg',
-  '/sedes/nosotros3.JPG',
-  '/ministries/life/life2.jpeg',
-  '/ministries/life/life4.jpeg',
-];
 ---
 
-<MaquetaLayout title="Iglesia Corazón de Fuego">
+<NocheLayout title="Iglesia Corazón de Fuego">
     <!-- ══════════ HERO ══════════
-         Foto a sangre + velo #28282840, display de 7rem con línea rotativa y la
-         tarjeta del último mensaje con su botón play de 50px. -->
-    <header class="as-hero">
-      <div class="as-hero__bg">
-        {/* El mismo video que ya usa el Hero del sitio. `poster` evita el
-            rectángulo negro mientras carga, y en móviles donde el autoplay
-            queda bloqueado se ve la imagen en vez de un hueco. */}
-        <video
-          autoplay
-          muted
-          loop
-          playsinline
-          preload="metadata"
-          poster={currentSeries?.image}
-        >
-          <source src="/home/hero-v1-compressed.mp4" type="video/mp4" />
-        </video>
-        <div class="as-hero__veil"></div>
-      </div>
+         Como los videos de testimonio: la casa de fondo, cálida y con viñeta,
+         la cita arriba a la izquierda y el logo abajo al centro. -->
+    <header class="lz-hero">
+      <video class="lz-hero__video" autoplay muted loop playsinline preload="metadata" poster={currentSeries?.image}>
+        <source src="/home/hero-v1-compressed.mp4" type="video/mp4" />
+      </video>
+      <div class="lz-hero__veil" aria-hidden="true"></div>
 
-      <div class="as-hero__grid">
-        <div class="as-hero__content">
-          <h1 class="as-display as-display--super" data-reveal="words">Somos</h1>
-          <div class="as-rotator" data-rotator>
-            {heroRotation.map((line, index) => (
-              <h2 class={`as-display as-display--super as-rotator__line${index === 0 ? ' is-active' : ''}`}>{line}</h2>
+      <p class="lz-quote lz-hero__quote" data-r>
+        Te esperamos este fin de semana. <strong>Viernes y sábados 20 hs · Domingos 9:30 y 11 hs.</strong>
+      </p>
+
+      <div class="lz-hero__center">
+        <h1 class="lz-lockup lz-lockup--xl">
+          <span data-r>somos una</span>
+          <span class="lz-lockup__shift lz-rotator" data-rotator aria-live="polite">
+            {heroWords.map((word, i) => (
+              <span class={`lz-rotator__word${i === 0 ? ' is-on' : ''}`}>{word}</span>
             ))}
-          </div>
-          <h2 class="as-display as-display--super" data-reveal="words" data-reveal-delay="120">Corazón de Fuego</h2>
-
-          <p class="as-hero__lead" data-reveal>
-            Te esperamos este fin de semana. Viernes y sábados 20 hs · Domingos 9:30 y 11 hs.
-          </p>
-
-          <div class="as-hero__actions" data-reveal data-reveal-delay="140">
-            <a class="as-button as-button--white" href={mapsUrl} target="_blank" rel="noopener noreferrer">Visitanos</a>
-          </div>
-        </div>
-
-        {/* La tarjeta muestra el último vivo de YouTube, resuelto en el
-            servidor. Si YouTube no responde, `ultimoVivo` viene null y cae al
-            arte de la serie: el hero nunca queda vacío por un tercero. */}
-        {tarjetaHero && (
-          <a
-            class="as-hero__sermon"
-            href={tarjetaHero.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-reveal
-            data-reveal-delay="220"
-          >
-            <div class="as-hero__sermon-image">
-              {/* `maxresdefault` solo existe si subieron en HD; si falta, el
-                  onerror pasa a `mqdefault`, que siempre está y es 16:9 igual,
-                  así que no hay salto de layout. */}
-              <img src={tarjetaHero.image} alt={tarjetaHero.alt} data-fallback={tarjetaHero.fallback} />
-              {tarjetaHero.isLive && (
-                <span class="as-vivo">
-                  <span class="as-vivo__punto"></span>
-                  En vivo
-                </span>
-              )}
-              <span class="as-play as-play--home">
-                <span class="as-play__circle">
-                  <span class="material-symbols-outlined">play_arrow</span>
-                </span>
-              </span>
-            </div>
-            <span class="as-hero__sermon-link">
-              {tarjetaHero.isLive ? 'Ver la transmisión' : 'Ver el último mensaje'}
-              <span class="material-symbols-outlined">arrow_forward</span>
-            </span>
+          </span>
+        </h1>
+        <div class="lz-actions lz-actions--center" data-r>
+          <a class="lz-btn" href={mapsUrl} target="_blank" rel="noopener noreferrer">Visitanos</a>
+          <a class="lz-btn lz-btn--ghost" href={mensajeHref} target="_blank" rel="noopener noreferrer">
+            {mensajeLabel}
           </a>
-        )}
+        </div>
       </div>
+
+      <div class="lz-logo lz-logo--foot" aria-hidden="true"><img src="/brand/logowhite.png" alt="" /></div>
     </header>
 
-    <!-- ══════════ BIENVENIDA ══════════
-         El bloque que va entre el hero y el carousel: grilla de 6 columnas, el
-         texto ocupa las primeras cuatro y los botones bajan a la derecha. -->
-    <section class="as-section as-section--intro">
-      <div class="as-wrap">
-        <div class="as-grid6">
-          <div class="as-grid6__eyebrow">
-            <h6 class="as-eyebrow" data-reveal>Bienvenido a Corazón de Fuego</h6>
-          </div>
-          <div class="as-grid6__lead">
-            <h2 class="as-h1" data-reveal="words">
-              Una comunidad para encontrarte con Dios, crecer y servir.
-            </h2>
-          </div>
-          <div class="as-grid6__actions">
-            <p data-reveal>
-              Creemos que la iglesia es una familia espiritual llamada a revelar a Cristo con
-              palabras, obras y una vida rendida a Dios.
-            </p>
-            <div class="as-button-group" data-reveal data-reveal-delay="120">
-              <a class="as-button" href={mapsUrl} target="_blank" rel="noopener noreferrer">Visitanos</a>
-              <a class="as-button as-button--ghost" href="/nosotros">Sobre nosotros</a>
-            </div>
+    <!-- ══════════ BIENVENIDA ══════════ Una placa de "devocional semanal" a sangre. -->
+    <section class="lz-plate lz-plate--full">
+      <div class="lz-mesh" aria-hidden="true"></div>
+      <div class="lz-wrap lz-welcome">
+        <p class="lz-quote" data-r>
+          Creemos que la iglesia es una familia espiritual llamada a revelar a Cristo con
+          <strong>palabras, obras y una vida rendida a Dios.</strong>
+        </p>
+        <h2 class="lz-lockup lz-lockup--lg" data-r>
+          <span>bienvenido a</span>
+          <span class="lz-lockup__shift">corazón de fuego</span>
+        </h2>
+        <div class="lz-welcome__foot" data-r>
+          <p class="lz-lead">Una comunidad para encontrarte con Dios, crecer y servir.</p>
+          <div class="lz-actions">
+            <a class="lz-btn" href={mapsUrl} target="_blank" rel="noopener noreferrer">Visitanos</a>
+            <a class="lz-btn lz-btn--ghost" href="/nosotros">Sobre nosotros</a>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ══════════ MARQUEE ══════════ 40s lineal, translateX(0 → -50%). -->
-    <section class="as-marquee" data-reveal>
-      <div class="as-marquee__track">
-        {
-          [...fotos, ...fotos].map((src, i) => (
-            <div class={`as-marquee__item as-marquee__item--${i % fotos.length % 2 === 0 ? '4x3' : '16x9'}`}>
-              <img src={src} alt="" loading="lazy" />
-            </div>
-          ))
-        }
-      </div>
-    </section>
-
-    <!-- ══════════ SERIE ACTUAL ══════════
-         Abre el cuerpo de la página: es lo que está pasando ahora. Los fondos
-         alternan de acá hasta el final —light, base, light, dark, light, dark—
-         para que ningún par de secciones vecinas se funda en un solo bloque. -->
+    <!-- ══════════ SERIE ACTUAL ══════════ -->
     {currentSeries && (
-      <section class="as-section as-section--light" id="series">
-        <div class="as-wrap">
-          {/* La imagen va primera en el markup, no dada vuelta por CSS: en la
-              referencia manda ella, y en mobile también tiene que abrir. */}
-          <div class="as-split as-split--serie">
-            {/* Pieza muda: `div` y no `a`, sin play y sin hover. El arte de la
-                serie acompaña, no invita a clickear — la única acción del
-                bloque es "Explorar la serie". Como `a.as-image:hover` no
-                matchea un div, el zoom de la imagen se apaga solo. */}
-            <div class="as-image as-image--16x9" data-reveal>
-              <img src={currentSeries.image} alt={currentSeries.title} loading="lazy" />
-            </div>
-            <div>
-              <h6 class="as-eyebrow" data-reveal>Serie actual</h6>
-              <h2 class="as-h1" data-reveal="words">{currentSeries.title}</h2>
-              {/* Como en la referencia, el párrafo no describe esta serie sino
-                  la costumbre de la casa: explica qué es una serie y por qué
-                  hay una nueva cada vez que volvés. Así el bloque no depende de
-                  que alguien escriba una bajada distinta cada mes. */}
-              <p class="as-head__lead" data-reveal>
-                Cada mes abrimos una serie nueva: varias semanas seguidas sobre un mismo tema
-                o un libro de la Biblia. Todas quedan grabadas y ordenadas por serie en YouTube.
-              </p>
-              <div class="as-button-group" data-reveal data-reveal-delay="120">
-                <a class="as-button as-button--small" href={seriesPlaylistUrl} target="_blank" rel="noopener noreferrer">
-                  Explorar la serie
-                </a>
-              </div>
-            </div>
+      <section class="lz-section lz-dark" id="series">
+        <div class="lz-wrap">
+          <div class="lz-head">
+            <h2 class="lz-lockup lz-lockup--md" data-r>
+              <span>serie</span>
+              <span class="lz-lockup__shift">actual</span>
+            </h2>
+            <p class="lz-quote lz-quote--side" data-r>
+              Cada mes abrimos una serie nueva: varias semanas seguidas sobre un mismo tema o un libro
+              de la Biblia. <strong>Todas quedan grabadas y ordenadas por serie en YouTube.</strong>
+            </p>
           </div>
+
+          <a class="lz-serie" href={seriesPlaylistUrl} target="_blank" rel="noopener noreferrer" data-r>
+            <img src={currentSeries.image} alt={currentSeries.title} loading="lazy" />
+            <span class="lz-serie__bar">
+              <span class="lz-caps-mix"><span>{currentSeries.subtitle}</span> {currentSeries.title}</span>
+              <span class="lz-btn">Explorar la serie</span>
+            </span>
+          </a>
+
+          {pastSeries.length > 0 && (
+            <ol class="lz-past">
+              {pastSeries.map((series) => (
+                <li data-r>
+                  <a href={series.href} target="_blank" rel="noopener noreferrer">
+                    <span class="lz-past__title">{series.title.toLowerCase()}</span>
+                    <span class="lz-spaced">{series.subtitle}</span>
+                  </a>
+                </li>
+              ))}
+            </ol>
+          )}
         </div>
       </section>
     )}
 
-    <!-- ══════════ ANUNCIOS ══════════ Va entre la serie y los ministerios. -->
-    <section class="as-section" id="agenda">
-      <div class="as-wrap">
-        <div class="as-head">
-          <div>
-            <h2 class="as-h1" data-reveal="words">Qué está pasando</h2>
-            <p class="as-head__lead" data-reveal>
-              Caminemos juntos. Mirá las próximas clases, eventos y encuentros de la casa.
-            </p>
-          </div>
+    <!-- ══════════ QUÉ ESTÁ PASANDO ══════════
+         Como el feed: piezas 4:5, foto con viñeta, título en mayúscula pesada
+         con mezcla de pesos y el logo abajo. -->
+    <section class="lz-section lz-dark lz-dark--2" id="agenda">
+      <div class="lz-wrap">
+        <div class="lz-head">
+          <h2 class="lz-lockup lz-lockup--md" data-r>
+            <span>qué está</span>
+            <span class="lz-lockup__shift">pasando</span>
+          </h2>
+          <p class="lz-quote lz-quote--side" data-r>
+            Caminemos juntos. <strong>Mirá las próximas clases, eventos y encuentros de la casa.</strong>
+          </p>
         </div>
-
-        {/* Los anuncios reales del panel, no una agenda de ejemplo. Antes acá
-            había cuatro eventos inventados con fechas inventadas, mientras la
-            colección `anuncios` ya existía y nadie la leía. Sin badge de fecha
-            porque un anuncio no la trae: no hay dato que poner ahí. */}
-        <div class="as-agenda">
-          {
-            announcements.map((item, index) => (
-              <a class="as-event" href={item.href} data-reveal data-reveal-delay={index * 70}>
-                <span class="as-event__body">
-                  <span class="as-event__meta">{item.eyebrow}</span>
-                  <span class="as-event__title">{item.title}</span>
-                </span>
-                <span class="material-symbols-outlined as-event__arrow">arrow_forward</span>
-              </a>
-            ))
-          }
+        {/* Los anuncios ya son flyers con su propio texto: van limpios,
+            como en el feed, y el título va abajo. */}
+        <div class="lz-feed">
+          {announcements.map((item) => (
+            <a class="lz-flyer" href={item.href} data-r>
+              <span class="lz-flyer__img">
+                {item.image && <img src={item.image} alt={item.alt} loading="lazy" />}
+              </span>
+              <span class="lz-spaced">{item.eyebrow}</span>
+              <span class="lz-flyer__title lz-caps-mix">
+                <span>{splitTitle(item.title)[0]}</span>
+                {splitTitle(item.title)[1]}
+              </span>
+            </a>
+          ))}
         </div>
       </div>
     </section>
+
+    <!-- ══════════ DEVOCIONAL ══════════ La placa del feed, tal cual. -->
+    {devotional && (
+      <section class="lz-section lz-dark">
+        <div class="lz-wrap lz-devo">
+          <div class="lz-devo__text">
+            <p class="lz-spaced" data-r>Devocional</p>
+            <h2 class="lz-title" data-r>Contenido sobre vida cristiana, formación y aliento bíblico para tu semana.</h2>
+            <div class="lz-devo__post" data-r>
+              <span class="lz-spaced">{devotional.weekLabel}</span>
+              <span class="lz-devo__name">{devotional.title}</span>
+            </div>
+            <a class="lz-btn" href="/devocional" data-r>Ver todos los devocionales</a>
+          </div>
+
+          <a class="lz-plate lz-plate--tile" href="/devocional" data-r>
+            <div class="lz-mesh" aria-hidden="true"></div>
+            <p class="lz-quote">{devotional.excerpt}</p>
+            <span class="lz-lockup lz-lockup--tile">
+              <span>devocional</span>
+              <span class="lz-lockup__shift">semanal</span>
+            </span>
+            <span class="lz-logo lz-logo--post" aria-hidden="true"><img src="/brand/logowhite.png" alt="" /></span>
+          </a>
+        </div>
+      </section>
+    )}
 
     <!-- ══════════ MINISTERIOS ══════════
-         Cada tarjeta lleva el color propio del ministerio y entra a su página
-         interna. Es lo que conecta el home con /ministerios/{slug}. -->
-    <section class="as-section as-section--light" id="ministerios">
-      <div class="as-wrap">
-        <div class="as-head">
-          <div>
-            <p class="as-eyebrow" data-reveal>Ministerios</p>
-            <h2 class="as-h1" data-reveal="words">Encontrá tu lugar para servir y crecer.</h2>
-          </div>
-          {/* Sólo aparecen en desktop: en mobile el gesto es el dedo. */}
-          <div class="as-ministries-nav" data-carousel-nav>
-            <button type="button" data-dir="-1" aria-label="Ministerios anteriores">
-              <span class="material-symbols-outlined">arrow_back</span>
-            </button>
-            <button type="button" data-dir="1" aria-label="Ministerios siguientes">
-              <span class="material-symbols-outlined">arrow_forward</span>
-            </button>
-          </div>
+         Las fotos van como los testimonios; los logos, sobre un degradé del
+         color de cada ministerio. -->
+    <section class="lz-section lz-dark lz-dark--2" id="ministerios">
+      <div class="lz-wrap">
+        <div class="lz-head">
+          <h2 class="lz-lockup lz-lockup--md" data-r>
+            <span>encontrá</span>
+            <span class="lz-lockup__shift">tu lugar</span>
+          </h2>
+          <p class="lz-quote lz-quote--side" data-r>
+            Ministerios. <strong>Encontrá tu lugar para servir y crecer.</strong>
+          </p>
         </div>
-
-        {/* El reveal va en la fila, no en cada tarjeta: adentro de un scroller
-            horizontal el IntersectionObserver no ve las que están corridas
-            —las tapa el `overflow` del contenedor— y se quedaban en
-            `opacity: 0` para siempre. */}
-        <div class="as-ministries" data-carousel data-reveal>
-          {
-            ministries.map((ministry) => (
-              <a
-                class="as-mcard"
-                href={`/ministerios/${ministry.slug}`}
-                style={`--m: ${ministryColors[ministry.slug] ?? '#282828'}`}
-              >
-                <div class={`as-mcard__media${logoSlugs.has(ministry.slug) ? ' is-logo' : ''}`}>
-                  <img src={ministry.image} alt={`Ministerio ${ministry.name}`} loading="lazy" />
-                </div>
-                <div class="as-mcard__body">
-                  <p class="as-mcard__area">{ministry.area}</p>
-                  <h3>{ministry.name}</h3>
-                  <span class="as-item__view">Conocer</span>
-                </div>
-              </a>
-            ))
-          }
+        <div class="lz-feed">
+          {ministries.map((ministry) => (
+            <a
+              class={`lz-post${logoSlugs.has(ministry.slug) ? ' lz-post--logo' : ''}`}
+              href={`/ministerios/${ministry.slug}`}
+              style={`--m: ${ministryColors[ministry.slug] ?? '#c5a059'}`}
+              data-r
+            >
+              <img class="lz-post__img" src={ministry.image} alt={`Ministerio ${ministry.name}`} loading="lazy" />
+              <span class="lz-spaced lz-post__top">{ministry.area}</span>
+              <span class="lz-post__title lz-post__title--big">{ministry.name}</span>
+              <span class="lz-logo lz-logo--post" aria-hidden="true"><img src="/brand/logowhite.png" alt="" /></span>
+            </a>
+          ))}
         </div>
       </div>
     </section>
 
-    <!-- ══════════ DEVOCIONAL ══════════
-         Era un bloque de pestañas con Series, Devocional y Anuncios. Quedó sólo
-         devocional, así que va derecho: con una sola solapa el menú de tabs no
-         decide nada y el JS de `[data-tabs]` no tiene a quién alternar.
-         Fondo base: Ministerios arriba y Radio abajo ya traen el suyo. -->
-    <section class="as-section">
-      {/* Con un solo devocional, el título a todo el ancho y la tarjeta sola
-          abajo dejaban medio bloque vacío. A dos columnas —título y botón a la
-          izquierda, la pieza a la derecha— la fila cierra. */}
-      <div class="as-wrap">
-        <div class="as-split as-split--devocional">
-          <div>
-            <h6 class="as-eyebrow" data-reveal>Devocional</h6>
-            <h2 class="as-h2" data-reveal="words">
-              Contenido sobre vida cristiana, formación y aliento bíblico para tu semana.
-            </h2>
-            <div class="as-button-group" data-reveal data-reveal-delay="120">
-              <a class="as-button as-button--small" href="/devocional">Ver todos los devocionales</a>
-            </div>
-          </div>
-
-          {
-            devotionalPosts.slice(0, 1).map((post) => (
-              <a class="as-item" href="/devocional" data-reveal data-reveal-delay="80">
-                <div class="as-image as-image--16x9">
-                  <img src={post.image} alt={post.title} loading="lazy" />
-                </div>
-                <p class="as-item__meta">{post.weekLabel}</p>
-                <h3 class="as-item__title">{post.title}</h3>
-                <span class="as-item__view">Ver</span>
-              </a>
-            ))
-          }
-        </div>
+    <!-- ══════════ RADIO ══════════ -->
+    <section class="lz-plate lz-plate--full lz-radio" id="radio">
+      <div class="lz-mesh" aria-hidden="true"></div>
+      <div class="lz-wrap lz-radio__inner">
+        <p class="lz-quote" data-r>La frecuencia del cielo. <strong>24/7 conectados con vos.</strong></p>
+        <h2 class="lz-lockup lz-lockup--lg" data-r>
+          <span>radio</span>
+          <span class="lz-lockup__shift">corazón</span>
+        </h2>
+        <span class="lz-tag" data-r>Próximamente</span>
       </div>
     </section>
 
-    <!-- ══════════ RADIO ══════════ El proyecto que viene. Panel propio, no
-         sección oscura a sangre: ver el porqué en `.as-radio` del CSS. -->
-    <section class="as-section as-section--radio" id="radio">
-      <div class="as-wrap as-radio">
-        <div>
-          <h6 class="as-eyebrow as-eyebrow--light" data-reveal>Radio Corazón</h6>
-          <h2 class="as-h1" data-reveal="words">La frecuencia del cielo.</h2>
-          <p data-reveal>24/7 conectados con vos.</p>
-        </div>
-        <div class="as-radio__side" data-reveal data-reveal-delay="120">
-          <span class="as-tag">Próximamente</span>
-          <div class="as-wave"><span></span><span></span><span></span><span></span><span></span></div>
-        </div>
-      </div>
-    </section>
-</MaquetaLayout>
+</NocheLayout>
