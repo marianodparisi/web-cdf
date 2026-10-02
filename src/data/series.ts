@@ -12,9 +12,33 @@ export const seriesPlaylistUrl = 'https://www.youtube.com/@Coraz%C3%B3ndeFuego/p
 
 export const sermonSeries: SermonSeries[] = [
   {
+    title: 'Restaurados',
+    subtitle: 'Serie octubre 2026',
+    label: 'Serie actual',
+    image: '/series/serierestaurados.webp',
+    href: seriesPlaylistUrl,
+    description: 'PENDIENTE: falta la descripcion real de la serie.',
+  },
+  {
+    title: 'Cuerpo',
+    subtitle: 'Serie septiembre 2026',
+    label: 'Serie anterior',
+    image: '/series/seriecuerpo.webp',
+    href: seriesPlaylistUrl,
+    description: 'PENDIENTE: falta la descripcion real de la serie.',
+  },
+  {
+    title: 'Alma',
+    subtitle: 'Serie agosto 2026',
+    label: 'Serie anterior',
+    image: '/series/seriealma.png',
+    href: seriesPlaylistUrl,
+    description: 'PENDIENTE: falta la descripcion real de la serie.',
+  },
+  {
     title: 'Éxodo',
     subtitle: 'El camino hacia la libertad',
-    label: 'Serie actual',
+    label: 'Serie anterior',
     image: '/series/exododesktop.jpg',
     mobileImage: '/series/exodomobile.jpg',
     href: 'https://www.youtube.com/playlist?list=PLbq3XgHcmjEtwhYdGCqO8PqbFY7EMFI5p',
