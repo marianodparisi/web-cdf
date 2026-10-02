@@ -1,0 +1,354 @@
+---
+/**
+ * MAQUETA "LUZ DEL MES" — el lenguaje de las portadas de serie llevado al
+ * inicio entero.
+ *
+ * Sale de mirar "Cuerpo" (sept '26) y "Restaurados" (oct '26) juntas:
+ *   - una palabra gigante, palo seco ultra negro y ancho;
+ *   - un objeto o una foto sola, montada con la palabra;
+ *   - la luz como protagonista sobre fondo casi negro;
+ *   - grano y textura de película;
+ *   - microtipografía muy espaciada y un sello de fecha en la esquina.
+ *
+ * Lo fijo es la gramática (tipografía, composición, sellos). Lo variable es
+ * la luz: cada serie trae su paleta y el sitio entero la toma. Acá se elige
+ * por el título de la serie actual y se puede alternar con el selector de
+ * abajo a la derecha, que existe sólo en la maqueta.
+ *
+ * Página descartable: no usa BaseLayout, Navbar, Footer ni global.css, todo
+ * su CSS va prefijado con `.lz` y ninguna otra ruta la referencia.
+ */
+import '../styles/maqueta-luz.css';
+import { seriesPlaylistUrl } from '../data/series';
+import { getAnnouncements, getDevotionals, getMinistries, getSeries } from '../lib/content/collections';
+
+const [devotionalPosts, ministries, sermonSeries, announcements] = await Promise.all([
+  getDevotionals(),
+  getMinistries(),
+  getSeries(),
+  getAnnouncements(),
+]);
+
+const visibleSeries = sermonSeries.filter((series) => series.image && series.href);
+const [currentSeries] = visibleSeries;
+const pastSeries = visibleSeries.slice(1, 4);
+
+/** Paletas de luz por serie. Al promover esto pasa a ser un campo de la serie. */
+const luces = {
+  restaurados: { name: 'Restaurados' },
+  cuerpo: { name: 'Cuerpo' },
+} as const;
+type Luz = keyof typeof luces;
+
+const normalize = (value: string) =>
+  value.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const seriesKey = currentSeries ? normalize(currentSeries.title) : '';
+const luz: Luz = seriesKey in luces ? (seriesKey as Luz) : 'restaurados';
+
+/** "Serie octubre 2026" → "OCT '26", como el sello de las portadas. */
+function sello(subtitle: string) {
+  const match = subtitle.match(/([a-záéíóúñ]+)\s+(\d{4})/i);
+  if (!match) return null;
+  return { month: normalize(match[1]).slice(0, 3).toUpperCase(), year: `'${match[2].slice(2)}` };
+}
+const selloSerie = currentSeries ? sello(currentSeries.subtitle) : null;
+
+const heroWords = ['Iglesia', 'Familia', 'Casa'];
+const mapsUrl = 'https://maps.app.goo.gl/mEVMgoTXbV3BULVq8';
+
+const ministryColors: Record<string, string> = {
+  life: '#48c2c5',
+  gold: '#c5a059',
+  kids: '#e31b48',
+  arde: '#e8642b',
+  carcelario: '#487a7c',
+  'firmes-y-adelante': '#c43b46',
+};
+const logoSlugs = new Set(['life', 'gold', 'kids', 'arde']);
+
+const pad = (n: number) => String(n + 1).padStart(2, '0');
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>Maqueta · Luz del mes</title>
+    <link rel="icon" href="/brand/favico.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+
+  <body class="lz" data-luz={luz}>
+    <div class="lz-grain" aria-hidden="true"></div>
+
+    <!-- ══════════ NAV ══════════ -->
+    <nav class="lz-nav">
+      <a class="lz-nav__logo" href="/maqueta-luz">
+        <img src="/brand/favico.png" alt="" width="32" height="32" />
+        <span>Corazón de Fuego</span>
+      </a>
+      <div class="lz-nav__links">
+        <a href="/nosotros">Nosotros</a>
+        <a href="/misiones">Misiones</a>
+        <a href="/evangelismo">Evangelismo</a>
+        <a href="/ministerios">Ministerios</a>
+      </div>
+      <a class="lz-btn lz-btn--small" href={mapsUrl} target="_blank" rel="noopener noreferrer">Visitanos</a>
+    </nav>
+
+    <!-- ══════════ HERO ══════════
+         La portada de serie hecha home: línea fina arriba, palabra gigante al
+         centro, firma abajo a la izquierda y sello a la derecha. -->
+    <header class="lz-hero lz-dark">
+      <video class="lz-hero__video" autoplay muted loop playsinline preload="metadata" poster={currentSeries?.image}>
+        <source src="/home/hero-v1-compressed.mp4" type="video/mp4" />
+      </video>
+      <div class="lz-light" aria-hidden="true"></div>
+
+      <p class="lz-hero__top lz-micro" data-r>
+        Te esperamos este fin de semana. Viernes y sábados 20 hs · Domingos 9:30 y 11 hs.
+      </p>
+
+      <div class="lz-hero__center">
+        <h1 class="lz-hero__lead lz-micro" data-r>Somos una</h1>
+        <div class="lz-rotator" data-rotator aria-live="polite">
+          {heroWords.map((word, i) => (
+            <span class={`lz-word lz-rotator__word${i === 0 ? ' is-on' : ''}`}>{word}</span>
+          ))}
+        </div>
+        <div class="lz-hero__actions" data-r>
+          <a class="lz-btn" href={mapsUrl} target="_blank" rel="noopener noreferrer">Visitanos</a>
+          <a class="lz-btn lz-btn--ghost" href={currentSeries?.href ?? seriesPlaylistUrl} target="_blank" rel="noopener noreferrer">
+            Ver el último mensaje →
+          </a>
+        </div>
+      </div>
+
+      <p class="lz-hero__sign lz-micro">Iglesia Corazón de Fuego</p>
+      {selloSerie && (
+        <div class="lz-stamp lz-hero__stamp">
+          <span class="lz-stamp__label">Serie</span>
+          <span class="lz-stamp__main">{selloSerie.month}</span>
+          <span class="lz-stamp__main">{selloSerie.year}</span>
+        </div>
+      )}
+    </header>
+
+    <!-- ══════════ BIENVENIDA ══════════ Página clara: marfil con grano. -->
+    <section class="lz-section lz-ivory">
+      <div class="lz-wrap lz-intro">
+        <p class="lz-micro lz-intro__eyebrow" data-r>Bienvenido a Corazón de Fuego</p>
+        <h2 class="lz-h1" data-r>Una comunidad para encontrarte con Dios, crecer y servir.</h2>
+        <div class="lz-intro__side" data-r>
+          <p class="lz-serif">
+            Creemos que la iglesia es una familia espiritual llamada a revelar a Cristo con
+            palabras, obras y una vida rendida a Dios.
+          </p>
+          <div class="lz-actions">
+            <a class="lz-btn lz-btn--ink" href={mapsUrl} target="_blank" rel="noopener noreferrer">Visitanos</a>
+            <a class="lz-btn lz-btn--ink-ghost" href="/nosotros">Sobre nosotros</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ SERIE ACTUAL ══════════
+         El arte manda a sangre. Abajo, las anteriores como índice tipográfico. -->
+    {currentSeries && (
+      <section class="lz-section lz-dark lz-serie" id="series">
+        <div class="lz-light lz-light--soft" aria-hidden="true"></div>
+        <div class="lz-wrap">
+          <div class="lz-serie__head" data-r>
+            <span class="lz-micro">Serie actual</span>
+            <span class="lz-micro">{currentSeries.subtitle}</span>
+          </div>
+          <div class="lz-serie__art" data-r>
+            <img src={currentSeries.image} alt={currentSeries.title} loading="lazy" />
+          </div>
+          <div class="lz-serie__body">
+            <h2 class="lz-h1" data-r>{currentSeries.title}</h2>
+            <div data-r>
+              <p class="lz-serif">
+                Cada mes abrimos una serie nueva: varias semanas seguidas sobre un mismo tema
+                o un libro de la Biblia. Todas quedan grabadas y ordenadas por serie en YouTube.
+              </p>
+              <a class="lz-btn" href={seriesPlaylistUrl} target="_blank" rel="noopener noreferrer">Explorar la serie</a>
+            </div>
+          </div>
+
+          {pastSeries.length > 0 && (
+            <ol class="lz-index">
+              {pastSeries.map((series) => (
+                <li data-r>
+                  <a href={series.href} target="_blank" rel="noopener noreferrer">
+                    <span class="lz-index__title">{series.title}</span>
+                    <span class="lz-micro">{series.subtitle}</span>
+                    <img src={series.image} alt="" loading="lazy" />
+                  </a>
+                </li>
+              ))}
+            </ol>
+          )}
+        </div>
+      </section>
+    )}
+
+    <!-- ══════════ QUÉ ESTÁ PASANDO ══════════ Lista editorial numerada. -->
+    <section class="lz-section lz-ivory" id="agenda">
+      <div class="lz-wrap">
+        <div class="lz-head">
+          <h2 class="lz-h1" data-r>Qué está pasando</h2>
+          <p class="lz-serif" data-r>Caminemos juntos. Mirá las próximas clases, eventos y encuentros de la casa.</p>
+        </div>
+        <ul class="lz-rows">
+          {announcements.map((item, i) => (
+            <li data-r>
+              <a class="lz-row" href={item.href}>
+                <span class="lz-row__num">{pad(i)}</span>
+                <span class="lz-micro">{item.eyebrow}</span>
+                <span class="lz-row__title">{item.title}</span>
+                {item.image && <img class="lz-row__img" src={item.image} alt={item.alt} loading="lazy" />}
+                <span class="lz-row__arrow">→</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <!-- ══════════ MINISTERIOS ══════════
+         Cada ficha es una mini portada: fondo negro, la luz del color propio y
+         el nombre como palabra. -->
+    <section class="lz-section lz-dark" id="ministerios">
+      <div class="lz-wrap">
+        <div class="lz-head">
+          <div>
+            <p class="lz-micro" data-r>Ministerios</p>
+            <h2 class="lz-h1" data-r>Encontrá tu lugar para servir y crecer.</h2>
+          </div>
+        </div>
+        <div class="lz-mgrid">
+          {ministries.map((ministry, i) => (
+            <a
+              class="lz-mcard"
+              href={`/ministerios/${ministry.slug}`}
+              style={`--m: ${ministryColors[ministry.slug] ?? '#c5a059'}`}
+              data-r
+            >
+              <div class={`lz-mcard__media${logoSlugs.has(ministry.slug) ? ' is-logo' : ''}`}>
+                <img src={ministry.image} alt={`Ministerio ${ministry.name}`} loading="lazy" />
+              </div>
+              <span class="lz-mcard__num lz-micro">{pad(i)}</span>
+              <div class="lz-mcard__body">
+                <span class="lz-micro">{ministry.area}</span>
+                <h3 class="lz-mcard__name">{ministry.name}</h3>
+              </div>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ DEVOCIONAL ══════════ La cita espaciada de "Cuerpo". -->
+    <section class="lz-section lz-ivory">
+      <div class="lz-wrap lz-devo">
+        <div>
+          <p class="lz-micro" data-r>Devocional</p>
+          <h2 class="lz-h2" data-r>Contenido sobre vida cristiana, formación y aliento bíblico para tu semana.</h2>
+          <a class="lz-btn lz-btn--ink" href="/devocional" data-r>Ver todos los devocionales</a>
+        </div>
+        {devotionalPosts.slice(0, 1).map((post) => (
+          <a class="lz-devo__card" href="/devocional" data-r>
+            <div class="lz-devo__img"><img src={post.image} alt={post.title} loading="lazy" /></div>
+            <p class="lz-verse">{post.weekLabel}</p>
+            <h3 class="lz-devo__title">{post.title}</h3>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- ══════════ RADIO ══════════ Escena de focos, sin foto. -->
+    <section class="lz-section lz-dark lz-radio" id="radio">
+      <div class="lz-light lz-light--spots" aria-hidden="true"></div>
+      <div class="lz-wrap lz-radio__inner">
+        <p class="lz-micro" data-r>Radio Corazón</p>
+        <h2 class="lz-word lz-word--md" data-r>La frecuencia del cielo.</h2>
+        <p class="lz-serif lz-serif--lg" data-r>24/7 conectados con vos.</p>
+        <span class="lz-tag" data-r>Próximamente</span>
+      </div>
+    </section>
+
+    <footer class="lz-footer lz-dark">
+      <div class="lz-wrap lz-footer__inner">
+        <span class="lz-word lz-word--footer">Corazón de Fuego</span>
+        <div class="lz-footer__links">
+          <a href="/nosotros">Nosotros</a>
+          <a href="/contacto">Contacto</a>
+          <a href="/devocional">Devocional</a>
+          <a href="/ministerios">Ministerios</a>
+        </div>
+        <p class="lz-micro">© 2026 Iglesia Corazón de Fuego · Ramos Mejía · Buenos Aires</p>
+      </div>
+    </footer>
+
+    <!-- Sólo maqueta: alterna la luz para ver cómo cambia el sitio con cada serie. -->
+    <div class="lz-switch" role="group" aria-label="Luz del mes">
+      <span class="lz-micro">Luz del mes</span>
+      {(Object.keys(luces) as Luz[]).map((key) => (
+        <button type="button" data-luz-set={key} aria-pressed={key === luz ? 'true' : 'false'}>
+          {luces[key].name}
+        </button>
+      ))}
+    </div>
+
+    <script>
+      const body = document.body;
+
+      document.querySelectorAll<HTMLButtonElement>('[data-luz-set]').forEach((button) => {
+        button.addEventListener('click', () => {
+          body.dataset.luz = button.dataset.luzSet;
+          document
+            .querySelectorAll('[data-luz-set]')
+            .forEach((b) => b.setAttribute('aria-pressed', String(b === button)));
+        });
+      });
+
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const items = document.querySelectorAll<HTMLElement>('[data-r]');
+      if (reduce || !('IntersectionObserver' in window)) {
+        items.forEach((el) => el.classList.add('is-in'));
+      } else {
+        // threshold 0: un bloque más alto que el viewport nunca llega a 0.12.
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting) return;
+              entry.target.classList.add('is-in');
+              io.unobserve(entry.target);
+            });
+          },
+          { threshold: 0, rootMargin: '0px 0px -8% 0px' },
+        );
+        items.forEach((el) => io.observe(el));
+        setTimeout(() => items.forEach((el) => el.classList.add('is-in')), 4000);
+      }
+
+      const words = document.querySelectorAll('.lz-rotator__word');
+      if (words.length > 1 && !reduce) {
+        let current = 0;
+        setInterval(() => {
+          words[current].classList.remove('is-on');
+          current = (current + 1) % words.length;
+          words[current].classList.add('is-on');
+        }, 2800);
+      }
+    </script>
+  </body>
+</html>
