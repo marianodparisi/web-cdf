@@ -7,8 +7,8 @@
      - Cita chiquita en cursiva con partes en negrita y raya corta debajo.
      - Mayúscula pesada con mezcla de pesos sobre foto.
      - El logo con serifa centrado abajo.
-   Variable: el clima. --c0…--c4 alimentan los degradés difusos y --bg tiñe
-   las escenas oscuras.
+   Clima noche: --c0…--c4 alimentan los degradés difusos y --bg tiñe las
+   escenas oscuras.
    ═══════════════════════════════════════════════════════════════════════ */
 
 .lz {
@@ -19,14 +19,14 @@
   --section: clamp(88px, 11vw, 160px);
   --ease: cubic-bezier(0.2, 0.7, 0.1, 1);
 
-  /* Brasa por defecto */
-  --bg: #120c09;
-  --bg-2: #170f0b;
-  --c0: #1b100b;
-  --c1: #e2702b;
-  --c2: #7a3b18;
-  --c3: #f2a466;
-  --c4: #2b1710;
+  /* Clima noche: el elegido entre los cuatro del feed */
+  --bg: #0a0b10;
+  --bg-2: #0e1016;
+  --c0: #0e1119;
+  --c1: #7a4822;
+  --c2: #1f3a58;
+  --c3: #b07a40;
+  --c4: #090b11;
 
   margin: 0;
   background: var(--bg);
@@ -36,18 +36,6 @@
   transition: background-color 0.8s var(--ease);
 }
 
-.lz[data-clima='aurora'] {
-  --bg: #0a1517; --bg-2: #0d1b1e;
-  --c0: #10414a; --c1: #1f9d9a; --c2: #f0b35b; --c3: #93d8c9; --c4: #164c63;
-}
-.lz[data-clima='hielo'] {
-  --bg: #0a121c; --bg-2: #0d1724;
-  --c0: #173d61; --c1: #a9d2ef; --c2: #eef6fc; --c3: #3a76a6; --c4: #0f2e4b;
-}
-.lz[data-clima='noche'] {
-  --bg: #0a0b10; --bg-2: #0e1016;
-  --c0: #0e1119; --c1: #7a4822; --c2: #1f3a58; --c3: #b07a40; --c4: #090b11;
-}
 
 .lz *,
 .lz *::before,
@@ -370,39 +358,6 @@
 .lz-footer__links { display: flex; flex-wrap: wrap; justify-content: center; gap: 28px; font-size: 0.86rem; font-weight: 600; }
 .lz-footer .lz-spaced { color: var(--soft); font-size: 0.58rem; }
 
-/* ── Selector de clima (sólo maqueta) ───────────────────────────────────── */
-.lz-switch {
-  position: fixed;
-  left: 50%;
-  bottom: 16px;
-  transform: translateX(-50%);
-  z-index: 60;
-  display: flex;
-  gap: 4px;
-  padding: 5px;
-  border-radius: 999px;
-  background: rgba(10, 10, 10, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  backdrop-filter: blur(14px);
-}
-.lz-switch button {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  padding: 8px 13px;
-  border: 0;
-  border-radius: 999px;
-  background: transparent;
-  color: var(--soft);
-  font: 600 0.72rem 'Inter Tight', sans-serif;
-  cursor: pointer;
-}
-.lz-switch button[aria-pressed='true'] { background: rgba(255, 255, 255, 0.14); color: var(--white); }
-.lz-switch__dot { width: 10px; height: 10px; border-radius: 50%; }
-.lz-switch__dot--brasa { background: linear-gradient(135deg, #7a3b18, #e2702b); }
-.lz-switch__dot--aurora { background: linear-gradient(135deg, #1f9d9a, #f0b35b); }
-.lz-switch__dot--hielo { background: linear-gradient(135deg, #3a76a6, #eef6fc); }
-.lz-switch__dot--noche { background: linear-gradient(135deg, #1f3a58, #b07a40); }
 
 /* ── Responsive ─────────────────────────────────────────────────────────── */
 @media (max-width: 900px) {
@@ -429,8 +384,6 @@
   .lz-post__title--big { font-size: 1.5rem; }
   .lz-logo--post { width: 46px; }
   .lz-welcome { padding-bottom: 96px; }
-  .lz-switch { left: 12px; right: 12px; transform: none; justify-content: center; }
-  .lz-switch button { padding: 8px 9px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

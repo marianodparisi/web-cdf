@@ -14,8 +14,8 @@
  *   - títulos en mayúscula pesada sobre foto ("PAPÁ", "REUNIÓN DE OBREROS")
  *     con mezcla de pesos.
  *
- * El degradé es lo variable: hay cuatro climas y la serie del mes elige uno.
- * El selector de abajo existe sólo en la maqueta para compararlos.
+ * Se compararon cuatro climas de degradé (brasa, aurora, hielo, noche) y se
+ * eligió noche: el fondo más oscuro de los cuatro.
  *
  * Página descartable: no usa BaseLayout, Navbar, Footer ni global.css, todo
  * su CSS va prefijado con `.lz` y ninguna otra ruta la referencia.
@@ -36,19 +36,6 @@ const [currentSeries] = visibleSeries;
 const pastSeries = visibleSeries.slice(1, 4);
 const [devotional] = devotionalPosts;
 
-/** Climas sacados del feed. Al promover, la serie trae el suyo como campo. */
-const climas = {
-  brasa: 'Brasa',
-  aurora: 'Aurora',
-  hielo: 'Hielo',
-  noche: 'Noche',
-} as const;
-type Clima = keyof typeof climas;
-const climaPorSerie: Record<string, Clima> = { restaurados: 'brasa', cuerpo: 'noche', alma: 'aurora' };
-
-const normalize = (value: string) =>
-  value.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
-const clima: Clima = (currentSeries && climaPorSerie[normalize(currentSeries.title)]) || 'brasa';
 
 /** "Encuentro GOLD" → ["Encuentro", "GOLD"]: liviano arriba, pesado abajo,
     como "REUNIÓN DE / OBREROS" en el feed. */
@@ -88,7 +75,7 @@ const logoSlugs = new Set(['life', 'gold', 'kids', 'arde']);
     />
   </head>
 
-  <body class="lz" data-clima={clima}>
+  <body class="lz">
     <div class="lz-grain" aria-hidden="true"></div>
 
     <!-- ══════════ NAV ══════════ -->
@@ -317,28 +304,7 @@ const logoSlugs = new Set(['life', 'gold', 'kids', 'arde']);
       </div>
     </footer>
 
-    <!-- Sólo maqueta: alterna el clima para ver cómo cambia el sitio con cada serie. -->
-    <div class="lz-switch" role="group" aria-label="Clima">
-      {(Object.keys(climas) as Clima[]).map((key) => (
-        <button type="button" data-clima-set={key} aria-pressed={key === clima ? 'true' : 'false'}>
-          <span class={`lz-switch__dot lz-switch__dot--${key}`}></span>
-          {climas[key]}
-        </button>
-      ))}
-    </div>
-
     <script>
-      const body = document.body;
-
-      document.querySelectorAll<HTMLButtonElement>('[data-clima-set]').forEach((button) => {
-        button.addEventListener('click', () => {
-          body.dataset.clima = button.dataset.climaSet;
-          document
-            .querySelectorAll('[data-clima-set]')
-            .forEach((b) => b.setAttribute('aria-pressed', String(b === button)));
-        });
-      });
-
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       const items = document.querySelectorAll<HTMLElement>('[data-r]');
       if (reduce || !('IntersectionObserver' in window)) {
