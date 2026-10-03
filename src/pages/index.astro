@@ -16,21 +16,24 @@
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
 
+/* Íconos de línea fina (trazos de Lucide, licencia ISC): acompañan la raya de
+   la cita y la letra, en vez de las marcas rellenas que pesaban más que el
+   texto. */
 const redes = [
-  {
-    label: 'Facebook',
-    href: 'https://www.facebook.com/corazondefuegoiglesia/?locale=es_LA',
-    path: 'M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z',
-  },
   {
     label: 'Instagram',
     href: 'https://www.instagram.com/corazondefuegoiglesia/',
-    path: 'M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.069-4.85.069-3.204 0-3.584-.012-4.849-.069-3.225-.149-4.771-1.664-4.919-4.919-.058-1.265-.069-1.644-.069-4.849 0-3.204.012-3.584.069-4.849.149-3.225 1.664-4.771 4.919-4.919 1.265-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z',
+    icon: '<rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><path d="M17.5 6.5h.01"/>',
   },
   {
     label: 'YouTube',
     href: 'https://www.youtube.com/@Coraz%C3%B3ndeFuego',
-    path: 'M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z',
+    icon: '<path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/>',
+  },
+  {
+    label: 'Facebook',
+    href: 'https://www.facebook.com/corazondefuegoiglesia/?locale=es_LA',
+    icon: '<path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>',
   },
 ];
 ---
@@ -59,7 +62,17 @@ const redes = [
         {
           redes.map((red) => (
             <a href={red.href} target="_blank" rel="noopener noreferrer" aria-label={red.label}>
-              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d={red.path} /></svg>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+                set:html={red.icon}
+              />
+              <span>{red.label}</span>
             </a>
           ))
         }
@@ -76,14 +89,15 @@ const redes = [
 </BaseLayout>
 
 <style>
-  /* Clima noche: los mismos valores que `noche.css` en dev. */
+  /* Clima noche, un escalón más oscuro que en `noche.css` de dev: acá la
+     pantalla entera es degradé y no hay nada más que la apague. */
   .soon {
-    --bg: #0a0b10;
-    --c0: #0e1119;
-    --c1: #7a4822;
-    --c2: #1f3a58;
-    --c3: #b07a40;
-    --c4: #090b11;
+    --bg: #07080c;
+    --c0: #08090e;
+    --c1: #4a2b14;
+    --c2: #13243a;
+    --c3: #6e4a26;
+    --c4: #050609;
     --white: #fbf8f3;
     --soft: rgba(251, 248, 243, 0.7);
 
@@ -114,6 +128,16 @@ const redes = [
     filter: blur(48px) saturate(1.1);
     animation: soon-mesh 22s ease-in-out infinite alternate;
   }
+  /* Viñeta: los bordes caen a negro y la luz queda detrás del título. */
+  .soon::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(75% 70% at 50% 50%, transparent 30%, rgba(3, 4, 7, 0.7) 100%);
+    pointer-events: none;
+  }
+
   @keyframes soon-mesh {
     from { transform: translate3d(-3%, 2%, 0) rotate(0deg) scale(1); }
     to { transform: translate3d(4%, -3%, 0) rotate(8deg) scale(1.08); }
@@ -173,7 +197,9 @@ const redes = [
     font-weight: 600;
     letter-spacing: 0.34em;
     text-transform: uppercase;
-    color: var(--c3);
+    /* El ámbar de acento del sitio nuevo, no el del degradé: con el fondo
+       más oscuro, ese se perdía. */
+    color: #c9965a;
   }
 
   /* El lockup de "devocional / semanal": minúscula negrísima, interletra muy
@@ -199,16 +225,22 @@ const redes = [
     gap: 10px;
     margin-top: 12px;
   }
+  /* Pastillas con ícono de línea y nombre: se lee qué es cada una sin
+     depender de reconocer la marca. */
   .soon__social a {
-    display: grid;
-    place-items: center;
-    width: 46px;
-    height: 46px;
-    border: 1px solid rgba(255, 255, 255, 0.35);
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 11px 18px 11px 15px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.06);
+    background: rgba(255, 255, 255, 0.04);
     backdrop-filter: blur(10px);
     color: var(--white);
+    font-family: 'Inter Tight', Arial, sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
     transition: background-color 0.25s, color 0.25s, border-color 0.25s;
   }
   .soon__social a:hover {
@@ -216,7 +248,7 @@ const redes = [
     background: var(--white);
     color: #121212;
   }
-  .soon__social svg { width: 18px; height: 18px; }
+  .soon__social svg { width: 17px; height: 17px; flex: none; }
 
   .soon__foot {
     display: grid;
@@ -277,5 +309,8 @@ const redes = [
   @media (max-width: 560px) {
     .soon__title { font-size: 21vw; }
     .soon__shift { margin-left: 0.55em; }
+    /* En celular las tres pastillas no entran con nombre: queda el ícono. */
+    .soon__social a { padding: 13px; }
+    .soon__social a span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
   }
 </style>
