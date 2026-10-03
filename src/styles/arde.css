@@ -231,3 +231,18 @@
 .lz--arde .lz-mobile__top { font-family: 'Bungee', sans-serif; font-weight: 400; letter-spacing: 0; }
 .lz--arde .lz-mobile__group a { font-weight: 800; }
 .lz--arde .lz-mobile__group .lz-spaced { color: #fff; }
+
+/* Título de la portada: las letras del logo recortadas (`arde-letras.png`),
+   en blanco y con la misma sombra escalonada que el resto de los títulos.
+   Son dibujadas a mano, no una fuente: por eso va como imagen, con "Arde"
+   como texto alternativo. */
+.ad-logo-title { margin: 0; width: min(520px, 100%); }
+.ad-logo-title img {
+  width: 100%;
+  height: auto;
+  filter: brightness(0) invert(1) drop-shadow(6px 6px 0 var(--deep)) drop-shadow(6px 6px 0 var(--ink));
+}
+@media (max-width: 560px) {
+  .ad-logo-title { width: min(300px, 82%); }
+  .ad-logo-title img { filter: brightness(0) invert(1) drop-shadow(4px 4px 0 var(--deep)) drop-shadow(4px 4px 0 var(--ink)); }
+}
