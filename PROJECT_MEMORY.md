@@ -632,15 +632,21 @@ se descartó: el usuario dijo que con esas imágenes nos fuimos para otro lado.
   usuario: "programa de estudio", con la ficha del curso y el temario como
   hojas de papel rayado (`.lz-sheet`, `.lz-modules`) y la inscripción sobre
   otra hoja.
-- **Kids y Arde quedan afuera a propósito**: el usuario les va a hacer algo
-  particular. Tienen rutas estáticas propias (`ministerios/kids.astro`,
-  `arde.astro`) que renderizan `components/ministerio/MinisterioClaro.astro`,
-  el diseño claro anterior. No resolverlo con un condicional dentro de
-  `[slug].astro`: importar ese componente suma Tailwind y `maqueta.css` a todas
-  las páginas noche y cambia la tipografía de los títulos.
+- **Kids y Arde tienen diseño propio y claro**, pedido del usuario ("más claro
+  como son, pero con el navbar y footer nuevos"). Rutas estáticas
+  (`ministerios/kids.astro`, `arde.astro`, le ganan a `[slug].astro`) sobre
+  `NocheLayout` con `solidNav`, y hojas propias: `styles/kids.css` (`.kd`,
+  historieta: crema, tramado, colores del logo, stickers, Fredoka) y
+  `styles/arde.css` (`.ad`, naranja de la marca, Bungee, polaroids con cinta y
+  ticket de día/horario/lugar). Los textos salen del panel; los bloques sin
+  datos no se muestran. Las rotaciones de stickers van con la propiedad
+  `rotate`, no `transform`, para no pelear con el reveal `[data-r]`.
+- No meter estilos de una página dentro de `[slug].astro` con un condicional:
+  todo lo que importa una ruta se carga aunque no se renderice.
 - Las fichas de Carcelario y Firmes y Adelante van sin foto, sólo degradé y
   nombre: las fotos eran imágenes externas de relleno y el usuario las sacó.
-- `MaquetaLayout` y `maqueta.css` siguen vivos sólo por Kids y Arde.
+- `MaquetaLayout`, `maqueta.css` y `maqueta-ui.js` se borraron cuando Kids y
+  Arde pasaron a diseño propio: ya no los usaba ninguna página. Están en git.
 - QA visual: el panel del navegador no dibuja si la ventana está oculta. Un
   Chrome headless por CDP con `--force-prefers-reduced-motion` (el sitio ya
   lo respeta y muestra todo sin transición) captura secciones sin depender de

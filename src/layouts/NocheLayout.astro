@@ -3,9 +3,8 @@
  * Layout "noche": el lenguaje del Instagram de la iglesia (degradés difusos
  * oscuros, lockup en minúscula, cita en cursiva, logo con serifa).
  *
- * Arrancó como la maqueta `/maqueta-luz` y pasó a ser el inicio. El menú y el
- * footer tienen los mismos destinos que `MaquetaLayout`, que sigue usándose en
- * las páginas internas hasta que se migren a este lenguaje.
+ * Arrancó como la maqueta `/maqueta-luz` y pasó a ser el layout de todo el
+ * sitio público. Kids y Arde lo usan con `solidNav` y un cuerpo propio.
  *
  * No pasa por BaseLayout: no carga global.css ni GSAP. Los reveals son un
  * IntersectionObserver liviano, con la misma red de seguridad de 4 s.
@@ -15,9 +14,12 @@ import { getMinistries } from '../lib/content/collections';
 
 interface Props {
   title?: string;
+  /** Barra con fondo desde el primer píxel: para páginas de fondo claro
+      (Kids, Arde), donde el menú transparente con texto blanco no se lee. */
+  solidNav?: boolean;
 }
 
-const { title = 'Iglesia Corazón de Fuego' } = Astro.props;
+const { title = 'Iglesia Corazón de Fuego', solidNav = false }: Props = Astro.props;
 
 const ministries = await getMinistries();
 const mapsUrl = 'https://maps.app.goo.gl/mEVMgoTXbV3BULVq8';
@@ -31,7 +33,7 @@ const sedes = [
   { name: 'El Palito', href: '/anexos/palito' },
 ];
 
-/* Mismos nombres y destinos que el menú de MaquetaLayout. */
+/* Mismos nombres y destinos que tenía el menú del sitio anterior. */
 const menu = [
   { label: 'Nosotros', href: '/nosotros' },
   { label: 'Misiones', href: '/misiones' },
@@ -100,12 +102,13 @@ const footerColumns = [
       href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,700;0,800;0,900;1,500;1,800&display=swap"
       rel="stylesheet"
     />
+    <slot name="head" />
   </head>
 
   <body class="lz">
     <div class="lz-grain" aria-hidden="true"></div>
 
-    <header class="lz-nav">
+    <header class={`lz-nav${solidNav ? ' lz-nav--solid' : ''}`}>
       <a class="lz-logo lz-logo--nav" href="/" aria-label="Corazón de Fuego, inicio">
         <img src="/brand/logowhite.png" alt="" />
       </a>

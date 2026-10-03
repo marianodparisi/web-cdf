@@ -1,0 +1,205 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   ARDE — diseño propio dentro del sitio noche. Todo prefijado con .ad.
+   Naranja de la marca, letra gruesa (Bungee, como el flyer del campa),
+   polaroids con cinta y un ticket para día, horario y lugar.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.ad {
+  --orange: #ff6b1a;
+  --orange-2: #e8642b;
+  --deep: #c2410c;
+  --cream: #fff3e6;
+  --ink: #1c110b;
+  --yellow: #ffc93c;
+  --pad: clamp(16px, 5vw, 72px);
+
+  background: var(--cream);
+  color: var(--ink);
+  font-family: 'Inter Tight', system-ui, sans-serif;
+  padding-top: 78px;
+}
+
+.ad-wrap { position: relative; z-index: 2; max-width: 1240px; margin: 0 auto; padding: 0 var(--pad); }
+
+/* ── Tipografía ─────────────────────────────────────────────────────────── */
+.ad-title {
+  font-family: 'Bungee', 'Inter Tight', sans-serif;
+  font-size: clamp(5rem, 16vw, 12rem);
+  line-height: 0.85;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 6px 6px 0 var(--deep), 12px 12px 0 var(--ink);
+}
+.ad-title--cta { font-size: clamp(3rem, 9vw, 7rem); }
+.ad-h2 { font-family: 'Bungee', 'Inter Tight', sans-serif; font-size: clamp(2rem, 4.6vw, 3.6rem); line-height: 0.95; text-transform: uppercase; margin-bottom: 22px; }
+.ad-h2--light { color: #fff; }
+.ad-lead { max-width: 30ch; font-size: clamp(1.25rem, 2vw, 1.65rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; color: #fff; }
+.ad-text { font-size: clamp(1.05rem, 1.4vw, 1.2rem); line-height: 1.55; }
+.ad-text--lg { font-size: clamp(1.2rem, 1.8vw, 1.5rem); line-height: 1.45; font-weight: 500; max-width: 42ch; }
+
+.ad-tag {
+  display: inline-block;
+  padding: 7px 14px;
+  background: var(--yellow);
+  color: var(--ink);
+  font-family: 'Bungee', 'Inter Tight', sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  rotate: -2deg;
+}
+.ad-tag--dark { background: var(--ink); color: var(--yellow); }
+
+/* ── Botones ────────────────────────────────────────────────────────────── */
+.ad-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.ad-actions--center { justify-content: center; }
+.ad-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 15px 26px;
+  border: 3px solid var(--ink);
+  border-radius: 14px;
+  background: var(--yellow);
+  color: var(--ink);
+  font-weight: 800;
+  font-size: 1rem;
+  text-decoration: none;
+  box-shadow: 5px 5px 0 var(--ink);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.ad-btn:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--ink); }
+.ad-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink); }
+.ad-btn--ghost { background: #fff; }
+.ad-btn--dark { background: var(--ink); color: #fff; box-shadow: 5px 5px 0 var(--deep); }
+.ad-btn--dark:hover { box-shadow: 7px 7px 0 var(--deep); }
+
+/* ── Portada naranja ────────────────────────────────────────────────────── */
+.ad-hero {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(48px, 7vw, 96px) 0 clamp(72px, 9vw, 120px);
+  background:
+    radial-gradient(40% 50% at 85% 20%, rgba(255, 201, 60, 0.55), transparent 70%),
+    radial-gradient(45% 55% at 10% 90%, rgba(194, 65, 12, 0.6), transparent 70%),
+    var(--orange);
+}
+.ad-hero__grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
+.ad-hero__copy { display: grid; gap: 24px; justify-items: start; }
+.ad-hero__media { position: relative; justify-self: center; width: min(520px, 100%); }
+
+.ad-polaroid {
+  position: relative;
+  margin: 0;
+  padding: 14px 14px 56px;
+  background: #fff;
+  box-shadow: 0 30px 60px -20px rgba(28, 17, 11, 0.55);
+  rotate: 3deg;
+}
+.ad-polaroid img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+.ad-tape {
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  width: 120px;
+  height: 34px;
+  translate: -50% 0;
+  rotate: -4deg;
+  background: rgba(255, 243, 230, 0.75);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+.ad-sticker {
+  position: absolute;
+  bottom: -40px;
+  left: -36px;
+  width: clamp(110px, 14vw, 170px);
+  rotate: -12deg;
+  filter: drop-shadow(6px 6px 0 var(--ink));
+  animation: ad-wobble 5s ease-in-out infinite;
+}
+@keyframes ad-wobble { 50% { rotate: -6deg; } }
+
+/* ── Ticket ─────────────────────────────────────────────────────────────── */
+.ad-ticket-band { position: relative; z-index: 3; margin-top: -48px; }
+.ad-ticket {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0;
+  border: 3px solid var(--ink);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 8px 8px 0 var(--ink);
+  overflow: hidden;
+}
+.ad-ticket__cell { display: grid; gap: 4px; padding: 22px 28px; border-right: 3px dashed rgba(28, 17, 11, 0.25); }
+.ad-ticket__cell--wide { flex: 1; }
+.ad-ticket__cell span { font-family: 'Bungee', 'Inter Tight', sans-serif; font-size: 0.72rem; color: var(--deep); }
+.ad-ticket__cell strong { font-size: clamp(1.2rem, 2vw, 1.6rem); font-weight: 900; letter-spacing: -0.02em; }
+.ad-ticket__cell small { font-size: 0.9rem; opacity: 0.7; }
+.ad-ticket .ad-btn { margin: 16px 22px; }
+
+/* ── Qué es ─────────────────────────────────────────────────────────────── */
+.ad-section { padding: clamp(72px, 9vw, 128px) 0; }
+.ad-split { display: grid; grid-template-columns: 1.15fr 1fr; gap: clamp(36px, 5vw, 80px); align-items: start; }
+.ad-stack { display: grid; gap: 20px; }
+.ad-callout {
+  display: grid;
+  gap: 14px;
+  justify-items: start;
+  padding: 28px 28px 30px;
+  border: 3px solid var(--ink);
+  border-radius: 18px;
+  background: var(--orange);
+  color: #fff;
+  box-shadow: 8px 8px 0 var(--ink);
+}
+.ad-callout p { font-size: clamp(1.1rem, 1.6vw, 1.3rem); font-weight: 700; line-height: 1.35; letter-spacing: -0.01em; }
+.ad-callout--light { background: #fff; color: var(--ink); }
+.ad-callout--light p { font-weight: 500; }
+
+/* ── Novedad ────────────────────────────────────────────────────────────── */
+.ad-notice { padding: clamp(72px, 9vw, 120px) 0; background: var(--ink); color: #fff; }
+.ad-notice__grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
+.ad-notice .ad-tag { margin-bottom: 18px; }
+.ad-notice .ad-text { color: rgba(255, 255, 255, 0.8); }
+.ad-flyer { width: 100%; border-radius: 18px; border: 3px solid #fff; box-shadow: 10px 10px 0 var(--orange); rotate: -2deg; }
+
+/* ── Collage ────────────────────────────────────────────────────────────── */
+.ad-section--collage { background: var(--cream); }
+.ad-collage { margin: 0 auto; max-width: 820px; border: 3px solid var(--ink); border-radius: 18px; overflow: hidden; box-shadow: 10px 10px 0 var(--orange); }
+.ad-collage img { width: 100%; }
+
+/* ── Cierre ─────────────────────────────────────────────────────────────── */
+.ad-cta {
+  padding: clamp(84px, 10vw, 140px) 0 clamp(56px, 7vw, 88px);
+  background:
+    radial-gradient(45% 60% at 50% 0%, rgba(255, 201, 60, 0.5), transparent 70%),
+    var(--orange);
+  text-align: center;
+  color: #fff;
+}
+.ad-cta__inner { display: grid; justify-items: center; gap: 24px; }
+.ad-next { display: grid; gap: 4px; margin-top: 28px; color: #fff; text-decoration: none; }
+.ad-next span { font-size: 0.9rem; opacity: 0.85; }
+.ad-next strong { font-family: 'Bungee', 'Inter Tight', sans-serif; font-size: clamp(1.4rem, 2.6vw, 2rem); text-transform: uppercase; }
+.ad-next:hover strong { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 6px; }
+
+/* ── Responsive ─────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .ad-hero__grid, .ad-split, .ad-notice__grid { grid-template-columns: 1fr; }
+  .ad-hero__media { width: min(420px, 92%); margin: 24px auto 0; }
+  .ad-ticket { flex-direction: column; align-items: stretch; }
+  .ad-ticket__cell { border-right: 0; border-bottom: 3px dashed rgba(28, 17, 11, 0.25); }
+  .ad-ticket .ad-btn { justify-content: center; }
+}
+
+@media (max-width: 560px) {
+  .ad { padding-top: 70px; }
+  .ad-title { text-shadow: 4px 4px 0 var(--deep), 8px 8px 0 var(--ink); }
+  .ad-sticker { left: -12px; bottom: -32px; }
+  .ad-ticket-band { margin-top: -32px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ad-sticker { animation: none; }
+}

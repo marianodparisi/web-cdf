@@ -1,22 +1,156 @@
 ---
 /**
- * Arde tiene ruta propia para quedar fuera del lenguaje noche: va a tener un
- * tratamiento particular y mientras tanto sigue con el diseño anterior.
+ * Arde, con diseño propio: el naranja de la marca, letra gruesa como la del
+ * flyer del campamento y fotos tipo polaroid con cinta. Usa el menú y el
+ * footer del lenguaje noche para que siga siendo el mismo sitio, con la barra
+ * sólida porque el cuerpo es claro.
  *
- * Va aparte de `[slug].astro` (las rutas estáticas le ganan a las dinámicas)
- * para que los estilos del diseño anterior no se carguen en las páginas noche.
+ * Ruta estática: le gana a `[slug].astro`. Día, horario, lugar, aviso y
+ * contacto salen del panel; si alguno está vacío, su bloque no se muestra.
  */
-import MinisterioClaro from '../../components/ministerio/MinisterioClaro.astro';
-import { getMinistries, getSeries, getAnnouncements } from '../../lib/content/collections';
+import NocheLayout from '../../layouts/NocheLayout.astro';
+import { getMinistries } from '../../lib/content/collections';
+import {
+  externalHref,
+  hasNotice,
+  hasSchedule,
+  instagramHref,
+  placeLines,
+  whatsappHref,
+} from '../../lib/content/ministry-details';
+import '../../styles/arde.css';
 
-const [ministries, sermonSeries, announcements] = await Promise.all([
-  getMinistries(),
-  getSeries(),
-  getAnnouncements(),
-]);
+const ministries = await getMinistries();
 const index = ministries.findIndex((m) => m.slug === 'arde');
 if (index === -1) return Astro.redirect('/');
+const arde = ministries[index];
 const next = ministries[(index + 1) % ministries.length];
+
+const whatsapp = whatsappHref(arde.whatsapp);
+const instagram = instagramHref(arde.instagram);
+const contacto = whatsapp || '/contact';
+const lugar = placeLines(arde.place);
+const mapa = externalHref(arde.mapUrl);
+const mapsUrl = 'https://maps.app.goo.gl/mEVMgoTXbV3BULVq8';
 ---
 
-<MinisterioClaro ministry={ministries[index]} next={next} sermonSeries={sermonSeries} announcements={announcements} />
+<NocheLayout title="Arde · Iglesia Corazón de Fuego" solidNav>
+  <link slot="head" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" />
+
+  <div class="ad">
+    <!-- ══════════ PORTADA ══════════ -->
+    <header class="ad-hero">
+      <div class="ad-wrap ad-hero__grid">
+        <div class="ad-hero__copy">
+          <span class="ad-tag" data-r>{arde.area}</span>
+          <h1 class="ad-title" data-r>Arde</h1>
+          <p class="ad-lead" data-r>{arde.excerpt}</p>
+          <div class="ad-actions" data-r>
+            <a class="ad-btn" href="#sumate">Quiero sumarme</a>
+            <a class="ad-btn ad-btn--ghost" href={contacto} target={whatsapp ? '_blank' : undefined} rel="noopener noreferrer">Escribinos</a>
+          </div>
+        </div>
+
+        <div class="ad-hero__media" data-r>
+          <figure class="ad-polaroid">
+            <span class="ad-tape" aria-hidden="true"></span>
+            <img src="/ministries/arde/arde1.png" alt="Los chicos de Arde en el campamento" />
+          </figure>
+          <img class="ad-sticker" src={arde.image} alt="Logo de Arde" />
+        </div>
+      </div>
+    </header>
+
+    <!-- ══════════ ENTRADA ══════════ Día, horario y lugar como un ticket. -->
+    {(hasSchedule(arde) || lugar.length > 0) && (
+      <section class="ad-ticket-band">
+        <div class="ad-wrap">
+          <div class="ad-ticket" data-r>
+            {arde.meetingDay && (
+              <div class="ad-ticket__cell"><span>Día</span><strong>{arde.meetingDay}</strong></div>
+            )}
+            {arde.meetingHours && (
+              <div class="ad-ticket__cell"><span>Horario</span><strong>{arde.meetingHours}</strong></div>
+            )}
+            {lugar.length > 0 && (
+              <div class="ad-ticket__cell ad-ticket__cell--wide">
+                <span>Dónde</span>
+                <strong>{lugar[0]}</strong>
+                {lugar.slice(1).map((l) => <small>{l}</small>)}
+              </div>
+            )}
+            {mapa && (
+              <a class="ad-btn ad-btn--dark" href={mapa} target="_blank" rel="noopener noreferrer">Cómo llegar</a>
+            )}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- ══════════ QUÉ ES ══════════ -->
+    <section class="ad-section" id="sumate">
+      <div class="ad-wrap ad-split">
+        <div data-r>
+          <h2 class="ad-h2">¿Qué es Arde?</h2>
+          <p class="ad-text ad-text--lg">{arde.description}</p>
+        </div>
+        <div class="ad-stack">
+          {arde.participation && (
+            <div class="ad-callout" data-r>
+              <span class="ad-tag ad-tag--dark">Para quién</span>
+              <p>{arde.participation}</p>
+            </div>
+          )}
+          {arde.schedule && (
+            <div class="ad-callout ad-callout--light" data-r>
+              <span class="ad-tag">Cómo son los encuentros</span>
+              <p>{arde.schedule}</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ NOVEDAD ══════════ El campa, con su flyer. -->
+    {hasNotice(arde) && (
+      <section class="ad-notice">
+        <div class="ad-wrap ad-notice__grid">
+          <img class="ad-flyer" src="/ministries/arde/campaarde.jpg" alt="Flyer del campamento de Arde" loading="lazy" data-r />
+          <div data-r>
+            <span class="ad-tag">Novedad</span>
+            <h2 class="ad-h2 ad-h2--light">{arde.noticeTitle}</h2>
+            {arde.noticeText && <p class="ad-text">{arde.noticeText}</p>}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- ══════════ FOTOS ══════════ El collage del campamento, a sangre. -->
+    <section class="ad-section ad-section--collage">
+      <div class="ad-wrap">
+        <figure class="ad-collage" data-r>
+          <img src="/ministries/arde/ardehero.png" alt="Collage de fotos de Arde" loading="lazy" />
+        </figure>
+      </div>
+    </section>
+
+    <!-- ══════════ CIERRE ══════════ -->
+    <section class="ad-cta">
+      <div class="ad-wrap ad-cta__inner">
+        <h2 class="ad-title ad-title--cta" data-r>Te esperamos</h2>
+        <p class="ad-text" data-r>Vení a conocernos o escribinos y te contamos cómo empezar.</p>
+        <div class="ad-actions ad-actions--center" data-r>
+          <a class="ad-btn ad-btn--dark" href={contacto} target={whatsapp ? '_blank' : undefined} rel="noopener noreferrer">Escribinos</a>
+          <a class="ad-btn ad-btn--ghost" href={mapsUrl} target="_blank" rel="noopener noreferrer">Visitanos</a>
+          {instagram && (
+            <a class="ad-btn ad-btn--ghost" href={instagram} target="_blank" rel="noopener noreferrer">Instagram ↗</a>
+          )}
+        </div>
+        <a class="ad-next" href={`/ministerios/${next.slug}`}>
+          <span>Siguiente ministerio</span>
+          <strong>{next.name} →</strong>
+        </a>
+      </div>
+    </section>
+  </div>
+</NocheLayout>

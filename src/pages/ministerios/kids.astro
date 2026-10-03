@@ -1,22 +1,137 @@
 ---
 /**
- * Kids tiene ruta propia para quedar fuera del lenguaje noche: va a tener un
- * tratamiento particular y mientras tanto sigue con el diseño anterior.
+ * Kids, con diseño propio: claro y de historieta, con los colores del logo
+ * (amarillo, magenta, celeste, violeta), tramado de puntos y tarjetas como
+ * stickers. Usa el menú y el footer del lenguaje noche para que siga siendo el
+ * mismo sitio, con la barra sólida porque el fondo es claro.
  *
- * Va aparte de `[slug].astro` (las rutas estáticas le ganan a las dinámicas)
- * para que los estilos del diseño anterior no se carguen en las páginas noche.
+ * Ruta estática: le gana a `[slug].astro`. Los textos salen del ministerio
+ * cargado en el panel, así que quien lidera puede editarlos sin tocar esto.
  */
-import MinisterioClaro from '../../components/ministerio/MinisterioClaro.astro';
-import { getMinistries, getSeries, getAnnouncements } from '../../lib/content/collections';
+import NocheLayout from '../../layouts/NocheLayout.astro';
+import { getMinistries } from '../../lib/content/collections';
+import { hasNotice, hasSchedule, instagramHref, placeLines, whatsappHref } from '../../lib/content/ministry-details';
+import '../../styles/kids.css';
 
-const [ministries, sermonSeries, announcements] = await Promise.all([
-  getMinistries(),
-  getSeries(),
-  getAnnouncements(),
-]);
+const ministries = await getMinistries();
 const index = ministries.findIndex((m) => m.slug === 'kids');
 if (index === -1) return Astro.redirect('/');
+const kids = ministries[index];
 const next = ministries[(index + 1) % ministries.length];
+
+const whatsapp = whatsappHref(kids.whatsapp);
+const instagram = instagramHref(kids.instagram);
+const contacto = whatsapp || '/contact';
+const lugar = placeLines(kids.place);
+const mapsUrl = 'https://maps.app.goo.gl/mEVMgoTXbV3BULVq8';
+
+/* Las tarjetas se arman con lo que haya cargado y se esconde la que venga
+   vacía. Cada una lleva un color del logo. */
+const tarjetas = [
+  kids.schedule && { title: 'Cómo es una reunión', text: kids.schedule, color: 'yellow' },
+  kids.participation && { title: 'Cómo participar', text: kids.participation, color: 'cyan' },
+].filter(Boolean) as { title: string; text: string; color: string }[];
 ---
 
-<MinisterioClaro ministry={ministries[index]} next={next} sermonSeries={sermonSeries} announcements={announcements} />
+<NocheLayout title="Kids · Iglesia Corazón de Fuego" solidNav>
+  <link
+    slot="head"
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap"
+  />
+
+  <div class="kd">
+    <!-- ══════════ PORTADA ══════════ -->
+    <header class="kd-hero">
+      <span class="kd-shape kd-shape--star" aria-hidden="true"></span>
+      <span class="kd-shape kd-shape--dot" aria-hidden="true"></span>
+      <span class="kd-shape kd-shape--ring" aria-hidden="true"></span>
+
+      <div class="kd-wrap kd-hero__grid">
+        <div class="kd-hero__copy">
+          <span class="kd-chip" data-r>{kids.area}</span>
+          <h1 class="kd-title" data-r>
+            <span>K</span><span>i</span><span>d</span><span>s</span>
+          </h1>
+          <p class="kd-lead" data-r>{kids.excerpt}</p>
+          <div class="kd-actions" data-r>
+            <a class="kd-btn" href="#participar">Quiero participar</a>
+            <a class="kd-btn kd-btn--ghost" href={contacto} target={whatsapp ? '_blank' : undefined} rel="noopener noreferrer">Escribinos</a>
+          </div>
+        </div>
+        <div class="kd-hero__logo" data-r>
+          <img src={kids.image} alt="Logo de Kids" />
+        </div>
+      </div>
+    </header>
+
+    <!-- ══════════ NOVEDAD ══════════ Banda de historieta con el flyer. -->
+    {hasNotice(kids) && (
+      <section class="kd-notice">
+        <div class="kd-wrap kd-notice__grid">
+          <div class="kd-notice__copy" data-r>
+            <span class="kd-burst">¡Nuevo!</span>
+            <h2 class="kd-h2">{kids.noticeTitle}</h2>
+            {kids.noticeText && <p class="kd-text">{kids.noticeText}</p>}
+          </div>
+          <img class="kd-flyer" src="/ministries/kids/campakids.jpg" alt="Flyer de Kids" loading="lazy" data-r />
+        </div>
+      </section>
+    )}
+
+    <!-- ══════════ QUÉ ES ══════════ -->
+    <section class="kd-section" id="participar">
+      <div class="kd-wrap">
+        <div class="kd-intro" data-r>
+          <h2 class="kd-h2">¿Qué es Kids?</h2>
+          <p class="kd-text kd-text--lg">{kids.description}</p>
+        </div>
+
+        {tarjetas.length > 0 && (
+          <div class="kd-cards">
+            {tarjetas.map((t, i) => (
+              <article class={`kd-card kd-card--${t.color}`} data-r>
+                <span class="kd-card__n">{i + 1}</span>
+                <h3>{t.title}</h3>
+                <p>{t.text}</p>
+              </article>
+            ))}
+          </div>
+        )}
+
+        {(hasSchedule(kids) || lugar.length > 0) && (
+          <div class="kd-info" data-r>
+            {kids.meetingDay && (
+              <div><span>Día</span><strong>{kids.meetingDay}</strong></div>
+            )}
+            {kids.meetingHours && (
+              <div><span>Horario</span><strong>{kids.meetingHours}</strong></div>
+            )}
+            {lugar.length > 0 && (
+              <div><span>Lugar</span><strong>{lugar.join(', ')}</strong></div>
+            )}
+          </div>
+        )}
+      </div>
+    </section>
+
+    <!-- ══════════ CIERRE ══════════ -->
+    <section class="kd-cta">
+      <div class="kd-wrap kd-cta__inner">
+        <h2 class="kd-h2 kd-h2--xl" data-r>¡Te esperamos!</h2>
+        <p class="kd-text" data-r>Vení a conocernos o escribinos y te contamos cómo empezar.</p>
+        <div class="kd-actions kd-actions--center" data-r>
+          <a class="kd-btn" href={contacto} target={whatsapp ? '_blank' : undefined} rel="noopener noreferrer">Escribinos</a>
+          <a class="kd-btn kd-btn--ghost" href={mapsUrl} target="_blank" rel="noopener noreferrer">Visitanos</a>
+          {instagram && (
+            <a class="kd-btn kd-btn--ghost" href={instagram} target="_blank" rel="noopener noreferrer">Instagram ↗</a>
+          )}
+        </div>
+        <a class="kd-next" href={`/ministerios/${next.slug}`}>
+          <span>Siguiente ministerio</span>
+          <strong>{next.name} →</strong>
+        </a>
+      </div>
+    </section>
+  </div>
+</NocheLayout>

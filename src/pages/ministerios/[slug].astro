@@ -4,9 +4,8 @@
  * el degradé y los acentos.
  *
  * Kids y Arde quedan afuera a propósito: tienen rutas propias (`kids.astro`,
- * `arde.astro`) con el diseño anterior hasta su tratamiento particular. No se
- * resuelven acá con un condicional porque importar ese componente sumaría los
- * estilos viejos (Tailwind, maqueta.css) a todas las páginas noche.
+ * `arde.astro`, que le ganan a esta) con un diseño claro particular, cada uno
+ * con su hoja de estilos para no cargarla acá.
  *
  * SSR con el adaptador de node: el slug llega por la URL y no hace falta
  * `getStaticPaths`.

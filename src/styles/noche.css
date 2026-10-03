@@ -202,6 +202,9 @@
   transition: background-color 0.3s, backdrop-filter 0.3s, transform 0.4s var(--ease);
 }
 .lz-nav.is-hidden { transform: translateY(-100%); }
+/* Doble clase: le tiene que ganar al fondo translúcido que el nav lleva en
+   celular, que va más abajo en el archivo. */
+.lz-nav.lz-nav--solid { background: var(--bg); }
 /* Los desplegables cuelgan de la barra: si quedó uno abierto, se va con ella. */
 .lz-nav.is-hidden .lz-drop { visibility: hidden; opacity: 0; }
 /* Al bajar, la barra toma fondo: si no, queda encima de los títulos. */
