@@ -1,0 +1,65 @@
+---
+/**
+ * Elegir qué puede editar una persona: rol en dos tarjetas y las secciones
+ * agrupadas, con "Todos" / "Ninguno" por grupo (el script vive en
+ * AdminLayout). Manda los mismos campos que antes: `role` (admin o editor)
+ * y `sections` repetido, así el endpoint no cambia.
+ */
+import type { Section } from '../../lib/content/sections';
+
+interface Props {
+  catalog: Section[];
+  role?: 'admin' | 'editor';
+  selected?: string[];
+  /** Distingue los radios de cada formulario: hay uno por persona. */
+  idPrefix: string;
+}
+
+const { catalog, role = 'editor', selected = [], idPrefix }: Props = Astro.props;
+const groups = ['Contenido', 'Ministerios'] as const;
+---
+
+<div class="adm-roles" role="radiogroup" aria-label="Tipo de acceso">
+  <label class="adm-role">
+    <input type="radio" name="role" value="editor" checked={role !== 'admin'} id={`${idPrefix}-editor`} />
+    <strong>Editor</strong>
+    <span>Entra sólo a las secciones que marques abajo.</span>
+  </label>
+  <label class="adm-role">
+    <input type="radio" name="role" value="admin" checked={role === 'admin'} id={`${idPrefix}-admin`} />
+    <strong>Administrador</strong>
+    <span>Entra a todo y puede dar o sacar accesos.</span>
+  </label>
+</div>
+
+<p class="adm-picker__note">
+  Un administrador ya entra a todo. Lo que marques igual queda guardado, por si más adelante vuelve a ser
+  editor.
+</p>
+
+{groups.map((group) => (
+  <div class="adm-picker__group">
+    <div class="adm-picker__head">
+      <p class="adm-eyebrow">{group}</p>
+      <div class="adm-picker__quick">
+        <button type="button" data-pick="all">Todos</button>
+        <button type="button" data-pick="none">Ninguno</button>
+      </div>
+    </div>
+    <div class="adm-picker__grid">
+      {catalog
+        .filter((section) => section.group === group)
+        .map((section) => (
+          <label class="adm-opt">
+            <input type="checkbox" name="sections" value={section.key} checked={selected.includes(section.key)} />
+            {section.image ? (
+              <img src={section.image} alt="" loading="lazy" />
+            ) : (
+              <span class="material-symbols-outlined">{section.icon ?? 'edit_note'}</span>
+            )}
+            <span>{section.label}</span>
+          </label>
+        ))}
+    </div>
+  </div>
+))}

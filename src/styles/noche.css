@@ -715,3 +715,14 @@ p.lz-body { font-size: clamp(1.05rem, 1.3vw, 1.2rem); line-height: 1.55; color: 
   .lz *, .lz *::before, .lz *::after { animation: none !important; transition: none !important; }
   [data-r] { opacity: 1; transform: none; filter: none; }
 }
+
+/* Aviso de ministerio sin imagen: degradé del color propio y el logo */
+.lz-flyer__img--empty {
+  display: grid;
+  place-items: center;
+  background:
+    radial-gradient(70% 60% at 70% 80%, color-mix(in srgb, var(--m) 80%, transparent), transparent 72%),
+    radial-gradient(60% 55% at 20% 15%, color-mix(in srgb, var(--m) 35%, #000), transparent 75%),
+    #0c0c0c;
+}
+.lz-flyer__img--empty img { width: 46%; height: auto; object-fit: contain; }

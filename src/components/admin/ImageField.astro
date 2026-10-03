@@ -17,11 +17,11 @@ const previewId = `preview-${name}`;
 ---
 
 <div class="mb-6">
-  <span class="mb-2 block text-sm font-bold text-charcoal">{label}</span>
-  <p class="mb-3 text-sm leading-relaxed text-charcoal/60">{hint}</p>
+  <span class="adm-label">{label}</span>
+  <p class="adm-help">{hint}</p>
 
   <div class="flex flex-col gap-4 sm:flex-row sm:items-start">
-    <div class="relative flex h-40 w-40 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-black/10 bg-white">
+    <div class="relative flex h-40 w-40 shrink-0 items-center justify-center overflow-hidden rounded-2xl border border-black/10 bg-[#faf8f4]">
       {/* Sin foto no se renderiza un <img src="">: el navegador lo interpreta
           como la URL de la página y la vuelve a pedir entera. */}
       {!currentImage && <span class="material-symbols-outlined text-4xl text-charcoal/25">image</span>}
@@ -36,7 +36,7 @@ const previewId = `preview-${name}`;
 
     <div class="flex-1">
       <label
-        class="inline-flex cursor-pointer items-center gap-2 rounded-full bg-charcoal px-5 py-3 text-sm font-bold text-white transition-colors hover:bg-primary hover:text-charcoal"
+        class="adm-btn adm-btn--ghost"
         for={name}
       >
         <span class="material-symbols-outlined text-lg">photo_camera</span>

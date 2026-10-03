@@ -1,6 +1,18 @@
 ---
+/**
+ * Cascarón del panel: menú lateral con lo que esa persona puede editar,
+ * avisos de guardado y los comportamientos compartidos de los formularios.
+ *
+ * El menú sale de los mismos permisos que protegen cada endpoint: un editor
+ * de Kids ve sólo Kids. Tailwind sigue cargado porque las pantallas lo usan
+ * para su contenido; la estructura vive en `admin.css`.
+ */
 import '../styles/global.css';
+import '../styles/admin.css';
 import type { AdminSession } from '../lib/admin-auth';
+import { canEdit } from '../lib/admin-guard';
+import { getMinistries } from '../lib/content/collections';
+import { ministrySectionKey } from '../lib/content/sections';
 
 interface Props {
   title: string;
@@ -14,6 +26,20 @@ const { title, backHref, backLabel = 'Volver', session } = Astro.props;
 
 const feedback = Astro.url.searchParams.get('ok');
 const errorMessage = Astro.url.searchParams.get('error');
+const path = Astro.url.pathname;
+
+const ministries = (await getMinistries()).filter((m) => canEdit(session, ministrySectionKey(m.slug)));
+const contenido = [
+  { section: 'devocionales', href: '/admin/devocionales', icon: 'menu_book', label: 'Devocionales' },
+  { section: 'anuncios', href: '/admin/anuncios', icon: 'campaign', label: 'Anuncios' },
+  { section: 'series', href: '/admin/series', icon: 'video_library', label: 'Series' },
+].filter((item) => canEdit(session, item.section));
+
+const isActive = (href: string) => (href === '/admin' ? path === '/admin' || path === '/admin/' : path.startsWith(href));
+
+/** Iniciales y un tono estable por nombre, para el avatar. */
+const initials = session.username.slice(0, 2).toUpperCase();
+const hue = [...session.username].reduce((sum, c) => sum + c.charCodeAt(0), 0) % 360;
 ---
 
 <!doctype html>
@@ -28,82 +54,141 @@ const errorMessage = Astro.url.searchParams.get('error');
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&display=swap"
     />
     <link
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
     />
   </head>
-  <body class="min-h-screen bg-[#f5f1e8] font-body text-charcoal antialiased">
-    <header class="border-b border-black/10 bg-white">
-      <div class="mx-auto flex max-w-4xl items-center justify-between gap-4 px-5 py-4 sm:px-6">
-        <a href="/admin" class="flex items-center gap-3">
-          <img src="/brand/logo.png" alt="" class="h-9 w-auto object-contain" />
-          <span class="hidden text-sm font-bold uppercase tracking-[0.18em] text-charcoal sm:inline">Panel</span>
+  <body class="adm">
+    <div class="adm-shell">
+      <aside class="adm-side" id="adm-side">
+        <a class="adm-brand" href="/admin" aria-label="Inicio del panel">
+          <span class="adm-brand__logo"><img src="/brand/logowhite.png" alt="" /></span>
+          <span class="adm-brand__tag">Panel</span>
         </a>
-        <div class="flex items-center gap-3">
-          <a
-            href="/admin/mi-cuenta"
-            class="text-sm font-semibold text-charcoal/70 transition-colors hover:text-primary"
-          >
-            {session.username}
+
+        <nav class="adm-nav" aria-label="Secciones del panel">
+          <a class:list={['adm-nav__link', isActive('/admin') && 'is-active']} href="/admin">
+            <span class="material-symbols-outlined">space_dashboard</span> Inicio
           </a>
-          <a
-            href="/api/admin/logout"
-            class="rounded-full border border-black/10 px-4 py-2 text-sm font-semibold text-charcoal transition-colors hover:bg-black/5"
-          >
-            Salir
+
+          {contenido.length > 0 && <p class="adm-nav__label">Contenido</p>}
+          {contenido.map((item) => (
+            <a class:list={['adm-nav__link', isActive(item.href) && 'is-active']} href={item.href}>
+              <span class="material-symbols-outlined">{item.icon}</span> {item.label}
+            </a>
+          ))}
+
+          {ministries.length > 0 && <p class="adm-nav__label">Ministerios</p>}
+          {ministries.map((m) => (
+            <a class:list={['adm-nav__link', isActive(`/admin/ministerios/${m.slug}`) && 'is-active']} href={`/admin/ministerios/${m.slug}`}>
+              <img class="adm-nav__logo" src={m.image} alt="" /> {m.name}
+            </a>
+          ))}
+
+          {session.role === 'admin' && (
+            <>
+              <p class="adm-nav__label">Administración</p>
+              <a class:list={['adm-nav__link', isActive('/admin/usuarios') && 'is-active']} href="/admin/usuarios">
+                <span class="material-symbols-outlined">group</span> Personas con acceso
+              </a>
+            </>
+          )}
+        </nav>
+
+        <div class="adm-side__foot">
+          <a class="adm-user" href="/admin/mi-cuenta" title="Mi cuenta">
+            <span class="adm-avatar" style={`--h: ${hue}`}>{initials}</span>
+            <span>
+              <span class="adm-user__name">{session.username}</span>
+              <span class="adm-user__role">{session.role === 'admin' ? 'Administrador' : 'Editor'} · Mi cuenta</span>
+            </span>
           </a>
+          <div class="adm-side__actions">
+            <a href="/" target="_blank" rel="noopener"><span class="material-symbols-outlined">open_in_new</span> Ver el sitio</a>
+            <a href="/api/admin/logout"><span class="material-symbols-outlined">logout</span> Salir</a>
+          </div>
         </div>
+      </aside>
+
+      <div class="adm-main">
+        <header class="adm-top">
+          <button class="adm-top__menu" type="button" aria-label="Abrir el menú" aria-controls="adm-side" aria-expanded="false" data-adm-menu>
+            <span class="material-symbols-outlined">menu</span>
+          </button>
+          <a class="adm-brand__logo" href="/admin" aria-label="Inicio del panel"><img src="/brand/logowhite.png" alt="" /></a>
+          <a href="/admin/mi-cuenta" aria-label="Mi cuenta"><span class="adm-avatar" style={`--h: ${hue}`}>{initials}</span></a>
+        </header>
+
+        <main class="adm-content">
+          {backHref && (
+            <a href={backHref} class="adm-back">
+              <span class="material-symbols-outlined">arrow_back</span>
+              {backLabel}
+            </a>
+          )}
+
+          <h1 class="adm-title">{title}</h1>
+
+          <div class="adm-body">
+            <slot />
+          </div>
+        </main>
       </div>
-    </header>
+    </div>
 
-    <main class="mx-auto max-w-4xl px-5 py-8 sm:px-6 sm:py-10">
-      {
-        backHref && (
-          <a
-            href={backHref}
-            class="mb-6 inline-flex items-center gap-2 text-sm font-semibold text-charcoal/70 transition-colors hover:text-primary"
-          >
-            <span class="material-symbols-outlined text-lg">arrow_back</span>
-            {backLabel}
-          </a>
-        )
-      }
-
-      <h1 class="font-display text-3xl font-semibold tracking-tight sm:text-4xl">{title}</h1>
-
-      {
-        feedback && (
-          <p
-            role="status"
-            class="mt-6 flex items-start gap-3 rounded-2xl border border-green-600/20 bg-green-50 px-5 py-4 text-green-900"
-          >
-            <span class="material-symbols-outlined text-xl">check_circle</span>
-            <span>{feedback}</span>
-          </p>
-        )
-      }
-
-      {
-        errorMessage && (
-          <p
-            role="alert"
-            class="mt-6 flex items-start gap-3 rounded-2xl border border-red-600/20 bg-red-50 px-5 py-4 text-red-900"
-          >
-            <span class="material-symbols-outlined text-xl">error</span>
-            <span>{errorMessage}</span>
-          </p>
-        )
-      }
-
-      <div class="mt-8">
-        <slot />
-      </div>
-    </main>
+    {feedback && (
+      <p role="status" class="adm-toast adm-toast--ok" data-adm-toast>
+        <span class="material-symbols-outlined">check_circle</span>
+        <span>{feedback}</span>
+        <button class="adm-toast__close" type="button" aria-label="Cerrar" data-adm-toast-close>
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </p>
+    )}
+    {errorMessage && (
+      <p role="alert" class="adm-toast adm-toast--err">
+        <span class="material-symbols-outlined">error</span>
+        <span>{errorMessage}</span>
+        <button class="adm-toast__close" type="button" aria-label="Cerrar" data-adm-toast-close>
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </p>
+    )}
 
     <script>
+      // Menú en celular
+      const menuButton = document.querySelector<HTMLButtonElement>('[data-adm-menu]');
+      menuButton?.addEventListener('click', () => {
+        const open = document.body.classList.toggle('adm-menu-open');
+        menuButton.setAttribute('aria-expanded', String(open));
+      });
+      document.addEventListener('click', (event) => {
+        if (!document.body.classList.contains('adm-menu-open')) return;
+        const target = event.target as HTMLElement;
+        if (!target.closest('#adm-side') && !target.closest('[data-adm-menu]')) {
+          document.body.classList.remove('adm-menu-open');
+          menuButton?.setAttribute('aria-expanded', 'false');
+        }
+      });
+
+      // Avisos: el de éxito se va solo; el de error queda hasta que lo cierren.
+      // Se limpia el ?ok= de la URL para que no reaparezca al recargar.
+      const closeToast = (toast: Element) => {
+        toast.classList.add('is-out');
+        window.setTimeout(() => toast.remove(), 300);
+      };
+      document.querySelectorAll('[data-adm-toast-close]').forEach((button) =>
+        button.addEventListener('click', () => closeToast(button.closest('.adm-toast')!)),
+      );
+      const okToast = document.querySelector('[data-adm-toast]');
+      if (okToast) window.setTimeout(() => closeToast(okToast), 4500);
+      if (location.search.includes('ok=') || location.search.includes('error=')) {
+        history.replaceState(null, '', location.pathname);
+      }
+
       // Avisar antes de perder lo escrito. El caso real es alguien que edita un
       // devocional largo en el celular y toca "atrás" sin querer.
       const form = document.querySelector<HTMLFormElement>('form[data-warn-unsaved]');
@@ -153,6 +238,39 @@ const errorMessage = Astro.url.searchParams.get('error');
               button.disabled = true;
             });
           }, 0);
+        });
+      });
+
+      // Selector de secciones: "Todos" / "Ninguno" por grupo.
+      document.querySelectorAll<HTMLButtonElement>('[data-pick]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const group = button.closest('.adm-picker__group');
+          group?.querySelectorAll<HTMLInputElement>('input[type="checkbox"]').forEach((box) => {
+            box.checked = button.dataset.pick === 'all';
+          });
+          group?.closest('form')?.dispatchEvent(new Event('input', { bubbles: true }));
+        });
+      });
+
+      // Generar contraseña: legible (sin 0/O ni 1/l) para dictarla por teléfono.
+      document.querySelectorAll<HTMLButtonElement>('[data-gen-pass]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const input = document.getElementById(button.dataset.genPass!) as HTMLInputElement | null;
+          if (!input) return;
+          const chars = 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+          const values = crypto.getRandomValues(new Uint32Array(12));
+          input.value = [...values].map((v) => chars[v % chars.length]).join('');
+          input.focus();
+          input.select();
+        });
+      });
+
+      // Buscador de personas
+      const search = document.querySelector<HTMLInputElement>('[data-people-search]');
+      search?.addEventListener('input', () => {
+        const q = search.value.trim().toLowerCase();
+        document.querySelectorAll<HTMLElement>('[data-person]').forEach((row) => {
+          row.classList.toggle('is-hidden', Boolean(q) && !row.dataset.person!.includes(q));
         });
       });
     </script>

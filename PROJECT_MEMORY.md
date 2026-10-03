@@ -124,6 +124,24 @@ Criterios de UX que conviene no romper:
   meter uno sería la mayor fuente de complejidad del panel.
 - Cada formulario avisa qué va a pasar ("Ya se ve en el sitio").
 
+### Rediseño del panel (3 de octubre de 2026)
+
+- `AdminLayout` tiene menú lateral oscuro armado con los mismos permisos de
+  los endpoints (un editor de Kids ve sólo Kids), avisos de guardado que se
+  van solos y menú desplegable en celular. Estructura y piezas en
+  `src/styles/admin.css` (`.adm`); las pantallas siguen con Tailwind.
+- `components/admin/SectionPicker.astro`: rol en dos tarjetas (radio
+  `role` = admin/editor) y secciones con ícono o logo, con "Todos" /
+  "Ninguno" por grupo. Manda los mismos campos que antes; el endpoint de
+  usuarios no cambió. `getSectionCatalog` devuelve `icon` e `image`.
+- Personas: lista con chips de lo que edita cada una, buscador (desde 6
+  personas) y botón para generar contraseña legible.
+- Avisos de ministerio: campo `noticeImage`. Vaciar el título borra el aviso
+  entero, imagen incluida. Kids y Arde muestran el aviso sólo si tiene
+  título, y el inicio los suma a "Qué está pasando" antes de los anuncios.
+- Para revisar las pantallas internas sin credenciales sirvió una página
+  temporal fuera de `/admin` con datos inventados; se borra después.
+
 ### Trampas encontradas, no volver a pisarlas
 
 - Los botones de submit se deshabilitan en el **próximo tick**, no dentro del

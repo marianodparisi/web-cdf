@@ -12,12 +12,16 @@ export interface Section {
   label: string;
   /** Agrupa las secciones en el panel. */
   group: 'Contenido' | 'Ministerios';
+  /** Ícono de Material Symbols, para las secciones fijas. */
+  icon?: string;
+  /** Logo o foto, para los ministerios. */
+  image?: string;
 }
 
 export const FIXED_SECTIONS: Section[] = [
-  { key: 'devocionales', label: 'Devocionales y testimonios', group: 'Contenido' },
-  { key: 'anuncios', label: 'Anuncios del inicio', group: 'Contenido' },
-  { key: 'series', label: 'Series de predicación', group: 'Contenido' },
+  { key: 'devocionales', label: 'Devocionales y testimonios', group: 'Contenido', icon: 'menu_book' },
+  { key: 'anuncios', label: 'Anuncios del inicio', group: 'Contenido', icon: 'campaign' },
+  { key: 'series', label: 'Series de predicación', group: 'Contenido', icon: 'video_library' },
 ];
 
 export const ministrySectionKey = (slug: string) => `ministerio:${slug}`;
@@ -31,6 +35,7 @@ export const getSectionCatalog = async (): Promise<Section[]> => {
       key: ministrySectionKey(ministry.slug),
       label: ministry.name,
       group: 'Ministerios' as const,
+      image: ministry.image,
     })),
   ];
 };

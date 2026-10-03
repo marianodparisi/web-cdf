@@ -20,7 +20,7 @@ const tasks = [
     href: '/admin/anuncios',
     icon: 'campaign',
     title: 'Anuncios del inicio',
-    description: 'Los tres avisos que aparecen en la página principal.',
+    description: 'Los avisos que aparecen en la página principal.',
   },
   {
     section: 'series',
@@ -39,73 +39,61 @@ const hasNothing = tasks.length === 0 && editableMinistries.length === 0;
 ---
 
 <AdminLayout title={`Hola, ${session.username}`} session={session}>
-  <p class="-mt-4 mb-8 text-lg text-charcoal/65">¿Qué querés editar hoy?</p>
+  <p class="adm-lead">¿Qué querés editar hoy?</p>
 
-  {
-    hasNothing && (
-      <div class="rounded-2xl border border-black/10 bg-white p-6">
-        <p class="text-charcoal/70">
-          Todavía no tenés ninguna sección asignada. Pedile a la persona que administra el panel que te dé
-          acceso.
-        </p>
-      </div>
-    )
-  }
+  {hasNothing && (
+    <div class="adm-card" style="padding: 24px">
+      <p style="margin: 0; color: var(--soft)">
+        Todavía no tenés ninguna sección asignada. Pedile a la persona que administra el panel que te dé
+        acceso.
+      </p>
+    </div>
+  )}
 
-  {
-    tasks.length > 0 && (
-      <div class="grid gap-4 sm:grid-cols-2">
+  {tasks.length > 0 && (
+    <section>
+      <p class="adm-eyebrow">Contenido</p>
+      <div class="adm-tiles">
         {tasks.map((task) => (
-          <a
-            href={task.href}
-            class="group flex flex-col rounded-2xl border border-black/10 bg-white p-6 transition-shadow hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)]"
-          >
-            <span class="material-symbols-outlined text-3xl text-primary">{task.icon}</span>
-            <span class="mt-4 font-display text-xl font-semibold group-hover:text-primary">{task.title}</span>
-            <span class="mt-2 text-sm leading-relaxed text-charcoal/60">{task.description}</span>
+          <a href={task.href} class="adm-card adm-tile">
+            <span class="adm-tile__icon"><span class="material-symbols-outlined">{task.icon}</span></span>
+            <span class="adm-tile__title">{task.title}</span>
+            <span class="adm-tile__text">{task.description}</span>
           </a>
         ))}
       </div>
-    )
-  }
+    </section>
+  )}
 
-  {
-    editableMinistries.length > 0 && (
-      <section class="mt-10">
-        <h2 class="mb-4 font-display text-xl font-semibold">Ministerios</h2>
-        <div class="grid gap-3 sm:grid-cols-2">
-          {editableMinistries.map((ministry) => (
-            <a
-              href={`/admin/ministerios/${ministry.slug}`}
-              class="group flex items-center gap-4 rounded-2xl border border-black/10 bg-white p-4 transition-shadow hover:shadow-[0_12px_40px_rgba(0,0,0,0.08)]"
-            >
-              <img
-                src={ministry.image}
-                alt=""
-                class="h-12 w-12 shrink-0 rounded-full border border-black/10 object-cover"
-              />
+  {editableMinistries.length > 0 && (
+    <section class="adm-section">
+      <p class="adm-eyebrow">Ministerios</p>
+      <div class="adm-mins">
+        {editableMinistries.map((ministry) => (
+          <a href={`/admin/ministerios/${ministry.slug}`} class="adm-card adm-min">
+            <img src={ministry.image} alt="" />
+            <span>
+              <strong>{ministry.name}</strong>
               <span>
-                <span class="block font-semibold group-hover:text-primary">{ministry.name}</span>
-                <span class="block text-sm text-charcoal/55">{ministry.area}</span>
+                {ministry.noticeTitle ? `Aviso: ${ministry.noticeTitle}` : ministry.area}
               </span>
-            </a>
-          ))}
-        </div>
-      </section>
-    )
-  }
+            </span>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
 
-  {
-    session.role === 'admin' && (
-      <section class="mt-10 border-t border-black/10 pt-8">
-        <a
-          href="/admin/usuarios"
-          class="group inline-flex items-center gap-3 text-charcoal/70 transition-colors hover:text-primary"
-        >
-          <span class="material-symbols-outlined text-2xl">group</span>
-          <span class="font-semibold">Personas con acceso al panel</span>
+  {session.role === 'admin' && (
+    <section class="adm-section">
+      <p class="adm-eyebrow">Administración</p>
+      <div class="adm-tiles">
+        <a href="/admin/usuarios" class="adm-card adm-tile">
+          <span class="adm-tile__icon"><span class="material-symbols-outlined">group</span></span>
+          <span class="adm-tile__title">Personas con acceso</span>
+          <span class="adm-tile__text">Dar acceso a alguien nuevo, elegir qué puede editar o sacarle el acceso.</span>
         </a>
-      </section>
-    )
-  }
+      </div>
+    </section>
+  )}
 </AdminLayout>

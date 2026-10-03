@@ -47,6 +47,25 @@ const ultimoVivo = vivos?.ultima;
 const mensajeHref = ultimoVivo?.url ?? currentSeries?.href ?? seriesPlaylistUrl;
 const mensajeLabel = ultimoVivo?.isLive ? 'Ver la transmisión' : 'Ver el último mensaje';
 
+/* "Qué está pasando": primero los avisos que cada ministerio carga en su
+   página (son lo más puntual: un campa, un encuentro) y después los anuncios
+   generales. Un aviso entra sólo si tiene título; si no trae imagen, la pieza
+   va con el degradé del color del ministerio y su logo. */
+const agenda = [
+  ...ministries
+    .filter((m) => m.noticeTitle?.trim())
+    .map((m) => ({
+      href: `/ministerios/${m.slug}`,
+      eyebrow: m.name,
+      title: m.noticeTitle!.trim(),
+      image: m.noticeImage,
+      alt: m.noticeTitle!.trim(),
+      logo: m.image,
+      slug: m.slug,
+    })),
+  ...announcements.map((a) => ({ ...a, logo: undefined, slug: undefined })),
+];
+
 /** "Encuentro GOLD" → ["Encuentro", "GOLD"]: liviano arriba, pesado abajo,
     como "REUNIÓN DE / OBREROS" en el feed. */
 function splitTitle(title: string): [string, string] {
@@ -178,35 +197,44 @@ const logoSlugs = new Set(['life', 'gold', 'kids', 'arde']);
     <!-- ══════════ QUÉ ESTÁ PASANDO ══════════
          Como el feed: piezas 4:5, foto con viñeta, título en mayúscula pesada
          con mezcla de pesos y el logo abajo. -->
-    <section class="lz-section lz-dark lz-dark--2" id="agenda">
-      <div class="lz-wrap">
-        <div class="lz-head">
-          <h2 class="lz-lockup lz-lockup--md" data-r>
-            <span>qué está</span>
-            <span class="lz-lockup__shift">pasando</span>
-          </h2>
-          <p class="lz-quote lz-quote--side" data-r>
-            Caminemos juntos. <strong>Mirá las próximas clases, eventos y encuentros de la casa.</strong>
-          </p>
+    {agenda.length > 0 && (
+      <section class="lz-section lz-dark lz-dark--2" id="agenda">
+        <div class="lz-wrap">
+          <div class="lz-head">
+            <h2 class="lz-lockup lz-lockup--md" data-r>
+              <span>qué está</span>
+              <span class="lz-lockup__shift">pasando</span>
+            </h2>
+            <p class="lz-quote lz-quote--side" data-r>
+              Caminemos juntos. <strong>Mirá las próximas clases, eventos y encuentros de la casa.</strong>
+            </p>
+          </div>
+          {/* Los anuncios ya son flyers con su propio texto: van limpios,
+              como en el feed, y el título va abajo. */}
+          <div class="lz-feed">
+            {agenda.map((item) => (
+              <a class="lz-flyer" href={item.href} data-r>
+                {item.image ? (
+                  <span class="lz-flyer__img"><img src={item.image} alt={item.alt} loading="lazy" /></span>
+                ) : (
+                  <span
+                    class="lz-flyer__img lz-flyer__img--empty"
+                    style={`--m: ${(item.slug && ministryColors[item.slug]) ?? '#c5a059'}`}
+                  >
+                    {item.logo && <img src={item.logo} alt="" loading="lazy" />}
+                  </span>
+                )}
+                <span class="lz-spaced">{item.eyebrow}</span>
+                <span class="lz-flyer__title lz-caps-mix">
+                  <span>{splitTitle(item.title)[0]}</span>
+                  {splitTitle(item.title)[1]}
+                </span>
+              </a>
+            ))}
+          </div>
         </div>
-        {/* Los anuncios ya son flyers con su propio texto: van limpios,
-            como en el feed, y el título va abajo. */}
-        <div class="lz-feed">
-          {announcements.map((item) => (
-            <a class="lz-flyer" href={item.href} data-r>
-              <span class="lz-flyer__img">
-                {item.image && <img src={item.image} alt={item.alt} loading="lazy" />}
-              </span>
-              <span class="lz-spaced">{item.eyebrow}</span>
-              <span class="lz-flyer__title lz-caps-mix">
-                <span>{splitTitle(item.title)[0]}</span>
-                {splitTitle(item.title)[1]}
-              </span>
-            </a>
-          ))}
-        </div>
-      </div>
-    </section>
+      </section>
+    )}
 
     <!-- ══════════ DEVOCIONAL ══════════ La placa del feed, tal cual. -->
     {devotional && (

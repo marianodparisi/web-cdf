@@ -11,16 +11,16 @@ interface Props {
 }
 
 const { name, label, value = '', hint, type = 'text', rows, required = false, placeholder } = Astro.props;
-const inputClass =
-  'w-full rounded-2xl border border-black/15 bg-white px-4 py-3 text-base text-charcoal outline-none transition-colors placeholder:text-charcoal/35 focus:border-primary focus:ring-2 focus:ring-primary/25';
+/* Estilo del panel (`.adm-input` en admin.css). */
+const inputClass = 'adm-input';
 ---
 
-<div class="mb-6">
-  <label class="mb-2 block text-sm font-bold text-charcoal" for={name}>
+<div class="adm-field">
+  <label class="adm-label" for={name}>
     {label}
-    {!required && <span class="ml-1 font-normal text-charcoal/45">(opcional)</span>}
+    {!required && <small> (opcional)</small>}
   </label>
-  {hint && <p class="mb-2 text-sm leading-relaxed text-charcoal/60">{hint}</p>}
+  {hint && <p class="adm-help">{hint}</p>}
   {
     rows ? (
       // Sin saltos de línea alrededor de `value`: lo que va entre las etiquetas

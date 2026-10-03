@@ -1,5 +1,12 @@
 ---
+/**
+ * Personas con acceso. Una fila por persona con lo que puede editar a la
+ * vista; al tocarla se despliega la edición. Los formularios mandan los mismos
+ * campos de siempre a `/api/admin/usuarios`, que es quien valida todo (último
+ * admin, contraseña corta, usuario repetido).
+ */
 import AdminLayout from '../../layouts/AdminLayout.astro';
+import SectionPicker from '../../components/admin/SectionPicker.astro';
 import { listAdminUsers } from '../../lib/admin-auth';
 import { denyRedirect, getSession } from '../../lib/admin-guard';
 import { getSectionCatalog } from '../../lib/content/sections';
@@ -10,189 +17,159 @@ if (session.role !== 'admin') {
 }
 
 const [users, catalog] = await Promise.all([listAdminUsers(), getSectionCatalog()]);
-const groups = ['Contenido', 'Ministerios'] as const;
+const labelOf = new Map(catalog.map((s) => [s.key, s.label]));
 
-const inputClass =
-  'w-full rounded-2xl border border-black/15 bg-white px-4 py-3 text-base outline-none transition-colors focus:border-primary focus:ring-2 focus:ring-primary/25';
+const admins = users.filter((u) => u.role === 'admin').length;
+const neverIn = users.filter((u) => !u.lastLoginAt).length;
 
 // Sin `timeZone`: el DATETIME viene sin zona y se muestra tal cual lo guardó la
 // base, que es la hora que la persona tiene en la cabeza.
-const dateFormatter = new Intl.DateTimeFormat('es-AR', {
-  dateStyle: 'medium',
-  timeStyle: 'short',
-});
+const dateFormatter = new Intl.DateTimeFormat('es-AR', { dateStyle: 'medium', timeStyle: 'short' });
+
+const hueOf = (name: string) => [...name].reduce((sum, c) => sum + c.charCodeAt(0), 0) % 360;
 ---
 
 <AdminLayout title="Personas con acceso" backHref="/admin" backLabel="Volver al panel" session={session}>
-  <p class="-mt-4 mb-8 text-charcoal/65">
-    Un administrador puede editar todo y gestionar estos accesos. Un editor solo ve las secciones que le
-    marques.
+  <p class="adm-lead">
+    Un administrador entra a todo. Un editor ve sólo las secciones que le marques: por ejemplo, quien lidera
+    Kids puede entrar únicamente a Kids.
   </p>
 
-  <section class="mb-10 rounded-2xl border border-black/10 bg-white p-6 sm:p-8">
-    <h2 class="mb-6 font-display text-xl font-semibold">Dar acceso a alguien nuevo</h2>
+  <div class="adm-stats">
+    <div class="adm-card adm-stat"><strong>{users.length}</strong><span>personas con acceso</span></div>
+    <div class="adm-card adm-stat"><strong>{admins}</strong><span>{admins === 1 ? 'administrador' : 'administradores'}</span></div>
+    <div class="adm-card adm-stat"><strong>{neverIn}</strong><span>nunca entraron</span></div>
+  </div>
 
-    <form method="POST" action="/api/admin/usuarios">
+  <!-- ══════════ NUEVA PERSONA ══════════ -->
+  <details class="adm-fold adm-new">
+    <summary class="adm-btn adm-btn--gold">
+      <span class="material-symbols-outlined">person_add</span> Dar acceso a alguien nuevo
+    </summary>
+
+    <form method="POST" action="/api/admin/usuarios" class="adm-card adm-new__body">
       <input type="hidden" name="accion" value="crear" />
 
-      <div class="mb-6 grid gap-4 sm:grid-cols-2">
-        <div>
-          <label class="mb-2 block text-sm font-bold" for="username">Usuario</label>
-          <input id="username" name="username" required class={inputClass} autocomplete="off" />
+      <div class="adm-grid2">
+        <div class="adm-field">
+          <label class="adm-label" for="username">Usuario</label>
+          <input id="username" name="username" required class="adm-input" autocomplete="off" placeholder="Ej: lucia.kids" />
         </div>
-        <div>
-          <label class="mb-2 block text-sm font-bold" for="email">
-            Email <span class="font-normal text-charcoal/45">(opcional)</span>
-          </label>
-          <input id="email" name="email" type="email" class={inputClass} autocomplete="off" />
+        <div class="adm-field">
+          <label class="adm-label" for="email">Email <small>(opcional)</small></label>
+          <input id="email" name="email" type="email" class="adm-input" autocomplete="off" />
         </div>
       </div>
 
-      <div class="mb-6">
-        <label class="mb-2 block text-sm font-bold" for="password">Contraseña</label>
-        <p class="mb-2 text-sm text-charcoal/60">Mínimo 8 caracteres. Después se la pasás a la persona.</p>
-        <input id="password" name="password" type="text" minlength="8" required class={inputClass} autocomplete="new-password" />
+      <div class="adm-field">
+        <label class="adm-label" for="new-password">Contraseña</label>
+        <p class="adm-help">Mínimo 8 caracteres. Generala y pasásela a la persona; después la puede cambiar ella.</p>
+        <div class="adm-pass">
+          <input id="new-password" name="password" type="text" minlength="8" required class="adm-input" autocomplete="new-password" />
+          <button type="button" class="adm-btn adm-btn--ghost" data-gen-pass="new-password">
+            <span class="material-symbols-outlined">key</span> Generar
+          </button>
+        </div>
       </div>
 
-      <fieldset class="mb-6">
-        <legend class="mb-3 text-sm font-bold">¿Qué puede editar?</legend>
-        <label class="mb-4 flex items-center gap-3">
-          <input type="checkbox" name="role" value="admin" class="h-5 w-5 rounded border-black/25" />
-          <span>Es administrador: puede editar todo y gestionar accesos</span>
-        </label>
+      <p class="adm-label">¿Qué puede editar?</p>
+      <SectionPicker catalog={catalog} idPrefix="nuevo" />
 
-        {
-          groups.map((group) => (
-            <div class="mb-4">
-              <p class="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-charcoal/45">{group}</p>
-              <div class="grid gap-2 sm:grid-cols-2">
-                {catalog
-                  .filter((section) => section.group === group)
-                  .map((section) => (
-                    <label class="flex items-center gap-3 rounded-xl border border-black/10 px-4 py-3">
-                      <input type="checkbox" name="sections" value={section.key} class="h-5 w-5 rounded border-black/25" />
-                      <span class="text-sm">{section.label}</span>
-                    </label>
-                  ))}
+      <div class="adm-actions">
+        <button type="submit" class="adm-btn adm-btn--gold">
+          <span class="material-symbols-outlined">check</span> Crear el acceso
+        </button>
+      </div>
+    </form>
+  </details>
+
+  <!-- ══════════ LISTA ══════════ -->
+  <div class="adm-toolbar">
+    <h2 class="adm-h2" style="margin: 0">Accesos actuales</h2>
+    {users.length > 5 && (
+      <label class="adm-search">
+        <span class="material-symbols-outlined">search</span>
+        <input class="adm-input" type="search" placeholder="Buscar por nombre o email" data-people-search aria-label="Buscar personas" />
+      </label>
+    )}
+  </div>
+
+  <div class="adm-people">
+    {users.map((user) => {
+      const isMe = user.username === session.username;
+      const chips = user.sections.map((key) => labelOf.get(key)).filter(Boolean) as string[];
+      return (
+        <details class="adm-fold adm-card adm-person" data-person={`${user.username} ${user.email ?? ''}`.toLowerCase()}>
+          <summary>
+            <span class="adm-avatar adm-avatar--lg" style={`--h: ${hueOf(user.username)}`}>
+              {user.username.slice(0, 2).toUpperCase()}
+            </span>
+            <span class="adm-person__who">
+              <span class="adm-person__line">
+                <span class="adm-person__name">{user.username}</span>
+                {user.role === 'admin' ? (
+                  <span class="adm-badge adm-badge--admin"><span class="material-symbols-outlined">shield_person</span>Administrador</span>
+                ) : (
+                  <span class="adm-badge adm-badge--editor">Editor</span>
+                )}
+                {isMe && <span class="adm-badge adm-badge--you">Sos vos</span>}
+                {user.email && <span class="adm-person__mail">{user.email}</span>}
+              </span>
+              <span class="adm-person__meta">
+                {user.role === 'admin' ? (
+                  <span>Entra a todo</span>
+                ) : chips.length === 0 ? (
+                  <span>Sin secciones asignadas todavía</span>
+                ) : (
+                  <>
+                    {chips.slice(0, 4).map((label) => <span class="adm-chip">{label}</span>)}
+                    {chips.length > 4 && <span class="adm-chip">+{chips.length - 4}</span>}
+                  </>
+                )}
+                <span>· {user.lastLoginAt ? `Entró ${dateFormatter.format(user.lastLoginAt)}` : 'Nunca entró'}</span>
+              </span>
+            </span>
+            <span class="adm-person__edit">Editar <span class="material-symbols-outlined">expand_more</span></span>
+          </summary>
+
+          <form method="POST" action="/api/admin/usuarios" class="adm-person__body">
+            <input type="hidden" name="id" value={String(user.id)} />
+
+            <SectionPicker catalog={catalog} role={user.role} selected={user.sections} idPrefix={`u${user.id}`} />
+
+            <div class="adm-field">
+              <label class="adm-label" for={`password-${user.id}`}>Cambiarle la contraseña <small>(opcional)</small></label>
+              <p class="adm-help">Dejalo vacío para no tocarla.</p>
+              <div class="adm-pass">
+                <input id={`password-${user.id}`} name="password" type="text" minlength="8" class="adm-input" autocomplete="new-password" />
+                <button type="button" class="adm-btn adm-btn--ghost" data-gen-pass={`password-${user.id}`}>
+                  <span class="material-symbols-outlined">key</span> Generar
+                </button>
               </div>
             </div>
-          ))
-        }
-      </fieldset>
 
-      <button
-        type="submit"
-        class="rounded-full bg-primary px-8 py-4 font-bold text-charcoal transition-colors hover:bg-primary-dark hover:text-white disabled:opacity-60"
-      >
-        Crear el acceso
-      </button>
-    </form>
-  </section>
-
-  <h2 class="mb-4 font-display text-xl font-semibold">Accesos actuales</h2>
-
-  <div class="flex flex-col gap-6">
-    {
-      users.map((user) => (
-        <form method="POST" action="/api/admin/usuarios" class="rounded-2xl border border-black/10 bg-white p-6 sm:p-8">
-          <input type="hidden" name="id" value={String(user.id)} />
-
-          <div class="mb-2 flex flex-wrap items-baseline gap-3">
-            <span class="font-display text-lg font-semibold">{user.username}</span>
-            {user.email && <span class="text-sm text-charcoal/55">{user.email}</span>}
-            {user.username === session.username && (
-              <span class="rounded-full bg-primary/15 px-3 py-1 text-[0.7rem] font-bold uppercase tracking-wider text-primary-dark">
-                Sos vos
-              </span>
-            )}
-          </div>
-
-          <p class="mb-5 text-sm text-charcoal/55">
-            {user.lastLoginAt
-              ? `Última vez que entró: ${dateFormatter.format(user.lastLoginAt)}`
-              : 'Nunca entró al panel.'}
-          </p>
-
-          <fieldset class="mb-5">
-            <label class="mb-4 flex items-center gap-3">
-              <input
-                type="checkbox"
-                name="role"
-                value="admin"
-                checked={user.role === 'admin'}
-                class="h-5 w-5 rounded border-black/25"
-              />
-              <span>Es administrador</span>
-            </label>
-
-            <p class="mb-4 text-sm text-charcoal/60">
-              Un administrador entra a todo. Lo que marques abajo queda guardado igual, por si más adelante
-              vuelve a ser editor.
-            </p>
-
-            {groups.map((group) => (
-              <div class="mb-4">
-                <p class="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-charcoal/45">{group}</p>
-                <div class="grid gap-2 sm:grid-cols-2">
-                  {catalog
-                    .filter((section) => section.group === group)
-                    .map((section) => (
-                      <label class="flex items-center gap-3 rounded-xl border border-black/10 px-4 py-3">
-                        <input
-                          type="checkbox"
-                          name="sections"
-                          value={section.key}
-                          checked={user.sections.includes(section.key)}
-                          class="h-5 w-5 rounded border-black/25"
-                        />
-                        <span class="text-sm">{section.label}</span>
-                      </label>
-                    ))}
-                </div>
-              </div>
-            ))}
-          </fieldset>
-
-          <div class="mb-6">
-            <label class="mb-2 block text-sm font-bold" for={`password-${user.id}`}>
-              Cambiarle la contraseña <span class="font-normal text-charcoal/45">(opcional)</span>
-            </label>
-            <p class="mb-2 text-sm text-charcoal/60">Dejalo vacío para no tocarla.</p>
-            <input
-              id={`password-${user.id}`}
-              name="password"
-              type="text"
-              minlength="8"
-              class={inputClass}
-              autocomplete="new-password"
-            />
-          </div>
-
-          <div class="flex flex-wrap items-center gap-3">
-            <button
-              type="submit"
-              name="accion"
-              value="guardar"
-              class="rounded-full bg-primary px-8 py-4 font-bold text-charcoal transition-colors hover:bg-primary-dark hover:text-white disabled:opacity-60"
-            >
-              Guardar
-            </button>
-
-            {user.username !== session.username && (
-              <button
-                type="submit"
-                name="accion"
-                value="borrar"
-                formnovalidate
-                onclick="return confirm('¿Sacarle el acceso a esta persona?')"
-                class="rounded-full border border-red-600/30 px-6 py-3 text-sm font-bold text-red-700 transition-colors hover:bg-red-50"
-              >
-                Sacar el acceso
+            <div class="adm-actions">
+              <button type="submit" name="accion" value="guardar" class="adm-btn adm-btn--gold">
+                <span class="material-symbols-outlined">check</span> Guardar cambios
               </button>
-            )}
-          </div>
-        </form>
-      ))
-    }
+              <span class="adm-actions__spacer"></span>
+              {!isMe && (
+                <button
+                  type="submit"
+                  name="accion"
+                  value="borrar"
+                  formnovalidate
+                  data-confirm={`¿Sacarle el acceso a ${user.username}?`}
+                  onclick="return confirm(this.dataset.confirm)"
+                  class="adm-btn adm-btn--danger"
+                >
+                  <span class="material-symbols-outlined">person_remove</span> Sacar el acceso
+                </button>
+              )}
+            </div>
+          </form>
+        </details>
+      );
+    })}
   </div>
 </AdminLayout>

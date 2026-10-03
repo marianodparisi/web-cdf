@@ -1,0 +1,299 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   PANEL — estructura y piezas propias. Prefijo .adm.
+   Menú lateral oscuro (el noche del sitio) y área de trabajo clara: quien
+   carga contenido pasa mucho tiempo leyendo formularios, y sobre fondo claro
+   se lee mejor. Las pantallas siguen usando Tailwind para su contenido; acá
+   van la estructura y lo compartido.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.adm {
+  --side: #0e1016;
+  --side-2: #161922;
+  --side-line: rgba(255, 255, 255, 0.08);
+  --side-text: rgba(251, 248, 243, 0.72);
+  --bg: #f4f2ed;
+  --card: #ffffff;
+  --ink: #1f1d1a;
+  --soft: #6b665e;
+  --line: rgba(31, 29, 26, 0.1);
+  --gold: #c5a059;
+  --gold-2: #a8893d;
+  --ok: #1f7a4d;
+  --err: #b42318;
+  --radius: 16px;
+
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Inter Tight', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.adm .font-display { font-family: 'Inter Tight', system-ui, sans-serif; letter-spacing: -0.02em; }
+.adm .font-body { font-family: 'Inter Tight', system-ui, sans-serif; }
+
+/* ── Estructura ─────────────────────────────────────────────────────────── */
+.adm-shell { display: grid; grid-template-columns: 272px minmax(0, 1fr); min-height: 100vh; }
+
+.adm-side {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding: 22px 16px 16px;
+  background: var(--side);
+  color: #fbf8f3;
+  overflow-y: auto;
+}
+.adm-brand { display: flex; align-items: center; gap: 12px; padding: 4px 10px 22px; border-bottom: 1px solid var(--side-line); margin-bottom: 14px; text-decoration: none; color: inherit; }
+.adm-brand__logo { position: relative; width: 104px; aspect-ratio: 2.22; overflow: hidden; }
+.adm-brand__logo img { position: absolute; width: 128%; max-width: none; left: -13%; top: -90%; }
+.adm-brand__tag { padding: 4px 8px; border: 1px solid var(--side-line); border-radius: 999px; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); }
+
+.adm-nav { display: grid; gap: 2px; }
+.adm-nav__label { margin: 16px 10px 6px; font-size: 0.62rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(251, 248, 243, 0.38); }
+.adm-nav__link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 10px;
+  border-radius: 10px;
+  color: var(--side-text);
+  font-size: 0.92rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.15s, color 0.15s;
+}
+.adm-nav__link:hover { background: var(--side-2); color: #fff; }
+.adm-nav__link.is-active { background: rgba(197, 160, 89, 0.14); color: #fff; box-shadow: inset 2px 0 0 var(--gold); }
+.adm-nav__link .material-symbols-outlined { font-size: 20px; color: rgba(251, 248, 243, 0.55); }
+.adm-nav__link.is-active .material-symbols-outlined { color: var(--gold); }
+.adm-nav__logo { width: 22px; height: 22px; flex: none; border-radius: 6px; background: #fff; object-fit: contain; padding: 2px; }
+
+.adm-side__foot { margin-top: auto; padding-top: 14px; border-top: 1px solid var(--side-line); display: grid; gap: 6px; }
+.adm-user { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 12px; color: inherit; text-decoration: none; transition: background-color 0.15s; }
+.adm-user:hover { background: var(--side-2); }
+.adm-user__name { display: block; font-size: 0.9rem; font-weight: 700; }
+.adm-user__role { display: block; font-size: 0.72rem; color: rgba(251, 248, 243, 0.5); }
+.adm-side__actions { display: flex; gap: 6px; }
+.adm-side__actions a { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 9px; border: 1px solid var(--side-line); border-radius: 10px; color: var(--side-text); font-size: 0.8rem; font-weight: 600; text-decoration: none; }
+.adm-side__actions a:hover { color: #fff; border-color: rgba(255, 255, 255, 0.2); }
+.adm-side__actions .material-symbols-outlined { font-size: 17px; }
+
+/* Avatar con iniciales: el color sale del nombre, así cada persona tiene el suyo */
+.adm-avatar {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: hsl(var(--h, 38) 45% 42%);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+}
+.adm-avatar--lg { width: 48px; height: 48px; font-size: 1rem; }
+
+/* ── Área de trabajo ────────────────────────────────────────────────────── */
+.adm-main { min-width: 0; }
+.adm-top { display: none; }
+.adm-content { max-width: 980px; margin: 0 auto; padding: 40px clamp(18px, 4vw, 48px) 80px; }
+.adm-back { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 18px; color: var(--soft); font-size: 0.88rem; font-weight: 600; text-decoration: none; }
+.adm-back:hover { color: var(--ink); }
+.adm-title { margin: 0; font-family: "Inter Tight", system-ui, sans-serif; font-size: clamp(1.8rem, 3.2vw, 2.4rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.1; }
+.adm-body { margin-top: 32px; }
+
+/* Avisos de guardado: arriba, se van solos */
+.adm-toast {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 60;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  max-width: min(420px, calc(100vw - 36px));
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  box-shadow: 0 18px 40px -16px rgba(0, 0, 0, 0.3);
+  font-size: 0.95rem;
+  font-weight: 600;
+  animation: adm-toast-in 0.35s cubic-bezier(0.2, 0.7, 0.1, 1);
+}
+.adm-toast--ok { border-left: 4px solid var(--ok); }
+.adm-toast--ok .material-symbols-outlined { color: var(--ok); }
+.adm-toast--err { border-left: 4px solid var(--err); }
+.adm-toast--err .material-symbols-outlined { color: var(--err); }
+.adm-toast.is-out { opacity: 0; transform: translateY(-8px); transition: opacity 0.3s, transform 0.3s; }
+.adm-toast__close { margin-left: auto; padding: 0 2px; border: 0; background: none; color: var(--soft); cursor: pointer; }
+@keyframes adm-toast-in { from { opacity: 0; transform: translateY(-10px); } }
+
+/* Lo que viene de las pantallas con Tailwind: las tarjetas blancas toman el
+   borde y la sombra del panel nuevo. */
+.adm-body .bg-white.rounded-2xl { border-color: var(--line); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px -18px rgba(0, 0, 0, 0.25); }
+
+/* ── Piezas compartidas ─────────────────────────────────────────────────── */
+.adm-card { background: var(--card); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 8px 24px -18px rgba(0, 0, 0, 0.25); }
+.adm-lead { margin: -16px 0 32px; color: var(--soft); font-size: 1.05rem; line-height: 1.5; max-width: 62ch; }
+.adm-h2 { margin: 0 0 16px; font-family: "Inter Tight", system-ui, sans-serif; font-size: 1.15rem; font-weight: 800; letter-spacing: -0.02em; }
+.adm-eyebrow { margin: 0 0 10px; font-size: 0.66rem; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: var(--soft); }
+
+.adm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: var(--ink);
+  color: #fff;
+  font: 700 0.92rem 'Inter Tight', sans-serif;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s, color 0.15s;
+}
+.adm-btn:hover { background: #000; }
+.adm-btn:disabled { opacity: 0.55; cursor: progress; }
+.adm-btn--gold { background: var(--gold); color: var(--ink); }
+.adm-btn--gold:hover { background: var(--gold-2); color: #fff; }
+.adm-btn--ghost { background: var(--card); border-color: var(--line); color: var(--ink); }
+.adm-btn--ghost:hover { background: #f3f1ec; }
+.adm-btn--danger { background: transparent; border-color: rgba(180, 35, 24, 0.3); color: var(--err); }
+.adm-btn--danger:hover { background: #fdf1f0; }
+.adm-btn--sm { padding: 8px 12px; font-size: 0.82rem; border-radius: 10px; }
+.adm-btn .material-symbols-outlined { font-size: 19px; }
+
+.adm-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid rgba(31, 29, 26, 0.16);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--ink);
+  font: 500 1rem 'Inter Tight', sans-serif;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.adm-input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.22); }
+.adm-label { display: block; margin-bottom: 6px; font-size: 0.85rem; font-weight: 700; }
+.adm-label small { font-weight: 500; color: var(--soft); }
+.adm-help { margin: -2px 0 8px; font-size: 0.85rem; color: var(--soft); }
+
+.adm-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 999px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; }
+.adm-badge--admin { background: rgba(197, 160, 89, 0.18); color: #7a5f22; }
+.adm-badge--editor { background: rgba(31, 29, 26, 0.07); color: var(--soft); }
+.adm-badge--you { background: #e8f3ed; color: var(--ok); }
+.adm-badge .material-symbols-outlined { font-size: 14px; }
+
+/* ── Inicio del panel ───────────────────────────────────────────────────── */
+.adm-tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
+.adm-tile { display: grid; gap: 10px; padding: 22px; color: inherit; text-decoration: none; transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s; }
+.adm-tile:hover { transform: translateY(-2px); border-color: rgba(197, 160, 89, 0.5); box-shadow: 0 16px 34px -20px rgba(0, 0, 0, 0.35); }
+.adm-tile__icon { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; background: rgba(197, 160, 89, 0.15); color: var(--gold-2); }
+.adm-tile__title { font-size: 1.05rem; font-weight: 800; letter-spacing: -0.015em; }
+.adm-tile__text { font-size: 0.9rem; line-height: 1.45; color: var(--soft); }
+.adm-mins { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+.adm-min { display: flex; align-items: center; gap: 12px; padding: 12px 14px; color: inherit; text-decoration: none; transition: border-color 0.15s, box-shadow 0.15s; }
+.adm-min:hover { border-color: rgba(197, 160, 89, 0.5); box-shadow: 0 12px 26px -18px rgba(0, 0, 0, 0.35); }
+.adm-min img { width: 44px; height: 44px; flex: none; border-radius: 12px; border: 1px solid var(--line); background: #fff; object-fit: contain; padding: 4px; }
+.adm-min strong { display: block; font-size: 0.98rem; }
+.adm-min span span { display: block; font-size: 0.82rem; color: var(--soft); }
+.adm-section { margin-top: 40px; }
+
+/* ── Personas ───────────────────────────────────────────────────────────── */
+.adm-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+.adm-stat { padding: 18px 20px; }
+.adm-stat strong { display: block; font-size: 1.8rem; font-weight: 800; letter-spacing: -0.03em; line-height: 1; }
+.adm-stat span { display: block; margin-top: 6px; font-size: 0.85rem; color: var(--soft); }
+
+.adm-toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.adm-search { position: relative; flex: 1; min-width: 220px; max-width: 360px; }
+.adm-search .material-symbols-outlined { position: absolute; left: 12px; top: 50%; translate: 0 -50%; font-size: 20px; color: var(--soft); }
+.adm-search .adm-input { padding-left: 40px; }
+
+/* Desplegables: <details> nativo, anda sin JS */
+.adm-fold > summary { list-style: none; cursor: pointer; }
+.adm-fold > summary::-webkit-details-marker { display: none; }
+.adm-new { margin-bottom: 18px; }
+.adm-new > summary { display: inline-flex; }
+.adm-new[open] > summary { margin-bottom: 14px; }
+.adm-new__body { padding: clamp(20px, 3vw, 32px); }
+
+.adm-people { display: grid; gap: 10px; }
+.adm-person > summary { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 16px 18px; }
+.adm-person__who { min-width: 0; }
+.adm-person__line { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.adm-person__name { font-weight: 800; font-size: 1rem; }
+.adm-person__mail { font-size: 0.85rem; color: var(--soft); }
+.adm-person__meta { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 0.8rem; color: var(--soft); }
+.adm-chip { padding: 3px 9px; border-radius: 999px; background: #f1eee7; font-size: 0.74rem; font-weight: 600; color: var(--ink); }
+.adm-person__edit { display: inline-flex; align-items: center; gap: 4px; color: var(--soft); font-size: 0.85rem; font-weight: 700; }
+.adm-person__edit .material-symbols-outlined { transition: rotate 0.2s; }
+.adm-person[open] .adm-person__edit .material-symbols-outlined { rotate: 180deg; }
+.adm-person[open] > summary { border-bottom: 1px solid var(--line); }
+.adm-person__body { padding: 22px 18px 20px; }
+.adm-person.is-hidden { display: none; }
+
+.adm-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.adm-field { margin-bottom: 18px; }
+.adm-pass { display: flex; gap: 8px; }
+.adm-pass .adm-input { font-family: ui-monospace, 'Cascadia Mono', monospace; letter-spacing: 0.02em; }
+.adm-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 8px; }
+.adm-actions__spacer { flex: 1; }
+
+/* Rol: dos tarjetas en vez de una casilla suelta */
+.adm-roles { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+.adm-role { position: relative; display: grid; gap: 4px; padding: 14px 16px 14px 46px; border: 1.5px solid var(--line); border-radius: 14px; cursor: pointer; transition: border-color 0.15s, background-color 0.15s; }
+.adm-role input { position: absolute; left: 16px; top: 17px; width: 18px; height: 18px; accent-color: var(--gold-2); }
+.adm-role strong { font-size: 0.95rem; }
+.adm-role span { font-size: 0.82rem; color: var(--soft); line-height: 1.35; }
+.adm-role:has(input:checked) { border-color: var(--gold); background: rgba(197, 160, 89, 0.08); }
+
+/* Secciones: casillas en tarjeta con ícono o logo */
+.adm-picker__group { margin-bottom: 18px; }
+.adm-picker__head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; }
+.adm-picker__head p { margin: 0; }
+.adm-picker__quick { display: flex; gap: 4px; }
+.adm-picker__quick button { padding: 4px 10px; border: 1px solid var(--line); border-radius: 8px; background: #fff; color: var(--soft); font: 600 0.76rem 'Inter Tight', sans-serif; cursor: pointer; }
+.adm-picker__quick button:hover { color: var(--ink); border-color: rgba(31, 29, 26, 0.25); }
+.adm-picker__grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
+.adm-opt { position: relative; display: flex; align-items: center; gap: 10px; padding: 10px 12px 10px 40px; border: 1.5px solid var(--line); border-radius: 12px; background: #fff; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: border-color 0.15s, background-color 0.15s; }
+.adm-opt input { position: absolute; left: 13px; width: 17px; height: 17px; accent-color: var(--gold-2); }
+.adm-opt img { width: 26px; height: 26px; flex: none; border-radius: 7px; border: 1px solid var(--line); object-fit: contain; background: #fff; padding: 2px; }
+.adm-opt .material-symbols-outlined { font-size: 21px; color: var(--gold-2); }
+.adm-opt:has(input:checked) { border-color: var(--gold); background: rgba(197, 160, 89, 0.08); }
+.adm-picker__note { display: none; margin: 0 0 12px; padding: 10px 12px; border-radius: 10px; background: rgba(197, 160, 89, 0.12); font-size: 0.85rem; color: #6b531c; }
+/* Con "Administrador" elegido, las secciones no limitan nada: se atenúan */
+form:has(.adm-role input[value='admin']:checked) .adm-picker__note { display: block; }
+form:has(.adm-role input[value='admin']:checked) .adm-picker__group { opacity: 0.55; }
+
+/* ── Celular ────────────────────────────────────────────────────────────── */
+@media (max-width: 960px) {
+  .adm-shell { display: block; }
+  .adm-side { position: fixed; inset: 0 auto 0 0; z-index: 50; width: min(300px, 86vw); transform: translateX(-100%); transition: transform 0.25s cubic-bezier(0.2, 0.7, 0.1, 1); }
+  .adm-menu-open .adm-side { transform: none; box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.45); }
+  .adm-top { position: sticky; top: 0; z-index: 40; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; background: var(--side); color: #fff; }
+  .adm-top__menu { display: grid; place-items: center; width: 40px; height: 40px; border: 1px solid var(--side-line); border-radius: 10px; background: transparent; color: #fff; cursor: pointer; }
+  .adm-content { padding-top: 26px; }
+  .adm-stats { grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+  .adm-stat { padding: 14px; }
+  .adm-stat strong { font-size: 1.4rem; }
+}
+
+@media (max-width: 600px) {
+  .adm-roles, .adm-grid2 { grid-template-columns: 1fr; }
+  .adm-person > summary { grid-template-columns: auto minmax(0, 1fr); }
+  .adm-person__edit { grid-column: 1 / -1; justify-content: flex-end; }
+  .adm-picker__grid { grid-template-columns: 1fr; }
+  .adm-stat span { font-size: 0.75rem; }
+}
+
+/* El CSS global del sitio le pone su propia familia a h1–h3: en el panel
+   todo va en Inter Tight. */
+.adm :is(h1, h2, h3, h4) { font-family: 'Inter Tight', system-ui, sans-serif; }

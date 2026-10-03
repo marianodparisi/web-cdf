@@ -1,11 +1,16 @@
 ---
+/**
+ * Ingreso al panel, con el degradé noche del sitio. Los códigos de error son
+ * los que devuelve `/api/admin/login`; distinguen credenciales malas de
+ * problemas de conexión con la base.
+ */
 const error = Astro.url.searchParams.get('error');
 const errorMessages: Record<string, string> = {
-  '1': 'Credenciales invalidas. Revisalas e intenta de nuevo.',
+  '1': 'El usuario o la contraseña no coinciden. Revisalos e intentá de nuevo.',
   env: 'Falta una variable de entorno del admin o MySQL.',
-  'db-auth': 'MySQL rechazo el usuario o la contrasena configurada.',
+  'db-auth': 'MySQL rechazó el usuario o la contraseña configurada.',
   'db-connection': 'No se pudo conectar al host de MySQL configurado.',
-  server: 'Hay un error del servidor en la autenticacion. Revisa la consola del server.',
+  server: 'Hubo un error del servidor al ingresar. Revisá la consola del servidor.',
 };
 const errorMessage = error ? errorMessages[error] || errorMessages.server : null;
 ---
@@ -15,59 +20,115 @@ const errorMessage = error ? errorMessages[error] || errorMessages.server : null
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Login | Corazon de Fuego</title>
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Ingresar | Panel Corazón de Fuego</title>
     <link rel="icon" type="image/png" href="/brand/favico.png" />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Inter:wght@300;400;500;600;700;800&display=swap"
-    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&display=swap" />
   </head>
-  <body style="margin:0;font-family:'DM Sans',sans-serif;background:#f5f1e8;color:#3a3a3a;">
-    <main style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;">
-      <div style="width:min(100%,420px);background:white;border:1px solid rgba(0,0,0,.06);border-radius:28px;padding:32px;box-shadow:0 24px 70px rgba(0,0,0,.08);">
-        <p style="margin:0 0 10px;font-size:12px;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:#c5a059;">
-          Corazon de Fuego
-        </p>
-        <h1 style="margin:0 0 12px;font-family:'Inter',sans-serif;font-size:40px;line-height:1;letter-spacing:-0.04em;">
-          Admin
-        </h1>
-        <p style="margin:0 0 24px;color:rgba(58,58,58,.72);line-height:1.6;">
-          Ingresá con tu usuario o email y tu contraseña para editar contenido.
-        </p>
+  <body>
+    <div class="mesh" aria-hidden="true"></div>
+    <main>
+      <span class="logo"><img src="/brand/logowhite.png" alt="Corazón de Fuego" /></span>
 
-        {errorMessage && (
-          <p style="margin:0 0 18px;padding:12px 14px;border-radius:14px;background:#fff4f1;color:#a33b22;font-size:14px;">
-            {errorMessage}
-          </p>
-        )}
+      <form class="card" method="POST" action="/api/admin/login">
+        <p class="eyebrow">Panel de contenido</p>
+        <h1>Ingresar</h1>
+        <p class="lead">Con tu usuario o email y tu contraseña.</p>
 
-        <form method="POST" action="/api/admin/login" style="display:grid;gap:14px;">
-          <label style="display:grid;gap:8px;">
-            <span style="font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;">Usuario o email</span>
-            <input
-              type="text"
-              name="identifier"
-              required
-              style="height:48px;border-radius:14px;border:1px solid rgba(0,0,0,.1);padding:0 14px;font:inherit;"
-            />
-          </label>
-          <label style="display:grid;gap:8px;">
-            <span style="font-size:12px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;">Contrasena</span>
-            <input
-              type="password"
-              name="password"
-              required
-              style="height:48px;border-radius:14px;border:1px solid rgba(0,0,0,.1);padding:0 14px;font:inherit;"
-            />
-          </label>
-          <button
-            type="submit"
-            style="margin-top:8px;height:50px;border:0;border-radius:999px;background:#3a3a3a;color:white;font:inherit;font-weight:700;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;"
-          >
-            Entrar
-          </button>
-        </form>
-      </div>
+        {errorMessage && <p class="error" role="alert">{errorMessage}</p>}
+
+        <label>
+          <span>Usuario o email</span>
+          <input type="text" name="identifier" required autocomplete="username" autofocus />
+        </label>
+        <label>
+          <span>Contraseña</span>
+          <input type="password" name="password" required autocomplete="current-password" />
+        </label>
+        <button type="submit">Entrar</button>
+      </form>
+
+      <a class="back" href="/">← Volver al sitio</a>
     </main>
   </body>
- </html>
+</html>
+
+<style is:global>
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: #08090e;
+    color: #1f1d1a;
+    font-family: 'Inter Tight', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+</style>
+
+<style>
+  .mesh {
+    position: fixed;
+    inset: -25%;
+    z-index: 0;
+    background:
+      radial-gradient(38% 42% at 78% 62%, #4a2b14, transparent 70%),
+      radial-gradient(30% 34% at 64% 30%, #6e4a26, transparent 70%),
+      radial-gradient(44% 46% at 18% 28%, #13243a, transparent 72%),
+      #08090e;
+    filter: blur(48px);
+  }
+  main {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 28px;
+    padding: 32px 18px;
+  }
+  .logo { position: relative; display: block; width: 150px; aspect-ratio: 2.22; overflow: hidden; }
+  .logo img { position: absolute; width: 128%; max-width: none; left: -13%; top: -90%; }
+  .card {
+    display: grid;
+    gap: 16px;
+    width: min(400px, 100%);
+    box-sizing: border-box;
+    padding: 34px 30px 30px;
+    border-radius: 22px;
+    background: #fff;
+    box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.7);
+  }
+  .eyebrow { margin: 0; font-size: 0.66rem; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: #a8893d; }
+  h1 { margin: -6px 0 0; font-size: 2.2rem; font-weight: 800; letter-spacing: -0.035em; }
+  .lead { margin: -8px 0 6px; color: #6b665e; }
+  .error { margin: 0; padding: 12px 14px; border-radius: 12px; background: #fdf1f0; border-left: 4px solid #b42318; color: #8a1c12; font-size: 0.9rem; }
+  label { display: grid; gap: 6px; }
+  label span { font-size: 0.85rem; font-weight: 700; }
+  input {
+    height: 48px;
+    padding: 0 14px;
+    border: 1px solid rgba(31, 29, 26, 0.16);
+    border-radius: 12px;
+    font: 500 1rem 'Inter Tight', sans-serif;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+  }
+  input:focus { border-color: #c5a059; box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.22); }
+  button {
+    height: 50px;
+    margin-top: 6px;
+    border: 0;
+    border-radius: 12px;
+    background: #1f1d1a;
+    color: #fff;
+    font: 700 1rem 'Inter Tight', sans-serif;
+    cursor: pointer;
+    transition: background-color 0.15s;
+  }
+  button:hover { background: #000; }
+  .back { color: rgba(251, 248, 243, 0.7); font-size: 0.9rem; font-weight: 600; text-decoration: none; }
+  .back:hover { color: #fff; }
+</style>
