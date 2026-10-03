@@ -1,0 +1,22 @@
+---
+/**
+ * Kids tiene ruta propia para quedar fuera del lenguaje noche: va a tener un
+ * tratamiento particular y mientras tanto sigue con el diseño anterior.
+ *
+ * Va aparte de `[slug].astro` (las rutas estáticas le ganan a las dinámicas)
+ * para que los estilos del diseño anterior no se carguen en las páginas noche.
+ */
+import MinisterioClaro from '../../components/ministerio/MinisterioClaro.astro';
+import { getMinistries, getSeries, getAnnouncements } from '../../lib/content/collections';
+
+const [ministries, sermonSeries, announcements] = await Promise.all([
+  getMinistries(),
+  getSeries(),
+  getAnnouncements(),
+]);
+const index = ministries.findIndex((m) => m.slug === 'kids');
+if (index === -1) return Astro.redirect('/');
+const next = ministries[(index + 1) % ministries.length];
+---
+
+<MinisterioClaro ministry={ministries[index]} next={next} sermonSeries={sermonSeries} announcements={announcements} />

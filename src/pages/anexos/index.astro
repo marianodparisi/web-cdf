@@ -1,40 +1,33 @@
 ---
 /**
- * Listado de sedes.
- *
- * Reusa `.as-sedes`, la misma grilla de hairlines que ya usan las páginas
- * internas, en vez de inventar un bloque nuevo. La lista sale de la única
- * fuente que hay, la que exporta el layout, así que el nav, el footer y esta
- * página no se pueden desincronizar.
+ * Listado de sedes, en el lenguaje noche. La lista sale de los mismos datos
+ * que usa cada página de sede.
  */
-import MaquetaLayout, { sedes } from '../../layouts/MaquetaLayout.astro';
-
-/* La primera entrada es "Sede Central", que apunta a este mismo listado: acá
-   sería un link a sí mismo. */
-const anexos = sedes.filter((sede) => sede.href !== '/anexos');
+import NocheLayout from '../../layouts/NocheLayout.astro';
+import NocheHero from '../../components/noche/NocheHero.astro';
+import NocheCta from '../../components/noche/NocheCta.astro';
+import { maquetaAnexos } from '../../data/maqueta-anexos';
 ---
 
-<MaquetaLayout title="Nuestras Sedes · Iglesia Corazón de Fuego">
-  <section class="as-section">
-    <div class="as-wrap">
-      <div class="as-head">
-        <div>
-          <p class="as-eyebrow" data-reveal>Nuestras Sedes</p>
-          <h1 class="as-h1" data-reveal="words">Una iglesia en varias ciudades.</h1>
-        </div>
-      </div>
+<NocheLayout title="Nuestras Sedes · Iglesia Corazón de Fuego">
+  <NocheHero lines={['nuestras', 'sedes']} lead="Una iglesia en varias ciudades." image="/sedes/nosotros3.JPG" short />
 
-      <div class="as-sedes" data-reveal>
-        {
-          anexos.map((sede) => (
-            <a class="as-sede" href={sede.href}>
-              <h4>{sede.name}</h4>
-              <p>{sede.region}</p>
-              <span class="as-sede__arrow material-symbols-outlined">arrow_forward</span>
-            </a>
-          ))
-        }
+  <section class="lz-section lz-dark">
+    <div class="lz-wrap">
+      <div class="lz-tiles">
+        {maquetaAnexos.map((a) => (
+          <a class="lz-tile" href={`/anexos/${a.slug}`} data-r>
+            <span class="lz-tile__name">{a.name}</span>
+            <span class="lz-spaced">{a.addressLines[0] ?? a.yearsLabel}</span>
+            <span class="lz-tile__arrow" aria-hidden="true">→</span>
+          </a>
+        ))}
       </div>
     </div>
   </section>
-</MaquetaLayout>
+
+  <NocheCta title="Te esperamos." text="Vení a conocernos este fin de semana en cualquiera de nuestras sedes.">
+    <a class="lz-btn" href="https://maps.app.goo.gl/mEVMgoTXbV3BULVq8" target="_blank" rel="noopener noreferrer">Tu primera vez</a>
+    <a class="lz-btn lz-btn--ghost" href="/contact">Escribinos</a>
+  </NocheCta>
+</NocheLayout>

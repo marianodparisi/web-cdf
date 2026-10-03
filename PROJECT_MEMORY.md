@@ -607,6 +607,45 @@ gasta 100 de las 10.000 unidades diarias por consulta.
 - Si se aprueba, el color por ministerio pasa a ser un campo `color` en
   `src/data/ministries.ts` y lo consumen también el navbar y `MinistryTemplate`.
 
+## Sistema "noche" — el sitio público desde octubre de 2026
+
+El 2 de octubre de 2026 el sitio pasó al lenguaje del Instagram de la
+iglesia: degradés difusos oscuros con grano, títulos en minúscula ultra
+negrita con la segunda línea corrida ("devocional / semanal"), una cita chica
+en cursiva con raya debajo y el logo con serifa abajo. Se compararon cuatro
+climas de degradé (brasa, aurora, hielo, noche) y el usuario eligió **noche**.
+Antes se probó una versión basada en las portadas de serie ("luz del mes") y
+se descartó: el usuario dijo que con esas imágenes nos fuimos para otro lado.
+
+- `src/layouts/NocheLayout.astro`: nav con los mismos desplegables que
+  `MaquetaLayout`, menú mobile, footer, reveals (IntersectionObserver con red
+  de 4 s), pestañas `[data-tabs]` y mapa `[data-mapa]`. **No pasa por
+  BaseLayout**: no carga global.css, Tailwind ni GSAP.
+- `src/styles/noche.css`: todo prefijado `.lz`. `.lz-tint` con `--m` tiñe el
+  degradé y los acentos con el color de la página (ministerio, sede, programa).
+- `src/components/noche/NocheHero.astro` y `NocheCta.astro`.
+- Tipografía: Inter Tight. El logo es `public/brand/logowhite.png`, un
+  cuadrado con mucho aire: `.lz-logo` lo recorta al lettering.
+- Migradas: inicio, nosotros, misiones, evangelismo, contacto, sedes (listado
+  y las cinco), devocional (listado y artículo), ministerios (listado y fichas).
+- **IETE y Discipulados** tienen tratamiento propio, pedido explícito del
+  usuario: "programa de estudio", con la ficha del curso y el temario como
+  hojas de papel rayado (`.lz-sheet`, `.lz-modules`) y la inscripción sobre
+  otra hoja.
+- **Kids y Arde quedan afuera a propósito**: el usuario les va a hacer algo
+  particular. Tienen rutas estáticas propias (`ministerios/kids.astro`,
+  `arde.astro`) que renderizan `components/ministerio/MinisterioClaro.astro`,
+  el diseño claro anterior. No resolverlo con un condicional dentro de
+  `[slug].astro`: importar ese componente suma Tailwind y `maqueta.css` a todas
+  las páginas noche y cambia la tipografía de los títulos.
+- Las fichas de Carcelario y Firmes y Adelante van sin foto, sólo degradé y
+  nombre: las fotos eran imágenes externas de relleno y el usuario las sacó.
+- `MaquetaLayout` y `maqueta.css` siguen vivos sólo por Kids y Arde.
+- QA visual: el panel del navegador no dibuja si la ventana está oculta. Un
+  Chrome headless por CDP con `--force-prefers-reduced-motion` (el sitio ya
+  lo respeta y muestra todo sin transición) captura secciones sin depender de
+  la ventana.
+
 ## Estado y precauciones del repositorio
 
 - No usar `git reset --hard`, `git checkout --` ni limpiezas destructivas.

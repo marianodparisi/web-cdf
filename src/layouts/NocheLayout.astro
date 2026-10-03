@@ -178,6 +178,11 @@ const footerColumns = [
     </footer>
 
     <script>
+      const nav = document.querySelector('.lz-nav');
+      const onScroll = () => nav?.classList.toggle('is-scrolled', window.scrollY > 40);
+      onScroll();
+      window.addEventListener('scroll', onScroll, { passive: true });
+
       const burger = document.querySelector<HTMLButtonElement>('[data-burger]');
       burger?.addEventListener('click', () => {
         const open = document.body.classList.toggle('lz-menu-open');
@@ -206,6 +211,38 @@ const footerColumns = [
         items.forEach((el) => io.observe(el));
         setTimeout(() => items.forEach((el) => el.classList.add('is-in')), 4000);
       }
+
+      // Pestañas: cada bloque se resuelve dentro de sí mismo. Los paneles
+      // dormidos están en display:none y el observer nunca los vio, así que al
+      // abrirlos se revelan a mano.
+      document.querySelectorAll('[data-tabs]').forEach((tabs) => {
+        tabs.querySelectorAll<HTMLElement>('[data-tab]').forEach((button) => {
+          button.addEventListener('click', () => {
+            const target = button.dataset.tab;
+            tabs.querySelectorAll('[data-tab]').forEach((b) => b.classList.toggle('is-active', b === button));
+            tabs.querySelectorAll<HTMLElement>('[data-panel]').forEach((panel) => {
+              const open = panel.dataset.panel === target;
+              panel.classList.toggle('is-active', open);
+              if (open) panel.querySelectorAll('[data-r]').forEach((el) => el.classList.add('is-in'));
+            });
+          });
+        });
+      });
+
+      // Mapa de destinos: un solo destino activo; hover, foco y tap.
+      document.querySelectorAll('[data-mapa]').forEach((mapa) => {
+        const puntos = [...mapa.querySelectorAll<HTMLElement>('[data-destino]')];
+        const fichas = [...mapa.querySelectorAll<HTMLElement>('[data-ficha]')];
+        const activar = (slug?: string) => {
+          puntos.forEach((p) => p.classList.toggle('is-active', p.dataset.destino === slug));
+          fichas.forEach((f) => f.classList.toggle('is-active', f.dataset.ficha === slug));
+        };
+        puntos.forEach((punto) =>
+          ['mouseenter', 'focus', 'click'].forEach((evt) =>
+            punto.addEventListener(evt, () => activar(punto.dataset.destino)),
+          ),
+        );
+      });
 
       const words = document.querySelectorAll('.lz-rotator__word');
       if (words.length > 1 && !reduce) {

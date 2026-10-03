@@ -1,13 +1,16 @@
 ---
 /**
- * MAQUETA — "Nosotros", con la estructura de la página institucional de
- * austinstone.org. El texto sale de la /nosotros que ya existe en el sitio.
+ * Nosotros, en el lenguaje noche del inicio. Los textos son los de la página
+ * anterior; cambia el envoltorio.
  */
-import MaquetaLayout from '../layouts/MaquetaLayout.astro';
+import NocheLayout from '../layouts/NocheLayout.astro';
+import NocheHero from '../components/noche/NocheHero.astro';
+import NocheCta from '../components/noche/NocheCta.astro';
 import { maquetaAnexos } from '../data/maqueta-anexos';
 import { getMinistries } from '../lib/content/collections';
 
 const ministries = await getMinistries();
+const mapsUrl = 'https://maps.app.goo.gl/mEVMgoTXbV3BULVq8';
 
 const pilares = [
   {
@@ -27,150 +30,127 @@ const pilares = [
   },
 ];
 
-const fotos = [
-  '/sedes/nosotros1.JPG',
-  '/ministries/life/life1.jpg',
-  '/sedes/nosotros2.JPG',
-  '/ministries/life/life3.jpg',
-  '/sedes/nosotros3.JPG',
-  '/ministries/life/life2.jpeg',
-];
+const fotos = ['/sedes/nosotros1.JPG', '/sedes/nosotros2.JPG', '/sedes/nosotros3.JPG'];
 ---
 
-<MaquetaLayout title="Nosotros · Iglesia Corazón de Fuego">
-  <div class="as-ministry" style="--m: #c5a059">
-    <header class="as-hero as-hero--inner">
-      <div class="as-hero__bg">
-        <video autoplay muted loop playsinline preload="metadata" poster="/sedes/nosotros1.JPG">
-          <source src="/home/hero-v1-compressed.mp4" type="video/mp4" />
-        </video>
-        <div class="as-hero__veil"></div>
-      </div>
-      <div class="as-hero__grid">
-        <div class="as-hero__content">
-          <p class="as-eyebrow as-eyebrow--light" data-reveal>Iglesia Corazón de Fuego · Ramos Mejía</p>
-          <h1 class="as-display" data-reveal="words">Una casa para encontrarnos con Su presencia.</h1>
-          <p class="as-hero__lead" data-reveal>
-            Adoramos, oramos y caminamos juntos para conocer a Jesús y encender una generación que viva para Él.
-          </p>
-          <div class="as-hero__actions" data-reveal data-reveal-delay="140">
-            <a class="as-button as-button--white" href="https://maps.app.goo.gl/mEVMgoTXbV3BULVq8" target="_blank" rel="noopener noreferrer">Visitanos</a>
-            <a class="as-button as-button--ghost-white" href="#historia">Nuestra historia</a>
-          </div>
-        </div>
-      </div>
-    </header>
+<NocheLayout title="Nosotros · Iglesia Corazón de Fuego">
+  <NocheHero
+    lines={['nosotros']}
+    kicker="Iglesia Corazón de Fuego · Ramos Mejía"
+    lead="Una casa para encontrarnos con Su presencia."
+    video="/home/hero-v1-compressed.mp4"
+    image="/sedes/nosotros1.JPG"
+  >
+    <Fragment slot="quote">
+      Adoramos, oramos y caminamos juntos para conocer a Jesús y
+      <strong>encender una generación que viva para Él.</strong>
+    </Fragment>
+    <a class="lz-btn" href={mapsUrl} target="_blank" rel="noopener noreferrer">Visitanos</a>
+    <a class="lz-btn lz-btn--ghost" href="#historia">Nuestra historia</a>
+  </NocheHero>
 
-    <section class="as-section as-section--dark as-statement" id="quienes">
-      <div class="as-wrap">
-        <p class="as-eyebrow as-eyebrow--light" data-reveal>Quiénes somos</p>
-        <h2 class="as-statement__text" data-reveal="words">
-          Una comunidad para encontrarte con Dios, crecer y servir.
-        </h2>
+  <section class="lz-plate lz-statement" id="quienes">
+    <div class="lz-mesh" aria-hidden="true"></div>
+    <div class="lz-wrap lz-statement__grid">
+      <div>
+        <span class="lz-spaced lz-kicker" data-r>Quiénes somos</span>
+        <h2 class="lz-statement__text" data-r>Una comunidad para encontrarte con Dios, crecer y servir.</h2>
       </div>
-    </section>
-
-    <section class="as-section as-section--light">
-      <div class="as-wrap as-split">
-        <h2 class="as-h1" data-reveal="words">Adoración que se vuelve vida.</h2>
-        <p class="as-lead" data-reveal>
+      <div class="lz-statement__body" data-r>
+        <p class="lz-title">Adoración que se vuelve vida.</p>
+        <p class="lz-body">
           Creemos que la iglesia es una familia espiritual llamada a revelar a Cristo con palabras,
           obras y una vida rendida a Dios.
         </p>
       </div>
+    </div>
+  </section>
 
-      <div class="as-wrap" style="margin-top:4rem">
-        <div class="as-cols">
-          {pilares.map((p, i) => (
-            <div class="as-col" data-reveal data-reveal-delay={i * 110}>
-              <span class="as-col__n">{p.n}</span>
-              <h3>{p.title}</h3>
-              <p>{p.text}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <section class="as-section" id="historia">
-      <div class="as-wrap as-split">
-        <div>
-          <p class="as-eyebrow" data-reveal>Nuestra historia</p>
-          <h2 class="as-h1" data-reveal="words">Una obra nacida en oración, espera y obediencia.</h2>
-        </div>
-        <div>
-          <p class="as-lead" data-reveal>
-            Dios abrió camino para levantar una casa en Ramos Mejía. Desde el primer llamado hasta el
-            terreno en una avenida visible, cada paso confirmó que Dios estaba preparando algo nuevo.
-          </p>
-          <p class="as-lead" style="margin-top:1.25rem" data-reveal data-reveal-delay="90">
-            Hoy somos una iglesia que alcanza, forma y envía, con un equipo disponible para servir y
-            soñar por más.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <section class="as-section as-section--photos">
-      <div class="as-wrap as-photos">
-        {fotos.map((src, i) => (
-          <div class="as-photo" data-reveal data-reveal-delay={i * 70}>
-            <img src={src} alt="" loading="lazy" />
+  <section class="lz-section lz-dark">
+    <div class="lz-wrap">
+      <div class="lz-cols">
+        {pilares.map((p) => (
+          <div class="lz-col" data-r>
+            <span class="lz-col__n">{p.n}</span>
+            <h3>{p.title}</h3>
+            <p>{p.text}</p>
           </div>
         ))}
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="as-section as-section--light" id="sedes">
-      <div class="as-wrap">
-        <div class="as-head">
-          <div>
-            <p class="as-eyebrow" data-reveal>Sedes</p>
-            <h2 class="as-h1" data-reveal="words">Una iglesia en varias ciudades.</h2>
-          </div>
-        </div>
-        <div class="as-sedes" data-reveal>
-          {maquetaAnexos.map((a) => (
-            <a class="as-sede" href={`/anexos/${a.slug}`}>
-              <h4>{a.name}</h4>
-              <p>{a.yearsValue} · {a.yearsLabel}</p>
-              <span class="as-sede__arrow material-symbols-outlined">arrow_forward</span>
-            </a>
-          ))}
-        </div>
+  <section class="lz-section lz-dark lz-dark--2" id="historia">
+    <div class="lz-wrap lz-split">
+      <div>
+        <span class="lz-spaced lz-kicker" data-r>Nuestra historia</span>
+        <h2 class="lz-title" data-r>Una obra nacida en oración, espera y obediencia.</h2>
       </div>
-    </section>
+      <div class="lz-prose" data-r>
+        <p>
+          Dios abrió camino para levantar una casa en Ramos Mejía. Desde el primer llamado hasta el
+          terreno en una avenida visible, cada paso confirmó que Dios estaba preparando algo nuevo.
+        </p>
+        <p>
+          Hoy somos una iglesia que alcanza, forma y envía, con un equipo disponible para servir y
+          soñar por más.
+        </p>
+      </div>
+    </div>
+    <div class="lz-wrap" style="margin-top: clamp(56px, 7vw, 96px)">
+      <div class="lz-photos" data-r>
+        {fotos.map((src) => <img src={src} alt="" loading="lazy" />)}
+      </div>
+    </div>
+  </section>
 
-    <section class="as-section" id="ministerios">
-      <div class="as-wrap">
-        <div class="as-head">
-          <div>
-            <p class="as-eyebrow" data-reveal>Ministerios</p>
-            <h2 class="as-h1" data-reveal="words">Dónde servimos y crecemos.</h2>
-          </div>
-          <a class="as-button as-button--small" href="/#ministerios">Ver todos</a>
-        </div>
-        <div class="as-sedes" data-reveal>
-          {ministries.slice(0, 6).map((m) => (
-            <a class="as-sede" href={`/ministerios/${m.slug}`}>
-              <h4>{m.name}</h4>
-              <p>{m.area}</p>
-              <span class="as-sede__arrow material-symbols-outlined">arrow_forward</span>
-            </a>
-          ))}
-        </div>
+  <section class="lz-section lz-dark" id="sedes">
+    <div class="lz-wrap">
+      <div class="lz-head">
+        <h2 class="lz-lockup lz-lockup--md" data-r>
+          <span>nuestras</span>
+          <span class="lz-lockup__shift">sedes</span>
+        </h2>
+        <p class="lz-quote lz-quote--side" data-r>Sedes. <strong>Una iglesia en varias ciudades.</strong></p>
       </div>
-    </section>
+      <div class="lz-tiles">
+        {maquetaAnexos.map((a) => (
+          <a class="lz-tile" href={`/anexos/${a.slug}`} data-r>
+            <span class="lz-tile__name">{a.name}</span>
+            <span class="lz-spaced">{a.yearsValue} · {a.yearsLabel}</span>
+            <span class="lz-tile__arrow" aria-hidden="true">→</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
 
-    <section class="as-section as-section--dark as-cta">
-      <div class="as-wrap">
-        <h2 class="as-display" data-reveal="words">Te esperamos.</h2>
-        <p data-reveal>Vení a conocernos este fin de semana en cualquiera de nuestras sedes.</p>
-        <div class="as-button-group" data-reveal data-reveal-delay="120">
-          <a class="as-button as-button--white" href="https://maps.app.goo.gl/mEVMgoTXbV3BULVq8" target="_blank" rel="noopener noreferrer">Tu primera vez</a>
-          <a class="as-button as-button--ghost-white" href="/contact">Contactanos</a>
-        </div>
+  <section class="lz-section lz-dark lz-dark--2" id="ministerios">
+    <div class="lz-wrap">
+      <div class="lz-head">
+        <h2 class="lz-lockup lz-lockup--md" data-r>
+          <span>dónde</span>
+          <span class="lz-lockup__shift">servimos</span>
+        </h2>
+        <p class="lz-quote lz-quote--side" data-r>Ministerios. <strong>Dónde servimos y crecemos.</strong></p>
       </div>
-    </section>
-  </div>
-</MaquetaLayout>
+      <div class="lz-tiles">
+        {ministries.slice(0, 6).map((m) => (
+          <a class="lz-tile" href={`/ministerios/${m.slug}`} data-r>
+            <span class="lz-tile__name">{m.name}</span>
+            <span class="lz-spaced">{m.area}</span>
+            <span class="lz-tile__arrow" aria-hidden="true">→</span>
+          </a>
+        ))}
+      </div>
+      <div class="lz-actions" style="margin-top: 32px" data-r>
+        <a class="lz-btn lz-btn--ghost" href="/ministerios">Ver todos</a>
+      </div>
+    </div>
+  </section>
+
+  <NocheCta title="Te esperamos." text="Vení a conocernos este fin de semana en cualquiera de nuestras sedes.">
+    <a class="lz-btn" href={mapsUrl} target="_blank" rel="noopener noreferrer">Tu primera vez</a>
+    <a class="lz-btn lz-btn--ghost" href="/contact">Contactanos</a>
+  </NocheCta>
+</NocheLayout>

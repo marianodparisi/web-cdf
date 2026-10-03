@@ -1,13 +1,14 @@
 ---
 /**
- * MAQUETA — páginas "Educativos" (IETE y Discipulados).
+ * Páginas "Educativos" (IETE y Discipulados), en el lenguaje noche con un
+ * tratamiento propio de programa de estudio: la ficha del curso como una hoja
+ * de papel rayada, el temario como índice de cuaderno con módulos numerados y
+ * la inscripción sobre otra hoja. El color de cada programa marca el margen.
  *
- * El contenido sale de las páginas reales que ya existen en el sitio:
- *   src/pages/institucional/iete.astro
- *   src/pages/institucional/discipulados.astro
- * Sólo cambia el envoltorio visual, no el texto.
+ * El contenido es el de las páginas anteriores; sólo cambia el envoltorio.
  */
-import MaquetaLayout from '../../layouts/MaquetaLayout.astro';
+import NocheLayout from '../../layouts/NocheLayout.astro';
+import NocheCta from '../../components/noche/NocheCta.astro';
 
 const { slug } = Astro.params;
 
@@ -162,180 +163,145 @@ if (!pagina) return Astro.redirect('/');
 const otroSlug = slug === 'iete' ? 'discipulados' : 'iete';
 const otro = paginas[otroSlug];
 
-/**
- * Columnas para las listas que son sección propia.
- * Una lista de 3 en dos columnas deja un hueco y se ve suelta; una de 4 en tres
- * columnas deja uno colgando. Se reparte según cuántos ítems haya:
- * hasta 3 → una columna por ítem · 4 → 2×2 · 5 o más → 3 columnas.
- */
-const columnasDeLista = (n: number) => (n <= 3 ? n : n === 4 ? 2 : 3);
-
+/* Los ejes de Discipulados vienen como "Título — explicación": en el temario
+   el título es el módulo y la explicación va debajo. Los de IETE son sólo
+   título. */
+const modulos = pagina.ejes.map((eje) => {
+  const [title, ...rest] = eje.split(' — ');
+  return { title, text: rest.join(' — ') };
+});
 ---
 
-<MaquetaLayout title={`${pagina.name} · Iglesia Corazón de Fuego`}>
-  <div class="as-ministry" style={`--m: ${pagina.color}`}>
-    <header class="as-mhero">
-      <div class="as-mhero__copy">
-        <p class="as-eyebrow" data-reveal>{pagina.kicker}</p>
-        <h1 class="as-display" data-reveal="words">{pagina.name}</h1>
-        <p class="as-mhero__lead" data-reveal>{pagina.lead}</p>
-        {pagina.lead2 && <p class="as-mhero__lead as-mhero__lead--sm" data-reveal data-reveal-delay="80">{pagina.lead2}</p>}
-        <div class="as-button-group" data-reveal data-reveal-delay="120">
-          <a class="as-button as-button--ministry" href="#inscripcion">Solicitar información</a>
-          <a class="as-button as-button--ghost" href="#que-es">¿Qué es {pagina.name}?</a>
+<NocheLayout title={`${pagina.name} · Iglesia Corazón de Fuego`}>
+  <div class="lz-tint" style={`--m: ${pagina.color}`}>
+    <!-- ══════════ PORTADA ══════════ El programa a la izquierda y su ficha
+         técnica en papel a la derecha: los datos duros son la primera pregunta
+         de quien evalúa anotarse. -->
+    <header class="lz-plate lz-phero">
+      <div class="lz-mesh" aria-hidden="true"></div>
+      <div></div>
+      <div class="lz-wrap lz-edu-hero" style="padding: 0">
+        <div class="lz-edu-hero__copy">
+          <span class="lz-spaced lz-phero__kicker" data-r>Educativos · {pagina.kicker}</span>
+          <h1 class="lz-lockup lz-lockup--xl" data-r><span>{pagina.name.toLowerCase()}</span></h1>
+          <p class="lz-lead" data-r>{pagina.lead}</p>
+          {pagina.lead2 && <p class="lz-body" data-r>{pagina.lead2}</p>}
+          <div class="lz-actions" data-r>
+            <a class="lz-btn" href="#inscripcion">Solicitar información</a>
+            <a class="lz-btn lz-btn--ghost" href="#que-es">¿Qué es {pagina.name}?</a>
+          </div>
         </div>
+
+        <aside class="lz-sheet lz-sheet--card" data-r>
+          {pagina.logo && <img class="lz-sheet__logo" src={pagina.logo} alt={`Logo ${pagina.name}`} />}
+          <span class="lz-spaced lz-sheet__kicker">Ficha del programa</span>
+          <p class="lz-sheet__name">{pagina.name}</p>
+          <dl class="lz-facts">
+            {pagina.datos.map((d) => (
+              <div>
+                <dt>{d.label}</dt>
+                <dd>{d.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </aside>
       </div>
-      {/* Si la sub-marca tiene logo propio, el hero lo muestra a él y no una
-          foto genérica: el logo *es* la imagen del programa. */}
-      <div class={`as-mhero__media${pagina.logo ? ' is-logo' : ''}`} data-reveal>
-        <img src={pagina.logo ?? pagina.image} alt={pagina.logo ? `Logo ${pagina.name}` : pagina.name} />
-      </div>
+      <div class="lz-logo lz-logo--foot" aria-hidden="true"><img src="/brand/logowhite.png" alt="" /></div>
     </header>
 
-    {/* Los datos duros (duración, modalidad, edad) van acá arriba y no al final:
-        son la primera pregunta de quien evalúa anotarse, y antes había que
-        recorrer la página entera para encontrarlos. */}
-    <section class="as-section as-section--facts">
-      <div class="as-wrap">
-        <div class="as-meta as-meta--top" data-reveal>
-          {pagina.datos.map((d) => (
-            <div class="as-meta__item">
-              <span class="material-symbols-outlined">{d.icon}</span>
-              <div><strong>{d.label}</strong><p>{d.value}</p></div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    {/* La declaración y su desarrollo son la misma idea: la pregunta, la
-        respuesta de una línea y su explicación. Estaban en dos secciones, y la
-        segunda quedaba sin título y con media pantalla vacía al costado. Van
-        juntas, a dos columnas, ocupando el ancho completo. */}
-    <section class="as-section as-section--dark as-statement" id="que-es">
-      <div class="as-wrap as-statement__grid">
+    <!-- ══════════ QUÉ ES ══════════ -->
+    <section class="lz-section lz-dark" id="que-es">
+      <div class="lz-wrap lz-statement__grid" style="align-items: start">
         <div>
-          <p class="as-eyebrow as-eyebrow--light" data-reveal>¿Qué es {pagina.name}?</p>
-          <h2 class="as-statement__text" data-reveal="words">{pagina.statement}</h2>
+          <span class="lz-spaced lz-kicker" data-r>¿Qué es {pagina.name}?</span>
+          <h2 class="lz-statement__text" data-r>{pagina.statement}</h2>
         </div>
-        <div class="as-statement__body">
-          {pagina.quees.map((p, i) => (
-            <p class="as-lead" style={i > 0 ? 'margin-top:1.5rem' : ''} data-reveal data-reveal-delay={i * 90}>
-              {p}
-            </p>
-          ))}
+        <div class="lz-prose" data-r>
+          {pagina.quees.map((p) => <p>{p}</p>)}
         </div>
       </div>
     </section>
 
-    {/* Los contenidos del programa dejan de ser una barra lateral y pasan a ser
-        una sección con título propio. */}
-    <section class="as-section as-section--tight" id="programa">
-      <div class="as-wrap">
-        <div class="as-head">
-          <div>
-            <p class="as-eyebrow" data-reveal>Contenidos</p>
-            <h2 class="as-h1" data-reveal="words">{pagina.ejesTitulo}</h2>
+    <!-- ══════════ TEMARIO ══════════ La hoja: módulos como índice de cuaderno. -->
+    <section class="lz-section lz-dark lz-dark--2" id="programa">
+      <div class="lz-wrap">
+        <div class="lz-sheet lz-sheet--page" data-r>
+          <div class="lz-sheet__head">
+            <div>
+              <span class="lz-spaced lz-sheet__kicker">Contenidos</span>
+              <h2>{pagina.ejesTitulo}</h2>
+            </div>
+            <span class="lz-spaced lz-sheet__kicker">{modulos.length} módulos</span>
           </div>
+          <ol class="lz-modules">
+            {modulos.map((m) => (
+              <li class="lz-module">
+                <div>
+                  <strong>{m.title}</strong>
+                  {m.text && <span>{m.text}</span>}
+                </div>
+              </li>
+            ))}
+          </ol>
+          {pagina.ejesCierre && <p class="lz-sheet__note">{pagina.ejesCierre}</p>}
         </div>
-        <ul class="as-cards" style={`--cards: ${columnasDeLista(pagina.ejes.length)}`}>
-          {pagina.ejes.map((e, i) => (
-            <li data-reveal data-reveal-delay={i * 70}>{e}</li>
-          ))}
-        </ul>
       </div>
     </section>
 
-    {/* Banda a sangre. Entre la portada y el pie no había una sola imagen:
-        seis secciones seguidas de eyebrow + título + texto, todas del mismo
-        alto. Este corte parte esa columna al medio.
-        Las dos fotos son provisorias: no hay material propio de las clases
-        todavía, así que salen de lo que ya existe en `/public`.
-        La frase de cierre de los contenidos vive acá y no como el párrafo
-        gris suelto que era antes: es la misma línea, con el peso que le
-        faltaba. Discipulados no tiene cierre, así que va sólo la foto. */}
-    <section class="as-section as-band">
-      <div class="as-band__media" data-reveal>
-        <img src={pagina.banda} alt={`${pagina.name} en Corazón de Fuego`} loading="lazy" />
-        {pagina.ejesCierre && <p class="as-band__quote">{pagina.ejesCierre}</p>}
-      </div>
-    </section>
-
-    <section class="as-section as-section--light as-section--tight" id="enfoque">
-      <div class="as-wrap">
-        <div class="as-head">
-          <div>
-            <p class="as-eyebrow" data-reveal>Nuestra visión de formación</p>
-            <h2 class="as-h1" data-reveal="words">{pagina.visionTitulo}</h2>
-          </div>
-        </div>
-        <div class={`as-cols${pagina.columnas.length === 4 ? ' as-cols--4' : ''}`}>
-          {pagina.columnas.map((c, i) => (
-            <div class="as-col" data-reveal data-reveal-delay={i * 100}>
-              <span class="as-col__n">{c.n}</span>
-              <p class="as-col__label">{c.label}</p>
+    <!-- ══════════ VISIÓN ══════════ -->
+    <section class="lz-section lz-dark" id="enfoque">
+      <div class="lz-wrap">
+        <span class="lz-spaced lz-kicker" data-r>Nuestra visión de formación</span>
+        <h2 class="lz-title" style="max-width: 24ch; margin-bottom: clamp(36px, 5vw, 64px)" data-r>{pagina.visionTitulo}</h2>
+        <div class="lz-cols" style={`--n: ${pagina.columnas.length}`}>
+          {pagina.columnas.map((c) => (
+            <div class="lz-col" data-r>
+              <span class="lz-col__n">{c.n}</span>
+              <span class="lz-spaced">{c.label}</span>
               <h3>{c.title}</h3>
               <p>{c.text}</p>
             </div>
           ))}
         </div>
         {pagina.visionCierre && (
-          <p class="as-lead as-prose" style="margin-top:3rem" data-reveal>{pagina.visionCierre}</p>
+          <p class="lz-body" style="margin-top: 40px; color: var(--white)" data-r>{pagina.visionCierre}</p>
         )}
       </div>
     </section>
 
-    {/* "¿Para quién es?" queda sola. Antes esta sección acumulaba cuatro
-        bloques distintos bajo un título que sólo describía el primero. */}
-    {/* Esta sección y "Contenidos" eran el mismo `.as-cards`: misma línea vino
-        arriba de cada ítem, mismo alto, seis ítems cada una. Cambiaban las
-        palabras y nada más, y era de ahí que las páginas se sentían todas
-        iguales. Son dos cosas distintas —un temario y un destinatario— y
-        ahora se leen distinto: acá una lista marcada, en dos columnas. */}
-    <section class="as-section as-section--tight" id="info">
-      <div class="as-wrap">
-        <div class="as-head">
-          <div>
-            <p class="as-eyebrow" data-reveal>Información general</p>
-            <h2 class="as-h1" data-reveal="words">¿Para quién es?</h2>
-          </div>
+    <!-- ══════════ PARA QUIÉN ══════════ -->
+    <section class="lz-plate lz-statement" id="info">
+      <div class="lz-mesh" aria-hidden="true"></div>
+      <div class="lz-wrap">
+        <div class="lz-head">
+          <h2 class="lz-lockup lz-lockup--md" data-r>
+            <span>¿para quién</span>
+            <span class="lz-lockup__shift">es?</span>
+          </h2>
+          <p class="lz-quote lz-quote--side" data-r>Información general.</p>
         </div>
-        <ul class="as-list as-list--lg as-list--2">
-          {pagina.paraQuien.map((p, i) => (
-            <li data-reveal data-reveal-delay={i * 70}>{p}</li>
-          ))}
+        <ul class="lz-checklist">
+          {pagina.paraQuien.map((p) => <li data-r>{p}</li>)}
         </ul>
       </div>
     </section>
 
     {(pagina.incluye.length > 0 || pagina.presenciales.length > 0) && (
-      <section class="as-section as-section--light as-section--tight" id="cursada">
-        <div class="as-wrap">
-          <div class="as-head">
-            <div>
-              <p class="as-eyebrow" data-reveal>Cómo se cursa</p>
-              <h2 class="as-h1" data-reveal="words">Qué incluye el programa</h2>
-            </div>
-          </div>
-          <div class="as-split">
+      <section class="lz-section lz-dark" id="cursada">
+        <div class="lz-wrap">
+          <span class="lz-spaced lz-kicker" data-r>Cómo se cursa</span>
+          <h2 class="lz-title" style="margin-bottom: 40px" data-r>Qué incluye el programa</h2>
+          <div class="lz-split">
             {pagina.incluye.length > 0 && (
-              <div data-reveal>
-                <h3 class="as-h3">La cursada</h3>
-                <ul class="as-list as-list--lg">
-                  {pagina.incluye.map((p) => (
-                    <li>{p}</li>
-                  ))}
-                </ul>
+              <div data-r>
+                <h3 class="lz-h3">La cursada</h3>
+                <ul class="lz-chips">{pagina.incluye.map((p) => <li>{p}</li>)}</ul>
               </div>
             )}
             {pagina.presenciales.length > 0 && (
-              <div data-reveal data-reveal-delay="100">
-                <h3 class="as-h3">Experiencias presenciales</h3>
-                <ul class="as-list as-list--lg">
-                  {pagina.presenciales.map((p) => (
-                    <li>{p}</li>
-                  ))}
-                </ul>
+              <div data-r>
+                <h3 class="lz-h3">Experiencias presenciales</h3>
+                <ul class="lz-chips">{pagina.presenciales.map((p) => <li>{p}</li>)}</ul>
               </div>
             )}
           </div>
@@ -343,62 +309,56 @@ const columnasDeLista = (n: number) => (n <= 3 ? n : n === 4 ? 2 : 3);
       </section>
     )}
 
-    <!-- ══════════ INSCRIPCIÓN ══════════ Mismos campos que la página real. -->
-    <section class="as-section" id="inscripcion">
-      <div class="as-wrap as-split">
+    <!-- ══════════ INSCRIPCIÓN ══════════ Mismos campos que antes, sobre una hoja. -->
+    <section class="lz-section lz-dark lz-dark--2" id="inscripcion">
+      <div class="lz-wrap lz-split">
         <div>
-          <p class="as-eyebrow" data-reveal>Solicitar información</p>
-          <h2 class="as-h1" data-reveal="words">{pagina.ctaTitle}</h2>
-          <p class="as-lead" style="margin-top:1.25rem" data-reveal>{pagina.ctaText}</p>
+          <span class="lz-spaced lz-kicker" data-r>Solicitar información</span>
+          <h2 class="lz-title" data-r>{pagina.ctaTitle}</h2>
+          <p class="lz-body" style="margin-top: 18px" data-r>{pagina.ctaText}</p>
         </div>
 
-        {/* `action="#"`: la maqueta no envía. Al promoverla va al endpoint real. */}
-        <form class="as-form" action="#" method="post" data-reveal data-reveal-delay="100">
-          <label class="as-field">
-            <span>WhatsApp</span>
-            <input type="tel" name="whatsapp" placeholder="10 dígitos" required />
-          </label>
-          <label class="as-field">
-            <span>Correo electrónico *</span>
-            <input type="email" name="email" placeholder="tu@correo.com" required />
-          </label>
-          <label class="as-field">
-            <span>Nombres *</span>
-            <input type="text" name="nombres" placeholder="Tus nombres" required />
-          </label>
-          <div class="as-form__row">
-            <label class="as-field">
-              <span>Primer apellido *</span>
-              <input type="text" name="apellido1" placeholder="Primer apellido" required />
+        {/* `action="#"`: todavía no hay endpoint, igual que antes. */}
+        <div class="lz-sheet lz-sheet--form" data-r>
+          <form class="lz-form" action="#" method="post">
+            <label class="lz-field">
+              <span>WhatsApp</span>
+              <input type="tel" name="whatsapp" placeholder="10 dígitos" required />
             </label>
-            <label class="as-field">
-              <span>Segundo apellido</span>
-              <input type="text" name="apellido2" placeholder="Segundo apellido" />
+            <label class="lz-field">
+              <span>Correo electrónico *</span>
+              <input type="email" name="email" placeholder="tu@correo.com" required />
             </label>
-          </div>
-          <label class="as-check">
-            <input type="checkbox" name="privacidad" required />
-            <span>Acepto el aviso de privacidad y protección de datos personales.</span>
-          </label>
-          <button class="as-button as-button--ministry" type="submit">Enviar solicitud</button>
-        </form>
+            <label class="lz-field">
+              <span>Nombres *</span>
+              <input type="text" name="nombres" placeholder="Tus nombres" required />
+            </label>
+            <div class="lz-form__row">
+              <label class="lz-field">
+                <span>Primer apellido *</span>
+                <input type="text" name="apellido1" placeholder="Primer apellido" required />
+              </label>
+              <label class="lz-field">
+                <span>Segundo apellido</span>
+                <input type="text" name="apellido2" placeholder="Segundo apellido" />
+              </label>
+            </div>
+            <label class="lz-check">
+              <input type="checkbox" name="privacidad" required />
+              <span>Acepto el aviso de privacidad y protección de datos personales.</span>
+            </label>
+            <button class="lz-btn" type="submit">Enviar solicitud</button>
+          </form>
+        </div>
       </div>
     </section>
 
-    <section class="as-section as-section--dark as-cta">
-      <div class="as-wrap">
-        <h2 class="as-display" data-reveal="words">Da el próximo paso.</h2>
-        <p data-reveal>Escribinos y te contamos cuándo abre la próxima inscripción.</p>
-        <div class="as-button-group" data-reveal data-reveal-delay="120">
-          <a class="as-button as-button--white" href="/contact">Escribinos</a>
-        </div>
-
-        <a class="as-next" href={`/institucional/${otroSlug}`}>
-          <span>También te puede interesar</span>
-          <strong>{otro.name}</strong>
-          <span class="material-symbols-outlined">arrow_forward</span>
-        </a>
-      </div>
-    </section>
+    <NocheCta
+      title="Da el próximo paso."
+      text="Escribinos y te contamos cuándo abre la próxima inscripción."
+      next={{ label: 'También te puede interesar', title: otro.name, href: `/institucional/${otroSlug}` }}
+    >
+      <a class="lz-btn" href="/contact">Escribinos</a>
+    </NocheCta>
   </div>
-</MaquetaLayout>
+</NocheLayout>

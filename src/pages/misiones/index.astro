@@ -1,14 +1,15 @@
 ---
 /**
- * MAQUETA — "Misiones", con la estructura de sus páginas de iniciativa
- * (For the Nations). Los destinos salen de `src/data/missions.ts`.
+ * Misiones, en el lenguaje noche. Los destinos salen de `src/data/missions.ts`
+ * y el mapa es el SVG estático de `maqueta-mapa.ts` (sin librería ni tiles).
  */
-import MaquetaLayout from '../../layouts/MaquetaLayout.astro';
+import NocheLayout from '../../layouts/NocheLayout.astro';
+import NocheHero from '../../components/noche/NocheHero.astro';
+import NocheCta from '../../components/noche/NocheCta.astro';
 import { missions } from '../../data/missions';
 import { mapaMundi, coordenadas, proyectar } from '../../data/maqueta-mapa';
 
-/* Sólo las misiones que tienen coordenada cargada entran al mapa; el resto
-   sigue apareciendo abajo en las pestañas. */
+/* Sólo las misiones con coordenada cargada entran al mapa. */
 const destinos = missions
   .filter((m) => coordenadas[m.slug])
   .map((m) => ({
@@ -26,56 +27,46 @@ const columnas = [
 const destacada = missions[0];
 ---
 
-<MaquetaLayout title="Misiones · Iglesia Corazón de Fuego">
-  <div class="as-ministry" style="--m: #35b887">
-    <header class="as-hero as-hero--inner">
-      <div class="as-hero__bg">
-        {destacada?.video ? (
-          <video autoplay muted loop playsinline preload="metadata" poster={destacada.image}>
-            <source src={destacada.video} type="video/mp4" />
-          </video>
-        ) : (
-          <img src={destacada?.image} alt="" />
-        )}
-        <div class="as-hero__veil"></div>
-      </div>
-      <div class="as-hero__grid">
-        <div class="as-hero__content">
-          <p class="as-eyebrow as-eyebrow--light" data-reveal>Misiones</p>
-          <h1 class="as-display" data-reveal="words">Hasta lo último de la tierra.</h1>
-          <p class="as-hero__lead" data-reveal>
-            Salimos a servir, anunciar y acompañar junto a iglesias que ya están trabajando en cada región.
-          </p>
-          <div class="as-hero__actions" data-reveal data-reveal-delay="140">
-            <a class="as-button as-button--white" href="#destinos">Ver destinos</a>
-            <a class="as-button as-button--ghost-white" href="#participar">Quiero ir</a>
-          </div>
-        </div>
-      </div>
-    </header>
+<NocheLayout title="Misiones · Iglesia Corazón de Fuego">
+  <div class="lz-tint" style="--m: #35b887">
+    <NocheHero
+      lines={['misiones']}
+      lead="Hasta lo último de la tierra."
+      video={destacada?.video}
+      image={destacada?.image}
+    >
+      <Fragment slot="quote">
+        Salimos a servir, anunciar y acompañar
+        <strong>junto a iglesias que ya están trabajando en cada región.</strong>
+      </Fragment>
+      <a class="lz-btn" href="#destinos">Ver destinos</a>
+      <a class="lz-btn lz-btn--ghost" href="#participar">Quiero ir</a>
+    </NocheHero>
 
-    <section class="as-section as-section--dark as-statement" id="sobre">
-      <div class="as-wrap">
-        <p class="as-eyebrow as-eyebrow--light" data-reveal>Nuestra visión</p>
-        <h2 class="as-statement__text" data-reveal="words">
-          Una iglesia que alcanza, forma y envía.
-        </h2>
+    <section class="lz-plate lz-statement" id="sobre">
+      <div class="lz-mesh" aria-hidden="true"></div>
+      <div class="lz-wrap">
+        <span class="lz-spaced lz-kicker" data-r>Nuestra visión</span>
+        <h2 class="lz-statement__text" data-r>Una iglesia que alcanza, forma y envía.</h2>
       </div>
     </section>
 
-    <section class="as-section as-section--light" id="participar">
-      <div class="as-wrap">
-        <div class="as-head">
-          <div>
-            <p class="as-eyebrow" data-reveal>Cómo participamos</p>
-            <h2 class="as-h1" data-reveal="words">Tres formas de sumarte.</h2>
+    <section class="lz-section lz-dark" id="participar">
+      <div class="lz-wrap">
+        <div class="lz-head">
+          <h2 class="lz-lockup lz-lockup--md" data-r>
+            <span>tres formas</span>
+            <span class="lz-lockup__shift">de sumarte</span>
+          </h2>
+          <div class="lz-actions" data-r>
+            <a class="lz-btn lz-btn--ghost" href="/contact">Escribinos</a>
           </div>
-          <a class="as-button as-button--small as-button--ministry" href="/contact">Escribinos</a>
         </div>
-        <div class="as-cols">
-          {columnas.map((c, i) => (
-            <div class="as-col" data-reveal data-reveal-delay={i * 110}>
-              <span class="as-col__n">{c.n}</span>
+        <span class="lz-spaced lz-kicker" data-r>Cómo participamos</span>
+        <div class="lz-cols">
+          {columnas.map((c) => (
+            <div class="lz-col" data-r>
+              <span class="lz-col__n">{c.n}</span>
               <h3>{c.title}</h3>
               <p>{c.text}</p>
             </div>
@@ -84,78 +75,59 @@ const destacada = missions[0];
       </div>
     </section>
 
-    <!-- Destinos: cada misión como escena alternada, texto e imagen. -->
-    <section class="as-section" id="destinos">
-      <div class="as-wrap">
-        <h2 class="as-h1" data-reveal="words">Destinos</h2>
+    <section class="lz-section lz-dark lz-dark--2" id="destinos">
+      <div class="lz-wrap">
+        <h2 class="lz-lockup lz-lockup--md" data-r><span>destinos</span></h2>
 
-        {/* Mapa: SVG estático, sin librería ni tiles. Los puntos son botones
-            posicionados en % sobre el lienzo, así siguen al mapa cuando escala.
-            Responden a hover, foco de teclado y tap: en mobile no hay hover y
-            el tap tiene que alcanzar. */}
         {destinos.length > 0 && (
-          <div class="as-mapa" data-mapa data-reveal>
-            <div class="as-mapa__lienzo">
+          <div class="lz-mapa" data-mapa data-r>
+            <div class="lz-mapa__lienzo">
               <svg
-                class="as-mapa__svg"
+                class="lz-mapa__svg"
                 viewBox={`0 0 ${mapaMundi.width} ${mapaMundi.height}`}
                 role="img"
                 aria-label="Mapa con los destinos de misiones"
               >
                 <path d={mapaMundi.path} />
               </svg>
-
               {destinos.map((d, i) => (
                 <button
                   type="button"
-                  class={`as-mapa__punto${i === 0 ? ' is-active' : ''}`}
+                  class={`lz-mapa__punto${i === 0 ? ' is-active' : ''}`}
                   style={`left: ${d.x}%; top: ${d.y}%`}
                   data-destino={d.slug}
                   aria-label={`${d.place}, ${d.country}, ${d.year}`}
                 >
-                  <span class="as-mapa__pulso"></span>
-                  <span class="as-mapa__rotulo">{d.place}</span>
+                  <span class="lz-mapa__pulso"></span>
+                  <span class="lz-mapa__rotulo">{d.place}</span>
                 </button>
               ))}
             </div>
 
-            {/* Las fichas son hermanas del lienzo, no hijas: los marcadores se
-                posicionan en % sobre el lienzo, así que si la ficha entrara en
-                su flujo —como pasa en mobile— lo estiraría y mandaría los
-                puntos fuera del mapa. Se anclan al mismo punto que su marcador
-                con el `--x`, para que el dato aparezca donde está mirando el
-                ojo y no en un panel al costado. */}
+            {/* Las fichas son hermanas del lienzo, no hijas: si entraran en su
+                flujo lo estirarían y los puntos, en %, saldrían del mapa. */}
             {destinos.map((d, i) => (
-                <article
-                  class={`as-mapa__ficha${i === 0 ? ' is-active' : ''}`}
-                  style={`--x: ${d.x}%; --y: ${d.y}%`}
-                  data-ficha={d.slug}
-                >
-                  <div class="as-image as-image--16x9">
-                    <img src={d.image} alt={d.place} loading="lazy" />
-                  </div>
-                  <div class="as-mapa__ficha-cuerpo">
-                    <p class="as-mapa__meta">{d.country} · {d.year} · {d.stage}</p>
-                    <h3 class="as-mapa__lugar">{d.place}</h3>
-                    <p class="as-mapa__foco">{d.focus}</p>
-                  </div>
-                </article>
-              ))}
+              <article
+                class={`lz-mapa__ficha${i === 0 ? ' is-active' : ''}`}
+                style={`--x: ${d.x}%; --y: ${d.y}%`}
+                data-ficha={d.slug}
+              >
+                <img src={d.image} alt={d.place} loading="lazy" />
+                <div class="lz-mapa__cuerpo">
+                  <span class="lz-spaced">{d.country} · {d.year} · {d.stage}</span>
+                  <h3 class="lz-mapa__lugar">{d.place}</h3>
+                  <p class="lz-mapa__foco">{d.focus}</p>
+                </div>
+              </article>
+            ))}
           </div>
         )}
-
       </div>
     </section>
 
-    <section class="as-section as-section--dark as-cta">
-      <div class="as-wrap">
-        <h2 class="as-display" data-reveal="words">¿Querés ir?</h2>
-        <p data-reveal>Escribinos y te contamos cómo prepararte para la próxima salida.</p>
-        <div class="as-button-group" data-reveal data-reveal-delay="120">
-          <a class="as-button as-button--white" href="/contact">Escribinos</a>
-          <a class="as-button as-button--ghost-white" href="/evangelismo">Ver Evangelismo</a>
-        </div>
-      </div>
-    </section>
+    <NocheCta title="¿Querés ir?" text="Escribinos y te contamos cómo prepararte para la próxima salida.">
+      <a class="lz-btn" href="/contact">Escribinos</a>
+      <a class="lz-btn lz-btn--ghost" href="/evangelismo">Ver Evangelismo</a>
+    </NocheCta>
   </div>
-</MaquetaLayout>
+</NocheLayout>

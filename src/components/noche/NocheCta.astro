@@ -1,0 +1,31 @@
+---
+/**
+ * Cierre de página: placa de degradé con el título, una línea y los botones
+ * (slot default). `next` agrega el link a la página siguiente.
+ */
+interface Props {
+  title: string;
+  text?: string;
+  next?: { label: string; title: string; href: string };
+}
+
+const { title, text, next } = Astro.props;
+---
+
+<section class="lz-plate lz-cta">
+  <div class="lz-mesh" aria-hidden="true"></div>
+  <div class="lz-wrap lz-cta__inner">
+    <h2 class="lz-statement__text" data-r>{title}</h2>
+    {text && <p class="lz-cta__text" data-r>{text}</p>}
+    {Astro.slots.has('default') && (
+      <div class="lz-actions lz-actions--center" data-r><slot /></div>
+    )}
+    {next && (
+      <a class="lz-next" href={next.href}>
+        <span class="lz-spaced">{next.label}</span>
+        <strong>{next.title}</strong>
+        <span aria-hidden="true">→</span>
+      </a>
+    )}
+  </div>
+</section>

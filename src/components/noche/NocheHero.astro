@@ -1,0 +1,59 @@
+---
+/**
+ * Hero de página interna, con la gramática de la portada: cita arriba a la
+ * izquierda, lockup en minúscula al centro y el logo abajo.
+ *
+ * Con `image` o `video` va sobre la foto con viñeta; sin nada, sobre el
+ * degradé noche (teñido si la página envuelve todo en `.lz-tint`).
+ *
+ * Slots: `quote` (la cita, admite <strong>) y el default (botones).
+ */
+interface Props {
+  /** Una o dos líneas; la segunda va corrida a la derecha. */
+  lines: string[];
+  kicker?: string;
+  lead?: string;
+  image?: string;
+  video?: string;
+  short?: boolean;
+}
+
+const { lines, kicker, lead, image, video, short = false }: Props = Astro.props;
+const [first, ...rest] = lines;
+/* Con nombres largos ("ministerio carcelario") el tamaño máximo tapa media
+   pantalla: baja un escalón. */
+const size = Math.max(...lines.map((line) => line.length)) > 9 ? 'lg' : 'xl';
+---
+
+<header class={`lz-phero${short ? ' lz-phero--short' : ''}`}>
+  {video ? (
+    <video class="lz-phero__media" autoplay muted loop playsinline preload="metadata" poster={image}>
+      <source src={video} type="video/mp4" />
+    </video>
+  ) : image ? (
+    <img class="lz-phero__media" src={image} alt="" />
+  ) : (
+    <div class="lz-mesh" aria-hidden="true"></div>
+  )}
+  {(video || image) && <div class="lz-phero__veil" aria-hidden="true"></div>}
+
+  <div>
+    {Astro.slots.has('quote') && (
+      <p class="lz-quote" data-r><slot name="quote" /></p>
+    )}
+  </div>
+
+  <div class="lz-phero__center">
+    {kicker && <p class="lz-spaced lz-phero__kicker" data-r>{kicker}</p>}
+    <h1 class={`lz-lockup lz-lockup--${size}`} data-r>
+      <span>{first}</span>
+      {rest.length > 0 && <span class="lz-lockup__shift">{rest.join(' ')}</span>}
+    </h1>
+    {lead && <p class="lz-phero__lead" data-r>{lead}</p>}
+    {Astro.slots.has('default') && (
+      <div class="lz-actions lz-actions--center" data-r><slot /></div>
+    )}
+  </div>
+
+  <div class="lz-logo lz-logo--foot" aria-hidden="true"><img src="/brand/logowhite.png" alt="" /></div>
+</header>

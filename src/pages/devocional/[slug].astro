@@ -1,9 +1,10 @@
 ---
 /**
- * MAQUETA — artículo de devocional. Estructura de sus páginas de artículo:
- * encabezado con metadatos, cuerpo en columna angosta y relacionados al pie.
+ * Artículo de devocional, en el lenguaje noche: encabezado sobre el degradé,
+ * cuerpo en columna angosta y relacionados al pie.
  */
-import MaquetaLayout from '../../layouts/MaquetaLayout.astro';
+import NocheLayout from '../../layouts/NocheLayout.astro';
+import NocheCta from '../../components/noche/NocheCta.astro';
 import { getDevotionals } from '../../lib/content/collections';
 
 const { slug } = Astro.params;
@@ -30,22 +31,24 @@ const getYouTubeEmbedUrl = (videoUrl?: string) => {
 const embed = getYouTubeEmbedUrl(post.videoUrl);
 ---
 
-<MaquetaLayout title={`${post.title} · Iglesia Corazón de Fuego`}>
-  <div class="as-ministry" style="--m: #c5a059">
-    <!-- ══════════ ENCABEZADO ══════════ Columna angosta, centrada. -->
-    <header class="as-article-head">
-      <a class="as-back" href="/devocional">
-        <span class="material-symbols-outlined">arrow_back</span>
-        Devocional
-      </a>
-      <p class="as-item__meta" data-reveal>{post.type} · {post.weekLabel}</p>
-      <h1 class="as-article-title" data-reveal="words">{post.title}</h1>
-      <p class="as-lead" data-reveal>{post.excerpt}</p>
-    </header>
+<NocheLayout title={`${post.title} · Iglesia Corazón de Fuego`}>
+  <header class="lz-plate lz-phero lz-phero--short">
+    <div class="lz-mesh" aria-hidden="true"></div>
+    <div>
+      <a class="lz-back" href="/devocional">← Devocional</a>
+    </div>
+    <div class="lz-phero__center">
+      <span class="lz-spaced lz-phero__kicker" data-r>{post.type} · {post.weekLabel}</span>
+      <h1 class="lz-statement__text" style="max-width: 18ch" data-r>{post.title}</h1>
+      <p class="lz-quote" style="text-align: left" data-r>{post.excerpt}</p>
+    </div>
+    <div class="lz-logo lz-logo--foot" aria-hidden="true"><img src="/brand/logowhite.png" alt="" /></div>
+  </header>
 
-    <div class="as-article-media" data-reveal>
+  <div class="lz-dark" style="padding-top: clamp(56px, 7vw, 96px)">
+    <div class="lz-article-media" data-r>
       {embed ? (
-        <div class="as-embed">
+        <div class="lz-embed">
           <iframe
             src={embed}
             title={post.title}
@@ -55,57 +58,45 @@ const embed = getYouTubeEmbedUrl(post.videoUrl);
           ></iframe>
         </div>
       ) : (
-        <div class="as-image as-image--wide">
-          <img src={post.image} alt={post.title} />
-        </div>
+        <img src={post.image} alt={post.title} />
       )}
     </div>
 
-    <!-- ══════════ CUERPO ══════════
-         Columna de ~68 caracteres: es el ancho donde el ojo no se pierde al
-         saltar de renglón. Más ancho cansa, más angosto corta el ritmo. -->
-    <article class="as-article">
+    {/* Columna de ~68 caracteres: el ancho donde el ojo no se pierde al
+        saltar de renglón. */}
+    <article class="lz-article">
       {post.content.map((parrafo) => <p>{parrafo}</p>)}
     </article>
-
-    <section class="as-section as-section--light">
-      <div class="as-wrap">
-        <div class="as-head">
-          <div>
-            <p class="as-eyebrow" data-reveal>Seguir leyendo</p>
-            <h2 class="as-h1" data-reveal="words">Otros devocionales</h2>
-          </div>
-          <a class="as-button as-button--small" href="/devocional">Ver todos</a>
-        </div>
-        <div class="as-collection">
-          {relacionados.map((p) => (
-            <a class="as-item" href={`/devocional/${p.slug}`}>
-              <div class="as-image as-image--square">
-                <img src={p.image} alt={p.title} loading="lazy" />
-              </div>
-              <p class="as-item__meta">{p.type} · {p.weekLabel}</p>
-              <h3 class="as-item__title">{p.title}</h3>
-              <span class="as-item__view">Leer</span>
-            </a>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <section class="as-section as-section--dark as-cta">
-      <div class="as-wrap">
-        <h2 class="as-display" data-reveal="words">Te esperamos.</h2>
-        <p data-reveal>Viernes y sábados 20 hs · Domingos 9:30 y 11:00 hs.</p>
-        <div class="as-button-group" data-reveal data-reveal-delay="120">
-          <a class="as-button as-button--white" href="https://maps.app.goo.gl/mEVMgoTXbV3BULVq8" target="_blank" rel="noopener noreferrer">Tu primera vez</a>
-        </div>
-
-        <a class="as-next" href={`/devocional/${next.slug}`}>
-          <span>Siguiente</span>
-          <strong>{next.title}</strong>
-          <span class="material-symbols-outlined">arrow_forward</span>
-        </a>
-      </div>
-    </section>
   </div>
-</MaquetaLayout>
+
+  <section class="lz-section lz-dark">
+    <div class="lz-wrap">
+      <div class="lz-head">
+        <h2 class="lz-lockup lz-lockup--md" data-r>
+          <span>seguir</span>
+          <span class="lz-lockup__shift">leyendo</span>
+        </h2>
+        <div class="lz-actions" data-r>
+          <a class="lz-btn lz-btn--ghost" href="/devocional">Ver todos</a>
+        </div>
+      </div>
+      <div class="lz-cards">
+        {relacionados.map((p) => (
+          <a class="lz-card" href={`/devocional/${p.slug}`} data-r>
+            <div class="lz-card__img"><img src={p.image} alt={p.title} loading="lazy" /></div>
+            <span class="lz-spaced">{p.type} · {p.weekLabel}</span>
+            <h3>{p.title}</h3>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <NocheCta
+    title="Te esperamos."
+    text="Viernes y sábados 20 hs · Domingos 9:30 y 11:00 hs."
+    next={{ label: 'Siguiente', title: next.title, href: `/devocional/${next.slug}` }}
+  >
+    <a class="lz-btn" href="https://maps.app.goo.gl/mEVMgoTXbV3BULVq8" target="_blank" rel="noopener noreferrer">Tu primera vez</a>
+  </NocheCta>
+</NocheLayout>

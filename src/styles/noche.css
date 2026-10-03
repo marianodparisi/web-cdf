@@ -199,7 +199,10 @@
   gap: 24px;
   padding: 16px var(--pad);
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.45), transparent);
+  transition: background-color 0.3s, backdrop-filter 0.3s;
 }
+/* Al bajar, la barra toma fondo: si no, queda encima de los títulos. */
+.lz-nav.is-scrolled { background-color: color-mix(in srgb, var(--bg) 78%, transparent); backdrop-filter: blur(14px); }
 .lz-nav__links { display: flex; align-items: center; gap: 4px; }
 .lz-nav__item {
   display: inline-flex;
@@ -431,6 +434,302 @@
 .lz-footer__grid a:hover { opacity: 1; }
 .lz-footer__legal { color: var(--soft); font-size: 0.56rem; }
 
+/* ═══════════════════════════════════════════════════════════════════════
+   PÁGINAS INTERNAS — piezas compartidas
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* Tinte por página: el color propio (ministerio, sede, programa) entra al
+   degradé y a los acentos sin dejar de ser noche. */
+.lz-tint {
+  --c1: color-mix(in srgb, var(--m) 62%, #000);
+  --c3: color-mix(in srgb, var(--m) 85%, #fff 0%);
+  --accent: color-mix(in srgb, var(--m) 70%, #fff);
+}
+.lz { --accent: #c9965a; }
+
+/* ── Hero interno (NocheHero) ───────────────────────────────────────────── */
+.lz-phero {
+  position: relative;
+  min-height: 92svh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 32px;
+  padding: 104px var(--pad) 32px;
+  overflow: hidden;
+  isolation: isolate;
+  background: var(--c0);
+}
+.lz-phero__media { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; object-fit: cover; filter: saturate(0.85) brightness(0.75); }
+.lz-phero__veil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(90% 80% at 50% 45%, transparent 25%, rgba(0, 0, 0, 0.65) 100%),
+    linear-gradient(180deg, color-mix(in srgb, var(--c2) 35%, transparent), color-mix(in srgb, var(--c1) 25%, transparent) 60%, color-mix(in srgb, var(--bg) 92%, transparent));
+}
+.lz-phero > :not(.lz-phero__media):not(.lz-phero__veil):not(.lz-mesh) { position: relative; z-index: 2; }
+.lz-phero__center { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 28px; }
+.lz-phero__kicker { color: var(--accent); }
+.lz-phero__lead { max-width: 30ch; font-size: clamp(1.25rem, 2.2vw, 1.9rem); font-weight: 700; letter-spacing: -0.035em; line-height: 1.1; }
+.lz-phero .lz-logo--foot { justify-self: center; }
+.lz-phero--short { min-height: 72svh; }
+
+/* ── Cabecera de sección ───────────────────────────────────────────────── */
+.lz-kicker { display: block; margin-bottom: 18px; color: var(--accent); }
+
+/* ── Declaración: placa de degradé con una idea ─────────────────────────── */
+.lz-statement { padding: clamp(96px, 12vw, 176px) 0; }
+.lz-statement__grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(32px, 6vw, 96px); align-items: end; }
+.lz-statement__text { font-size: clamp(2.2rem, 5.2vw, 4.8rem); font-weight: 900; letter-spacing: -0.06em; line-height: 0.92; max-width: 16ch; }
+.lz-statement__body { display: grid; gap: 18px; }
+
+/* ── Texto corrido ──────────────────────────────────────────────────────── */
+.lz-prose { display: grid; gap: 18px; }
+.lz-prose p,
+p.lz-body { font-size: clamp(1.05rem, 1.3vw, 1.2rem); line-height: 1.55; color: var(--soft); max-width: 60ch; }
+.lz-split { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 6vw, 96px); align-items: start; }
+
+/* ── Columnas numeradas ─────────────────────────────────────────────────── */
+.lz-cols { display: grid; grid-template-columns: repeat(var(--n, 3), 1fr); gap: 4px; }
+.lz-col { display: grid; align-content: start; gap: 14px; padding: 32px 28px 36px; background: rgba(255, 255, 255, 0.035); }
+.lz-col__n { font-size: 2.6rem; font-style: italic; font-weight: 500; letter-spacing: -0.04em; line-height: 1; color: var(--accent); }
+.lz-col .lz-spaced { color: var(--soft); font-size: 0.58rem; }
+.lz-col h3 { font-size: clamp(1.35rem, 1.8vw, 1.7rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.05; }
+.lz-col p { color: var(--soft); line-height: 1.5; }
+
+/* ── Tiles de navegación (sedes, ministerios) ───────────────────────────── */
+.lz-tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+.lz-tile { position: relative; display: grid; gap: 12px; padding: 28px 24px 30px; background: rgba(255, 255, 255, 0.04); transition: background-color 0.3s; }
+.lz-tile:hover { background: rgba(255, 255, 255, 0.09); }
+.lz-tile__name { font-size: clamp(1.7rem, 2.8vw, 2.5rem); font-weight: 900; letter-spacing: -0.065em; line-height: 0.9; padding-right: 28px; }
+.lz-tile .lz-spaced { color: var(--soft); font-size: 0.58rem; }
+.lz-tile__arrow { position: absolute; top: 26px; right: 22px; font-size: 1.3rem; transition: transform 0.3s var(--ease); }
+.lz-tile:hover .lz-tile__arrow { transform: translateX(4px); }
+
+/* ── Fotos ──────────────────────────────────────────────────────────────── */
+.lz-photos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
+.lz-photos img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; filter: saturate(0.9) brightness(0.88); }
+.lz-photos img:nth-child(3n + 2) { aspect-ratio: 4 / 5; }
+.lz-wide { width: 100%; aspect-ratio: 21 / 9; object-fit: cover; filter: saturate(0.9) brightness(0.88); }
+
+/* ── Escenas alternadas (evangelismo) ───────────────────────────────────── */
+.lz-scenes { display: grid; gap: clamp(56px, 8vw, 120px); }
+.lz-scene { display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(32px, 5vw, 80px); align-items: center; }
+.lz-scene:nth-child(even) .lz-scene__media { order: 2; }
+.lz-scene__media { aspect-ratio: 4 / 3; overflow: hidden; }
+.lz-scene__media img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.9) brightness(0.88); }
+.lz-scene h3 { font-size: clamp(2.2rem, 4.4vw, 4rem); font-weight: 900; letter-spacing: -0.065em; line-height: 0.9; margin: 14px 0 18px; }
+.lz-scene .lz-spaced { color: var(--accent); }
+
+/* ── Horarios / datos ───────────────────────────────────────────────────── */
+.lz-times { display: grid; border-top: 1px solid var(--faint); }
+.lz-time { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 18px 0; border-bottom: 1px solid var(--faint); }
+.lz-time__day { font-size: clamp(1.3rem, 2vw, 1.8rem); font-weight: 800; letter-spacing: -0.04em; }
+.lz-time__hour { font-size: 1rem; font-weight: 600; color: var(--soft); }
+.lz-data { display: grid; gap: 6px; margin-top: 24px; }
+.lz-data .lz-spaced { color: var(--soft); font-size: 0.58rem; }
+.lz-data p, .lz-data a { font-size: 1.15rem; font-weight: 700; letter-spacing: -0.02em; }
+.lz-data a { text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--faint); }
+
+.lz-stats { display: flex; gap: 40px; margin-top: 36px; }
+.lz-stat strong { display: block; font-size: clamp(2.6rem, 5vw, 4.4rem); font-weight: 900; letter-spacing: -0.06em; line-height: 0.9; color: var(--accent); }
+.lz-stat span { display: block; margin-top: 8px; color: var(--soft); font-size: 0.85rem; }
+
+.lz-notice { margin-top: 28px; padding: 22px 24px; border-left: 2px solid var(--accent); background: rgba(255, 255, 255, 0.04); }
+.lz-notice__title { font-weight: 800; font-size: 1.15rem; letter-spacing: -0.02em; margin-bottom: 6px; }
+.lz-notice p:not(.lz-notice__title) { color: var(--soft); }
+
+/* ── Formularios ────────────────────────────────────────────────────────── */
+.lz-form { display: grid; gap: 18px; margin-top: 32px; }
+.lz-field { display: grid; gap: 8px; }
+.lz-field span { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.28em; text-transform: uppercase; color: var(--soft); }
+.lz-field :is(input, textarea) {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--faint);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--white);
+  font: 500 1rem 'Inter Tight', sans-serif;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+.lz-field :is(input, textarea)::placeholder { color: rgba(251, 248, 243, 0.35); }
+.lz-field :is(input, textarea):focus { outline: none; border-color: var(--accent); background: rgba(255, 255, 255, 0.07); }
+.lz-form__row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.lz-check { display: flex; gap: 12px; align-items: flex-start; color: var(--soft); font-size: 0.9rem; }
+.lz-check input { margin-top: 3px; accent-color: var(--accent); }
+.lz-form .lz-btn { justify-self: start; cursor: pointer; }
+
+/* ── Artículo ───────────────────────────────────────────────────────────── */
+.lz-article { max-width: 68ch; margin: 0 auto; padding: 0 var(--pad); display: grid; gap: 1.4em; }
+.lz-article p { font-size: clamp(1.1rem, 1.35vw, 1.25rem); line-height: 1.7; color: rgba(251, 248, 243, 0.85); }
+.lz-article-media { max-width: 1100px; margin: 0 auto clamp(56px, 7vw, 96px); padding: 0 var(--pad); }
+.lz-article-media img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.lz-embed { position: relative; aspect-ratio: 16 / 9; background: #000; }
+.lz-embed iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.lz-back { display: inline-flex; gap: 8px; align-items: center; font-size: 0.85rem; font-weight: 600; opacity: 0.75; }
+.lz-back:hover { opacity: 1; }
+
+/* ── Pestañas ───────────────────────────────────────────────────────────── */
+.lz-tabs__menu { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 36px; }
+.lz-tabs__link {
+  padding: 10px 18px;
+  border: 1px solid var(--faint);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--soft);
+  font: 600 0.82rem 'Inter Tight', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.lz-tabs__link.is-active { background: var(--white); border-color: var(--white); color: #121212; }
+.lz-tabs__panel { display: none; }
+.lz-tabs__panel.is-active { display: block; }
+
+/* Grilla de artículos (devocional) */
+.lz-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(16px, 2vw, 28px); }
+.lz-card { display: grid; gap: 12px; align-content: start; }
+.lz-card__img { aspect-ratio: 4 / 5; overflow: hidden; background: #000; margin-bottom: 6px; }
+.lz-card__img img { width: 100%; height: 100%; object-fit: cover; filter: saturate(0.9) brightness(0.9); transition: transform 1.4s var(--ease); }
+.lz-card:hover .lz-card__img img { transform: scale(1.04); }
+.lz-card .lz-spaced { color: var(--soft); font-size: 0.58rem; }
+.lz-card h3 { font-size: clamp(1.3rem, 2vw, 1.8rem); font-weight: 800; letter-spacing: -0.045em; line-height: 1.02; }
+
+/* ── Mapa de destinos (misiones) ────────────────────────────────────────── */
+.lz-mapa { position: relative; margin-top: 48px; }
+.lz-mapa__lienzo { position: relative; }
+.lz-mapa__svg { display: block; width: 100%; height: auto; }
+.lz-mapa__svg path { fill: rgba(251, 248, 243, 0.1); stroke: rgba(251, 248, 243, 0.16); stroke-width: 0.5; }
+.lz-mapa__punto { position: absolute; transform: translate(-50%, -50%); display: grid; place-items: center; width: 34px; height: 34px; background: none; border: 0; cursor: pointer; }
+.lz-mapa__pulso { width: 12px; height: 12px; border-radius: 50%; background: var(--accent); transition: transform 0.25s ease; }
+.lz-mapa__punto:hover .lz-mapa__pulso,
+.lz-mapa__punto:focus-visible .lz-mapa__pulso,
+.lz-mapa__punto.is-active .lz-mapa__pulso { transform: scale(1.35); }
+.lz-mapa__punto.is-active .lz-mapa__pulso { animation: lz-latido 2.4s ease-out infinite; }
+@keyframes lz-latido {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 55%, transparent); }
+  70%, 100% { box-shadow: 0 0 0 16px transparent; }
+}
+.lz-mapa__rotulo { position: absolute; top: 100%; white-space: nowrap; font-size: 0.62rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; opacity: 0; transition: opacity 0.2s; }
+.lz-mapa__punto:hover .lz-mapa__rotulo,
+.lz-mapa__punto:focus-visible .lz-mapa__rotulo,
+.lz-mapa__punto.is-active .lz-mapa__rotulo { opacity: 1; }
+.lz-mapa__ficha {
+  position: absolute;
+  left: clamp(140px, var(--x), calc(100% - 140px));
+  top: var(--y);
+  z-index: 3;
+  width: 268px;
+  transform: translate(-50%, calc(-100% - 26px)) scale(0.96);
+  transform-origin: bottom center;
+  background: color-mix(in srgb, var(--bg) 92%, #fff 4%);
+  border: 1px solid var(--faint);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 18px 50px rgb(0 0 0 / 0.45);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.28s ease, transform 0.28s var(--ease), visibility 0.28s;
+}
+.lz-mapa__ficha.is-active { opacity: 1; visibility: visible; transform: translate(-50%, calc(-100% - 26px)) scale(1); }
+.lz-mapa__ficha img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.lz-mapa__cuerpo { display: grid; gap: 6px; padding: 14px 16px 18px; }
+.lz-mapa__cuerpo .lz-spaced { color: var(--soft); font-size: 0.55rem; letter-spacing: 0.2em; }
+.lz-mapa__lugar { font-size: 1.4rem; font-weight: 900; letter-spacing: -0.05em; }
+.lz-mapa__foco { font-size: 0.9rem; line-height: 1.45; color: var(--soft); }
+
+/* ── Cierre (NocheCta) ──────────────────────────────────────────────────── */
+.lz-cta { padding: clamp(110px, 13vw, 190px) 0 clamp(56px, 7vw, 96px); text-align: center; }
+.lz-cta__inner { display: grid; justify-items: center; gap: 28px; }
+.lz-cta__text { color: var(--soft); font-size: clamp(1.05rem, 1.4vw, 1.25rem); max-width: 44ch; }
+.lz-next { display: flex; align-items: baseline; justify-content: center; flex-wrap: wrap; gap: 6px 16px; margin-top: clamp(48px, 7vw, 96px); padding-top: 28px; border-top: 1px solid var(--faint); width: 100%; }
+.lz-next .lz-spaced { color: var(--soft); font-size: 0.6rem; }
+.lz-next strong { font-size: clamp(1.6rem, 3vw, 2.6rem); font-weight: 900; letter-spacing: -0.06em; }
+.lz-next:hover strong { text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 2px; }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   EDUCATIVOS (IETE, Discipulados) — tratamiento propio, "programa de estudio"
+   Una hoja clara rayada para el temario y la ficha, dentro de la noche.
+   ═══════════════════════════════════════════════════════════════════════ */
+.lz-edu-hero { display: grid; grid-template-columns: 1.15fr 1fr; gap: clamp(32px, 5vw, 80px); align-items: center; }
+.lz-edu-hero__copy { display: grid; gap: 24px; justify-items: start; }
+.lz-edu-hero__copy .lz-lead { max-width: 24ch; }
+
+/* La ficha del programa: una tarjeta de papel con los datos duros */
+.lz-sheet {
+  --paper: #efe9de;
+  --ink: #17140f;
+  --rule: rgba(23, 20, 15, 0.1);
+  position: relative;
+  color: var(--ink);
+  background:
+    repeating-linear-gradient(180deg, transparent 0 37px, var(--rule) 37px 38px),
+    var(--paper);
+  border-radius: 6px;
+  box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.7);
+}
+.lz-sheet::before { content: ''; position: absolute; top: 0; bottom: 0; left: 56px; width: 1.5px; background: color-mix(in srgb, var(--m) 70%, transparent); }
+.lz-sheet--card { padding: 36px 32px 32px 84px; transform: rotate(1.2deg); }
+.lz-sheet--card .lz-sheet__logo { width: 92px; margin-bottom: 22px; }
+.lz-sheet__name { font-size: clamp(2.6rem, 5vw, 4.2rem); font-weight: 900; letter-spacing: -0.07em; line-height: 0.85; margin-bottom: 26px; }
+.lz-sheet__kicker { color: color-mix(in srgb, var(--m) 85%, #000); }
+.lz-facts { display: grid; }
+.lz-facts > div { display: grid; grid-template-columns: 120px 1fr; gap: 16px; align-items: baseline; padding: 11px 0; }
+.lz-facts dt { font-size: 0.58rem; font-weight: 600; letter-spacing: 0.26em; text-transform: uppercase; opacity: 0.6; }
+.lz-facts dd { margin: 0; font-size: 1.1rem; font-weight: 800; letter-spacing: -0.02em; }
+
+/* El temario: hoja ancha, módulos numerados como índice de un cuaderno */
+.lz-sheet--page { padding: clamp(40px, 6vw, 80px) clamp(24px, 5vw, 72px) clamp(40px, 6vw, 80px) clamp(76px, 9vw, 132px); }
+.lz-sheet--page::before { left: clamp(52px, 6vw, 92px); }
+.lz-sheet__head { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; margin-bottom: clamp(28px, 4vw, 48px); }
+.lz-sheet__head h2 { font-size: clamp(2.2rem, 5vw, 4.4rem); font-weight: 900; letter-spacing: -0.065em; line-height: 0.9; }
+.lz-modules { counter-reset: modulo; display: grid; }
+.lz-module {
+  counter-increment: modulo;
+  display: grid;
+  grid-template-columns: 110px 1fr;
+  gap: 20px;
+  align-items: baseline;
+  padding: 18px 0;
+  border-top: 1px solid rgba(23, 20, 15, 0.18);
+}
+.lz-module:last-child { border-bottom: 1px solid rgba(23, 20, 15, 0.18); }
+.lz-module::before {
+  content: 'Módulo ' counter(modulo, decimal-leading-zero);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--m) 85%, #000);
+}
+.lz-module strong { display: block; font-size: clamp(1.35rem, 2.4vw, 2.1rem); font-weight: 900; letter-spacing: -0.05em; line-height: 1; }
+.lz-module span { display: block; margin-top: 8px; font-size: 1rem; line-height: 1.45; opacity: 0.72; max-width: 56ch; }
+.lz-sheet__note { margin-top: 32px; font-size: clamp(1.05rem, 1.6vw, 1.35rem); font-style: italic; font-weight: 500; line-height: 1.35; max-width: 52ch; }
+
+/* Para quién: checklist */
+.lz-checklist { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; }
+.lz-checklist li { display: flex; gap: 16px; align-items: flex-start; padding: 22px 24px; background: rgba(255, 255, 255, 0.035); font-size: clamp(1.05rem, 1.5vw, 1.3rem); font-weight: 700; letter-spacing: -0.025em; line-height: 1.2; }
+.lz-checklist li::before { content: ''; flex: none; width: 18px; height: 18px; margin-top: 2px; border-radius: 4px; border: 1.5px solid var(--accent); background: linear-gradient(135deg, transparent 45%, var(--accent) 45% 60%, transparent 60%); }
+
+/* Qué incluye: chips */
+.lz-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.lz-chips li { padding: 12px 18px; border: 1px solid var(--faint); border-radius: 999px; font-weight: 700; letter-spacing: -0.02em; }
+.lz-h3 { font-size: clamp(1.4rem, 2vw, 1.8rem); font-weight: 800; letter-spacing: -0.04em; }
+
+/* Inscripción: el formulario va sobre una hoja */
+.lz-sheet--form { padding: clamp(28px, 4vw, 44px) clamp(22px, 3vw, 36px) clamp(28px, 4vw, 44px) clamp(70px, 7vw, 92px); }
+.lz-sheet--form::before { left: clamp(46px, 4.5vw, 60px); }
+.lz-sheet--form .lz-form { margin-top: 0; }
+.lz-sheet--form .lz-field span { color: rgba(23, 20, 15, 0.6); }
+.lz-sheet--form .lz-field :is(input, textarea) { background: rgba(255, 255, 255, 0.55); border-color: rgba(23, 20, 15, 0.16); color: var(--ink); }
+.lz-sheet--form .lz-field :is(input, textarea)::placeholder { color: rgba(23, 20, 15, 0.35); }
+.lz-sheet--form .lz-field :is(input, textarea):focus { border-color: color-mix(in srgb, var(--m) 80%, #000); background: #fff; }
+.lz-sheet--form .lz-check { color: rgba(23, 20, 15, 0.7); }
+.lz-sheet--form .lz-btn { background: var(--ink); border-color: var(--ink); color: var(--paper); }
+
 
 /* ── Responsive ─────────────────────────────────────────────────────────── */
 @media (max-width: 1080px) {
@@ -446,6 +745,20 @@
   .lz-feed { grid-template-columns: repeat(2, 1fr); }
   .lz-serie { aspect-ratio: 16 / 11; }
   .lz-serie__bar { flex-direction: column; align-items: start; padding: 18px; }
+  .lz-statement__grid, .lz-split, .lz-scene, .lz-edu-hero { grid-template-columns: 1fr; }
+  .lz-scene:nth-child(even) .lz-scene__media { order: 0; }
+  .lz-cols { grid-template-columns: 1fr; }
+  .lz-tiles, .lz-photos, .lz-cards { grid-template-columns: repeat(2, 1fr); }
+  .lz-checklist { grid-template-columns: 1fr; }
+  .lz-sheet--card { transform: none; }
+  .lz-module { grid-template-columns: 1fr; gap: 8px; }
+}
+
+/* El mapa en celular: la ficha baja y se apoya debajo, en flujo normal */
+@media (max-width: 767px) {
+  .lz-mapa__ficha { position: relative; left: auto; top: auto; width: 100%; margin-top: 28px; transform: none; box-shadow: none; }
+  .lz-mapa__ficha.is-active { transform: none; }
+  .lz-mapa__ficha:not(.is-active) { display: none; }
 }
 
 @media (max-width: 560px) {
@@ -462,6 +775,15 @@
   .lz-post__title--big { font-size: 1.5rem; }
   .lz-logo--post { width: 46px; }
   .lz-welcome { padding-bottom: 96px; }
+  .lz-phero { padding-top: 92px; }
+  .lz-tiles, .lz-photos { grid-template-columns: 1fr; }
+  .lz-cards { grid-template-columns: 1fr; }
+  .lz-form__row { grid-template-columns: 1fr; }
+  .lz-stats { gap: 28px; }
+  .lz-facts > div { grid-template-columns: 1fr; gap: 4px; }
+  .lz-sheet--card { padding: 28px 22px 26px 64px; }
+  .lz-sheet::before { left: 42px; }
+  .lz-sheet--page { padding-left: 58px; padding-right: 20px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

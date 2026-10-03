@@ -1,20 +1,25 @@
 ---
 /**
- * MAQUETA — listado de devocional, con la estructura de sus páginas de media:
- * pieza destacada arriba, pestañas por tipo y grilla de 3 columnas.
+ * Listado de devocional, en el lenguaje noche. Arriba la placa de la semana,
+ * como la del feed; abajo los anteriores con pestañas por tipo.
  */
-import MaquetaLayout from '../../layouts/MaquetaLayout.astro';
+import NocheLayout from '../../layouts/NocheLayout.astro';
+import NocheCta from '../../components/noche/NocheCta.astro';
 import { getDevotionals } from '../../lib/content/collections';
 
 const posts = await getDevotionals();
 const [destacado, ...resto] = posts;
 
-// El tipo ya viene en los datos ('Devocional' | 'Testimonio'): se arman las
-// pestañas con lo que realmente hay cargado, no con una lista fija.
+// Las pestañas salen de los tipos que realmente hay cargados.
 const tipos = [...new Set(posts.map((p) => p.type))];
 const tabs = [
   { id: 'todos', label: 'Todos', items: resto },
-  ...tipos.map((t) => ({ id: t.toLowerCase(), label: `${t}s`, items: resto.filter((p) => p.type === t) })),
+  // "Devocional" → "Devocionales": el plural en -s daba "Devocionals".
+  ...tipos.map((t) => ({
+    id: t.toLowerCase(),
+    label: /[aeiou]$/i.test(t) ? `${t}s` : `${t}es`,
+    items: resto.filter((p) => p.type === t),
+  })),
 ];
 
 const getYouTubeEmbedUrl = (videoUrl?: string) => {
@@ -31,106 +36,95 @@ const getYouTubeEmbedUrl = (videoUrl?: string) => {
 const embed = getYouTubeEmbedUrl(destacado?.videoUrl);
 ---
 
-<MaquetaLayout title="Devocional · Iglesia Corazón de Fuego">
-  <div class="as-ministry" style="--m: #c5a059">
-    <header class="as-mhero">
-      <div class="as-mhero__copy">
-        <p class="as-eyebrow" data-reveal>Contenido</p>
-        <h1 class="as-display" data-reveal="words">Devocional</h1>
-        <p class="as-mhero__lead" data-reveal>
-          Una palabra para la semana. Textos y testimonios para sostener el caminar de todos los días.
-        </p>
+<NocheLayout title="Devocional · Iglesia Corazón de Fuego">
+  <!-- La placa de la semana a sangre: es la pieza del feed hecha portada. -->
+  <header class="lz-plate lz-phero">
+    <div class="lz-mesh" aria-hidden="true"></div>
+    <div>
+      <p class="lz-quote" data-r>
+        Una palabra para la semana.
+        <strong>Textos y testimonios para sostener el caminar de todos los días.</strong>
+      </p>
+    </div>
+    <div class="lz-phero__center">
+      <span class="lz-spaced lz-phero__kicker" data-r>Contenido</span>
+      <h1 class="lz-lockup lz-lockup--xl" data-r>
+        <span>devocional</span>
+        <span class="lz-lockup__shift">semanal</span>
+      </h1>
+    </div>
+    <div class="lz-logo lz-logo--foot" aria-hidden="true"><img src="/brand/logowhite.png" alt="" /></div>
+  </header>
+
+  {destacado && (
+    <section class="lz-section lz-dark">
+      <div class="lz-wrap lz-split">
+        <div>
+          <span class="lz-spaced lz-kicker" data-r>Esta semana</span>
+          <h2 class="lz-title" data-r>{destacado.title}</h2>
+          <span class="lz-spaced" style="display:block; margin-top: 16px; color: var(--soft)" data-r>
+            {destacado.type} · {destacado.weekLabel}
+          </span>
+          <p class="lz-body" style="margin-top: 22px" data-r>{destacado.excerpt}</p>
+          <div class="lz-actions" style="margin-top: 28px" data-r>
+            <a class="lz-btn" href={`/devocional/${destacado.slug}`}>Leer completo</a>
+          </div>
+        </div>
+        <div data-r>
+          {embed ? (
+            <div class="lz-embed">
+              <iframe
+                src={embed}
+                title={destacado.title}
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+              ></iframe>
+            </div>
+          ) : (
+            <a class="lz-card__img" href={`/devocional/${destacado.slug}`} style="display:block; aspect-ratio: 16/10">
+              <img src={destacado.image} alt={destacado.title} loading="lazy" />
+            </a>
+          )}
+        </div>
       </div>
-      {destacado && (
-        <div class="as-mhero__media" data-reveal>
-          <img src={destacado.image} alt={destacado.title} />
-        </div>
-      )}
-    </header>
+    </section>
+  )}
 
-    <!-- ══════════ DESTACADO ══════════ -->
-    {destacado && (
-      <section class="as-section as-section--light">
-        <div class="as-wrap">
-          <p class="as-eyebrow" data-reveal>Esta semana</p>
-          <div class="as-split">
-            <div>
-              <h2 class="as-h1" data-reveal="words">{destacado.title}</h2>
-              <p class="as-item__meta" style="margin-top:1rem">{destacado.type} · {destacado.weekLabel}</p>
-              <p class="as-lead" style="margin-top:1.25rem" data-reveal>{destacado.excerpt}</p>
-              <div class="as-button-group" data-reveal data-reveal-delay="120">
-                <a class="as-button as-button--ministry" href={`/devocional/${destacado.slug}`}>
-                  Leer completo
-                </a>
-              </div>
-            </div>
-            <div data-reveal>
-              {embed ? (
-                <div class="as-embed">
-                  <iframe
-                    src={embed}
-                    title={destacado.title}
-                    loading="lazy"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowfullscreen
-                  ></iframe>
-                </div>
-              ) : (
-                <a class="as-image as-image--landscape" href={`/devocional/${destacado.slug}`}>
-                  <img src={destacado.image} alt={destacado.title} loading="lazy" />
-                </a>
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
-    )}
-
-    <!-- ══════════ LISTADO ══════════ -->
-    <section class="as-section">
-      <div class="as-wrap">
-        <h2 class="as-h1" data-reveal="words">Anteriores</h2>
-        <div class="as-tabs" data-tabs>
-          <div class="as-tabs__menu">
-            {tabs.map((t, i) => (
-              <button class={`as-tabs__link${i === 0 ? ' is-active' : ''}`} type="button" data-tab={t.id}>
-                {t.label}
-              </button>
-            ))}
-          </div>
+  <section class="lz-section lz-dark lz-dark--2">
+    <div class="lz-wrap">
+      <h2 class="lz-lockup lz-lockup--md" style="margin-bottom: 40px" data-r><span>anteriores</span></h2>
+      <div data-tabs>
+        <div class="lz-tabs__menu">
           {tabs.map((t, i) => (
-            <div class={`as-tabs__panel${i === 0 ? ' is-active' : ''}`} data-panel={t.id}>
-              {t.items.length === 0 ? (
-                <p class="as-lead">Todavía no hay contenido en esta categoría.</p>
-              ) : (
-                <div class="as-collection">
-                  {t.items.map((p) => (
-                    <a class="as-item" href={`/devocional/${p.slug}`}>
-                      <div class="as-image as-image--square">
-                        <img src={p.image} alt={p.title} loading="lazy" />
-                      </div>
-                      <p class="as-item__meta">{p.type} · {p.weekLabel}</p>
-                      <h3 class="as-item__title">{p.title}</h3>
-                      <span class="as-item__view">Leer</span>
-                    </a>
-                  ))}
-                </div>
-              )}
-            </div>
+            <button class={`lz-tabs__link${i === 0 ? ' is-active' : ''}`} type="button" data-tab={t.id}>
+              {t.label}
+            </button>
           ))}
         </div>
+        {tabs.map((t, i) => (
+          <div class={`lz-tabs__panel${i === 0 ? ' is-active' : ''}`} data-panel={t.id}>
+            {t.items.length === 0 ? (
+              <p class="lz-body">Todavía no hay contenido en esta categoría.</p>
+            ) : (
+              <div class="lz-cards">
+                {t.items.map((p) => (
+                  <a class="lz-card" href={`/devocional/${p.slug}`} data-r>
+                    <div class="lz-card__img"><img src={p.image} alt={p.title} loading="lazy" /></div>
+                    <span class="lz-spaced">{p.type} · {p.weekLabel}</span>
+                    <h3>{p.title}</h3>
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="as-section as-section--dark as-cta">
-      <div class="as-wrap">
-        <h2 class="as-display" data-reveal="words">Nos vemos el fin de semana.</h2>
-        <p data-reveal>Viernes y sábados 20 hs · Domingos 9:30 y 11:00 hs.</p>
-        <div class="as-button-group" data-reveal data-reveal-delay="120">
-          <a class="as-button as-button--white" href="https://maps.app.goo.gl/mEVMgoTXbV3BULVq8" target="_blank" rel="noopener noreferrer">Tu primera vez</a>
-          <a class="as-button as-button--ghost-white" href="/contact">Escribinos</a>
-        </div>
-      </div>
-    </section>
-  </div>
-</MaquetaLayout>
+  <NocheCta title="Nos vemos el fin de semana." text="Viernes y sábados 20 hs · Domingos 9:30 y 11:00 hs.">
+    <a class="lz-btn" href="https://maps.app.goo.gl/mEVMgoTXbV3BULVq8" target="_blank" rel="noopener noreferrer">Tu primera vez</a>
+    <a class="lz-btn lz-btn--ghost" href="/contact">Escribinos</a>
+  </NocheCta>
+</NocheLayout>

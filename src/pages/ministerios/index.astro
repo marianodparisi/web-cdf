@@ -1,20 +1,15 @@
 ---
 /**
- * Listado de ministerios.
- *
- * El home los muestra en una fila que se desliza, porque ahí compiten con el
- * resto de la página. Acá es lo único que hay, así que van en grilla: se ven
- * todos de una y no hay que arrastrar para descubrir que existe el noveno.
- *
- * Reusa `.as-mcard`, la misma tarjeta del home, para que sea el mismo objeto
- * en los dos lugares y no dos cosas parecidas.
+ * Listado de ministerios, en el lenguaje noche. Las mismas piezas 4:5 del
+ * inicio, en grilla: acá es lo único que hay, así que se ven todos de una.
  */
-import MaquetaLayout from '../../layouts/MaquetaLayout.astro';
+import NocheLayout from '../../layouts/NocheLayout.astro';
+import NocheHero from '../../components/noche/NocheHero.astro';
 import { getMinistries } from '../../lib/content/collections';
 
 const ministries = await getMinistries();
 
-/** Mismo mapa de color que el home y la página de cada ministerio. */
+/** Mismo mapa de color que el inicio y la página de cada ministerio. */
 const ministryColors: Record<string, string> = {
   life: '#48c2c5',
   gold: '#c5a059',
@@ -23,41 +18,33 @@ const ministryColors: Record<string, string> = {
   carcelario: '#487a7c',
   'firmes-y-adelante': '#c43b46',
 };
-
-// Los logos no toleran recorte: van contenidos sobre fondo propio.
 const logoSlugs = new Set(['life', 'gold', 'kids', 'arde']);
 ---
 
-<MaquetaLayout title="Ministerios · Iglesia Corazón de Fuego">
-  <section class="as-section as-section--light">
-    <div class="as-wrap">
-      <div class="as-head">
-        <div>
-          <p class="as-eyebrow" data-reveal>Ministerios</p>
-          <h1 class="as-h1" data-reveal="words">Encontrá tu lugar para servir y crecer.</h1>
-        </div>
-      </div>
+<NocheLayout title="Ministerios · Iglesia Corazón de Fuego">
+  <NocheHero lines={['encontrá', 'tu lugar']} kicker="Ministerios" short>
+    <Fragment slot="quote">Encontrá tu lugar <strong>para servir y crecer.</strong></Fragment>
+  </NocheHero>
 
-      <div class="as-ministries as-ministries--grilla" data-reveal>
-        {
-          ministries.map((ministry) => (
-            <a
-              class="as-mcard"
-              href={`/ministerios/${ministry.slug}`}
-              style={`--m: ${ministryColors[ministry.slug] ?? '#282828'}`}
-            >
-              <div class={`as-mcard__media${logoSlugs.has(ministry.slug) ? ' is-logo' : ''}`}>
-                <img src={ministry.image} alt={`Ministerio ${ministry.name}`} loading="lazy" />
-              </div>
-              <div class="as-mcard__body">
-                <p class="as-mcard__area">{ministry.area}</p>
-                <h3>{ministry.name}</h3>
-                <span class="as-item__view">Conocer</span>
-              </div>
-            </a>
-          ))
-        }
+  <section class="lz-section lz-dark">
+    <div class="lz-wrap">
+      <div class="lz-feed">
+        {ministries.map((ministry) => (
+          <a
+            class={`lz-post lz-post--logo${logoSlugs.has(ministry.slug) ? '' : ' lz-post--solo'}`}
+            href={`/ministerios/${ministry.slug}`}
+            style={`--m: ${ministryColors[ministry.slug] ?? '#c5a059'}`}
+            data-r
+          >
+            {logoSlugs.has(ministry.slug) && (
+              <img class="lz-post__img" src={ministry.image} alt={`Ministerio ${ministry.name}`} loading="lazy" />
+            )}
+            <span class="lz-spaced lz-post__top">{ministry.area}</span>
+            <span class="lz-post__title lz-post__title--big">{ministry.name}</span>
+            <span class="lz-logo lz-logo--post" aria-hidden="true"><img src="/brand/logowhite.png" alt="" /></span>
+          </a>
+        ))}
       </div>
     </div>
   </section>
-</MaquetaLayout>
+</NocheLayout>

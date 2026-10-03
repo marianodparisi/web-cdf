@@ -1,0 +1,296 @@
+---
+/**
+ * Página de ministerio en el diseño claro anterior. Hoy la usan sólo Kids y
+ * Arde, que van a tener un tratamiento propio; el resto pasó al lenguaje noche
+ * en `src/pages/ministerios/[slug].astro`, que es quien elige cuál mostrar.
+ *
+ * Estructura calcada de austinstone.org/kids, adaptada a `ministries.ts`.
+ *
+ * Orden de bloques del original:
+ *   hero partido (logo + display + botones) · fila de jump-links ·
+ *   franja oscura de declaración · "¿qué es?" · bloque de columnas ·
+ *   grilla de fotos · agenda con pestañas · sedes con pestañas ·
+ *   contenido reciente · preguntas frecuentes · CTA oscuro · siguiente
+ *
+ * Cada ministerio lleva su color propio, como hacen ellos con `.button.ministry`.
+ */
+import MaquetaLayout, { sedes } from '../../layouts/MaquetaLayout.astro';
+import type { Ministry } from '../../data/ministries';
+import type { SermonSeries } from '../../data/series';
+import type { Announcement } from '../../data/announcements';
+
+interface Props {
+  ministry: Ministry;
+  /** El siguiente de la lista, para el link de "próximo" del pie. */
+  next: Ministry;
+  sermonSeries: SermonSeries[];
+  announcements: Announcement[];
+}
+
+const { ministry, next, sermonSeries, announcements }: Props = Astro.props;
+
+/** Mismo mapa de color que usa el listado. Al promover esto pasa a ministries.ts. */
+const ministryColors: Record<string, string> = {
+  life: '#48c2c5',
+  gold: '#c5a059',
+  kids: '#e31b48',
+  arde: '#e8642b',
+  carcelario: '#487a7c',
+  'firmes-y-adelante': '#c43b46',
+};
+const color = ministryColors[ministry.slug] ?? '#282828';
+
+// Los logos no toleran recorte: van contenidos sobre fondo propio.
+/* Mismo criterio que en el home: la imagen de `life` también es un logotipo,
+   así que no se recorta ni se le aplica el grado de color. */
+const esLogo = ['life', 'gold', 'kids', 'arde'].includes(ministry.slug);
+
+/** Fotos de comunidad. Igual que en el home, `ministry.image` suele ser logo. */
+/**
+ * Fotos propias de cada ministerio, las que ya viven en `/public/ministries`.
+ * Antes esta grilla era una sola lista fija —fotos de sedes mezcladas con las
+ * de Life— y se repetía idéntica en las nueve páginas: la de Gold mostraba
+ * gente de Life.
+ *
+ * Sólo se listan archivos que son fotografía. Quedan afuera los logotipos
+ * (`arde.png`, `gold.png`, `kids.png`, `life.png`) y el arte de serie
+ * (`arde/serie.png`), que en una grilla a sangre se ven rotos.
+ *
+ * Carcelario y Firmes y Adelante no tienen material propio todavía, así que su
+ * grilla no se muestra. Un hueco es más honesto que fotos de otro ministerio.
+ */
+const fotosPorMinisterio: Record<string, string[]> = {
+  life: [
+    '/ministries/life/life1.jpg',
+    '/ministries/life/life3.jpg',
+    '/ministries/life/life4.jpeg',
+    '/ministries/life/life2.jpeg',
+  ],
+  arde: ['/ministries/arde/ardehero.png', '/ministries/arde/arde1.png', '/ministries/arde/campaarde.jpg'],
+  gold: ['/ministries/gold/goldanuncio.jpg'],
+  kids: ['/ministries/kids/campakids.jpg'],
+};
+
+const fotos = fotosPorMinisterio[ministry.slug] ?? [];
+
+/* Su bloque de tres columnas debajo del "qué es". Se arma con los datos que
+   tenga cargados el ministerio y se esconde el que venga vacío. */
+const columnas = [
+  ministry.schedule && { n: '01', title: 'Cuándo nos reunimos', text: ministry.schedule },
+  ministry.participation && { n: '02', title: 'Cómo participar', text: ministry.participation },
+  ministry.place && { n: '03', title: 'Dónde', text: ministry.place },
+].filter(Boolean) as { n: string; title: string; text: string }[];
+
+
+
+
+const publishedSeries = sermonSeries.filter((s) => s.image && s.href).slice(0, 3);
+const contenidoTabs = [
+  { id: 'series', label: 'Series' },
+  { id: 'anuncios', label: 'Anuncios' },
+];
+
+const whatsappHref = ministry.whatsapp
+  ? `https://wa.me/${ministry.whatsapp.replace(/\D/g, '')}`
+  : '/contact';
+---
+
+<MaquetaLayout title={`${ministry.name} · Iglesia Corazón de Fuego`}>
+  <div class="as-ministry" style={`--m: ${color}`}>
+    <!-- ══════════ HERO PARTIDO ══════════
+         Copy a la izquierda, imagen a la derecha ocupando media pantalla. -->
+    <header class="as-mhero">
+      <div class="as-mhero__copy">
+        <p class="as-eyebrow" data-reveal>{ministry.area}</p>
+        <h1 class="as-display" data-reveal="words">{ministry.name}</h1>
+        <p class="as-mhero__lead" data-reveal>{ministry.excerpt}</p>
+        <div class="as-button-group" data-reveal data-reveal-delay="120">
+          <a class="as-button as-button--ministry" href="#participar">Quiero participar</a>
+        </div>
+      </div>
+      <div class={`as-mhero__media${esLogo ? ' is-logo' : ''}`} data-reveal>
+        <img src={ministry.photo || ministry.image} alt={ministry.name} />
+      </div>
+    </header>
+
+    <!-- Fila de anclas internas, como su jump-link row. -->
+    <!-- ══════════ DECLARACIÓN ══════════ Franja oscura, una sola idea. -->
+    <section class="as-section as-section--dark as-statement" id="sobre">
+      <div class="as-wrap">
+        <p class="as-eyebrow as-eyebrow--light" data-reveal>{ministry.name} en Corazón de Fuego</p>
+        <h2 class="as-statement__text" data-reveal="words">{ministry.excerpt}</h2>
+      </div>
+    </section>
+
+    <!-- ══════════ QUÉ ES ══════════ -->
+    <section class="as-section as-section--light" id="que-hacemos">
+      <div class="as-wrap as-split">
+        <h2 class="as-h1" data-reveal="words">¿Qué es {ministry.name}?</h2>
+        <div>
+          <p class="as-lead" data-reveal>{ministry.description}</p>
+          {ministry.noticeTitle && (
+            <div class="as-notice" data-reveal data-reveal-delay="120">
+              <p class="as-notice__title">{ministry.noticeTitle}</p>
+              {ministry.noticeText && <p>{ministry.noticeText}</p>}
+            </div>
+          )}
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ COLUMNAS ══════════ Horario, participación y lugar. -->
+    {columnas.length > 0 && (
+      <section class="as-section" id="participar">
+        <div class="as-wrap">
+          <div class="as-head">
+            <div>
+              <p class="as-eyebrow" data-reveal>Participar</p>
+              <h2 class="as-h1" data-reveal="words">Cómo sumarte.</h2>
+            </div>
+            <a class="as-button as-button--small as-button--ministry" href={whatsappHref} target="_blank" rel="noopener noreferrer">
+              Escribinos
+            </a>
+          </div>
+          <div class="as-cols">
+            {columnas.map((c, i) => (
+              <div class="as-col" data-reveal data-reveal-delay={i * 110}>
+                <span class="as-col__n">{c.n}</span>
+                <h3>{c.title}</h3>
+                <p>{c.text}</p>
+              </div>
+            ))}
+          </div>
+
+          {(ministry.meetingDay || ministry.meetingHours) && (
+            <div class="as-meta" data-reveal>
+              {ministry.meetingDay && (
+                <div class="as-meta__item">
+                  <span class="material-symbols-outlined">event</span>
+                  <div><strong>Día</strong><p>{ministry.meetingDay}</p></div>
+                </div>
+              )}
+              {ministry.meetingHours && (
+                <div class="as-meta__item">
+                  <span class="material-symbols-outlined">schedule</span>
+                  <div><strong>Horario</strong><p>{ministry.meetingHours}</p></div>
+                </div>
+              )}
+              {ministry.place && (
+                <div class="as-meta__item">
+                  <span class="material-symbols-outlined">location_on</span>
+                  <div><strong>Lugar</strong><p>{ministry.place}</p></div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </section>
+    )}
+
+    <!-- ══════════ FOTOS ══════════ Grilla escalonada, sin padding superior.
+         Sólo aparece si el ministerio tiene fotos propias. -->
+    {fotos.length > 0 && (
+      <section class="as-section as-section--photos">
+        <div class="as-wrap as-photos">
+          {fotos.slice(0, 6).map((src, i) => (
+            <div class="as-photo" data-reveal data-reveal-delay={i * 70}>
+              <img src={src} alt={`${ministry.name}`} loading="lazy" />
+            </div>
+          ))}
+        </div>
+      </section>
+    )}
+
+
+    <!-- ══════════ SEDES ══════════ -->
+    <section class="as-section" id="sedes">
+      <div class="as-wrap">
+        <div class="as-head">
+          <div>
+            <p class="as-eyebrow" data-reveal>Sedes</p>
+            <h2 class="as-h1" data-reveal="words">Dónde encontrarnos.</h2>
+          </div>
+          <a class="as-button as-button--small" href="/anexos">Ver todas</a>
+        </div>
+        <div class="as-sedes" data-reveal>
+          {sedes.map((sede) => (
+            <a class="as-sede" href={sede.href}>
+              <h4>{sede.name}</h4>
+              <p>{sede.region}</p>
+              <span class="as-sede__arrow material-symbols-outlined">arrow_forward</span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ CONTENIDO RECIENTE ══════════ -->
+    <section class="as-section as-section--light" id="contenido">
+      <div class="as-wrap">
+        <h2 class="as-h1" data-reveal="words">Contenido reciente</h2>
+        <div class="as-tabs" data-tabs>
+          <div class="as-tabs__menu">
+            {contenidoTabs.map((t, i) => (
+              <button class={`as-tabs__link${i === 0 ? ' is-active' : ''}`} type="button" data-tab={t.id}>
+                {t.label}
+              </button>
+            ))}
+          </div>
+          <div class="as-tabs__panel is-active" data-panel="series">
+            <div class="as-collection">
+              {publishedSeries.map((s) => (
+                <a class="as-item" href={s.href} target="_blank" rel="noopener noreferrer">
+                  <div class="as-image as-image--square"><img src={s.image} alt={s.title} loading="lazy" /></div>
+                  <p class="as-item__meta">Serie</p>
+                  <h3 class="as-item__title">{s.title}</h3>
+                  <span class="as-item__view">Ver</span>
+                </a>
+              ))}
+            </div>
+          </div>
+          <div class="as-tabs__panel" data-panel="anuncios">
+            <div class="as-collection">
+              {announcements.slice(0, 3).map((a) => (
+                <a class="as-item" href={a.href}>
+                  <div class="as-image as-image--square as-image--contain"><img src={a.image} alt={a.alt} loading="lazy" /></div>
+                  <p class="as-item__meta">{a.eyebrow}</p>
+                  <h3 class="as-item__title">{a.title}</h3>
+                  <span class="as-item__view">Ver</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ══════════ CTA + SIGUIENTE ══════════ -->
+    <section class="as-section as-section--dark as-cta">
+      <div class="as-wrap">
+        <h2 class="as-display" data-reveal="words">Te esperamos.</h2>
+        <p data-reveal>Vení a conocernos o escribinos y te contamos cómo empezar.</p>
+        <div class="as-button-group" data-reveal data-reveal-delay="120">
+          <a class="as-button as-button--white" href={whatsappHref} target="_blank" rel="noopener noreferrer">Escribinos</a>
+          <a class="as-button as-button--ghost-white" href="https://maps.app.goo.gl/mEVMgoTXbV3BULVq8" target="_blank" rel="noopener noreferrer">Visitanos</a>
+        </div>
+
+        {ministry.instagram && (
+          <div class="as-follow" data-reveal>
+            <p class="as-eyebrow as-eyebrow--light">Seguinos</p>
+            <a class="as-follow__link" href={ministry.instagram} target="_blank" rel="noopener noreferrer">
+              Instagram
+              <span class="material-symbols-outlined">arrow_outward</span>
+            </a>
+          </div>
+        )}
+
+        <a class="as-next" href={`/ministerios/${next.slug}`}>
+          <span>Siguiente ministerio</span>
+          <strong>{next.name}</strong>
+          <span class="material-symbols-outlined">arrow_forward</span>
+        </a>
+      </div>
+    </section>
+  </div>
+</MaquetaLayout>
