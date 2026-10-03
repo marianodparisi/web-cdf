@@ -628,10 +628,14 @@ se descartó: el usuario dijo que con esas imágenes nos fuimos para otro lado.
   cuadrado con mucho aire: `.lz-logo` lo recorta al lettering.
 - Migradas: inicio, nosotros, misiones, evangelismo, contacto, sedes (listado
   y las cinco), devocional (listado y artículo), ministerios (listado y fichas).
-- **IETE y Discipulados** tienen tratamiento propio, pedido explícito del
-  usuario: "programa de estudio", con la ficha del curso y el temario como
-  hojas de papel rayado (`.lz-sheet`, `.lz-modules`) y la inscripción sobre
-  otra hoja.
+- **IETE y Discipulados tienen diseño propio**, cada uno distinto, como Kids y
+  Arde (pedido del usuario: "algo más educativo, particular"). Páginas
+  estáticas `institucional/iete.astro` y `discipulados.astro` (se borró el
+  `[slug].astro`), con el texto en `src/data/educativos.ts`. IETE es un
+  prospecto académico (`styles/iete.css`, `.ie`: papel crema, vino y dorado,
+  Fraunces, capitular, índice con números romanos). Discipulados es un
+  cuaderno (`styles/discipulados.css`, `.dc`: renglones, resaltador, Caveat,
+  post-its y camino de pasos). Los dos llevan menú tematizado (`theme`).
 - **Kids y Arde tienen diseño propio y claro**, pedido del usuario ("más claro
   como son, pero con el navbar y footer nuevos"). Rutas estáticas
   (`ministerios/kids.astro`, `arde.astro`, le ganan a `[slug].astro`) sobre

@@ -1,0 +1,208 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   DISCIPULADOS — diseño propio dentro del sitio noche. Prefijo .dc.
+   Cuaderno de primeros pasos: hoja rayada con margen, verde azulado,
+   resaltador amarillo, letra manuscrita (Caveat) y post-its.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.dc {
+  --paper: #fbf8f1;
+  --ink: #1d2b2c;
+  --soft: #4f5f60;
+  --teal: #487a7c;
+  --teal-2: #335a5c;
+  --mint: #dcebe5;
+  --marker: #ffe27a;
+  --rule-line: rgba(72, 122, 124, 0.16);
+  --pad: clamp(16px, 5vw, 72px);
+  --hand: 'Caveat', 'Comic Sans MS', cursive;
+
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'Inter Tight', system-ui, sans-serif;
+  padding-top: 78px;
+}
+
+.dc-wrap { position: relative; max-width: 1200px; margin: 0 auto; padding: 0 var(--pad); }
+
+/* Hoja de cuaderno: renglones y margen */
+.dc-paper {
+  position: relative;
+  background:
+    linear-gradient(90deg, transparent calc(var(--pad) - 18px), rgba(220, 90, 90, 0.35) calc(var(--pad) - 18px), rgba(220, 90, 90, 0.35) calc(var(--pad) - 16px), transparent calc(var(--pad) - 16px)),
+    repeating-linear-gradient(180deg, transparent 0 35px, var(--rule-line) 35px 36px),
+    var(--paper);
+}
+
+/* ── Tipografía ─────────────────────────────────────────────────────────── */
+.dc mark {
+  background: linear-gradient(100deg, transparent 0.2em, var(--marker) 0.2em, var(--marker) calc(100% - 0.15em), transparent calc(100% - 0.15em)) 0 62% / 100% 0.62em no-repeat;
+  color: inherit;
+  padding: 0 0.08em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+.dc-hand { font-family: var(--hand); color: var(--teal); }
+.dc-hand--kicker { font-size: clamp(1.5rem, 2.2vw, 1.9rem); font-weight: 700; line-height: 1; }
+.dc-title { font-size: clamp(2.6rem, 6.4vw, 6.4rem); font-weight: 900; letter-spacing: -0.035em; line-height: 0.95; }
+.dc-title--cta { font-size: clamp(2.6rem, 6.4vw, 5rem); color: #fff; }
+.dc-h2 { font-size: clamp(2rem, 4.4vw, 3.4rem); font-weight: 900; letter-spacing: -0.03em; line-height: 1.04; margin-top: 10px; }
+.dc-h2--wide { max-width: 24ch; }
+.dc-lead { font-size: clamp(1.3rem, 2.2vw, 1.8rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; max-width: 24ch; }
+.dc-text { margin-top: 16px; font-size: clamp(1.02rem, 1.25vw, 1.15rem); line-height: 1.6; color: var(--soft); max-width: 50ch; }
+.dc-prose { display: grid; gap: 18px; }
+.dc-prose p { font-size: clamp(1.08rem, 1.35vw, 1.22rem); line-height: 1.65; color: var(--soft); }
+
+/* ── Botones ────────────────────────────────────────────────────────────── */
+.dc-actions { display: flex; flex-wrap: wrap; gap: 12px; }
+.dc-actions--center { justify-content: center; }
+.dc-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 14px 24px;
+  border: 2px solid var(--teal);
+  border-radius: 10px;
+  background: var(--teal);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s, transform 0.2s;
+}
+.dc-btn:hover { background: var(--teal-2); border-color: var(--teal-2); transform: translateY(-2px); }
+.dc-btn--ghost { background: #fff; color: var(--teal); }
+.dc-btn--ghost:hover { background: var(--mint); color: var(--teal-2); }
+.dc-btn--yellow { background: var(--marker); border-color: var(--marker); color: var(--ink); }
+.dc-btn--yellow:hover { background: #fff; border-color: #fff; }
+
+/* ── Portada ────────────────────────────────────────────────────────────── */
+.dc-hero { min-height: calc(100svh - 78px); display: flex; align-items: center; padding: clamp(40px, 6vw, 80px) 0; }
+.dc-hero__grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: clamp(36px, 6vw, 96px); align-items: center; width: 100%; }
+.dc-hero__copy { display: grid; gap: 22px; justify-items: start; }
+
+/* Post-its con los datos del programa */
+.dc-notes { position: relative; display: grid; gap: 22px; justify-items: center; }
+.dc-postit {
+  position: relative;
+  display: grid;
+  gap: 6px;
+  width: min(300px, 100%);
+  padding: 30px 26px 26px;
+  box-shadow: 0 14px 24px -12px rgba(29, 43, 44, 0.35), 0 2px 0 rgba(0, 0, 0, 0.04) inset;
+}
+.dc-postit--1 { background: var(--marker); rotate: -3deg; justify-self: start; }
+.dc-postit--2 { background: #bfe3d6; rotate: 2deg; justify-self: end; }
+.dc-postit--3 { background: #ffd1c2; rotate: -1.5deg; }
+.dc-postit__pin { position: absolute; top: -9px; left: 50%; width: 18px; height: 18px; translate: -50% 0; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fff 0 18%, var(--teal) 20%); box-shadow: 0 3px 4px rgba(0, 0, 0, 0.25); }
+.dc-postit__label { font-family: var(--hand); font-size: 1.5rem; font-weight: 700; color: var(--teal-2); line-height: 1; }
+.dc-postit strong { font-size: 1.35rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1.15; }
+
+/* ── Secciones ──────────────────────────────────────────────────────────── */
+.dc-section { padding: clamp(80px, 10vw, 136px) 0; }
+.dc-section--tint { background: var(--mint); }
+.dc-split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: clamp(32px, 5vw, 80px); align-items: start; }
+.dc-head { margin-bottom: clamp(36px, 5vw, 64px); }
+
+/* Camino de pasos: números en círculo unidos por una línea punteada */
+.dc-path { position: relative; list-style: none; margin: 0; padding: 0; display: grid; gap: 28px; }
+.dc-path::before { content: ''; position: absolute; top: 28px; bottom: 28px; left: 27px; border-left: 3px dashed rgba(72, 122, 124, 0.45); }
+.dc-step { position: relative; display: grid; grid-template-columns: 58px 1fr; gap: 22px; align-items: start; }
+.dc-step__n { position: relative; z-index: 1; display: grid; place-items: center; width: 58px; height: 58px; border: 3px solid var(--teal); border-radius: 50%; background: var(--paper); font-family: var(--hand); font-size: 2rem; font-weight: 700; color: var(--teal); }
+.dc-step__card { padding: 22px 26px; background: #fff; border: 1.5px solid rgba(72, 122, 124, 0.25); border-radius: 14px; box-shadow: 0 8px 20px -14px rgba(29, 43, 44, 0.4); }
+.dc-step__card h3 { font-size: clamp(1.4rem, 2.4vw, 1.9rem); font-weight: 900; letter-spacing: -0.025em; line-height: 1.05; }
+.dc-step__card p { margin-top: 8px; font-size: 1.08rem; line-height: 1.5; color: var(--soft); }
+
+/* Fichas de estudio: tarjeta blanca con línea roja arriba y renglones */
+.dc-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.dc-card {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+  padding: 28px 26px 32px;
+  border-radius: 6px;
+  border-top: 4px solid rgba(220, 90, 90, 0.6);
+  background:
+    repeating-linear-gradient(180deg, transparent 0 29px, rgba(72, 122, 124, 0.12) 29px 30px) 0 64px / 100% calc(100% - 64px) no-repeat,
+    #fff;
+  box-shadow: 0 12px 26px -16px rgba(29, 43, 44, 0.45);
+}
+.dc-card:nth-child(2) { rotate: 0.8deg; }
+.dc-card:nth-child(3) { rotate: -0.8deg; }
+.dc-card__label { font-family: var(--hand); font-size: 1.5rem; font-weight: 700; color: var(--teal); line-height: 1; }
+.dc-card h3 { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.025em; line-height: 1.1; }
+.dc-card p { line-height: 1.6; color: var(--soft); }
+
+/* Casillas dibujadas a mano */
+.dc-checks { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; }
+.dc-checks li { position: relative; padding: 18px 22px 18px 66px; background: #fff; border-radius: 12px; font-size: clamp(1.1rem, 1.6vw, 1.35rem); font-weight: 700; letter-spacing: -0.015em; line-height: 1.25; }
+.dc-checks li::before { content: ''; position: absolute; left: 22px; top: 50%; width: 26px; height: 26px; translate: 0 -50%; border: 2.5px solid var(--ink); border-radius: 5px 7px 4px 6px; rotate: -3deg; }
+.dc-checks li::after { content: '✓'; position: absolute; left: 25px; top: 50%; translate: 0 -62%; font-family: var(--hand); font-size: 2.2rem; font-weight: 700; color: var(--teal); line-height: 1; }
+
+/* Formulario sobre una ficha */
+.dc-form {
+  display: grid;
+  gap: 18px;
+  padding: clamp(28px, 3.5vw, 40px);
+  border-radius: 8px;
+  border-top: 4px solid rgba(220, 90, 90, 0.6);
+  background: #fff;
+  box-shadow: 0 20px 40px -24px rgba(29, 43, 44, 0.45);
+}
+.dc-field { display: grid; gap: 6px; }
+.dc-field span { font-family: var(--hand); font-size: 1.35rem; font-weight: 700; color: var(--teal-2); line-height: 1; }
+.dc-field input { width: 100%; padding: 12px 14px; border: 1.5px solid rgba(72, 122, 124, 0.35); border-radius: 10px; background: var(--paper); color: var(--ink); font: 500 1rem 'Inter Tight', sans-serif; }
+.dc-field input:focus { outline: none; border-color: var(--teal); background: #fff; }
+.dc-field input::placeholder { color: rgba(29, 43, 44, 0.35); }
+.dc-form__row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.dc-check { display: flex; gap: 12px; align-items: flex-start; font-size: 0.92rem; color: var(--soft); }
+.dc-check input { margin-top: 3px; accent-color: var(--teal); }
+.dc-form .dc-btn { justify-self: start; }
+
+/* ── Cierre ─────────────────────────────────────────────────────────────── */
+.dc-cta { padding: clamp(90px, 11vw, 150px) 0 clamp(56px, 7vw, 88px); background: var(--teal); text-align: center; color: #fff; }
+.dc-cta__inner { display: grid; justify-items: center; gap: 20px; }
+.dc-cta .dc-text { color: rgba(255, 255, 255, 0.85); margin-top: 0; }
+.dc-next { display: grid; gap: 4px; margin-top: 28px; color: #fff; text-decoration: none; }
+.dc-next span { font-family: var(--hand); font-size: 1.4rem; opacity: 0.9; }
+.dc-next strong { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 900; letter-spacing: -0.03em; }
+.dc-next:hover strong { text-decoration: underline; text-decoration-color: var(--marker); text-decoration-thickness: 4px; text-underline-offset: 6px; }
+
+/* ── Menú con el tema de Discipulados ───────────────────────────────────────
+   `lz--discipulados` va en el body (prop `theme` de NocheLayout). Verde
+   azulado con renglones y los links en letra manuscrita. */
+.lz--discipulados .lz-nav.lz-nav--solid {
+  background: repeating-linear-gradient(180deg, transparent 0 17px, rgba(255, 255, 255, 0.06) 17px 18px), #335a5c;
+  border-bottom: 3px solid #ffe27a;
+}
+.lz--discipulados .lz-nav__item { font-family: 'Caveat', cursive; font-size: 1.35rem; font-weight: 700; opacity: 0.95; }
+.lz--discipulados .lz-nav__utils .lz-btn { border-radius: 10px; border-color: #ffe27a; background: #ffe27a; color: #1d2b2c; backdrop-filter: none; }
+.lz--discipulados .lz-burger { border-radius: 10px; border-color: #ffe27a; }
+.lz--discipulados .lz-drop { border-radius: 10px; border: 0; border-top: 4px solid rgba(220, 90, 90, 0.6); background: #fbf8f1; color: #1d2b2c; backdrop-filter: none; }
+.lz--discipulados .lz-drop__link:hover { background: #dcebe5; }
+.lz--discipulados .lz-drop__link .lz-spaced { color: #487a7c; }
+.lz--discipulados .lz-mobile { background: #335a5c; }
+.lz--discipulados .lz-mobile__top { font-family: 'Caveat', cursive; font-size: 2.6rem; font-weight: 700; letter-spacing: 0; }
+.lz--discipulados .lz-mobile__group .lz-spaced { color: #ffe27a; }
+
+/* ── Responsive ─────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .dc-hero__grid, .dc-split { grid-template-columns: 1fr; }
+  .dc-notes { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+  .dc-postit { width: 100%; padding: 24px 16px 18px; justify-self: stretch; }
+  .dc-postit strong { font-size: 1.05rem; }
+  .dc-cards { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 560px) {
+  .dc { padding-top: 70px; }
+  .dc-hero { min-height: calc(100svh - 70px); }
+  .dc-notes { grid-template-columns: 1fr; }
+  .dc-postit { width: 86%; }
+  .dc-postit--1 { justify-self: start; }
+  .dc-postit--2 { justify-self: end; }
+  .dc-postit--3 { justify-self: center; }
+  .dc-form__row { grid-template-columns: 1fr; }
+  .dc-step { grid-template-columns: 46px 1fr; gap: 14px; }
+  .dc-step__n { width: 46px; height: 46px; font-size: 1.6rem; }
+  .dc-path::before { left: 21px; }
+}

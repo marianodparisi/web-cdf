@@ -1,0 +1,208 @@
+---
+/**
+ * IETE, con diseño propio: un prospecto académico. Papel crema, el vino del
+ * logo con filetes dorados, serifa de libro (Fraunces), el plan de estudios
+ * como índice con números romanos y la inscripción como solicitud.
+ *
+ * Usa el menú y el footer del lenguaje noche (tema `iete`) para seguir siendo
+ * el mismo sitio. El contenido sale de `src/data/educativos.ts`.
+ */
+import NocheLayout from '../../layouts/NocheLayout.astro';
+import { educativos } from '../../data/educativos';
+import '../../styles/iete.css';
+
+const p = educativos.iete;
+const otro = educativos.discipulados;
+
+const romanos = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
+/* La primera letra del primer párrafo va como capitular, al estilo de libro. */
+const [primerParrafo, ...restoQuees] = p.quees;
+const capitular = primerParrafo.charAt(0);
+const restoPrimero = primerParrafo.slice(1);
+---
+
+<NocheLayout title="IETE · Iglesia Corazón de Fuego" solidNav theme="iete">
+  <link
+    slot="head"
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,800;1,9..144,400;1,9..144,600&display=swap"
+  />
+
+  <div class="ie">
+    <!-- ══════════ PORTADA ══════════ Título y lema a la izquierda; a la
+         derecha, el logo como sello sobre una ficha con doble filete. -->
+    <header class="ie-hero">
+      <div class="ie-wrap ie-hero__grid">
+        <div class="ie-hero__copy">
+          <p class="ie-kicker" data-r>Educativos · {p.kicker}</p>
+          <h1 class="ie-title" data-r>{p.name}</h1>
+          <p class="ie-lead" data-r>{p.lead}</p>
+          {p.lead2 && <p class="ie-text" data-r>{p.lead2}</p>}
+          <div class="ie-actions" data-r>
+            <a class="ie-btn" href="#inscripcion">Solicitar información</a>
+            <a class="ie-btn ie-btn--ghost" href="#que-es">¿Qué es {p.name}?</a>
+          </div>
+        </div>
+
+        <aside class="ie-seal" data-r>
+          {p.logo && <img class="ie-seal__logo" src={p.logo} alt={`Logo ${p.name}`} />}
+          <p class="ie-seal__caption">Ficha del programa</p>
+          <dl class="ie-facts">
+            {p.datos.map((d) => (
+              <div>
+                <dt>{d.label}</dt>
+                <dd>{d.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </aside>
+      </div>
+    </header>
+
+    <!-- ══════════ QUÉ ES ══════════ Texto a dos columnas con capitular. -->
+    <section class="ie-section" id="que-es">
+      <div class="ie-wrap">
+        <div class="ie-chapter" data-r>
+          <span class="ie-chapter__n">Capítulo I</span>
+          <h2 class="ie-h2">¿Qué es {p.name}?</h2>
+          <p class="ie-statement">{p.statement}</p>
+        </div>
+        <div class="ie-book" data-r>
+          <p><span class="ie-dropcap">{capitular}</span>{restoPrimero}</p>
+          {restoQuees.map((parrafo) => <p>{parrafo}</p>)}
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ PLAN DE ESTUDIOS ══════════ Índice de libro. -->
+    <section class="ie-section ie-section--paper" id="programa">
+      <div class="ie-wrap ie-wrap--narrow">
+        <div class="ie-chapter ie-chapter--center" data-r>
+          <span class="ie-chapter__n">Capítulo II</span>
+          <h2 class="ie-h2">{p.ejesTitulo}</h2>
+        </div>
+        <ol class="ie-toc" data-r>
+          {p.ejes.map((eje, i) => (
+            <li>
+              <span class="ie-toc__n">{romanos[i] ?? i + 1}</span>
+              <span class="ie-toc__title">{eje}</span>
+              <span class="ie-toc__dots" aria-hidden="true"></span>
+              <span class="ie-toc__page">Módulo {String(i + 1).padStart(2, '0')}</span>
+            </li>
+          ))}
+        </ol>
+        {p.ejesCierre && <p class="ie-note" data-r>{p.ejesCierre}</p>}
+      </div>
+    </section>
+
+    <!-- ══════════ VISIÓN ══════════ -->
+    <section class="ie-section" id="enfoque">
+      <div class="ie-wrap">
+        <div class="ie-chapter" data-r>
+          <span class="ie-chapter__n">Capítulo III · Nuestra visión de formación</span>
+          <h2 class="ie-h2 ie-h2--wide">{p.visionTitulo}</h2>
+        </div>
+        <div class="ie-pillars">
+          {p.columnas.map((c) => (
+            <article class="ie-pillar" data-r>
+              <span class="ie-pillar__n">{c.n}</span>
+              <p class="ie-pillar__label">{c.label}</p>
+              <h3>{c.title}</h3>
+              <p>{c.text}</p>
+            </article>
+          ))}
+        </div>
+        {p.visionCierre && <p class="ie-quote" data-r>{p.visionCierre}</p>}
+      </div>
+    </section>
+
+    <!-- ══════════ PERFIL Y CURSADA ══════════ -->
+    <section class="ie-section ie-section--paper" id="info">
+      <div class="ie-wrap ie-split">
+        <div class="ie-box" data-r>
+          <p class="ie-kicker">Información general</p>
+          <h2 class="ie-h3">¿Para quién es?</h2>
+          <ul class="ie-checks">
+            {p.paraQuien.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+        {(p.incluye.length > 0 || p.presenciales.length > 0) && (
+          <div class="ie-box" data-r>
+            <p class="ie-kicker">Cómo se cursa</p>
+            <h2 class="ie-h3">Qué incluye el programa</h2>
+            {p.incluye.length > 0 && (
+              <>
+                <p class="ie-box__sub">La cursada</p>
+                <ul class="ie-tags">{p.incluye.map((i) => <li>{i}</li>)}</ul>
+              </>
+            )}
+            {p.presenciales.length > 0 && (
+              <>
+                <p class="ie-box__sub">Experiencias presenciales</p>
+                <ul class="ie-tags">{p.presenciales.map((i) => <li>{i}</li>)}</ul>
+              </>
+            )}
+          </div>
+        )}
+      </div>
+    </section>
+
+    <!-- ══════════ INSCRIPCIÓN ══════════ Formulario de solicitud. -->
+    <section class="ie-section" id="inscripcion">
+      <div class="ie-wrap ie-split">
+        <div data-r>
+          <p class="ie-kicker">Solicitar información</p>
+          <h2 class="ie-h2">{p.ctaTitle}</h2>
+          <p class="ie-text">{p.ctaText}</p>
+        </div>
+
+        {/* `action="#"`: todavía no hay endpoint, igual que antes. */}
+        <form class="ie-form" action="#" method="post" data-r>
+          <p class="ie-form__head">Solicitud · {p.name}</p>
+          <label class="ie-field">
+            <span>WhatsApp</span>
+            <input type="tel" name="whatsapp" placeholder="10 dígitos" required />
+          </label>
+          <label class="ie-field">
+            <span>Correo electrónico *</span>
+            <input type="email" name="email" placeholder="tu@correo.com" required />
+          </label>
+          <label class="ie-field">
+            <span>Nombres *</span>
+            <input type="text" name="nombres" placeholder="Tus nombres" required />
+          </label>
+          <div class="ie-form__row">
+            <label class="ie-field">
+              <span>Primer apellido *</span>
+              <input type="text" name="apellido1" placeholder="Primer apellido" required />
+            </label>
+            <label class="ie-field">
+              <span>Segundo apellido</span>
+              <input type="text" name="apellido2" placeholder="Segundo apellido" />
+            </label>
+          </div>
+          <label class="ie-check">
+            <input type="checkbox" name="privacidad" required />
+            <span>Acepto el aviso de privacidad y protección de datos personales.</span>
+          </label>
+          <button class="ie-btn" type="submit">Enviar solicitud</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ══════════ CIERRE ══════════ -->
+    <section class="ie-cta">
+      <div class="ie-wrap ie-cta__inner">
+        <h2 class="ie-title ie-title--cta" data-r>Da el próximo paso.</h2>
+        <p class="ie-text" data-r>Escribinos y te contamos cuándo abre la próxima inscripción.</p>
+        <div class="ie-actions ie-actions--center" data-r>
+          <a class="ie-btn ie-btn--gold" href="/contact">Escribinos</a>
+        </div>
+        <a class="ie-next" href="/institucional/discipulados">
+          <span>También te puede interesar</span>
+          <strong>{otro.name} →</strong>
+        </a>
+      </div>
+    </section>
+  </div>
+</NocheLayout>

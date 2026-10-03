@@ -657,96 +657,6 @@ p.lz-body { font-size: clamp(1.05rem, 1.3vw, 1.2rem); line-height: 1.55; color: 
 .lz-next strong { font-size: clamp(1.6rem, 3vw, 2.6rem); font-weight: 900; letter-spacing: -0.03em; }
 .lz-next:hover strong { text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 2px; }
 
-/* ═══════════════════════════════════════════════════════════════════════
-   EDUCATIVOS (IETE, Discipulados) — tratamiento propio, "programa de estudio"
-   Una hoja clara rayada para el temario y la ficha, dentro de la noche.
-   ═══════════════════════════════════════════════════════════════════════ */
-/* `minmax(0, …)`: sin eso, una palabra larga ("discipulados") ensancha su
-   columna y empuja la ficha fuera de la pantalla. */
-.lz-edu-hero { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 80px); align-items: center; }
-.lz-edu-hero__copy { display: grid; gap: 24px; justify-items: start; min-width: 0; }
-/* El nombre del programa se escala con el ancho de su columna: "iete" entra
-   enorme, "discipulados" necesita bajar. */
-.lz-edu-hero__title { font-size: clamp(3.4rem, 11vw, 11rem); }
-.lz-edu-hero__title--long { font-size: clamp(2.8rem, 7.2vw, 7.4rem); }
-.lz-edu-hero__copy .lz-lead { max-width: 24ch; }
-
-/* La ficha del programa: una tarjeta de papel con los datos duros */
-.lz-sheet {
-  --paper: #efe9de;
-  --ink: #17140f;
-  --rule: rgba(23, 20, 15, 0.1);
-  position: relative;
-  color: var(--ink);
-  background:
-    repeating-linear-gradient(180deg, transparent 0 37px, var(--rule) 37px 38px),
-    var(--paper);
-  border-radius: 6px;
-  box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.7);
-}
-.lz-sheet::before { content: ''; position: absolute; top: 0; bottom: 0; left: 56px; width: 1.5px; background: color-mix(in srgb, var(--m) 70%, transparent); }
-.lz-sheet--card { padding: 36px 32px 32px 84px; transform: rotate(1.2deg); }
-.lz-sheet--card .lz-sheet__logo { width: 92px; margin-bottom: 22px; }
-.lz-sheet__name { font-size: clamp(2rem, 3.6vw, 3.6rem); overflow-wrap: anywhere; font-weight: 900; letter-spacing: -0.035em; line-height: 0.92; margin-bottom: 26px; }
-.lz-sheet__kicker { color: color-mix(in srgb, var(--m) 85%, #000); }
-.lz-facts { display: grid; }
-.lz-facts > div { display: grid; grid-template-columns: 120px 1fr; gap: 16px; align-items: baseline; padding: 11px 0; }
-.lz-facts dt { font-size: 0.58rem; font-weight: 600; letter-spacing: 0.26em; text-transform: uppercase; opacity: 0.6; }
-.lz-facts dd { margin: 0; font-size: 1.1rem; font-weight: 800; letter-spacing: -0.02em; }
-
-/* El temario: hoja ancha, módulos numerados como índice de un cuaderno */
-.lz-sheet--page { padding: clamp(40px, 6vw, 80px) clamp(24px, 5vw, 72px) clamp(40px, 6vw, 80px) clamp(76px, 9vw, 132px); }
-.lz-sheet--page::before { left: clamp(52px, 6vw, 92px); }
-.lz-sheet__head { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; margin-bottom: clamp(28px, 4vw, 48px); }
-.lz-sheet__head h2 { font-size: clamp(2.2rem, 5vw, 4.4rem); font-weight: 900; letter-spacing: -0.035em; line-height: 0.95; }
-/* La etiqueta va en su propio renglón y con aire: con el interlineado justo
-   del título, las tildes de las mayúsculas ("Áreas") la tocaban. */
-.lz-sheet__head > div > .lz-sheet__kicker,
-.lz-sheet--card .lz-sheet__kicker { display: block; margin-bottom: 16px; }
-.lz-modules { counter-reset: modulo; display: grid; }
-.lz-module {
-  counter-increment: modulo;
-  display: grid;
-  grid-template-columns: 110px 1fr;
-  gap: 20px;
-  align-items: baseline;
-  padding: 18px 0;
-  border-top: 1px solid rgba(23, 20, 15, 0.18);
-}
-.lz-module:last-child { border-bottom: 1px solid rgba(23, 20, 15, 0.18); }
-.lz-module::before {
-  content: 'Módulo ' counter(modulo, decimal-leading-zero);
-  font-size: 0.6rem;
-  font-weight: 600;
-  letter-spacing: 0.24em;
-  text-transform: uppercase;
-  color: color-mix(in srgb, var(--m) 85%, #000);
-}
-.lz-module strong { display: block; font-size: clamp(1.35rem, 2.4vw, 2.1rem); font-weight: 900; letter-spacing: -0.025em; line-height: 1; }
-.lz-module span { display: block; margin-top: 8px; font-size: 1rem; line-height: 1.45; opacity: 0.72; max-width: 56ch; }
-.lz-sheet__note { margin-top: 32px; font-size: clamp(1.05rem, 1.6vw, 1.35rem); font-style: italic; font-weight: 500; line-height: 1.35; max-width: 52ch; }
-
-/* Para quién: checklist */
-.lz-checklist { display: grid; grid-template-columns: repeat(2, 1fr); gap: 4px; }
-.lz-checklist li { display: flex; gap: 16px; align-items: flex-start; padding: 22px 24px; background: rgba(255, 255, 255, 0.035); font-size: clamp(1.05rem, 1.5vw, 1.3rem); font-weight: 700; letter-spacing: -0.025em; line-height: 1.2; }
-.lz-checklist li::before { content: ''; flex: none; width: 18px; height: 18px; margin-top: 2px; border-radius: 4px; border: 1.5px solid var(--accent); background: linear-gradient(135deg, transparent 45%, var(--accent) 45% 60%, transparent 60%); }
-
-/* Qué incluye: chips */
-.lz-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
-.lz-chips li { padding: 12px 18px; border: 1px solid var(--faint); border-radius: 999px; font-weight: 700; letter-spacing: -0.02em; }
-.lz-h3 { font-size: clamp(1.4rem, 2vw, 1.8rem); font-weight: 800; letter-spacing: -0.04em; }
-
-/* Inscripción: el formulario va sobre una hoja */
-.lz-sheet--form { padding: clamp(28px, 4vw, 44px) clamp(22px, 3vw, 36px) clamp(28px, 4vw, 44px) clamp(70px, 7vw, 92px); }
-.lz-sheet--form::before { left: clamp(46px, 4.5vw, 60px); }
-.lz-sheet--form .lz-form { margin-top: 0; }
-.lz-sheet--form .lz-field span { color: rgba(23, 20, 15, 0.6); }
-.lz-sheet--form .lz-field :is(input, textarea) { background: rgba(255, 255, 255, 0.55); border-color: rgba(23, 20, 15, 0.16); color: var(--ink); }
-.lz-sheet--form .lz-field :is(input, textarea)::placeholder { color: rgba(23, 20, 15, 0.35); }
-.lz-sheet--form .lz-field :is(input, textarea):focus { border-color: color-mix(in srgb, var(--m) 80%, #000); background: #fff; }
-.lz-sheet--form .lz-check { color: rgba(23, 20, 15, 0.7); }
-.lz-sheet--form .lz-btn { background: var(--ink); border-color: var(--ink); color: var(--paper); }
-
 
 /* ── Responsive ─────────────────────────────────────────────────────────── */
 @media (max-width: 1080px) {
@@ -767,13 +677,10 @@ p.lz-body { font-size: clamp(1.05rem, 1.3vw, 1.2rem); line-height: 1.55; color: 
   .lz-past { grid-template-columns: 1fr; }
   .lz-feed { grid-template-columns: repeat(2, 1fr); }
   .lz-serie__bar { flex-direction: column; align-items: start; gap: 18px; padding: 20px; }
-  .lz-statement__grid, .lz-split, .lz-scene, .lz-edu-hero { grid-template-columns: 1fr; }
+  .lz-statement__grid, .lz-split, .lz-scene { grid-template-columns: 1fr; }
   .lz-scene:nth-child(even) .lz-scene__media { order: 0; }
   .lz-cols { grid-template-columns: 1fr; }
   .lz-tiles, .lz-photos, .lz-cards { grid-template-columns: repeat(2, 1fr); }
-  .lz-checklist { grid-template-columns: 1fr; }
-  .lz-sheet--card { transform: none; }
-  .lz-module { grid-template-columns: 1fr; gap: 8px; }
 }
 
 /* El mapa en celular: la ficha baja y se apoya debajo, en flujo normal */
@@ -802,10 +709,6 @@ p.lz-body { font-size: clamp(1.05rem, 1.3vw, 1.2rem); line-height: 1.55; color: 
   .lz-cards { grid-template-columns: 1fr; }
   .lz-form__row { grid-template-columns: 1fr; }
   .lz-stats { gap: 28px; }
-  .lz-facts > div { grid-template-columns: 1fr; gap: 4px; }
-  .lz-sheet--card { padding: 28px 22px 26px 64px; }
-  .lz-sheet::before { left: 42px; }
-  .lz-sheet--page { padding-left: 58px; padding-right: 20px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

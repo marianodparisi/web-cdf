@@ -1,0 +1,181 @@
+---
+/**
+ * Discipulados, con diseño propio: un cuaderno de primeros pasos. Hoja
+ * rayada con margen, verde azulado, resaltador amarillo y letra manuscrita
+ * (Caveat) para los acentos. Los datos van en post-its, los temas como un
+ * camino de pasos y "¿Para quién es?" con casillas dibujadas.
+ *
+ * Usa el menú y el footer del lenguaje noche (tema `discipulados`). El
+ * contenido sale de `src/data/educativos.ts`.
+ */
+import NocheLayout from '../../layouts/NocheLayout.astro';
+import { educativos } from '../../data/educativos';
+import '../../styles/discipulados.css';
+
+const p = educativos.discipulados;
+const otro = educativos.iete;
+
+/* Los ejes vienen como "Título — explicación": el título encabeza el paso. */
+const pasos = p.ejes.map((eje) => {
+  const [title, ...rest] = eje.split(' — ');
+  return { title, text: rest.join(' — ') };
+});
+---
+
+<NocheLayout title="Discipulados · Iglesia Corazón de Fuego" solidNav theme="discipulados">
+  <link
+    slot="head"
+    rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&display=swap"
+  />
+
+  <div class="dc">
+    <!-- ══════════ PORTADA ══════════ Hoja de cuaderno con post-its. -->
+    <header class="dc-hero dc-paper">
+      <div class="dc-wrap dc-hero__grid">
+        <div class="dc-hero__copy">
+          <p class="dc-hand dc-hand--kicker" data-r>Educativos · {p.kicker}</p>
+          <h1 class="dc-title" data-r><mark>{p.name}</mark></h1>
+          <p class="dc-lead" data-r>{p.lead}</p>
+          <div class="dc-actions" data-r>
+            <a class="dc-btn" href="#inscripcion">Solicitar información</a>
+            <a class="dc-btn dc-btn--ghost" href="#que-es">¿Qué es {p.name}?</a>
+          </div>
+        </div>
+
+        <div class="dc-notes" data-r>
+          {p.datos.map((d, i) => (
+            <div class={`dc-postit dc-postit--${i + 1}`}>
+              <span class="dc-postit__pin" aria-hidden="true"></span>
+              <span class="dc-postit__label">{d.label}</span>
+              <strong>{d.value}</strong>
+            </div>
+          ))}
+        </div>
+      </div>
+    </header>
+
+    <!-- ══════════ QUÉ ES ══════════ -->
+    <section class="dc-section" id="que-es">
+      <div class="dc-wrap dc-split">
+        <div data-r>
+          <p class="dc-hand dc-hand--kicker">¿Qué es {p.name}?</p>
+          <h2 class="dc-h2"><mark>{p.statement}</mark></h2>
+        </div>
+        <div class="dc-prose" data-r>
+          {p.quees.map((parrafo) => <p>{parrafo}</p>)}
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ QUÉ SE TRABAJA ══════════ Un camino de pasos. -->
+    <section class="dc-section dc-paper" id="programa">
+      <div class="dc-wrap">
+        <div class="dc-head" data-r>
+          <p class="dc-hand dc-hand--kicker">Contenidos</p>
+          <h2 class="dc-h2">{p.ejesTitulo}</h2>
+        </div>
+        <ol class="dc-path">
+          {pasos.map((paso, i) => (
+            <li class="dc-step" data-r>
+              <span class="dc-step__n">{i + 1}</span>
+              <div class="dc-step__card">
+                <h3>{paso.title}</h3>
+                {paso.text && <p>{paso.text}</p>}
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <!-- ══════════ ENFOQUE ══════════ Fichas de estudio. -->
+    <section class="dc-section" id="enfoque">
+      <div class="dc-wrap">
+        <div class="dc-head" data-r>
+          <p class="dc-hand dc-hand--kicker">Nuestra visión de formación</p>
+          <h2 class="dc-h2 dc-h2--wide">{p.visionTitulo}</h2>
+        </div>
+        <div class="dc-cards">
+          {p.columnas.map((c) => (
+            <article class="dc-card" data-r>
+              <span class="dc-card__label">{c.label}</span>
+              <h3>{c.title}</h3>
+              <p>{c.text}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════ PARA QUIÉN ══════════ Casillas dibujadas. -->
+    <section class="dc-section dc-section--tint" id="info">
+      <div class="dc-wrap dc-split">
+        <div data-r>
+          <p class="dc-hand dc-hand--kicker">Información general</p>
+          <h2 class="dc-h2">¿Para quién es?</h2>
+        </div>
+        <ul class="dc-checks" data-r>
+          {p.paraQuien.map((item) => <li>{item}</li>)}
+        </ul>
+      </div>
+    </section>
+
+    <!-- ══════════ INSCRIPCIÓN ══════════ El formulario sobre una ficha. -->
+    <section class="dc-section" id="inscripcion">
+      <div class="dc-wrap dc-split">
+        <div data-r>
+          <p class="dc-hand dc-hand--kicker">Solicitar información</p>
+          <h2 class="dc-h2">{p.ctaTitle}</h2>
+          <p class="dc-text">{p.ctaText}</p>
+        </div>
+
+        {/* `action="#"`: todavía no hay endpoint, igual que antes. */}
+        <form class="dc-form" action="#" method="post" data-r>
+          <label class="dc-field">
+            <span>WhatsApp</span>
+            <input type="tel" name="whatsapp" placeholder="10 dígitos" required />
+          </label>
+          <label class="dc-field">
+            <span>Correo electrónico *</span>
+            <input type="email" name="email" placeholder="tu@correo.com" required />
+          </label>
+          <label class="dc-field">
+            <span>Nombres *</span>
+            <input type="text" name="nombres" placeholder="Tus nombres" required />
+          </label>
+          <div class="dc-form__row">
+            <label class="dc-field">
+              <span>Primer apellido *</span>
+              <input type="text" name="apellido1" placeholder="Primer apellido" required />
+            </label>
+            <label class="dc-field">
+              <span>Segundo apellido</span>
+              <input type="text" name="apellido2" placeholder="Segundo apellido" />
+            </label>
+          </div>
+          <label class="dc-check">
+            <input type="checkbox" name="privacidad" required />
+            <span>Acepto el aviso de privacidad y protección de datos personales.</span>
+          </label>
+          <button class="dc-btn" type="submit">Enviar solicitud</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ══════════ CIERRE ══════════ -->
+    <section class="dc-cta">
+      <div class="dc-wrap dc-cta__inner">
+        <h2 class="dc-title dc-title--cta" data-r>Da el próximo paso.</h2>
+        <p class="dc-text" data-r>Escribinos y te contamos cuándo abre la próxima inscripción.</p>
+        <div class="dc-actions dc-actions--center" data-r>
+          <a class="dc-btn dc-btn--yellow" href="/contact">Escribinos</a>
+        </div>
+        <a class="dc-next" href="/institucional/iete">
+          <span>También te puede interesar</span>
+          <strong>{otro.name} →</strong>
+        </a>
+      </div>
+    </section>
+  </div>
+</NocheLayout>
