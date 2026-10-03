@@ -236,13 +236,13 @@
    en blanco y con la misma sombra escalonada que el resto de los títulos.
    Son dibujadas a mano, no una fuente: por eso va como imagen, con "Arde"
    como texto alternativo. */
-.ad-logo-title { margin: 0; width: min(520px, 100%); }
+.ad-logo-title { margin: 0; width: min(440px, 100%); }
 .ad-logo-title img {
   width: 100%;
   height: auto;
   filter: brightness(0) invert(1) drop-shadow(6px 6px 0 var(--deep)) drop-shadow(6px 6px 0 var(--ink));
 }
 @media (max-width: 560px) {
-  .ad-logo-title { width: min(300px, 82%); }
+  .ad-logo-title { width: min(240px, 66%); justify-self: center; }
   .ad-logo-title img { filter: brightness(0) invert(1) drop-shadow(4px 4px 0 var(--deep)) drop-shadow(4px 4px 0 var(--ink)); }
 }
