@@ -71,7 +71,6 @@ export const ministries: Ministry[] = [
     participation:
       'Los chicos se integran durante las reuniones generales, cada uno en su salita. Cada grupo tiene líderes que dirigen la enseñanza y ayudantes que reciben, contienen y acompañan durante toda la reunión.',
     schedule: 'Bienvenida, alabanza, enseñanza bíblica, actividad por edades y cierre, en un entorno cuidado y dinámico.',
-    noticeTitle: 'Nueva aventura disponible',
   },
   {
     slug: 'arde',

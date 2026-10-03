@@ -65,16 +65,20 @@ const tarjetas = [
       </div>
     </header>
 
-    <!-- ══════════ NOVEDAD ══════════ Banda de historieta con el flyer. -->
+    <!-- ══════════ NOVEDAD ══════════ Banda de historieta. Todo sale del aviso
+         del panel: título, texto e imagen. Sin título la sección no existe;
+         sin imagen, va sólo el texto. -->
     {hasNotice(kids) && (
       <section class="kd-notice">
-        <div class="kd-wrap kd-notice__grid">
+        <div class={`kd-wrap${kids.noticeImage ? ' kd-notice__grid' : ''}`}>
           <div class="kd-notice__copy" data-r>
             <span class="kd-burst">¡Nuevo!</span>
             <h2 class="kd-h2">{kids.noticeTitle}</h2>
             {kids.noticeText && <p class="kd-text">{kids.noticeText}</p>}
           </div>
-          <img class="kd-flyer" src="/ministries/kids/campakids.jpg" alt="Flyer de Kids" loading="lazy" data-r />
+          {kids.noticeImage && (
+            <img class="kd-flyer" src={kids.noticeImage} alt={kids.noticeTitle} loading="lazy" data-r />
+          )}
         </div>
       </section>
     )}

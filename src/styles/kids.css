@@ -118,7 +118,7 @@
   border-bottom: 4px solid var(--ink);
 }
 .kd-notice__grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: clamp(28px, 5vw, 64px); align-items: center; }
-.kd-notice__copy { display: grid; gap: 18px; justify-items: start; }
+.kd-notice__copy { display: grid; gap: 18px; justify-items: start; max-width: 760px; }
 .kd-burst {
   display: inline-grid;
   place-items: center;
