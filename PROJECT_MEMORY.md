@@ -170,6 +170,11 @@ mantenerlas separadas:
   `api/admin/ministerios.ts`, no sólo en el formulario: un editor puede mandar
   un POST a mano. Si no es admin, esos campos se toman de lo que ya está
   guardado y el archivo del logo ni se mira.
+- **Desde el 3 de octubre de 2026 quien lidera edita sólo la novedad (título,
+  texto e imagen) y las imágenes de la página**, pedido del usuario. Textos,
+  horarios, lugar, mapa y contactos pasaron a ser de admin, con el mismo doble
+  chequeo (formulario y endpoint). El párrafo siguiente describe el reparto
+  anterior.
 - **Lo demás** lo edita quien lidera: los textos largos y los datos que cambian
   seguido (`meetingDay`, `meetingHours`, `place`, `mapUrl`, `noticeTitle`,
   `noticeText`, `whatsapp`, `instagram`, `photo`). Son **todos opcionales**: el

@@ -28,18 +28,22 @@ export const POST: APIRoute = async (context) => {
     return backTo('/admin', { error: `No tenés acceso a ${current.name}.` });
   }
 
-  const description = readText(form, 'description');
-  const participation = readText(form, 'participation');
-  const schedule = readText(form, 'schedule');
+  // Un editor (quien lidera el ministerio) maneja sólo la novedad y las
+  // imágenes. La ficha, los textos, horarios, lugar y contactos los toca un
+  // admin. El chequeo va acá y no sólo en el formulario: un editor puede
+  // mandar un POST a mano con los campos que quiera.
+  const isAdmin = session.role === 'admin';
+  const adminText = (field: string, fallback?: string) => (isAdmin ? readText(form, field) : fallback ?? '');
+  const adminLines = (field: string, fallback?: string) => (isAdmin ? readLines(form, field) : fallback ?? '');
 
-  if (!description || !participation || !schedule) {
+  const description = adminText('description', current.description);
+  const participation = adminText('participation', current.participation);
+  const schedule = adminText('schedule', current.schedule);
+
+  if (isAdmin && (!description || !participation || !schedule)) {
     return backTo(path, { error: 'Faltan datos. Los textos de la página son obligatorios.' });
   }
 
-  // La ficha se ve fuera de la página del ministerio (navbar, inicio, listado),
-  // así que sólo la toca un admin. El chequeo va acá y no sólo en el formulario:
-  // un editor puede mandar un POST a mano con los campos que quiera.
-  const isAdmin = session.role === 'admin';
   const name = isAdmin ? readText(form, 'name') : current.name;
   const area = isAdmin ? readText(form, 'area') : current.area;
   const excerpt = isAdmin ? readText(form, 'excerpt') : current.excerpt;
@@ -84,17 +88,17 @@ export const POST: APIRoute = async (context) => {
               schedule,
               image,
               photo,
-              meetingDay: readText(form, 'meetingDay'),
-              meetingHours: readText(form, 'meetingHours'),
-              place: readLines(form, 'place'),
-              mapUrl: readText(form, 'mapUrl'),
+              meetingDay: adminText('meetingDay', current.meetingDay),
+              meetingHours: adminText('meetingHours', current.meetingHours),
+              place: adminLines('place', current.place),
+              mapUrl: adminText('mapUrl', current.mapUrl),
               noticeTitle,
               noticeText: readText(form, 'noticeText'),
               // Vaciar el título borra el aviso entero: si no, la imagen vieja
               // reaparecería sola en el próximo aviso que se cargue.
               noticeImage: noticeTitle ? noticeImage : undefined,
-              whatsapp: readText(form, 'whatsapp'),
-              instagram: readText(form, 'instagram'),
+              whatsapp: adminText('whatsapp', current.whatsapp),
+              instagram: adminText('instagram', current.instagram),
             }
           : item
       ),
