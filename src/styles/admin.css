@@ -297,3 +297,27 @@ form:has(.adm-role input[value='admin']:checked) .adm-picker__group { opacity: 0
 /* El CSS global del sitio le pone su propia familia a h1–h3: en el panel
    todo va en Inter Tight. */
 .adm :is(h1, h2, h3, h4) { font-family: 'Inter Tight', system-ui, sans-serif; }
+
+/* ── Grupos plegables del menú ─────────────────────────────────────────── */
+.adm-group { display: grid; gap: 2px; }
+.adm-group > summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 8px;
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+}
+.adm-group > summary::-webkit-details-marker { display: none; }
+.adm-group > summary:hover { color: rgba(251, 248, 243, 0.75); background: var(--side-2); }
+.adm-group > summary .material-symbols-outlined { margin-left: auto; font-size: 18px; transition: rotate 0.2s; }
+.adm-group:not([open]) > summary .material-symbols-outlined { rotate: -90deg; }
+.adm-group__count { padding: 1px 7px; border-radius: 999px; background: var(--side-2); font-size: 0.6rem; letter-spacing: 0.04em; color: rgba(251, 248, 243, 0.6); }
+
+/* Si igual hace falta scroll (pantallas bajas), que sea fino y oscuro */
+.adm-side { scrollbar-width: thin; scrollbar-color: rgba(255, 255, 255, 0.14) transparent; }
+.adm-side::-webkit-scrollbar { width: 6px; }
+.adm-side::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.14); border-radius: 6px; }
+.adm-side::-webkit-scrollbar-track { background: transparent; }

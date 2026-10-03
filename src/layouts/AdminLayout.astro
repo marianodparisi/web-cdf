@@ -37,6 +37,15 @@ const contenido = [
 
 const isActive = (href: string) => (href === '/admin' ? path === '/admin' || path === '/admin/' : path.startsWith(href));
 
+/* La pestaña del navegador dice dónde estás, sin el saludo: "Panel · CDF" en
+   el inicio y "Anuncios · Panel CDF" adentro. */
+const isHome = path === '/admin' || path === '/admin/';
+const tabTitle = isHome ? 'Panel · CDF' : `${title} · Panel CDF`;
+
+/* Los grupos del menú se pliegan para que no haga falta scroll. Arranca
+   abierto el que tiene la pantalla actual; Contenido, además, siempre. */
+const ministriesOpen = ministries.some((m) => isActive(`/admin/ministerios/${m.slug}`));
+
 /** Iniciales y un tono estable por nombre, para el avatar. */
 const initials = session.username.slice(0, 2).toUpperCase();
 const hue = [...session.username].reduce((sum, c) => sum + c.charCodeAt(0), 0) % 360;
@@ -47,7 +56,7 @@ const hue = [...session.username].reduce((sum, c) => sum + c.charCodeAt(0), 0) %
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title} | Panel Corazón de Fuego</title>
+    <title>{tabTitle}</title>
     <meta name="robots" content="noindex, nofollow" />
     <link rel="icon" type="image/png" href="/brand/favico.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -74,27 +83,38 @@ const hue = [...session.username].reduce((sum, c) => sum + c.charCodeAt(0), 0) %
             <span class="material-symbols-outlined">space_dashboard</span> Inicio
           </a>
 
-          {contenido.length > 0 && <p class="adm-nav__label">Contenido</p>}
-          {contenido.map((item) => (
-            <a class:list={['adm-nav__link', isActive(item.href) && 'is-active']} href={item.href}>
-              <span class="material-symbols-outlined">{item.icon}</span> {item.label}
-            </a>
-          ))}
+          {contenido.length > 0 && (
+            <details class="adm-group" open>
+              <summary class="adm-nav__label">Contenido <span class="material-symbols-outlined">expand_more</span></summary>
+              {contenido.map((item) => (
+                <a class:list={['adm-nav__link', isActive(item.href) && 'is-active']} href={item.href}>
+                  <span class="material-symbols-outlined">{item.icon}</span> {item.label}
+                </a>
+              ))}
+            </details>
+          )}
 
-          {ministries.length > 0 && <p class="adm-nav__label">Ministerios</p>}
-          {ministries.map((m) => (
-            <a class:list={['adm-nav__link', isActive(`/admin/ministerios/${m.slug}`) && 'is-active']} href={`/admin/ministerios/${m.slug}`}>
-              <img class="adm-nav__logo" src={m.image} alt="" /> {m.name}
-            </a>
-          ))}
+          {ministries.length > 0 && (
+            <details class="adm-group" open={ministriesOpen || ministries.length <= 3}>
+              <summary class="adm-nav__label">
+                Ministerios <span class="adm-group__count">{ministries.length}</span>
+                <span class="material-symbols-outlined">expand_more</span>
+              </summary>
+              {ministries.map((m) => (
+                <a class:list={['adm-nav__link', isActive(`/admin/ministerios/${m.slug}`) && 'is-active']} href={`/admin/ministerios/${m.slug}`}>
+                  <img class="adm-nav__logo" src={m.image} alt="" /> {m.name}
+                </a>
+              ))}
+            </details>
+          )}
 
           {session.role === 'admin' && (
-            <>
-              <p class="adm-nav__label">Administración</p>
+            <details class="adm-group" open>
+              <summary class="adm-nav__label">Administración <span class="material-symbols-outlined">expand_more</span></summary>
               <a class:list={['adm-nav__link', isActive('/admin/usuarios') && 'is-active']} href="/admin/usuarios">
                 <span class="material-symbols-outlined">group</span> Personas con acceso
               </a>
-            </>
+            </details>
           )}
         </nav>
 
