@@ -178,8 +178,19 @@ const footerColumns = [
     </footer>
 
     <script>
+      // Al bajar el menú se esconde y al subir vuelve: el contenido ocupa la
+      // pantalla entera y la navegación sigue a un gesto de distancia. Arriba
+      // de todo y con el menú mobile abierto queda siempre visible.
       const nav = document.querySelector('.lz-nav');
-      const onScroll = () => nav?.classList.toggle('is-scrolled', window.scrollY > 40);
+      let lastY = window.scrollY;
+      const onScroll = () => {
+        const y = window.scrollY;
+        nav?.classList.toggle('is-scrolled', y > 40);
+        if (!document.body.classList.contains('lz-menu-open') && Math.abs(y - lastY) > 6) {
+          nav?.classList.toggle('is-hidden', y > lastY && y > 120);
+          lastY = y;
+        }
+      };
       onScroll();
       window.addEventListener('scroll', onScroll, { passive: true });
 

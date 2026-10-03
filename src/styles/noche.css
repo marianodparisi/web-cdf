@@ -199,8 +199,11 @@
   gap: 24px;
   padding: 16px var(--pad);
   background: linear-gradient(180deg, rgba(0, 0, 0, 0.45), transparent);
-  transition: background-color 0.3s, backdrop-filter 0.3s;
+  transition: background-color 0.3s, backdrop-filter 0.3s, transform 0.4s var(--ease);
 }
+.lz-nav.is-hidden { transform: translateY(-100%); }
+/* Los desplegables cuelgan de la barra: si quedó uno abierto, se va con ella. */
+.lz-nav.is-hidden .lz-drop { visibility: hidden; opacity: 0; }
 /* Al bajar, la barra toma fondo: si no, queda encima de los títulos. */
 .lz-nav.is-scrolled { background-color: color-mix(in srgb, var(--bg) 78%, transparent); backdrop-filter: blur(14px); }
 .lz-nav__links { display: flex; align-items: center; gap: 4px; }
