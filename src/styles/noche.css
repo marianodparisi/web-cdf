@@ -457,7 +457,7 @@
 /* ── Hero interno (NocheHero) ───────────────────────────────────────────── */
 .lz-phero {
   position: relative;
-  min-height: 92svh;
+  min-height: 100svh;
   display: grid;
   grid-template-rows: auto 1fr auto;
   grid-template-columns: minmax(0, 1fr);
@@ -661,8 +661,14 @@ p.lz-body { font-size: clamp(1.05rem, 1.3vw, 1.2rem); line-height: 1.55; color: 
    EDUCATIVOS (IETE, Discipulados) — tratamiento propio, "programa de estudio"
    Una hoja clara rayada para el temario y la ficha, dentro de la noche.
    ═══════════════════════════════════════════════════════════════════════ */
-.lz-edu-hero { display: grid; grid-template-columns: 1.15fr 1fr; gap: clamp(32px, 5vw, 80px); align-items: center; }
-.lz-edu-hero__copy { display: grid; gap: 24px; justify-items: start; }
+/* `minmax(0, …)`: sin eso, una palabra larga ("discipulados") ensancha su
+   columna y empuja la ficha fuera de la pantalla. */
+.lz-edu-hero { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 80px); align-items: center; }
+.lz-edu-hero__copy { display: grid; gap: 24px; justify-items: start; min-width: 0; }
+/* El nombre del programa se escala con el ancho de su columna: "iete" entra
+   enorme, "discipulados" necesita bajar. */
+.lz-edu-hero__title { font-size: clamp(3.4rem, 11vw, 11rem); }
+.lz-edu-hero__title--long { font-size: clamp(2.8rem, 7.2vw, 7.4rem); }
 .lz-edu-hero__copy .lz-lead { max-width: 24ch; }
 
 /* La ficha del programa: una tarjeta de papel con los datos duros */
@@ -681,7 +687,7 @@ p.lz-body { font-size: clamp(1.05rem, 1.3vw, 1.2rem); line-height: 1.55; color: 
 .lz-sheet::before { content: ''; position: absolute; top: 0; bottom: 0; left: 56px; width: 1.5px; background: color-mix(in srgb, var(--m) 70%, transparent); }
 .lz-sheet--card { padding: 36px 32px 32px 84px; transform: rotate(1.2deg); }
 .lz-sheet--card .lz-sheet__logo { width: 92px; margin-bottom: 22px; }
-.lz-sheet__name { font-size: clamp(2.6rem, 5vw, 4.2rem); font-weight: 900; letter-spacing: -0.035em; line-height: 0.92; margin-bottom: 26px; }
+.lz-sheet__name { font-size: clamp(2rem, 3.6vw, 3.6rem); overflow-wrap: anywhere; font-weight: 900; letter-spacing: -0.035em; line-height: 0.92; margin-bottom: 26px; }
 .lz-sheet__kicker { color: color-mix(in srgb, var(--m) 85%, #000); }
 .lz-facts { display: grid; }
 .lz-facts > div { display: grid; grid-template-columns: 120px 1fr; gap: 16px; align-items: baseline; padding: 11px 0; }
@@ -692,7 +698,11 @@ p.lz-body { font-size: clamp(1.05rem, 1.3vw, 1.2rem); line-height: 1.55; color: 
 .lz-sheet--page { padding: clamp(40px, 6vw, 80px) clamp(24px, 5vw, 72px) clamp(40px, 6vw, 80px) clamp(76px, 9vw, 132px); }
 .lz-sheet--page::before { left: clamp(52px, 6vw, 92px); }
 .lz-sheet__head { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; margin-bottom: clamp(28px, 4vw, 48px); }
-.lz-sheet__head h2 { font-size: clamp(2.2rem, 5vw, 4.4rem); font-weight: 900; letter-spacing: -0.035em; line-height: 0.9; }
+.lz-sheet__head h2 { font-size: clamp(2.2rem, 5vw, 4.4rem); font-weight: 900; letter-spacing: -0.035em; line-height: 0.95; }
+/* La etiqueta va en su propio renglón y con aire: con el interlineado justo
+   del título, las tildes de las mayúsculas ("Áreas") la tocaban. */
+.lz-sheet__head > div > .lz-sheet__kicker,
+.lz-sheet--card .lz-sheet__kicker { display: block; margin-bottom: 16px; }
 .lz-modules { counter-reset: modulo; display: grid; }
 .lz-module {
   counter-increment: modulo;

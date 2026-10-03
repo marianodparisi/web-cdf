@@ -17,9 +17,12 @@ interface Props {
   /** Barra con fondo desde el primer píxel: para páginas de fondo claro
       (Kids, Arde), donde el menú transparente con texto blanco no se lee. */
   solidNav?: boolean;
+  /** Tema de la página: agrega `lz--{theme}` al body para que su hoja propia
+      tiña el menú, el panel mobile y la letra (Kids, Arde). */
+  theme?: string;
 }
 
-const { title = 'Iglesia Corazón de Fuego', solidNav = false }: Props = Astro.props;
+const { title = 'Iglesia Corazón de Fuego', solidNav = false, theme }: Props = Astro.props;
 
 const ministries = await getMinistries();
 const mapsUrl = 'https://maps.app.goo.gl/mEVMgoTXbV3BULVq8';
@@ -105,7 +108,7 @@ const footerColumns = [
     <slot name="head" />
   </head>
 
-  <body class="lz">
+  <body class={theme ? `lz lz--${theme}` : 'lz'}>
     <div class="lz-grain" aria-hidden="true"></div>
 
     <header class={`lz-nav${solidNav ? ' lz-nav--solid' : ''}`}>

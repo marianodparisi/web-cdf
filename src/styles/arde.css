@@ -203,3 +203,31 @@
 @media (prefers-reduced-motion: reduce) {
   .ad-sticker { animation: none; }
 }
+
+/* ── Menú con el tema de Arde ───────────────────────────────────────────────
+   `lz--arde` va en el body (prop `theme` de NocheLayout): el menú y el panel
+   mobile son hermanos del contenido, no hijos de `.ad`. Naranja de la marca
+   con borde de tinta, letra Bungee y botón como los de la página. */
+.lz--arde .lz-nav.lz-nav--solid { background: #ff6b1a; border-bottom: 3px solid #1c110b; }
+.lz--arde .lz-nav__item { font-family: 'Bungee', sans-serif; font-size: 0.78rem; font-weight: 400; color: #1c110b; opacity: 1; }
+.lz--arde .lz-nav__item:hover,
+.lz--arde .lz-nav__group:hover .lz-nav__item { color: #fff; }
+.lz--arde .lz-nav__utils .lz-btn {
+  border: 3px solid #1c110b;
+  border-radius: 12px;
+  background: #1c110b;
+  color: #fff;
+  font-weight: 800;
+  box-shadow: 4px 4px 0 #c2410c;
+  backdrop-filter: none;
+}
+.lz--arde .lz-burger { border: 3px solid #1c110b; border-radius: 12px; background: #ffc93c; }
+.lz--arde .lz-burger span { background: #1c110b; }
+.lz--arde .lz-drop { border: 3px solid #1c110b; border-radius: 14px; background: #fff3e6; color: #1c110b; box-shadow: 6px 6px 0 #1c110b; backdrop-filter: none; }
+.lz--arde .lz-drop__link:hover { background: #ffc93c; }
+.lz--arde .lz-drop__link .lz-spaced { color: #c2410c; }
+.lz--arde .lz-drop__title { font-family: 'Bungee', sans-serif; font-weight: 400; font-size: 0.9rem; letter-spacing: 0; }
+.lz--arde .lz-mobile { background: #ff6b1a; color: #1c110b; }
+.lz--arde .lz-mobile__top { font-family: 'Bungee', sans-serif; font-weight: 400; letter-spacing: 0; }
+.lz--arde .lz-mobile__group a { font-weight: 800; }
+.lz--arde .lz-mobile__group .lz-spaced { color: #fff; }

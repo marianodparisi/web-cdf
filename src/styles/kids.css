@@ -196,3 +196,35 @@
 @media (prefers-reduced-motion: reduce) {
   .kd-hero__logo img, .kd-shape--star { animation: none; }
 }
+
+/* ── Menú con el tema de Kids ───────────────────────────────────────────────
+   `lz--kids` va en el body (prop `theme` de NocheLayout): el menú y el panel
+   mobile son hermanos del contenido, no hijos de `.kd`. Violeta del logo con
+   tramado, letra Fredoka y botones sticker, como el resto de la página. */
+.lz--kids .lz-nav.lz-nav--solid {
+  background:
+    radial-gradient(circle, rgba(255, 255, 255, 0.14) 1.6px, transparent 1.8px) 0 0 / 16px 16px,
+    #6a2ca0;
+  border-bottom: 4px solid #2b1747;
+}
+.lz--kids .lz-nav__item { font-family: 'Fredoka', sans-serif; font-size: 1rem; font-weight: 600; opacity: 0.92; }
+.lz--kids .lz-nav__utils .lz-btn {
+  border: 3px solid #2b1747;
+  background: #ffd23f;
+  color: #2b1747;
+  font-family: 'Fredoka', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  box-shadow: 3px 3px 0 #2b1747;
+  backdrop-filter: none;
+}
+.lz--kids .lz-burger { border: 3px solid #2b1747; background: #fff; }
+.lz--kids .lz-burger span { background: #2b1747; }
+.lz--kids .lz-drop { border: 3px solid #2b1747; border-radius: 20px; background: #fff7e8; color: #2b1747; box-shadow: 6px 6px 0 #2b1747; backdrop-filter: none; }
+.lz--kids .lz-drop__link:hover { background: #ffd23f; }
+.lz--kids .lz-drop__link .lz-spaced { color: #6a2ca0; }
+.lz--kids .lz-drop__title { font-family: 'Fredoka', sans-serif; font-weight: 600; letter-spacing: 0; }
+.lz--kids .lz-mobile { background: #6a2ca0; font-family: 'Fredoka', sans-serif; }
+.lz--kids .lz-mobile__top { font-weight: 700; letter-spacing: 0; }
+.lz--kids .lz-mobile__group a { font-weight: 600; letter-spacing: 0; }
+.lz--kids .lz-mobile__group .lz-spaced { color: #ffd23f; }
