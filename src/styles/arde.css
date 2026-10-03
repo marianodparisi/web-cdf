@@ -159,10 +159,11 @@
 
 /* ── Novedad ────────────────────────────────────────────────────────────── */
 .ad-notice { padding: clamp(72px, 9vw, 120px) 0; background: var(--ink); color: #fff; }
-.ad-notice__grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(32px, 5vw, 72px); align-items: center; }
+.ad-notice__copy { max-width: 760px; }
+.ad-notice__grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: clamp(32px, 5vw, 72px); align-items: center; }
+.ad-flyer { width: 100%; border-radius: 18px; border: 3px solid #fff; box-shadow: 10px 10px 0 var(--orange); rotate: -2deg; }
 .ad-notice .ad-tag { margin-bottom: 18px; }
 .ad-notice .ad-text { color: rgba(255, 255, 255, 0.8); }
-.ad-flyer { width: 100%; border-radius: 18px; border: 3px solid #fff; box-shadow: 10px 10px 0 var(--orange); rotate: -2deg; }
 
 /* ── Collage ────────────────────────────────────────────────────────────── */
 .ad-section--collage { background: var(--cream); }

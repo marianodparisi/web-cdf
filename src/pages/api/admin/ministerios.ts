@@ -48,6 +48,8 @@ export const POST: APIRoute = async (context) => {
     return backTo(path, { error: 'Faltan datos. El nombre, el área y el resumen son obligatorios.' });
   }
 
+  const noticeTitle = readText(form, 'noticeTitle');
+
   const uploadImage = async (field: string, fallback?: string) => {
     const uploaded = form.get(field);
     if (!(uploaded instanceof File) || uploaded.size === 0) return fallback;
@@ -56,11 +58,13 @@ export const POST: APIRoute = async (context) => {
 
   let image = current.image;
   let photo = current.photo;
+  let noticeImage = current.noticeImage;
 
   try {
     // El logo es parte de la ficha: si no es admin ni se mira el archivo.
     if (isAdmin) image = (await uploadImage('image', current.image)) ?? current.image;
     photo = await uploadImage('photo', current.photo);
+    noticeImage = await uploadImage('noticeImage', current.noticeImage);
   } catch (error) {
     const message = error instanceof UploadError ? error.message : 'No se pudo guardar la imagen.';
     return backTo(path, { error: message });
@@ -84,8 +88,11 @@ export const POST: APIRoute = async (context) => {
               meetingHours: readText(form, 'meetingHours'),
               place: readLines(form, 'place'),
               mapUrl: readText(form, 'mapUrl'),
-              noticeTitle: readText(form, 'noticeTitle'),
+              noticeTitle,
               noticeText: readText(form, 'noticeText'),
+              // Vaciar el título borra el aviso entero: si no, la imagen vieja
+              // reaparecería sola en el próximo aviso que se cargue.
+              noticeImage: noticeTitle ? noticeImage : undefined,
               whatsapp: readText(form, 'whatsapp'),
               instagram: readText(form, 'instagram'),
             }

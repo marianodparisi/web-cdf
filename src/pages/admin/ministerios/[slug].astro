@@ -140,7 +140,7 @@ const isAdmin = session.role === 'admin';
     <fieldset class="mb-10">
       <legend class="mb-1 font-display text-lg font-semibold">Un aviso arriba de todo</legend>
       <p class="mb-6 text-sm text-charcoal/60">
-        Para la próxima actividad o algo puntual. Si borrás el título, el aviso desaparece de la página.
+        Para la próxima actividad o algo puntual. Si borrás el título, el aviso desaparece de la página junto con su imagen.
       </p>
 
       <Field
@@ -150,6 +150,7 @@ const isAdmin = session.role === 'admin';
         placeholder="Se viene el campamento"
       />
       <Field name="noticeText" label="Texto del aviso" value={ministry.noticeText} rows={3} />
+      <ImageField name="noticeImage" label="Imagen del aviso (el flyer)" currentImage={ministry.noticeImage} />
       <ImageField name="photo" label="Foto de la última actividad" currentImage={ministry.photo} />
     </fieldset>
 

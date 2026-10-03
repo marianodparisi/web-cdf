@@ -111,12 +111,16 @@ const mapsUrl = 'https://maps.app.goo.gl/mEVMgoTXbV3BULVq8';
       </div>
     </section>
 
-    <!-- ══════════ NOVEDAD ══════════ El campa, con su flyer. -->
+    <!-- ══════════ NOVEDAD ══════════ Todo sale del aviso del panel: título,
+         texto e imagen. Sin título cargado la sección no existe; sin imagen,
+         va sólo el texto. -->
     {hasNotice(arde) && (
       <section class="ad-notice">
-        <div class="ad-wrap ad-notice__grid">
-          <img class="ad-flyer" src="/ministries/arde/campaarde.jpg" alt="Flyer del campamento de Arde" loading="lazy" data-r />
-          <div data-r>
+        <div class={`ad-wrap${arde.noticeImage ? ' ad-notice__grid' : ''}`}>
+          {arde.noticeImage && (
+            <img class="ad-flyer" src={arde.noticeImage} alt={arde.noticeTitle} loading="lazy" data-r />
+          )}
+          <div class="ad-notice__copy" data-r>
             <span class="ad-tag">Novedad</span>
             <h2 class="ad-h2 ad-h2--light">{arde.noticeTitle}</h2>
             {arde.noticeText && <p class="ad-text">{arde.noticeText}</p>}

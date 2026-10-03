@@ -23,6 +23,8 @@ export interface Ministry {
   mapUrl?: string;
   noticeTitle?: string;
   noticeText?: string;
+  /** Imagen del aviso (flyer). Se borra junto con el aviso al vaciar el título. */
+  noticeImage?: string;
   whatsapp?: string;
   instagram?: string;
   photo?: string;
@@ -86,8 +88,6 @@ export const ministries: Ministry[] = [
     meetingHours: '18:00 a 20:00 hs',
     place: 'Av. Pres. Peron 251\nB1706 Villa Sarmiento, Provincia de Buenos Aires',
     mapUrl: 'https://maps.app.goo.gl/nbkxbz89Rt92Aqx78',
-    noticeTitle: 'Se viene el campamento de ARDE',
-    noticeText: 'Si formás parte de ARDE, este campa es para vos. Un tiempo para desconectarte de lo de siempre, encontrar a Dios de una forma real y vivir algo fuerte con tu grupo.',
   },
   {
     slug: 'carcelario',
