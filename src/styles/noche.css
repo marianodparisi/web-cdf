@@ -326,22 +326,23 @@
 .lz-head { display: flex; justify-content: space-between; align-items: end; gap: 40px; margin-bottom: clamp(40px, 5vw, 72px); }
 
 /* ── SERIE ──────────────────────────────────────────────────────────────── */
-.lz-serie { position: relative; display: block; aspect-ratio: 2 / 1; overflow: hidden; background: #000; }
-.lz-serie img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.6s var(--ease); }
-.lz-serie:hover img { transform: scale(1.03); }
+/* El arte en su proporción natural, sin recorte ni nada encima: cada portada
+   trae su propia tipografía. */
+.lz-serie { display: block; }
+.lz-serie__art { display: block; overflow: hidden; background: #000; }
+.lz-serie__art img { width: 100%; height: auto; transition: transform 1.6s var(--ease); }
+.lz-serie:hover .lz-serie__art img { transform: scale(1.02); }
 .lz-serie__bar {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
   display: flex;
   justify-content: space-between;
-  align-items: end;
+  align-items: center;
   gap: 24px;
-  padding: 28px;
-  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.7));
+  padding: 24px 28px;
+  background: rgba(255, 255, 255, 0.04);
 }
-.lz-serie__bar .lz-caps-mix { font-size: clamp(1.4rem, 2.6vw, 2.4rem); }
+.lz-serie__info { display: grid; gap: 8px; }
+.lz-serie__info .lz-spaced { color: var(--soft); font-size: 0.6rem; }
+.lz-serie__title { font-size: clamp(1.8rem, 3.4vw, 3rem); font-weight: 900; letter-spacing: -0.06em; line-height: 0.9; }
 .lz-past { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; margin-top: 4px; }
 .lz-past a { display: grid; gap: 14px; padding: 28px 24px; background: rgba(255, 255, 255, 0.04); transition: background-color 0.3s; }
 .lz-past a:hover { background: rgba(255, 255, 255, 0.09); }
@@ -741,13 +742,18 @@ p.lz-body { font-size: clamp(1.05rem, 1.3vw, 1.2rem); line-height: 1.55; color: 
 }
 
 @media (max-width: 900px) {
-  .lz-footer__grid { grid-template-columns: repeat(2, 1fr); }
+  /* Footer en celular: en dos columnas los grupos de largo dispar (2 links
+     contra 6) dejaban huecos grandes. Cada grupo pasa a ser una fila con los
+     links corridos que bajan de renglón cuando no entran. */
+  .lz-footer__grid { grid-template-columns: 1fr; gap: 28px; }
+  .lz-footer__grid > div { display: flex; flex-wrap: wrap; gap: 10px 20px; }
+  .lz-footer__grid .lz-spaced { flex-basis: 100%; margin-bottom: 0; }
+  .lz-footer__grid a { font-size: 0.95rem; }
   .lz-head { flex-direction: column; align-items: start; gap: 24px; }
   .lz-devo { grid-template-columns: 1fr; }
   .lz-past { grid-template-columns: 1fr; }
   .lz-feed { grid-template-columns: repeat(2, 1fr); }
-  .lz-serie { aspect-ratio: 16 / 11; }
-  .lz-serie__bar { flex-direction: column; align-items: start; padding: 18px; }
+  .lz-serie__bar { flex-direction: column; align-items: start; gap: 18px; padding: 20px; }
   .lz-statement__grid, .lz-split, .lz-scene, .lz-edu-hero { grid-template-columns: 1fr; }
   .lz-scene:nth-child(even) .lz-scene__media { order: 0; }
   .lz-cols { grid-template-columns: 1fr; }

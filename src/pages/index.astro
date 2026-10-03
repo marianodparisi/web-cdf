@@ -140,10 +140,21 @@ const logoSlugs = new Set(['life', 'gold', 'kids', 'arde']);
             </p>
           </div>
 
+          {/* El arte va limpio y entero, y el texto debajo: la portada ya trae
+              su propio título, y encima de ella lo tapaba y lo duplicaba. Si la
+              serie tiene versión vertical, el celular usa esa. */}
           <a class="lz-serie" href={seriesPlaylistUrl} target="_blank" rel="noopener noreferrer" data-r>
-            <img src={currentSeries.image} alt={currentSeries.title} loading="lazy" />
+            <span class="lz-serie__art">
+              <picture>
+                {currentSeries.mobileImage && <source media="(max-width: 767px)" srcset={currentSeries.mobileImage} />}
+                <img src={currentSeries.image} alt={currentSeries.title} loading="lazy" />
+              </picture>
+            </span>
             <span class="lz-serie__bar">
-              <span class="lz-caps-mix"><span>{currentSeries.subtitle}</span> {currentSeries.title}</span>
+              <span class="lz-serie__info">
+                <span class="lz-spaced">{currentSeries.subtitle}</span>
+                <span class="lz-serie__title">{currentSeries.title}</span>
+              </span>
               <span class="lz-btn">Explorar la serie</span>
             </span>
           </a>
