@@ -641,9 +641,23 @@ Antes se probó una versión basada en las portadas de serie ("luz del mes") y
 se descartó: el usuario dijo que con esas imágenes nos fuimos para otro lado.
 
 - `src/layouts/NocheLayout.astro`: nav con los mismos desplegables que
-  `MaquetaLayout`, menú mobile, footer, reveals (IntersectionObserver con red
-  de 4 s), pestañas `[data-tabs]` y mapa `[data-mapa]`. **No pasa por
+  `MaquetaLayout`, menú mobile, footer, pestañas `[data-tabs]` y mapa `[data-mapa]`. **No pasa por
   BaseLayout**: no carga global.css, Tailwind ni GSAP.
+- **Movimiento** (`src/scripts/motion.ts` + sección "Movimiento" de
+  noche.css), pedido del usuario porque todas las páginas entraban con el
+  mismo fade. Cada `[data-r]` recibe un tipo (`data-m`) según lo que es:
+  títulos palabra por palabra con máscara (`words`), títulos-logo que se
+  estampan (`stamp`), imágenes con cortina (`media`), fotos de tarjeta que
+  se abren y se asientan (`frame`/`card`, se aplican solas a
+  `.lz-serie__art`, `.lz-flyer__img`, etc.), kickers con barrido (`wipe`),
+  grupos en cascada (`group`) y el resto sube (`rise`). Lo que entra junto
+  se escalona (`--d`). Son animaciones con fill `backwards`, no
+  transiciones, para no pisar los hovers. Cada tema tiene su carácter con
+  variables `--m-*` (kids rebota, arde corta en diagonal, los educativos son
+  calmos). Además: parallax del hero con `animation-timeline: scroll()`,
+  transición entre páginas con `@view-transition` (cortina; el panel no
+  opta) y scroll suave con Lenis sólo con mouse. Red de seguridad de 4 s y
+  todo apagado con movimiento reducido.
 - `src/styles/noche.css`: todo prefijado `.lz`. `.lz-tint` con `--m` tiñe el
   degradé y los acentos con el color de la página (ministerio, sede, programa).
 - `src/components/noche/NocheHero.astro` y `NocheCta.astro`.
@@ -667,7 +681,7 @@ se descartó: el usuario dijo que con esas imágenes nos fuimos para otro lado.
   `styles/arde.css` (`.ad`, naranja de la marca, Bungee, polaroids con cinta y
   ticket de día/horario/lugar). Los textos salen del panel; los bloques sin
   datos no se muestran. Las rotaciones de stickers van con la propiedad
-  `rotate`, no `transform`, para no pelear con el reveal `[data-r]`.
+  `rotate`, no `transform`, para no pelear con las entradas `[data-r]`.
 - No meter estilos de una página dentro de `[slug].astro` con un condicional:
   todo lo que importa una ruta se carga aunque no se renderice.
 - Las fichas de Carcelario y Firmes y Adelante van sin foto, sólo degradé y
@@ -677,7 +691,8 @@ se descartó: el usuario dijo que con esas imágenes nos fuimos para otro lado.
 - QA visual: el panel del navegador no dibuja si la ventana está oculta. Un
   Chrome headless por CDP con `--force-prefers-reduced-motion` (el sitio ya
   lo respeta y muestra todo sin transición) captura secciones sin depender de
-  la ventana.
+  la ventana. Para ver las animaciones hay que capturar sin esa bandera y
+  en varios tiempos después de entrar o scrollear.
 
 ## Estado y precauciones del repositorio
 

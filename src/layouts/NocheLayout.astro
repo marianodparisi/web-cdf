@@ -6,8 +6,9 @@
  * Arrancó como la maqueta `/maqueta-luz` y pasó a ser el layout de todo el
  * sitio público. Kids y Arde lo usan con `solidNav` y un cuerpo propio.
  *
- * No pasa por BaseLayout: no carga global.css ni GSAP. Los reveals son un
- * IntersectionObserver liviano, con la misma red de seguridad de 4 s.
+ * No pasa por BaseLayout: no carga global.css ni GSAP. El movimiento (entradas
+ * por tipo, scroll suave y transición entre páginas) vive en scripts/motion.ts
+ * y en la sección "Movimiento" de noche.css.
  */
 import '../styles/noche.css';
 import { getMinistries } from '../lib/content/collections';
@@ -184,6 +185,8 @@ const footerColumns = [
     </footer>
 
     <script>
+      import { initMotion } from '../scripts/motion';
+
       // Al bajar el menú se esconde y al subir vuelve: el contenido ocupa la
       // pantalla entera y la navegación sigue a un gesto de distancia. Arriba
       // de todo y con el menú mobile abierto queda siempre visible.
@@ -210,24 +213,7 @@ const footerColumns = [
       );
 
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const items = document.querySelectorAll<HTMLElement>('[data-r]');
-      if (reduce || !('IntersectionObserver' in window)) {
-        items.forEach((el) => el.classList.add('is-in'));
-      } else {
-        // threshold 0: un bloque más alto que el viewport nunca llega a 0.12.
-        const io = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (!entry.isIntersecting) return;
-              entry.target.classList.add('is-in');
-              io.unobserve(entry.target);
-            });
-          },
-          { threshold: 0, rootMargin: '0px 0px -8% 0px' },
-        );
-        items.forEach((el) => io.observe(el));
-        setTimeout(() => items.forEach((el) => el.classList.add('is-in')), 4000);
-      }
+      initMotion();
 
       // Pestañas: cada bloque se resuelve dentro de sí mismo. Los paneles
       // dormidos están en display:none y el observer nunca los vio, así que al
