@@ -1,4 +1,10 @@
 ---
+/**
+ * Lista de devocionales y testimonios. El primero es el de la semana y va
+ * destacado; el resto en lista, con filtro por tipo, buscador y "Ver más"
+ * para que la pantalla no crezca sin fin. Reordenar sigue siendo "subir"
+ * (`/api/admin/devocionales`, accion=subir).
+ */
 import AdminLayout from '../../../layouts/AdminLayout.astro';
 import { getDevotionals } from '../../../lib/content/collections';
 import { canEdit, denyRedirect, getSession } from '../../../lib/admin-guard';
@@ -9,66 +15,104 @@ if (!canEdit(session, 'devocionales')) {
 }
 
 const posts = await getDevotionals();
+const [semana, ...resto] = posts;
+const VISIBLES = 8;
+const cuenta = (tipo: string) => resto.filter((p) => p.type === tipo).length;
 ---
 
 <AdminLayout title="Devocionales y testimonios" backHref="/admin" backLabel="Volver al panel" session={session}>
-  <p class="-mt-4 mb-8 text-charcoal/65">
-    El primero de la lista es el que se muestra como devocional de la semana, en el inicio y arriba de todo
-    en la sección Devocional.
-  </p>
+  <div class="adm-toolbar adm-toolbar--lead">
+    <p class="adm-lead" style="margin: 0">
+      El primero de la lista es el de la semana: se ve en el inicio y arriba de todo en la sección Devocional.
+    </p>
+    <a href="/admin/devocionales/nuevo" class="adm-btn adm-btn--gold">
+      <span class="material-symbols-outlined">add</span> Publicar uno nuevo
+    </a>
+  </div>
 
-  <a
-    href="/admin/devocionales/nuevo"
-    class="mb-8 inline-flex items-center gap-2 rounded-full bg-charcoal px-6 py-3 font-bold text-white transition-colors hover:bg-primary hover:text-charcoal"
-  >
-    <span class="material-symbols-outlined text-xl">add</span>
-    Publicar uno nuevo
-  </a>
+  {posts.length === 0 && (
+    <div class="adm-card adm-empty">
+      <span class="material-symbols-outlined">menu_book</span>
+      <p>Todavía no hay ninguno publicado.</p>
+    </div>
+  )}
 
-  <ul class="flex flex-col gap-3">
-    {
-      posts.map((post, index) => (
-        <li class="flex items-center gap-4 rounded-2xl border border-black/10 bg-white p-4">
-          <img src={post.image} alt="" class="h-16 w-16 shrink-0 rounded-xl border border-black/10 object-cover" />
+  <!-- ══════════ ESTA SEMANA ══════════ -->
+  {semana && (
+    <a href={`/admin/devocionales/${semana.slug}`} class="adm-card adm-feature adm-feature--link">
+      <div class="adm-feature__top">
+        <div class="adm-feature__cover">
+          {semana.image ? <img src={semana.image} alt="" /> : <span class="material-symbols-outlined">image</span>}
+        </div>
+        <div class="adm-feature__info">
+          <span class="adm-badge adm-badge--admin"><span class="material-symbols-outlined">star</span>Se muestra esta semana</span>
+          <h2 class="adm-feature__title">{semana.title}</h2>
+          <p class="adm-feature__sub">{semana.type} · {semana.weekLabel}</p>
+          <p class="adm-feature__excerpt">{semana.excerpt}</p>
+          <span class="adm-btn adm-btn--ghost adm-btn--sm" style="justify-self: start">
+            <span class="material-symbols-outlined">edit</span> Editar
+          </span>
+        </div>
+      </div>
+    </a>
+  )}
 
-          <div class="min-w-0 flex-1">
-            {index === 0 && (
-              <span class="mb-1 inline-block rounded-full bg-primary/15 px-3 py-1 text-[0.7rem] font-bold uppercase tracking-wider text-primary-dark">
-                Se muestra ahora
+  <!-- ══════════ ANTERIORES ══════════ -->
+  {resto.length > 0 && (
+    <section class="adm-section" data-filter-scope>
+      <div class="adm-toolbar">
+        <div class="adm-seg" role="group" aria-label="Filtrar por tipo">
+          <button type="button" class="is-on" data-filter="">Todos <span>{resto.length}</span></button>
+          <button type="button" data-filter="Devocional">Devocionales <span>{cuenta('Devocional')}</span></button>
+          <button type="button" data-filter="Testimonio">Testimonios <span>{cuenta('Testimonio')}</span></button>
+        </div>
+        {resto.length > 5 && (
+          <label class="adm-search">
+            <span class="material-symbols-outlined">search</span>
+            <input class="adm-input" type="search" placeholder="Buscar por título" data-filter-search aria-label="Buscar" />
+          </label>
+        )}
+      </div>
+
+      <ul class="adm-rows" data-more-list>
+        {resto.map((post, i) => (
+          <li
+            class:list={['adm-card adm-row adm-row--static', i >= VISIBLES && 'is-extra']}
+            data-type={post.type}
+            data-text={`${post.title} ${post.weekLabel}`.toLowerCase()}
+          >
+            <span class="adm-row__thumb adm-row__thumb--sq">
+              {post.image ? <img src={post.image} alt="" loading="lazy" /> : <span class="material-symbols-outlined">image</span>}
+            </span>
+            <a class="adm-row__text" href={`/admin/devocionales/${post.slug}`}>
+              <span class="adm-row__title">
+                {post.title}
+                <span class:list={['adm-badge', post.type === 'Testimonio' ? 'adm-badge--info' : 'adm-badge--editor']}>{post.type}</span>
               </span>
-            )}
-            <p class="truncate font-semibold">{post.title}</p>
-            <p class="truncate text-sm text-charcoal/55">
-              {post.type} · {post.weekLabel}
-            </p>
-          </div>
-
-          <div class="flex shrink-0 items-center gap-2">
-            {index > 0 && (
+              <span class="adm-row__sub">{post.weekLabel}</span>
+            </a>
+            <span class="adm-row__actions">
               <form method="POST" action="/api/admin/devocionales">
                 <input type="hidden" name="accion" value="subir" />
                 <input type="hidden" name="slug" value={post.slug} />
-                <button
-                  type="submit"
-                  title="Mover arriba"
-                  aria-label={`Mover ${post.title} hacia arriba`}
-                  class="flex h-10 w-10 items-center justify-center rounded-full border border-black/10 transition-colors hover:bg-black/5"
-                >
-                  <span class="material-symbols-outlined text-xl">arrow_upward</span>
+                <button type="submit" class="adm-icon-btn" title="Subir un lugar" aria-label={`Subir ${post.title} un lugar`}>
+                  <span class="material-symbols-outlined">arrow_upward</span>
                 </button>
               </form>
-            )}
-            <a
-              href={`/admin/devocionales/${post.slug}`}
-              class="rounded-full bg-charcoal px-5 py-2.5 text-sm font-bold text-white transition-colors hover:bg-primary hover:text-charcoal"
-            >
-              Editar
-            </a>
-          </div>
-        </li>
-      ))
-    }
-  </ul>
+              <a href={`/admin/devocionales/${post.slug}`} class="adm-btn adm-btn--ghost adm-btn--sm">
+                <span class="material-symbols-outlined">edit</span><span class="adm-hide-sm">Editar</span>
+              </a>
+            </span>
+          </li>
+        ))}
+      </ul>
+      <p class="adm-none" hidden data-filter-none>No hay resultados con ese filtro.</p>
 
-  {posts.length === 0 && <p class="text-charcoal/60">Todavía no hay ninguno publicado.</p>}
+      {resto.length > VISIBLES && (
+        <button type="button" class="adm-btn adm-btn--ghost adm-more" data-more>
+          <span class="material-symbols-outlined">expand_more</span> Ver más ({resto.length - VISIBLES})
+        </button>
+      )}
+    </section>
+  )}
 </AdminLayout>

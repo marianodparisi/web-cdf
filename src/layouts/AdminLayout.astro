@@ -285,6 +285,45 @@ const hue = [...session.username].reduce((sum, c) => sum + c.charCodeAt(0), 0) %
         });
       });
 
+      // "Ver todas" en listas largas
+      document.querySelectorAll<HTMLButtonElement>('[data-more]').forEach((button) => {
+        button.addEventListener('click', () => {
+          button.parentElement?.querySelector('[data-more-list]')?.classList.add('is-all');
+          button.remove();
+        });
+      });
+
+      // Filtro por tipo + buscador (devocionales). Mientras se filtra se ve
+      // todo lo que coincide, sin el corte de "Ver más".
+      document.querySelectorAll<HTMLElement>('[data-filter-scope]').forEach((scope) => {
+        let type = '';
+        const searchInput = scope.querySelector<HTMLInputElement>('[data-filter-search]');
+        const list = scope.querySelector('[data-more-list]');
+        const apply = () => {
+          const q = searchInput?.value.trim().toLowerCase() ?? '';
+          const filtering = Boolean(type || q);
+          scope.classList.toggle('is-filtering', filtering);
+          if (filtering) list?.classList.add('is-all');
+          else if (scope.querySelector('[data-more]')) list?.classList.remove('is-all');
+          let shown = 0;
+          scope.querySelectorAll<HTMLElement>('[data-type]').forEach((row) => {
+            const ok = (!type || row.dataset.type === type) && (!q || row.dataset.text!.includes(q));
+            row.hidden = !ok;
+            if (ok) shown++;
+          });
+          const none = scope.querySelector<HTMLElement>('[data-filter-none]');
+          if (none) none.hidden = shown > 0;
+        };
+        scope.querySelectorAll<HTMLButtonElement>('[data-filter]').forEach((button) => {
+          button.addEventListener('click', () => {
+            type = button.dataset.filter ?? '';
+            scope.querySelectorAll('[data-filter]').forEach((b) => b.classList.toggle('is-on', b === button));
+            apply();
+          });
+        });
+        searchInput?.addEventListener('input', apply);
+      });
+
       // Buscador de personas
       const search = document.querySelector<HTMLInputElement>('[data-people-search]');
       search?.addEventListener('input', () => {

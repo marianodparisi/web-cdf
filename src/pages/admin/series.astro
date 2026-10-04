@@ -1,4 +1,10 @@
 ---
+/**
+ * Series de predicación. La actual va destacada; las anteriores en una lista
+ * compacta que se despliega sólo al editar, con las primeras a la vista y el
+ * resto detrás de "Ver todas". Los formularios mandan los mismos campos de
+ * siempre a `/api/admin/series` (accion, indice, title, subtitle, …).
+ */
 import Field from '../../components/admin/Field.astro';
 import ImageField from '../../components/admin/ImageField.astro';
 import AdminLayout from '../../layouts/AdminLayout.astro';
@@ -11,103 +17,174 @@ if (!canEdit(session, 'series')) {
 }
 
 const series = await getSeries();
+const [actual, ...anteriores] = series;
+const VISIBLES = 5;
+
+/** Una serie recién agregada viene sin portada ni link: se marca y se abre sola. */
+const incompleta = (item: (typeof series)[number]) => !item.image || !item.href;
 ---
 
 <AdminLayout title="Series de predicación" backHref="/admin" backLabel="Volver al panel" session={session}>
-  <p class="-mt-4 mb-8 text-charcoal/65">
-    La primera de la lista es la serie actual y se muestra grande en el inicio. Las demás aparecen abajo,
-    como series anteriores.
-  </p>
+  <div class="adm-toolbar adm-toolbar--lead">
+    <p class="adm-lead" style="margin: 0">
+      La serie actual se muestra grande en el inicio. Las anteriores aparecen debajo, como archivo.
+    </p>
+    <form method="POST" action="/api/admin/series" enctype="multipart/form-data">
+      <input type="hidden" name="accion" value="crear" />
+      <button type="submit" class="adm-btn adm-btn--gold">
+        <span class="material-symbols-outlined">add</span> Agregar una serie
+      </button>
+    </form>
+  </div>
 
-  <form method="POST" action="/api/admin/series" enctype="multipart/form-data" class="mb-8">
-    <input type="hidden" name="accion" value="crear" />
-    <button
-      type="submit"
-      class="inline-flex items-center gap-2 rounded-full bg-charcoal px-6 py-3 font-bold text-white transition-colors hover:bg-primary hover:text-charcoal"
-    >
-      <span class="material-symbols-outlined text-xl">add</span>
-      Agregar una serie nueva
-    </button>
-  </form>
+  {series.length === 0 && (
+    <div class="adm-card adm-empty">
+      <span class="material-symbols-outlined">video_library</span>
+      <p>Todavía no hay series cargadas.</p>
+    </div>
+  )}
 
-  <div class="flex flex-col gap-6">
-    {
-      series.map((item, index) => (
-        <form
-          method="POST"
-          action="/api/admin/series"
-          enctype="multipart/form-data"
-          class="rounded-2xl border border-black/10 bg-white p-6 sm:p-8"
-        >
-          <input type="hidden" name="indice" value={String(index)} />
-
-          <div class="mb-6 flex flex-wrap items-center gap-3">
-            {index === 0 ? (
-              <span class="rounded-full bg-primary/15 px-3 py-1 text-[0.7rem] font-bold uppercase tracking-wider text-primary-dark">
-                Serie actual
-              </span>
-            ) : (
-              <span class="text-xs font-bold uppercase tracking-[0.2em] text-charcoal/45">
-                Serie anterior
-              </span>
+  <!-- ══════════ SERIE ACTUAL ══════════ -->
+  {actual && (
+    <form method="POST" action="/api/admin/series" enctype="multipart/form-data" class="adm-card adm-feature">
+      <input type="hidden" name="indice" value="0" />
+      <div class="adm-feature__top">
+        <div class="adm-feature__cover">
+          {actual.image ? <img src={actual.image} alt="" /> : <span class="material-symbols-outlined">image</span>}
+        </div>
+        <div class="adm-feature__info">
+          <span class="adm-badge adm-badge--admin"><span class="material-symbols-outlined">star</span>Serie actual</span>
+          <h2 class="adm-feature__title">{actual.title}</h2>
+          <p class="adm-feature__sub">{actual.subtitle}</p>
+          <div class="adm-feature__links">
+            {actual.href && (
+              <a class="adm-btn adm-btn--ghost adm-btn--sm" href={actual.href} target="_blank" rel="noopener noreferrer">
+                <span class="material-symbols-outlined">play_circle</span> Ver la playlist
+              </a>
             )}
-
-            {index > 0 && (
-              <button
-                type="submit"
-                name="accion"
-                value="destacar"
-                formnovalidate
-                class="rounded-full border border-black/15 px-4 py-1.5 text-sm font-semibold transition-colors hover:bg-black/5"
-              >
-                Hacerla la serie actual
-              </button>
-            )}
+            <a class="adm-btn adm-btn--ghost adm-btn--sm" href="/#series" target="_blank" rel="noopener">
+              <span class="material-symbols-outlined">open_in_new</span> Ver en el inicio
+            </a>
           </div>
+        </div>
+      </div>
 
-          <Field name="title" label="Nombre de la serie" value={item.title} required />
-          <Field name="subtitle" label="Bajada" value={item.subtitle} required />
-          <Field name="description" label="Descripción" value={item.description} rows={3} required />
-          <Field
-            name="href"
-            label="Link a la playlist de YouTube"
-            value={item.href}
-            type="url"
-            required
-          />
-          <ImageField name="image" label="Portada" currentImage={item.image} />
-
-          {index === 0 && (
+      <details class="adm-fold adm-feature__edit" open={incompleta(actual)}>
+        <summary class="adm-btn adm-btn--ghost">
+          <span class="material-symbols-outlined">edit</span> Editar la serie actual
+        </summary>
+        <div class="adm-feature__form">
+          <div class="adm-grid2">
+            <Field name="title" label="Nombre de la serie" value={actual.title} required />
+            <Field name="subtitle" label="Bajada" value={actual.subtitle} required />
+          </div>
+          <Field name="description" label="Descripción" value={actual.description} rows={3} required />
+          <Field name="href" label="Link a la playlist de YouTube" value={actual.href} type="url" required />
+          <div class="adm-grid2">
+            <ImageField name="image" label="Portada" currentImage={actual.image} />
             <ImageField
               name="mobileImage"
               label="Portada para celular"
-              currentImage={item.mobileImage}
-              hint="Opcional. Solo la serie actual la usa, porque se muestra a lo ancho. Si no cargás ninguna, se usa la portada normal."
+              currentImage={actual.mobileImage}
+              hint="Opcional. Si no cargás ninguna, se usa la portada normal."
             />
-          )}
-
-          <div class="mt-2 flex flex-wrap items-center gap-3">
-            <button
-              type="submit"
-              name="accion"
-              value="guardar"
-              class="rounded-full bg-primary px-8 py-4 font-bold text-charcoal transition-colors hover:bg-primary-dark hover:text-white disabled:opacity-60"
-            >
-              Guardar
+          </div>
+          <div class="adm-actions">
+            <button type="submit" name="accion" value="guardar" class="adm-btn adm-btn--gold">
+              <span class="material-symbols-outlined">check</span> Guardar
             </button>
+            <span class="adm-actions__spacer"></span>
             <button
               type="submit"
               name="accion"
               value="borrar"
               formnovalidate
-              onclick="return confirm('¿Seguro que querés borrar esta serie?')"
-              class="rounded-full border border-red-600/30 px-6 py-3 text-sm font-bold text-red-700 transition-colors hover:bg-red-50"
+              data-confirm="¿Seguro que querés borrar la serie actual?"
+              onclick="return confirm(this.dataset.confirm)"
+              class="adm-btn adm-btn--danger"
             >
-              Borrar
+              <span class="material-symbols-outlined">delete</span> Borrar
             </button>
           </div>
-        </form>
-      ))
-    }
-  </div>
+        </div>
+      </details>
+    </form>
+  )}
+
+  <!-- ══════════ ANTERIORES ══════════ -->
+  {anteriores.length > 0 && (
+    <section class="adm-section">
+      <div class="adm-toolbar">
+        <h2 class="adm-h2" style="margin: 0">Series anteriores <span class="adm-count">{anteriores.length}</span></h2>
+      </div>
+
+      <div class="adm-rows" data-more-list>
+        {anteriores.map((item, i) => {
+          const index = i + 1;
+          return (
+            <form
+              method="POST"
+              action="/api/admin/series"
+              enctype="multipart/form-data"
+              class:list={['adm-card adm-row-item', i >= VISIBLES && 'is-extra']}
+            >
+              <input type="hidden" name="indice" value={String(index)} />
+              <details class="adm-fold" open={incompleta(item)}>
+                <summary class="adm-row">
+                  <span class="adm-row__thumb">
+                    {item.image ? <img src={item.image} alt="" loading="lazy" /> : <span class="material-symbols-outlined">image</span>}
+                  </span>
+                  <span class="adm-row__text">
+                    <span class="adm-row__title">
+                      {item.title}
+                      {incompleta(item) && <span class="adm-badge adm-badge--warn">Incompleta</span>}
+                    </span>
+                    <span class="adm-row__sub">{item.subtitle}</span>
+                  </span>
+                  <span class="adm-row__actions">
+                    <button type="submit" name="accion" value="destacar" formnovalidate class="adm-btn adm-btn--ghost adm-btn--sm" title="Pasa a ser la serie del inicio">
+                      <span class="material-symbols-outlined">star</span><span class="adm-hide-sm">Hacer actual</span>
+                    </button>
+                    <span class="adm-row__chev material-symbols-outlined">expand_more</span>
+                  </span>
+                </summary>
+                <div class="adm-row__body">
+                  <div class="adm-grid2">
+                    <Field name="title" label="Nombre de la serie" value={item.title} required />
+                    <Field name="subtitle" label="Bajada" value={item.subtitle} required />
+                  </div>
+                  <Field name="description" label="Descripción" value={item.description} rows={3} required />
+                  <Field name="href" label="Link a la playlist de YouTube" value={item.href} type="url" required />
+                  <ImageField name="image" label="Portada" currentImage={item.image} />
+                  <div class="adm-actions">
+                    <button type="submit" name="accion" value="guardar" class="adm-btn adm-btn--gold">
+                      <span class="material-symbols-outlined">check</span> Guardar
+                    </button>
+                    <span class="adm-actions__spacer"></span>
+                    <button
+                      type="submit"
+                      name="accion"
+                      value="borrar"
+                      formnovalidate
+                      data-confirm={`¿Seguro que querés borrar "${item.title}"?`}
+                      onclick="return confirm(this.dataset.confirm)"
+                      class="adm-btn adm-btn--danger"
+                    >
+                      <span class="material-symbols-outlined">delete</span> Borrar
+                    </button>
+                  </div>
+                </div>
+              </details>
+            </form>
+          );
+        })}
+      </div>
+
+      {anteriores.length > VISIBLES && (
+        <button type="button" class="adm-btn adm-btn--ghost adm-more" data-more>
+          <span class="material-symbols-outlined">expand_more</span> Ver todas ({anteriores.length})
+        </button>
+      )}
+    </section>
+  )}
 </AdminLayout>
