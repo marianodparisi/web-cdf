@@ -7,6 +7,7 @@
  */
 import Field from '../../components/admin/Field.astro';
 import ImageField from '../../components/admin/ImageField.astro';
+import Modal from '../../components/admin/Modal.astro';
 import AdminLayout from '../../layouts/AdminLayout.astro';
 import { getSeries } from '../../lib/content/collections';
 import { canEdit, denyRedirect, getSession } from '../../lib/admin-guard';
@@ -29,13 +30,39 @@ const incompleta = (item: (typeof series)[number]) => !item.image || !item.href;
     <p class="adm-lead" style="margin: 0">
       La serie actual se muestra grande en el inicio. Las anteriores aparecen debajo, como archivo.
     </p>
-    <form method="POST" action="/api/admin/series" enctype="multipart/form-data">
-      <input type="hidden" name="accion" value="crear" />
-      <button type="submit" class="adm-btn adm-btn--gold">
-        <span class="material-symbols-outlined">add</span> Agregar una serie
-      </button>
-    </form>
+    <button type="button" class="adm-btn adm-btn--gold" data-modal-open="nueva-serie">
+      <span class="material-symbols-outlined">add</span> Agregar una serie
+    </button>
   </div>
+
+  <!-- ══════════ NUEVA SERIE ══════════ Modal: se crea completa, en su lugar. -->
+  <Modal id="nueva-serie" title="Agregar una serie" subtitle="Se crea completa. Si la marcás como actual, pasa a ser la del inicio.">
+    <form method="POST" action="/api/admin/series" enctype="multipart/form-data" class="adm-modal__form">
+      <input type="hidden" name="accion" value="crear" />
+      <div class="adm-modal__body">
+        <div class="adm-grid2">
+          <Field id="ns-title" name="title" label="Nombre de la serie" required placeholder="Restaurados" />
+          <Field id="ns-subtitle" name="subtitle" label="Bajada" required placeholder="Serie octubre 2026" />
+        </div>
+        <Field id="ns-description" name="description" label="Descripción" rows={3} required />
+        <Field id="ns-href" name="href" label="Link a la playlist de YouTube" type="url" required placeholder="https://www.youtube.com/playlist?list=..." />
+        <ImageField id="ns-image" name="image" label="Portada" />
+        <label class="adm-check-line">
+          <input type="checkbox" name="actual" value="si" checked />
+          <span>
+            <strong>Hacerla la serie actual</strong>
+            Se muestra grande en el inicio y la de ahora pasa a las anteriores.
+          </span>
+        </label>
+      </div>
+      <footer class="adm-modal__foot">
+        <button type="button" class="adm-btn adm-btn--ghost" data-modal-close>Cancelar</button>
+        <button type="submit" class="adm-btn adm-btn--gold">
+          <span class="material-symbols-outlined">check</span> Crear la serie
+        </button>
+      </footer>
+    </form>
+  </Modal>
 
   {series.length === 0 && (
     <div class="adm-card adm-empty">
@@ -75,14 +102,15 @@ const incompleta = (item: (typeof series)[number]) => !item.image || !item.href;
         </summary>
         <div class="adm-feature__form">
           <div class="adm-grid2">
-            <Field name="title" label="Nombre de la serie" value={actual.title} required />
-            <Field name="subtitle" label="Bajada" value={actual.subtitle} required />
+            <Field id={`s0-title`} name="title" label="Nombre de la serie" value={actual.title} required />
+            <Field id={`s0-subtitle`} name="subtitle" label="Bajada" value={actual.subtitle} required />
           </div>
-          <Field name="description" label="Descripción" value={actual.description} rows={3} required />
-          <Field name="href" label="Link a la playlist de YouTube" value={actual.href} type="url" required />
+          <Field id={`s0-description`} name="description" label="Descripción" value={actual.description} rows={3} required />
+          <Field id={`s0-href`} name="href" label="Link a la playlist de YouTube" value={actual.href} type="url" required />
           <div class="adm-grid2">
-            <ImageField name="image" label="Portada" currentImage={actual.image} />
+            <ImageField id={`s0-image`} name="image" label="Portada" currentImage={actual.image} />
             <ImageField
+              id="s0-mobile"
               name="mobileImage"
               label="Portada para celular"
               currentImage={actual.mobileImage}
@@ -126,7 +154,7 @@ const incompleta = (item: (typeof series)[number]) => !item.image || !item.href;
               method="POST"
               action="/api/admin/series"
               enctype="multipart/form-data"
-              class:list={['adm-card adm-row-item', i >= VISIBLES && 'is-extra']}
+              class:list={['adm-card adm-row-item', i >= VISIBLES && !incompleta(item) && 'is-extra']}
             >
               <input type="hidden" name="indice" value={String(index)} />
               <details class="adm-fold" open={incompleta(item)}>
@@ -150,12 +178,12 @@ const incompleta = (item: (typeof series)[number]) => !item.image || !item.href;
                 </summary>
                 <div class="adm-row__body">
                   <div class="adm-grid2">
-                    <Field name="title" label="Nombre de la serie" value={item.title} required />
-                    <Field name="subtitle" label="Bajada" value={item.subtitle} required />
+                    <Field id={`s${index}-title`} name="title" label="Nombre de la serie" value={item.title} required />
+                    <Field id={`s${index}-subtitle`} name="subtitle" label="Bajada" value={item.subtitle} required />
                   </div>
-                  <Field name="description" label="Descripción" value={item.description} rows={3} required />
-                  <Field name="href" label="Link a la playlist de YouTube" value={item.href} type="url" required />
-                  <ImageField name="image" label="Portada" currentImage={item.image} />
+                  <Field id={`s${index}-description`} name="description" label="Descripción" value={item.description} rows={3} required />
+                  <Field id={`s${index}-href`} name="href" label="Link a la playlist de YouTube" value={item.href} type="url" required />
+                  <ImageField id={`s${index}-image`} name="image" label="Portada" currentImage={item.image} />
                   <div class="adm-actions">
                     <button type="submit" name="accion" value="guardar" class="adm-btn adm-btn--gold">
                       <span class="material-symbols-outlined">check</span> Guardar

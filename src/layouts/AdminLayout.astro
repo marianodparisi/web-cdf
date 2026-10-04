@@ -285,6 +285,56 @@ const hue = [...session.username].reduce((sum, c) => sum + c.charCodeAt(0), 0) %
         });
       });
 
+      // Modales: abrir, cerrar con animación, cerrar tocando afuera. Si el
+      // formulario tiene cambios, pregunta antes de descartarlos.
+      const isDirty = (dialog: HTMLDialogElement) =>
+        [...dialog.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>('input:not([type=hidden]), textarea')].some(
+          (el) =>
+            el.type === 'checkbox' || el.type === 'radio'
+              ? (el as HTMLInputElement).checked !== (el as HTMLInputElement).defaultChecked
+              : el.type === 'file'
+                ? Boolean((el as HTMLInputElement).files?.length)
+                : el.value !== el.defaultValue,
+        );
+      const closeModal = (dialog: HTMLDialogElement, force = false) => {
+        if (!force && isDirty(dialog) && !confirm('¿Cerrar sin guardar? Se pierde lo que escribiste.')) return;
+        dialog.querySelector('form')?.reset();
+        dialog.classList.add('is-closing');
+        window.setTimeout(() => {
+          dialog.classList.remove('is-closing');
+          dialog.close();
+        }, 190);
+      };
+      document.querySelectorAll<HTMLButtonElement>('[data-modal-open]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const dialog = document.getElementById(button.dataset.modalOpen!) as HTMLDialogElement | null;
+          if (!dialog) return;
+          dialog.showModal();
+          dialog.querySelector<HTMLElement>('input:not([type=hidden]), textarea')?.focus();
+        });
+      });
+      document.querySelectorAll<HTMLDialogElement>('dialog.adm-modal').forEach((dialog) => {
+        dialog.querySelectorAll('[data-modal-close]').forEach((b) => b.addEventListener('click', () => closeModal(dialog)));
+        // El clic en el fondo oscuro llega al <dialog> mismo, no al panel.
+        dialog.addEventListener('mousedown', (event) => {
+          if (event.target === dialog) closeModal(dialog);
+        });
+        // Esc: misma regla que el botón de cerrar.
+        dialog.addEventListener('cancel', (event) => {
+          event.preventDefault();
+          closeModal(dialog);
+        });
+      });
+
+      // Barra de progreso fina arriba mientras se envía un formulario.
+      const progress = document.createElement('div');
+      progress.className = 'adm-progress';
+      document.body.append(progress);
+      document.querySelectorAll('form').forEach((f) =>
+        f.addEventListener('submit', () => requestAnimationFrame(() => progress.classList.add('is-on'))),
+      );
+      window.addEventListener('pageshow', () => progress.classList.remove('is-on'));
+
       // "Ver todas" en listas largas
       document.querySelectorAll<HTMLButtonElement>('[data-more]').forEach((button) => {
         button.addEventListener('click', () => {

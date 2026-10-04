@@ -18,23 +18,48 @@ export const POST: APIRoute = async (context) => {
   const form = await context.request.formData();
   const action = readText(form, 'accion');
 
+  // Se crea completa desde el formulario de "Agregar una serie". Antes se
+  // agregaba un borrador vacío al final de la lista, que quedaba escondido
+  // detrás de "Ver todas" y parecía que el botón no hacía nada.
   if (action === 'crear') {
-    await seriesCollection.update(
-      (items) => [
-        ...items,
-        {
-          title: 'Serie nueva',
-          subtitle: 'Completá los datos',
-          label: 'Serie anterior',
-          image: '',
-          href: '',
-          description: '',
-        },
-      ],
-      session.username
-    );
+    const title = readText(form, 'title');
+    const subtitle = readText(form, 'subtitle');
+    const description = readText(form, 'description');
+    const href = readText(form, 'href');
+    const asCurrent = form.get('actual') === 'si';
 
-    return backTo(PATH, { ok: 'Se agregó al final de la lista. Completala y guardala.' });
+    if (!title || !subtitle || !description || !href) {
+      return backTo(PATH, { error: 'Faltan datos. Completá nombre, bajada, descripción y link.' });
+    }
+
+    let image: string | undefined;
+    try {
+      const uploaded = form.get('image');
+      if (uploaded instanceof File && uploaded.size > 0) image = await saveUploadedImage(uploaded);
+    } catch (error) {
+      const message = error instanceof UploadError ? error.message : 'No se pudo guardar la imagen.';
+      return backTo(PATH, { error: message });
+    }
+
+    if (!image) {
+      return backTo(PATH, { error: 'Falta la portada de la serie.' });
+    }
+
+    const nueva: SermonSeries = { title, subtitle, description, href, image, label: 'Serie anterior' };
+
+    await seriesCollection.update((items) => {
+      if (!asCurrent) {
+        // Como anterior va justo después de la actual: es la más reciente.
+        const [first, ...rest] = items;
+        return first ? [first, nueva, ...rest] : [{ ...nueva, label: 'Serie actual' }];
+      }
+      // La etiqueta va atada a la posición: la primera es la actual.
+      return [{ ...nueva, label: 'Serie actual' }, ...items.map((item) => ({ ...item, label: 'Serie anterior' }))];
+    }, session.username);
+
+    return backTo(PATH, {
+      ok: asCurrent ? `${title} ya es la serie actual del inicio.` : `Se agregó ${title} a las series anteriores.`,
+    });
   }
 
   const index = Number(readText(form, 'indice'));

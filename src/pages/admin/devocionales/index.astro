@@ -6,6 +6,9 @@
  * (`/api/admin/devocionales`, accion=subir).
  */
 import AdminLayout from '../../../layouts/AdminLayout.astro';
+import Field from '../../../components/admin/Field.astro';
+import ImageField from '../../../components/admin/ImageField.astro';
+import Modal from '../../../components/admin/Modal.astro';
 import { getDevotionals } from '../../../lib/content/collections';
 import { canEdit, denyRedirect, getSession } from '../../../lib/admin-guard';
 
@@ -25,10 +28,57 @@ const cuenta = (tipo: string) => resto.filter((p) => p.type === tipo).length;
     <p class="adm-lead" style="margin: 0">
       El primero de la lista es el de la semana: se ve en el inicio y arriba de todo en la sección Devocional.
     </p>
-    <a href="/admin/devocionales/nuevo" class="adm-btn adm-btn--gold">
+    <button type="button" class="adm-btn adm-btn--gold" data-modal-open="nuevo-devocional">
       <span class="material-symbols-outlined">add</span> Publicar uno nuevo
-    </a>
+    </button>
   </div>
+
+  <!-- ══════════ NUEVO ══════════ Modal ancho. Se publica arriba de todo y
+       pasa a ser el de la semana (así lo hace /api/admin/devocionales). -->
+  <Modal id="nuevo-devocional" title="Publicar un devocional" subtitle="Queda primero en la lista: pasa a ser el de la semana." wide>
+    <form method="POST" action="/api/admin/devocionales" enctype="multipart/form-data" class="adm-modal__form">
+      <input type="hidden" name="accion" value="guardar" />
+      <input type="hidden" name="slug" value="" />
+      <div class="adm-modal__body">
+        <div class="adm-modal__cols">
+          <div>
+            <Field id="nd-title" name="title" label="Título" required />
+            <Field
+              id="nd-week"
+              name="weekLabel"
+              label="Referencia"
+              hint="La cita bíblica o la semana. Por ejemplo: Malaquías 1:6-7."
+              required
+            />
+            <Field id="nd-excerpt" name="excerpt" label="Resumen corto" rows={3} hint="Dos o tres líneas, para la portada." required />
+            <Field
+              id="nd-content"
+              name="content"
+              label="El texto completo"
+              rows={12}
+              hint="Dejá una línea en blanco entre párrafo y párrafo."
+              required
+            />
+          </div>
+          <div>
+            <p class="adm-label">¿Qué es?</p>
+            <div class="adm-seg adm-seg--full" role="radiogroup" aria-label="Tipo" style="margin-bottom: 18px">
+              <label><input type="radio" name="type" value="Devocional" checked /> Devocional</label>
+              <label><input type="radio" name="type" value="Testimonio" /> Testimonio</label>
+            </div>
+            <ImageField id="nd-image" name="image" label="Foto" />
+            <Field id="nd-video" name="videoUrl" label="Video de YouTube" type="url" placeholder="https://www.youtube.com/..." />
+          </div>
+        </div>
+      </div>
+      <footer class="adm-modal__foot">
+        <button type="button" class="adm-btn adm-btn--ghost" data-modal-close>Cancelar</button>
+        <button type="submit" class="adm-btn adm-btn--gold">
+          <span class="material-symbols-outlined">check</span> Publicar
+        </button>
+      </footer>
+    </form>
+  </Modal>
 
   {posts.length === 0 && (
     <div class="adm-card adm-empty">

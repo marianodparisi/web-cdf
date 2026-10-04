@@ -7,6 +7,7 @@
  */
 import AdminLayout from '../../layouts/AdminLayout.astro';
 import SectionPicker from '../../components/admin/SectionPicker.astro';
+import Modal from '../../components/admin/Modal.astro';
 import { listAdminUsers } from '../../lib/admin-auth';
 import { denyRedirect, getSession } from '../../lib/admin-guard';
 import { getSectionCatalog } from '../../lib/content/sections';
@@ -41,14 +42,11 @@ const hueOf = (name: string) => [...name].reduce((sum, c) => sum + c.charCodeAt(
     <div class="adm-card adm-stat"><strong>{neverIn}</strong><span>nunca entraron</span></div>
   </div>
 
-  <!-- ══════════ NUEVA PERSONA ══════════ -->
-  <details class="adm-fold adm-new">
-    <summary class="adm-btn adm-btn--gold">
-      <span class="material-symbols-outlined">person_add</span> Dar acceso a alguien nuevo
-    </summary>
-
-    <form method="POST" action="/api/admin/usuarios" class="adm-card adm-new__body">
+  <!-- ══════════ NUEVA PERSONA ══════════ Modal. -->
+  <Modal id="nueva-persona" title="Dar acceso a alguien nuevo" subtitle="Creá su usuario y elegí qué puede editar.">
+    <form method="POST" action="/api/admin/usuarios" class="adm-modal__form">
       <input type="hidden" name="accion" value="crear" />
+      <div class="adm-modal__body">
 
       <div class="adm-grid2">
         <div class="adm-field">
@@ -75,17 +73,22 @@ const hueOf = (name: string) => [...name].reduce((sum, c) => sum + c.charCodeAt(
       <p class="adm-label">¿Qué puede editar?</p>
       <SectionPicker catalog={catalog} idPrefix="nuevo" />
 
-      <div class="adm-actions">
+      </div>
+      <footer class="adm-modal__foot">
+        <button type="button" class="adm-btn adm-btn--ghost" data-modal-close>Cancelar</button>
         <button type="submit" class="adm-btn adm-btn--gold">
           <span class="material-symbols-outlined">check</span> Crear el acceso
         </button>
-      </div>
+      </footer>
     </form>
-  </details>
+  </Modal>
 
   <!-- ══════════ LISTA ══════════ -->
   <div class="adm-toolbar">
     <h2 class="adm-h2" style="margin: 0">Accesos actuales</h2>
+    <button type="button" class="adm-btn adm-btn--gold" data-modal-open="nueva-persona">
+      <span class="material-symbols-outlined">person_add</span> Dar acceso a alguien nuevo
+    </button>
     {users.length > 5 && (
       <label class="adm-search">
         <span class="material-symbols-outlined">search</span>

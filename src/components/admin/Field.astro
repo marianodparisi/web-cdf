@@ -8,15 +8,17 @@ interface Props {
   rows?: number;
   required?: boolean;
   placeholder?: string;
+  /** Para cuando el mismo campo aparece en varios formularios de una pantalla. */
+  id?: string;
 }
 
-const { name, label, value = '', hint, type = 'text', rows, required = false, placeholder } = Astro.props;
+const { name, label, value = '', hint, type = 'text', rows, required = false, placeholder, id = name } = Astro.props;
 /* Estilo del panel (`.adm-input` en admin.css). */
 const inputClass = 'adm-input';
 ---
 
 <div class="adm-field">
-  <label class="adm-label" for={name}>
+  <label class="adm-label" for={id}>
     {label}
     {!required && <small> (opcional)</small>}
   </label>
@@ -26,10 +28,10 @@ const inputClass = 'adm-input';
       // Sin saltos de línea alrededor de `value`: lo que va entre las etiquetas
       // de un textarea es su contenido literal, y la indentación del template
       // terminaría metiéndose en el texto que edita la persona.
-      <textarea id={name} name={name} rows={rows} required={required} placeholder={placeholder} class={inputClass}>{value}</textarea>
+      <textarea id={id} name={name} rows={rows} required={required} placeholder={placeholder} class={inputClass}>{value}</textarea>
     ) : (
       <input
-        id={name}
+        id={id}
         name={name}
         type={type}
         value={value}

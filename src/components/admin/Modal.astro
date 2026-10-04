@@ -1,0 +1,35 @@
+---
+/**
+ * Modal del panel, sobre `<dialog>` nativo: atrapa el foco, cierra con Esc y
+ * no necesita librería. Se abre con cualquier botón `data-modal-open="{id}"`
+ * (el script vive en AdminLayout). Si adentro hay un formulario con cambios,
+ * pide confirmación antes de cerrarse para no perder lo escrito.
+ *
+ * El slot lleva el formulario entero; su pie fijo va con la clase
+ * `adm-modal__foot` para que los botones queden siempre a la vista.
+ */
+interface Props {
+  id: string;
+  title: string;
+  subtitle?: string;
+  /** Más ancho para formularios largos (un devocional). */
+  wide?: boolean;
+}
+
+const { id, title, subtitle, wide = false }: Props = Astro.props;
+---
+
+<dialog class:list={['adm-modal', wide && 'adm-modal--wide']} id={id} aria-labelledby={`${id}-title`}>
+  <div class="adm-modal__panel">
+    <header class="adm-modal__head">
+      <div>
+        <h2 id={`${id}-title`}>{title}</h2>
+        {subtitle && <p>{subtitle}</p>}
+      </div>
+      <button type="button" class="adm-modal__x" data-modal-close aria-label="Cerrar">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </header>
+    <slot />
+  </div>
+</dialog>
