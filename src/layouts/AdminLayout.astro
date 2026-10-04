@@ -206,7 +206,7 @@ const hue = [...session.username].reduce((sum, c) => sum + c.charCodeAt(0), 0) %
       const okToast = document.querySelector('[data-adm-toast]');
       if (okToast) window.setTimeout(() => closeToast(okToast), 4500);
       if (location.search.includes('ok=') || location.search.includes('error=')) {
-        history.replaceState(null, '', location.pathname);
+        history.replaceState(null, '', location.pathname + location.hash);
       }
 
       // Avisar antes de perder lo escrito. El caso real es alguien que edita un
@@ -334,6 +334,42 @@ const hue = [...session.username].reduce((sum, c) => sum + c.charCodeAt(0), 0) %
         f.addEventListener('submit', () => requestAnimationFrame(() => progress.classList.add('is-on'))),
       );
       window.addEventListener('pageshow', () => progress.classList.remove('is-on'));
+
+      // Abrir un modal desde un link (acciones rápidas del inicio: #nueva-serie).
+      if (location.hash) {
+        const target = document.getElementById(location.hash.slice(1));
+        if (target instanceof HTMLDialogElement) {
+          target.showModal();
+          history.replaceState(null, '', location.pathname);
+        }
+      }
+
+      // Pestañas dentro de un formulario: sólo muestran u ocultan partes; el
+      // formulario se manda entero. La pestaña elegida queda en el hash para
+      // volver a ella después de guardar.
+      document.querySelectorAll<HTMLElement>('[data-admin-tabs]').forEach((tabs) => {
+        const buttons = [...tabs.querySelectorAll<HTMLButtonElement>('[data-tab-btn]')];
+        const panels = [...tabs.querySelectorAll<HTMLElement>('[data-tab-panel]')];
+        const show = (name: string, remember = true) => {
+          if (!buttons.some((b) => b.dataset.tabBtn === name)) name = buttons[0]?.dataset.tabBtn ?? '';
+          buttons.forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tabBtn === name)));
+          panels.forEach((p) => p.classList.toggle('is-on', p.dataset.tabPanel === name));
+          if (remember) history.replaceState(null, '', `${location.pathname}#${name}`);
+        };
+        buttons.forEach((b) => b.addEventListener('click', () => show(b.dataset.tabBtn!)));
+        show(location.hash.slice(1), false);
+        tabs.classList.add('is-ready');
+        // Un campo obligatorio vacío en una pestaña oculta bloquea el envío sin
+        // que se vea por qué: se abre esa pestaña para que aparezca el aviso.
+        tabs.addEventListener(
+          'invalid',
+          (event) => {
+            const panel = (event.target as HTMLElement).closest<HTMLElement>('[data-tab-panel]');
+            if (panel && !panel.classList.contains('is-on')) show(panel.dataset.tabPanel!);
+          },
+          true,
+        );
+      });
 
       // "Ver todas" en listas largas
       document.querySelectorAll<HTMLButtonElement>('[data-more]').forEach((button) => {

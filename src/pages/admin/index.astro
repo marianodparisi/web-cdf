@@ -1,64 +1,109 @@
 ---
+/**
+ * Inicio del panel: el estado del sitio en números, acciones rápidas que
+ * abren directo el modal de alta (`/admin/series#nueva-serie`) y accesos a
+ * cada sección. Todo filtrado por lo que esa persona puede editar.
+ */
 import AdminLayout from '../../layouts/AdminLayout.astro';
-import { getMinistries } from '../../lib/content/collections';
+import { getAnnouncements, getDevotionals, getMinistries, getSeries } from '../../lib/content/collections';
 import { canEdit, getSession } from '../../lib/admin-guard';
 import { ministrySectionKey } from '../../lib/content/sections';
 
 const session = getSession(Astro.locals);
-const ministries = await getMinistries();
+const [ministries, devotionals, series, announcements] = await Promise.all([
+  getMinistries(),
+  getDevotionals(),
+  getSeries(),
+  getAnnouncements(),
+]);
 
-const tasks = [
-  {
-    section: 'devocionales',
-    href: '/admin/devocionales',
+const editableMinistries = ministries.filter((ministry) => canEdit(session, ministrySectionKey(ministry.slug)));
+const avisos = editableMinistries.filter((m) => m.noticeTitle?.trim());
+
+const stats = [
+  canEdit(session, 'devocionales') && {
     icon: 'menu_book',
-    title: 'Devocionales y testimonios',
-    description: 'Publicar el devocional de la semana o cargar un testimonio.',
+    value: devotionals.length,
+    label: devotionals.length === 1 ? 'devocional publicado' : 'devocionales publicados',
+    detail: devotionals[0] ? `Esta semana: ${devotionals[0].title}` : 'Ninguno todavía',
+    href: '/admin/devocionales',
   },
-  {
-    section: 'anuncios',
-    href: '/admin/anuncios',
-    icon: 'campaign',
-    title: 'Anuncios del inicio',
-    description: 'Los avisos que aparecen en la página principal.',
-  },
-  {
-    section: 'series',
-    href: '/admin/series',
+  canEdit(session, 'series') && {
     icon: 'video_library',
-    title: 'Series de predicación',
-    description: 'Cambiar la serie actual y las anteriores.',
+    value: series.length,
+    label: series.length === 1 ? 'serie' : 'series',
+    detail: series[0] ? `Actual: ${series[0].title}` : 'Ninguna todavía',
+    href: '/admin/series',
   },
-].filter((task) => canEdit(session, task.section));
+  canEdit(session, 'anuncios') && {
+    icon: 'campaign',
+    value: announcements.length,
+    label: announcements.length === 1 ? 'anuncio en el inicio' : 'anuncios en el inicio',
+    detail: announcements[0] ? `Primero: ${announcements[0].title}` : 'Ninguno',
+    href: '/admin/anuncios',
+  },
+  editableMinistries.length > 0 && {
+    icon: 'diversity_3',
+    value: avisos.length,
+    label: avisos.length === 1 ? 'aviso de ministerio activo' : 'avisos de ministerios activos',
+    detail: `${editableMinistries.length} ${editableMinistries.length === 1 ? 'ministerio' : 'ministerios'} a tu cargo`,
+    href: undefined,
+  },
+].filter(Boolean) as { icon: string; value: number; label: string; detail: string; href?: string }[];
 
-const editableMinistries = ministries.filter((ministry) =>
-  canEdit(session, ministrySectionKey(ministry.slug))
-);
+const quick = [
+  canEdit(session, 'devocionales') && { href: '/admin/devocionales#nuevo-devocional', icon: 'edit_note', label: 'Publicar devocional' },
+  canEdit(session, 'series') && { href: '/admin/series#nueva-serie', icon: 'add_photo_alternate', label: 'Agregar serie' },
+  canEdit(session, 'anuncios') && { href: '/admin/anuncios#nuevo', icon: 'campaign', label: 'Nuevo anuncio' },
+  session.role === 'admin' && { href: '/admin/usuarios#nueva-persona', icon: 'person_add', label: 'Dar acceso' },
+].filter(Boolean) as { href: string; icon: string; label: string }[];
 
-const hasNothing = tasks.length === 0 && editableMinistries.length === 0;
+const hasNothing = stats.length === 0;
 ---
 
 <AdminLayout title={`Hola, ${session.username}`} session={session}>
-  <p class="adm-lead">¿Qué querés editar hoy?</p>
+  <p class="adm-lead">Así está el sitio hoy.</p>
 
   {hasNothing && (
-    <div class="adm-card" style="padding: 24px">
-      <p style="margin: 0; color: var(--soft)">
+    <div class="adm-card adm-empty">
+      <span class="material-symbols-outlined">lock</span>
+      <p>
         Todavía no tenés ninguna sección asignada. Pedile a la persona que administra el panel que te dé
         acceso.
       </p>
     </div>
   )}
 
-  {tasks.length > 0 && (
-    <section>
-      <p class="adm-eyebrow">Contenido</p>
-      <div class="adm-tiles">
-        {tasks.map((task) => (
-          <a href={task.href} class="adm-card adm-tile">
-            <span class="adm-tile__icon"><span class="material-symbols-outlined">{task.icon}</span></span>
-            <span class="adm-tile__title">{task.title}</span>
-            <span class="adm-tile__text">{task.description}</span>
+  {stats.length > 0 && (
+    <div class="adm-kpis">
+      {stats.map((s) =>
+        s.href ? (
+          <a class="adm-card adm-kpi" href={s.href}>
+            <span class="adm-kpi__icon material-symbols-outlined">{s.icon}</span>
+            <strong>{s.value}</strong>
+            <span class="adm-kpi__label">{s.label}</span>
+            <span class="adm-kpi__detail">{s.detail}</span>
+          </a>
+        ) : (
+          <div class="adm-card adm-kpi">
+            <span class="adm-kpi__icon material-symbols-outlined">{s.icon}</span>
+            <strong>{s.value}</strong>
+            <span class="adm-kpi__label">{s.label}</span>
+            <span class="adm-kpi__detail">{s.detail}</span>
+          </div>
+        ),
+      )}
+    </div>
+  )}
+
+  {quick.length > 0 && (
+    <section class="adm-section">
+      <p class="adm-eyebrow">Acciones rápidas</p>
+      <div class="adm-quick">
+        {quick.map((q) => (
+          <a class="adm-quick__btn" href={q.href}>
+            <span class="material-symbols-outlined">{q.icon}</span>
+            {q.label}
           </a>
         ))}
       </div>
@@ -68,31 +113,26 @@ const hasNothing = tasks.length === 0 && editableMinistries.length === 0;
   {editableMinistries.length > 0 && (
     <section class="adm-section">
       <p class="adm-eyebrow">Ministerios</p>
-      <div class="adm-mins">
+      <div class="adm-card adm-table">
         {editableMinistries.map((ministry) => (
-          <a href={`/admin/ministerios/${ministry.slug}`} class="adm-card adm-min">
-            <img src={ministry.image} alt="" />
-            <span>
-              <strong>{ministry.name}</strong>
-              <span>
-                {ministry.noticeTitle ? `Aviso: ${ministry.noticeTitle}` : ministry.area}
+          <a class="adm-table__row adm-table__row--link" href={`/admin/ministerios/${ministry.slug}`}>
+            <div class="adm-table__main">
+              <img class="adm-table__logo" src={ministry.image} alt="" />
+              <span class="adm-row__text">
+                <span class="adm-row__title">{ministry.name}</span>
+                <span class="adm-row__sub">{ministry.area}</span>
               </span>
+            </div>
+            <span>
+              {ministry.noticeTitle ? (
+                <span class="adm-badge adm-badge--ok"><span class="material-symbols-outlined">campaign</span><span class="adm-hide-sm">{ministry.noticeTitle}</span></span>
+              ) : (
+                <span class="adm-muted adm-hide-sm">Sin aviso</span>
+              )}
             </span>
+            <span class="material-symbols-outlined adm-table__chev">chevron_right</span>
           </a>
         ))}
-      </div>
-    </section>
-  )}
-
-  {session.role === 'admin' && (
-    <section class="adm-section">
-      <p class="adm-eyebrow">Administración</p>
-      <div class="adm-tiles">
-        <a href="/admin/usuarios" class="adm-card adm-tile">
-          <span class="adm-tile__icon"><span class="material-symbols-outlined">group</span></span>
-          <span class="adm-tile__title">Personas con acceso</span>
-          <span class="adm-tile__text">Dar acceso a alguien nuevo, elegir qué puede editar o sacarle el acceso.</span>
-        </a>
       </div>
     </section>
   )}

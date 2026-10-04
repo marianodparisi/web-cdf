@@ -1,6 +1,11 @@
 ---
+/**
+ * Anuncios del inicio, como tabla: flyer, etiqueta, título y destino. Editar
+ * y crear van en modales; borrar y subir de lugar, en la misma fila.
+ */
 import Field from '../../components/admin/Field.astro';
 import ImageField from '../../components/admin/ImageField.astro';
+import Modal from '../../components/admin/Modal.astro';
 import AdminLayout from '../../layouts/AdminLayout.astro';
 import { getAnnouncements } from '../../lib/content/collections';
 import { canEdit, denyRedirect, getSession } from '../../lib/admin-guard';
@@ -14,51 +19,106 @@ const announcements = await getAnnouncements();
 ---
 
 <AdminLayout title="Anuncios del inicio" backHref="/admin" backLabel="Volver al panel" session={session}>
-  <p class="-mt-4 mb-8 text-charcoal/65">
-    Son los tres avisos de la página principal. Se editan de a uno y cada uno tiene su propio botón de
-    guardar.
-  </p>
-
-  <div class="flex flex-col gap-6">
-    {
-      announcements.map((item, index) => (
-        <form
-          method="POST"
-          action="/api/admin/anuncios"
-          enctype="multipart/form-data"
-          class="rounded-2xl border border-black/10 bg-white p-6 sm:p-8"
-        >
-          <input type="hidden" name="indice" value={String(index)} />
-
-          <p class="mb-6 text-xs font-bold uppercase tracking-[0.2em] text-primary">
-            Anuncio {index + 1}
-          </p>
-
-          <Field name="eyebrow" label="Etiqueta chica" value={item.eyebrow} hint="Va arriba del título, en dorado." required />
-          <Field name="title" label="Título" value={item.title} required />
-          <Field name="description" label="Descripción" value={item.description} rows={3} required />
-          <Field
-            name="href"
-            label="A dónde lleva"
-            value={item.href}
-            hint="Puede ser una página del sitio, como /ministerios/kids, o un link completo a otro lado."
-            required
-          />
-          <ImageField
-            name="image"
-            label="Flyer o foto"
-            currentImage={item.image}
-            hint="Se muestra entero, sin recortar, así no se pierde el texto del flyer."
-          />
-
-          <button
-            type="submit"
-            class="mt-2 rounded-full bg-primary px-8 py-4 font-bold text-charcoal transition-colors hover:bg-primary-dark hover:text-white disabled:opacity-60"
-          >
-            Guardar este anuncio
-          </button>
-        </form>
-      ))
-    }
+  <div class="adm-toolbar adm-toolbar--lead">
+    <p class="adm-lead" style="margin: 0">
+      Los avisos de "Qué está pasando" en la página principal, en este orden. Los avisos de cada ministerio
+      aparecen antes que estos.
+    </p>
+    <button type="button" class="adm-btn adm-btn--gold" data-modal-open="nuevo">
+      <span class="material-symbols-outlined">add</span> Nuevo anuncio
+    </button>
   </div>
+
+  {announcements.length === 0 ? (
+    <div class="adm-card adm-empty">
+      <span class="material-symbols-outlined">campaign</span>
+      <p>No hay anuncios. El inicio muestra sólo los avisos de los ministerios.</p>
+    </div>
+  ) : (
+    <div class="adm-card adm-table">
+      <div class="adm-table__head">
+        <span>Anuncio</span>
+        <span class="adm-hide-sm">Lleva a</span>
+        <span></span>
+      </div>
+      {announcements.map((item, index) => (
+        <div class="adm-table__row">
+          <div class="adm-table__main">
+            <span class="adm-row__thumb adm-row__thumb--flyer">
+              {item.image ? <img src={item.image} alt="" loading="lazy" /> : <span class="material-symbols-outlined">image</span>}
+            </span>
+            <span class="adm-row__text">
+              <span class="adm-chip adm-chip--gold">{item.eyebrow}</span>
+              <span class="adm-row__title">{item.title}</span>
+              <span class="adm-row__sub">{item.description}</span>
+            </span>
+          </div>
+          <span class="adm-table__link adm-hide-sm">{item.href}</span>
+          <div class="adm-row__actions">
+            {index > 0 && (
+              <form method="POST" action="/api/admin/anuncios">
+                <input type="hidden" name="accion" value="subir" />
+                <input type="hidden" name="indice" value={String(index)} />
+                <button type="submit" class="adm-icon-btn" title="Subir un lugar" aria-label={`Subir ${item.title}`}>
+                  <span class="material-symbols-outlined">arrow_upward</span>
+                </button>
+              </form>
+            )}
+            <button type="button" class="adm-btn adm-btn--ghost adm-btn--sm" data-modal-open={`anuncio-${index}`}>
+              <span class="material-symbols-outlined">edit</span><span class="adm-hide-sm">Editar</span>
+            </button>
+            <form method="POST" action="/api/admin/anuncios" data-confirm={`¿Borrar "${item.title}"?`} onsubmit="return confirm(this.dataset.confirm)">
+              <input type="hidden" name="accion" value="borrar" />
+              <input type="hidden" name="indice" value={String(index)} />
+              <button type="submit" class="adm-icon-btn adm-icon-btn--danger" title="Borrar" aria-label={`Borrar ${item.title}`}>
+                <span class="material-symbols-outlined">delete</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      ))}
+    </div>
+  )}
+
+  <!-- ══════════ MODALES ══════════ -->
+  <Modal id="nuevo" title="Nuevo anuncio" subtitle="Se publica primero en la lista.">
+    <form method="POST" action="/api/admin/anuncios" enctype="multipart/form-data" class="adm-modal__form">
+      <input type="hidden" name="accion" value="crear" />
+      <div class="adm-modal__body">
+        <div class="adm-grid2">
+          <Field id="n-eyebrow" name="eyebrow" label="Etiqueta chica" hint="Va arriba del título." required placeholder="Destacado" />
+          <Field id="n-title" name="title" label="Título" required />
+        </div>
+        <Field id="n-description" name="description" label="Descripción" rows={3} required />
+        <Field id="n-href" name="href" label="A dónde lleva" hint="Una página del sitio, como /ministerios/kids, o un link completo." required />
+        <ImageField id="n-image" name="image" label="Flyer o foto" hint="Se muestra entero, sin recortar." />
+      </div>
+      <footer class="adm-modal__foot">
+        <button type="button" class="adm-btn adm-btn--ghost" data-modal-close>Cancelar</button>
+        <button type="submit" class="adm-btn adm-btn--gold"><span class="material-symbols-outlined">check</span> Publicar</button>
+      </footer>
+    </form>
+  </Modal>
+
+  {announcements.map((item, index) => (
+    <Modal id={`anuncio-${index}`} title="Editar anuncio" subtitle={item.title}>
+      <form method="POST" action="/api/admin/anuncios" enctype="multipart/form-data" class="adm-modal__form">
+        <input type="hidden" name="accion" value="guardar" />
+        <input type="hidden" name="indice" value={String(index)} />
+        <div class="adm-modal__body">
+          <div class="adm-grid2">
+            <Field id={`a${index}-eyebrow`} name="eyebrow" label="Etiqueta chica" value={item.eyebrow} required />
+            <Field id={`a${index}-title`} name="title" label="Título" value={item.title} required />
+          </div>
+          <Field id={`a${index}-description`} name="description" label="Descripción" value={item.description} rows={3} required />
+          <Field id={`a${index}-href`} name="href" label="A dónde lleva" value={item.href} required />
+          <ImageField id={`a${index}-image`} name="image" label="Flyer o foto" currentImage={item.image} hint="Se muestra entero, sin recortar." />
+        </div>
+        <footer class="adm-modal__foot">
+          <button type="button" class="adm-btn adm-btn--ghost" data-modal-close>Cancelar</button>
+          <button type="submit" class="adm-btn adm-btn--gold"><span class="material-symbols-outlined">check</span> Guardar</button>
+        </footer>
+      </form>
+    </Modal>
+  ))}
 </AdminLayout>
