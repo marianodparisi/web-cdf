@@ -21,7 +21,7 @@ const series = await getSeries();
 const [actual, ...anteriores] = series;
 const VISIBLES = 5;
 
-/** Una serie recién agregada viene sin portada ni link: se marca y se abre sola. */
+/** Sin portada o sin link: se marca "Incompleta" y nunca queda escondida en "Ver todas". */
 const incompleta = (item: (typeof series)[number]) => !item.image || !item.href;
 ---
 
@@ -96,7 +96,7 @@ const incompleta = (item: (typeof series)[number]) => !item.image || !item.href;
         </div>
       </div>
 
-      <details class="adm-fold adm-feature__edit" open={incompleta(actual)}>
+      <details class="adm-fold adm-feature__edit">
         <summary class="adm-btn adm-btn--ghost">
           <span class="material-symbols-outlined">edit</span> Editar la serie actual
         </summary>
@@ -157,7 +157,7 @@ const incompleta = (item: (typeof series)[number]) => !item.image || !item.href;
               class:list={['adm-card adm-row-item', i >= VISIBLES && !incompleta(item) && 'is-extra']}
             >
               <input type="hidden" name="indice" value={String(index)} />
-              <details class="adm-fold" open={incompleta(item)}>
+              <details class="adm-fold">
                 <summary class="adm-row">
                   <span class="adm-row__thumb">
                     {item.image ? <img src={item.image} alt="" loading="lazy" /> : <span class="material-symbols-outlined">image</span>}

@@ -240,7 +240,7 @@
 .adm-person__body { padding: 22px 18px 20px; }
 .adm-person.is-hidden { display: none; }
 
-.adm-grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.adm-grid2 { display: grid; grid-template-columns: 1fr 1fr; column-gap: 16px; row-gap: 0; }
 .adm-field { margin-bottom: 18px; }
 .adm-pass { display: flex; gap: 8px; }
 .adm-pass .adm-input { font-family: ui-monospace, 'Cascadia Mono', monospace; letter-spacing: 0.02em; }
@@ -554,4 +554,51 @@ details[open] > :not(summary) { animation: adm-reveal 0.32s cubic-bezier(0.2, 0.
 
 @media (prefers-reduced-motion: reduce) {
   .adm *, .adm *::before, .adm *::after, .adm-modal, .adm-modal::backdrop { animation: none !important; transition: none !important; }
+}
+
+/* ═══════════════════ Ajustes de celular ════════════════════════════════ */
+/* Con un modal abierto la página de atrás no scrollea ni muestra su barra */
+html:has(.adm-modal[open]) { overflow: hidden; }
+
+@media (max-width: 600px) {
+  .adm-content { padding: 20px 16px 72px; }
+  .adm-title { font-size: 1.7rem; }
+  .adm-back { margin-bottom: 12px; }
+  .adm-body { margin-top: 22px; }
+  .adm-lead { margin-top: -8px; font-size: 0.95rem; }
+  /* El botón principal de cada pantalla, a todo el ancho y fácil de tocar */
+  .adm-toolbar > .adm-btn, .adm-toolbar--lead > .adm-btn { width: 100%; padding: 14px 18px; }
+  .adm-toolbar { gap: 12px; }
+  .adm-feature { padding: 12px; }
+  .adm-feature__edit > summary { width: 100%; justify-content: center; }
+  .adm-person > summary { padding: 14px; gap: 12px; }
+  .adm-person__body, .adm-row__body { padding: 18px 14px 16px; }
+  .adm-tiles { grid-template-columns: 1fr; }
+  .adm-tile { grid-template-columns: auto 1fr; align-items: center; column-gap: 14px; padding: 16px; }
+  .adm-tile__icon { grid-row: span 2; }
+  .adm-actions .adm-btn { flex: 1; }
+  .adm-actions__spacer { display: none; }
+
+  /* Foto dentro de un modal: miniatura al lado del botón, no un cuadro enorme */
+  .adm-modal .flex.flex-col.gap-4 { flex-direction: row; align-items: center; }
+  .adm-modal .h-40.w-40 { width: 88px; height: 88px; }
+  .adm-modal__head { padding: 18px 18px 14px; }
+  .adm-modal__body { padding: 18px 18px 6px; }
+  .adm-modal__foot { padding: 12px 18px calc(12px + env(safe-area-inset-bottom)); }
+
+  /* Formularios largos (ministerio): guardar queda fijo abajo de la pantalla */
+  .adm-savebar {
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    margin: 24px -24px -24px !important;
+    padding: 12px 24px calc(12px + env(safe-area-inset-bottom)) !important;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(8px);
+    border-radius: 0 0 16px 16px;
+    flex-direction: row !important;
+    align-items: center;
+  }
+  .adm-savebar > button { flex: 1; padding-top: 13px !important; padding-bottom: 13px !important; }
+  .adm-savebar > a { padding: 12px 10px !important; }
 }
