@@ -9,6 +9,8 @@
  * contacto salen del panel; si alguno está vacío, su bloque no se muestra.
  */
 import NocheLayout from '../../layouts/NocheLayout.astro';
+import IgLatest from '../../components/ig/IgLatest.astro';
+import { latestInstagram } from '../../data/instagram';
 import { getMinistries } from '../../lib/content/collections';
 import {
   externalHref,
@@ -25,6 +27,7 @@ const index = ministries.findIndex((m) => m.slug === 'arde');
 if (index === -1) return Astro.redirect('/');
 const arde = ministries[index];
 const next = ministries[(index + 1) % ministries.length];
+const ig = await latestInstagram('arde');
 
 const whatsapp = whatsappHref(arde.whatsapp);
 const instagram = instagramHref(arde.instagram);
@@ -125,6 +128,24 @@ const mapsUrl = 'https://maps.app.goo.gl/mEVMgoTXbV3BULVq8';
             <h2 class="ad-h2 ad-h2--light">{arde.noticeTitle}</h2>
             {arde.noticeText && <p class="ad-text">{arde.noticeText}</p>}
           </div>
+        </div>
+      </section>
+    )}
+
+    <!-- ══════════ INSTAGRAM ══════════ La última publicación de la cuenta
+         (src/data/instagram.ts: muestra hasta que se conecte la API). -->
+    {ig && (
+      <section class="ad-section">
+        <div class="ad-wrap ig-split">
+          <div class="ig-split__copy" data-r>
+            <span class="ad-tag">En Instagram</span>
+            <h2 class="ad-h2">Lo último en Arde</h2>
+            <p class="ad-text">Lo que pasa cada sábado, primero lo subimos a Instagram. Seguinos para no perderte nada.</p>
+            <div class="ad-actions">
+              <a class="ad-btn" href={ig.account.url} target="_blank" rel="noopener noreferrer">Seguir a @{ig.account.username}</a>
+            </div>
+          </div>
+          <div data-r><IgLatest account={ig.account} post={ig.post} variant="arde" /></div>
         </div>
       </section>
     )}

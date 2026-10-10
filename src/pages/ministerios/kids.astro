@@ -9,6 +9,8 @@
  * cargado en el panel, así que quien lidera puede editarlos sin tocar esto.
  */
 import NocheLayout from '../../layouts/NocheLayout.astro';
+import IgLatest from '../../components/ig/IgLatest.astro';
+import { latestInstagram } from '../../data/instagram';
 import { getMinistries } from '../../lib/content/collections';
 import { hasNotice, hasSchedule, instagramHref, placeLines, whatsappHref } from '../../lib/content/ministry-details';
 import '../../styles/kids.css';
@@ -18,6 +20,7 @@ const index = ministries.findIndex((m) => m.slug === 'kids');
 if (index === -1) return Astro.redirect('/');
 const kids = ministries[index];
 const next = ministries[(index + 1) % ministries.length];
+const ig = await latestInstagram('kids');
 
 const whatsapp = whatsappHref(kids.whatsapp);
 const instagram = instagramHref(kids.instagram);
@@ -118,6 +121,24 @@ const tarjetas = [
         )}
       </div>
     </section>
+
+    <!-- ══════════ INSTAGRAM ══════════ La última publicación de la cuenta
+         (src/data/instagram.ts: muestra hasta que se conecte la API). -->
+    {ig && (
+      <section class="kd-section">
+        <div class="kd-wrap ig-split">
+          <div class="ig-split__copy" data-r>
+            <span class="kd-chip">En Instagram</span>
+            <h2 class="kd-h2">Lo último en Kids</h2>
+            <p class="kd-text">Fotos, videos y novedades de cada domingo. Seguinos para ver todo lo que vivimos.</p>
+            <div class="kd-actions">
+              <a class="kd-btn" href={ig.account.url} target="_blank" rel="noopener noreferrer">Seguir a @{ig.account.username}</a>
+            </div>
+          </div>
+          <div data-r><IgLatest account={ig.account} post={ig.post} variant="kids" /></div>
+        </div>
+      </section>
+    )}
 
     <!-- ══════════ CIERRE ══════════ -->
     <section class="kd-cta">

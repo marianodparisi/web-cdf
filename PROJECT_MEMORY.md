@@ -682,6 +682,18 @@ se descartó: el usuario dijo que con esas imágenes nos fuimos para otro lado.
   ticket de día/horario/lugar). Los textos salen del panel; los bloques sin
   datos no se muestran. Las rotaciones de stickers van con la propiedad
   `rotate`, no `transform`, para no pelear con las entradas `[data-r]`.
+- **Instagram en Arde y Kids**: sección "Lo último en …" con UNA sola
+  publicación con aspecto de post del feed (el usuario prefirió eso a una
+  grilla de perfil). Componente `components/ig/IgLatest.astro` + `styles/ig.css`
+  (variantes `.ig--arde` polaroid y `.ig--kids` sticker); los datos salen de
+  `latestInstagram()` en `src/data/instagram.ts`. **Hoy es contenido de
+  muestra** (fotos del sitio, @arde.cdf / @kids.cdf provisorios) para que no
+  quede vacío. Pendiente: conectar la API de Instagram con inicio de sesión de
+  Instagram (cuentas profesionales, app de Meta en modo desarrollo con las
+  cuentas como probadoras, token largo de 60 días que se renueva solo),
+  pegar el token desde el panel (sólo admin, nunca por chat), cachear ~30 min
+  y guardar las fotos en el servidor porque las URLs de Instagram vencen. Si
+  la API falla, la sección se oculta.
 - No meter estilos de una página dentro de `[slug].astro` con un condicional:
   todo lo que importa una ruta se carga aunque no se renderice.
 - Las fichas de Carcelario y Firmes y Adelante van sin foto, sólo degradé y
