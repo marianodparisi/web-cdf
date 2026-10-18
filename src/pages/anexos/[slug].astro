@@ -15,7 +15,6 @@ const index = maquetaAnexos.findIndex((a) => a.slug === slug);
 const anexo = maquetaAnexos[index];
 if (!anexo) return Astro.redirect('/');
 
-const next = maquetaAnexos[(index + 1) % maquetaAnexos.length];
 const ministries = await getMinistries();
 
 const fotos = ['/sedes/nosotros1.JPG', '/sedes/nosotros2.JPG', '/sedes/nosotros3.JPG'];
@@ -113,7 +112,6 @@ const mapsHref = `https://www.google.com/maps/search/${encodeURIComponent(anexo.
     <NocheCta
       title={anexo.ctaTitle}
       text={anexo.ctaText}
-      next={{ label: 'Siguiente sede', title: next.name, href: `/anexos/${next.slug}` }}
     >
       <a class="lz-btn" href="/contact">Escribinos</a>
       <a class="lz-btn lz-btn--ghost" href="https://maps.app.goo.gl/mEVMgoTXbV3BULVq8" target="_blank" rel="noopener noreferrer">Tu primera vez</a>

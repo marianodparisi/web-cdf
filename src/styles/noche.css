@@ -773,10 +773,6 @@ p.lz-body { font-size: clamp(1.05rem, 1.3vw, 1.2rem); line-height: 1.55; color: 
 .lz-cta { padding: clamp(110px, 13vw, 190px) 0 clamp(56px, 7vw, 96px); text-align: center; }
 .lz-cta__inner { display: grid; justify-items: center; gap: 28px; }
 .lz-cta__text { color: var(--soft); font-size: clamp(1.05rem, 1.4vw, 1.25rem); max-width: 44ch; }
-.lz-next { display: flex; align-items: baseline; justify-content: center; flex-wrap: wrap; gap: 6px 16px; margin-top: clamp(48px, 7vw, 96px); padding-top: 28px; border-top: 1px solid var(--faint); width: 100%; }
-.lz-next .lz-spaced { color: var(--soft); font-size: 0.6rem; }
-.lz-next strong { font-size: clamp(1.6rem, 3vw, 2.6rem); font-weight: 900; letter-spacing: -0.03em; }
-.lz-next:hover strong { text-decoration: underline; text-underline-offset: 6px; text-decoration-thickness: 2px; }
 
 
 /* ── Responsive ─────────────────────────────────────────────────────────── */

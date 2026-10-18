@@ -164,10 +164,6 @@
 .ie-cta { padding: clamp(90px, 11vw, 150px) 0 clamp(56px, 7vw, 88px); background: var(--wine); text-align: center; color: var(--paper); border-top: 4px double var(--gold); }
 .ie-cta__inner { display: grid; justify-items: center; gap: 22px; }
 .ie-cta .ie-text { color: rgba(247, 242, 232, 0.8); }
-.ie-next { display: grid; gap: 4px; margin-top: 28px; color: var(--paper); text-decoration: none; }
-.ie-next span { font-size: 0.9rem; opacity: 0.8; }
-.ie-next strong { font-family: var(--serif); font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 600; }
-.ie-next:hover strong { text-decoration: underline; text-underline-offset: 6px; text-decoration-color: var(--gold); }
 
 /* ── Menú con el tema de IETE ───────────────────────────────────────────────
    `lz--iete` va en el body (prop `theme` de NocheLayout). Vino con filete

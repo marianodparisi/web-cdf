@@ -695,7 +695,7 @@ se descartó: el usuario dijo que con esas imágenes nos fuimos para otro lado.
   y guardar las fotos en el servidor porque las URLs de Instagram vencen. Si
   la API falla, la sección se oculta.
 - **Arde con la letra de su Instagram** (@cdfarde), pedido del usuario: `styles/arde-feed.css` bajo `.ad--feed`, fijo en la página. Anton para títulos, Yellowtail como acento manuscrito ("¿Qué es / ARDE?", "vení, / TE ESPERAMOS"), leyendas espaciadas en las esquinas, naranja con grano y lima. Pisa la Bungee de arde.css, que ya no se carga.
-- Las fichas de ministerio (incluidas Kids y Arde) **no llevan "Siguiente ministerio"**: el usuario lo pidió sacar de todas.
+- **Ninguna página lleva link a "la siguiente"** (ministerio, sede, devocional, ni el cruce IETE/Discipulados): el usuario lo pidió sacar de todas. `NocheCta` ya no tiene la prop `next`.
 - No meter estilos de una página dentro de `[slug].astro` con un condicional:
   todo lo que importa una ruta se carga aunque no se renderice.
 - Las fichas de Carcelario y Firmes y Adelante van sin foto, sólo degradé y

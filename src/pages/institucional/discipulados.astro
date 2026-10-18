@@ -13,7 +13,6 @@ import { educativos } from '../../data/educativos';
 import '../../styles/discipulados.css';
 
 const p = educativos.discipulados;
-const otro = educativos.iete;
 
 /* Los ejes vienen como "Título — explicación": el título encabeza el paso. */
 const pasos = p.ejes.map((eje) => {
@@ -171,10 +170,6 @@ const pasos = p.ejes.map((eje) => {
         <div class="dc-actions dc-actions--center" data-r>
           <a class="dc-btn dc-btn--yellow" href="/contact">Escribinos</a>
         </div>
-        <a class="dc-next" href="/institucional/iete">
-          <span>También te puede interesar</span>
-          <strong>{otro.name} →</strong>
-        </a>
       </div>
     </section>
   </div>

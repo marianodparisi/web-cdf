@@ -162,10 +162,6 @@
 .dc-cta { padding: clamp(90px, 11vw, 150px) 0 clamp(56px, 7vw, 88px); background: var(--teal); text-align: center; color: #fff; }
 .dc-cta__inner { display: grid; justify-items: center; gap: 20px; }
 .dc-cta .dc-text { color: rgba(255, 255, 255, 0.85); margin-top: 0; }
-.dc-next { display: grid; gap: 4px; margin-top: 28px; color: #fff; text-decoration: none; }
-.dc-next span { font-family: var(--hand); font-size: 1.4rem; opacity: 0.9; }
-.dc-next strong { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 900; letter-spacing: -0.03em; }
-.dc-next:hover strong { text-decoration: underline; text-decoration-color: var(--marker); text-decoration-thickness: 4px; text-underline-offset: 6px; }
 
 /* ── Menú con el tema de Discipulados ───────────────────────────────────────
    `lz--discipulados` va en el body (prop `theme` de NocheLayout). Verde

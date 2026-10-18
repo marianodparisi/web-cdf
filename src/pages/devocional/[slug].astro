@@ -14,7 +14,6 @@ const index = posts.findIndex((p) => p.slug === slug);
 const post = posts[index];
 if (!post) return Astro.redirect('/devocional');
 
-const next = posts[(index + 1) % posts.length];
 const relacionados = posts.filter((p) => p.slug !== slug).slice(0, 3);
 
 const getYouTubeEmbedUrl = (videoUrl?: string) => {
@@ -95,7 +94,6 @@ const embed = getYouTubeEmbedUrl(post.videoUrl);
   <NocheCta
     title="Te esperamos."
     text="Viernes y sábados 20 hs · Domingos 9:30 y 11:00 hs."
-    next={{ label: 'Siguiente', title: next.title, href: `/devocional/${next.slug}` }}
   >
     <a class="lz-btn" href="https://maps.app.goo.gl/mEVMgoTXbV3BULVq8" target="_blank" rel="noopener noreferrer">Tu primera vez</a>
   </NocheCta>
