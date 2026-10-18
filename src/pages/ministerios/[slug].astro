@@ -23,7 +23,6 @@ const index = ministries.findIndex((m) => m.slug === slug);
 const ministry = ministries[index];
 if (!ministry) return Astro.redirect('/');
 
-const next = ministries[(index + 1) % ministries.length];
 
 /** Mismo mapa de color que el inicio y el listado. */
 const ministryColors: Record<string, string> = {
@@ -167,7 +166,6 @@ const lines = nameWords.length > 1 ? [nameWords.slice(0, -1).join(' '), nameWord
       <NocheCta
         title="Te esperamos."
         text="Vení a conocernos o escribinos y te contamos cómo empezar."
-        next={{ label: 'Siguiente ministerio', title: next.name, href: `/ministerios/${next.slug}` }}
       >
         <a class="lz-btn" href={whatsappHref} target="_blank" rel="noopener noreferrer">Escribinos</a>
         <a class="lz-btn lz-btn--ghost" href={mapsUrl} target="_blank" rel="noopener noreferrer">Visitanos</a>

@@ -1,0 +1,148 @@
+/* ═══════════════════════════════════════════════════════════════════════
+   ARDE · estilo del feed: el diseño vigente de Arde, sobre arde.css.
+   La tipografía de las publicaciones de @cdfarde, en tres capas:
+   - Anton: condensada ultra negrita en mayúsculas, para los títulos;
+   - Yellowtail: manuscrita de pincel, para el acento ("¿Qué es…");
+   - Inter Tight espaciada: leyendas chicas en las esquinas.
+   Más naranja encendido con grano y verde lima de acento.
+   Va bajo `.ad--feed` (fijo en ministerios/arde.astro) y pisa la Bungee
+   original de arde.css.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.ad--feed {
+  --lime: #e6ff3a;
+  --fire: #ff5a14;
+  --display: 'Anton', 'Inter Tight', sans-serif;
+  --script: 'Yellowtail', cursive;
+}
+
+/* Grano de papel / fotocopia sobre los fondos naranjas */
+.ad--feed .ad-hero::after,
+.ad--feed .ad-cta::after,
+.ad--feed .ad-callout:not(.ad-callout--light)::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  mix-blend-mode: multiply;
+  opacity: 0.5;
+}
+.ad--feed .ad-hero {
+  background:
+    radial-gradient(38% 46% at 78% 28%, rgba(255, 214, 120, 0.85), transparent 70%),
+    radial-gradient(50% 60% at 12% 92%, rgba(170, 40, 8, 0.75), transparent 72%),
+    radial-gradient(60% 70% at 50% 50%, #ff7a1f, transparent 80%),
+    var(--fire);
+}
+.ad--feed .ad-hero__copy { position: relative; z-index: 2; }
+
+/* ── Títulos ─────────────────────────────────────────────────────────── */
+.ad--feed .ad-h2 {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(3.2rem, 7.6vw, 6.6rem);
+  line-height: 0.88;
+  letter-spacing: -0.005em;
+  text-transform: uppercase;
+  color: #e8461a;
+  margin-bottom: 26px;
+}
+.ad--feed .ad-h2--light { color: #fff3e6; }
+.ad--feed .ad-title {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(5rem, 17vw, 13rem);
+  line-height: 0.84;
+  letter-spacing: -0.01em;
+  color: #fff3e6;
+  text-shadow: none;
+}
+.ad--feed .ad-script {
+  display: block;
+  margin: 0 0 -0.04em 0.04em;
+  font-family: var(--script);
+  font-size: 0.56em;
+  font-weight: 400;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--ink);
+  rotate: -5deg;
+  transform-origin: left bottom;
+}
+.ad--feed .ad-h2--light .ad-script { color: var(--lime); }
+.ad--feed .ad-cta .ad-script { color: var(--lime); font-size: 0.34em; margin-bottom: 0.06em; text-align: center; rotate: -4deg; }
+
+/* ── Leyendas espaciadas (reemplazan a la etiqueta amarilla) ───────────── */
+.ad--feed .ad-tag {
+  padding: 0;
+  background: none;
+  rotate: 0deg;
+  font-family: 'Inter Tight', sans-serif;
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.34em;
+  color: #fff;
+}
+.ad--feed .ad-section .ad-tag, .ad--feed .ad-callout--light .ad-tag { color: #e8461a; }
+.ad--feed .ad-tag--dark, .ad--feed .ad-callout:not(.ad-callout--light) .ad-tag { color: #fff3e6; }
+.ad--feed .ad-notice .ad-tag { color: var(--lime); }
+.ad--feed .ad-corners {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-family: 'Inter Tight', sans-serif;
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: #fff3e6;
+  opacity: 0.9;
+}
+
+/* ── Botones: misma forma, letra del feed ─────────────────────────────── */
+.ad--feed .ad-btn {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 1.12rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 13px 26px;
+}
+
+.ad--feed .ig--arde .ig-follow, .ad--feed .ig--arde .ig-cta { font-family: var(--display); font-weight: 400; letter-spacing: 0.05em; }
+.ad--feed .ig--arde .ig-cta { font-size: 1.05rem; }
+
+/* ── Ticket, callouts, novedad ───────────────────────────────────────── */
+.ad--feed .ad-ticket__cell span { font-family: 'Inter Tight', sans-serif; font-weight: 700; font-size: 0.66rem; letter-spacing: 0.3em; text-transform: uppercase; }
+.ad--feed .ad-ticket__cell strong { font-family: var(--display); font-weight: 400; font-size: clamp(1.6rem, 2.6vw, 2.2rem); letter-spacing: 0; text-transform: uppercase; line-height: 1; }
+.ad--feed .ad-callout { position: relative; overflow: hidden; background: radial-gradient(70% 80% at 80% 10%, #ff9a3c, transparent 70%), var(--fire); }
+.ad--feed .ad-callout--light { background: #fff; }
+.ad--feed .ad-callout > * { position: relative; z-index: 2; }
+.ad--feed .ad-notice { background: radial-gradient(60% 80% at 100% 0%, rgba(255, 90, 20, 0.25), transparent 70%), #140c07; }
+
+/* ── Cierre: el flyer ────────────────────────────────────────────────── */
+.ad--feed .ad-cta {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(45% 55% at 50% 38%, rgba(255, 220, 140, 0.9), transparent 70%),
+    radial-gradient(70% 60% at 50% 110%, rgba(150, 30, 6, 0.85), transparent 70%),
+    var(--fire);
+}
+.ad--feed .ad-cta__inner { position: relative; z-index: 2; }
+.ad--feed .ad-cta .ad-corners { margin-bottom: clamp(24px, 5vw, 56px); }
+.ad--feed .ad-cta .ad-corners--foot { margin: clamp(8px, 2vw, 20px) 0 0; }
+
+/* ── Menú ─────────────────────────────────────────────────────────────── */
+.lz--arde:has(.ad--feed) .lz-nav__item { font-family: 'Inter Tight', sans-serif; font-weight: 800; font-size: 0.72rem; letter-spacing: 0.16em; text-transform: uppercase; }
+.lz--arde:has(.ad--feed) .lz-drop__title,
+.lz--arde:has(.ad--feed) .lz-mobile__top { font-family: 'Anton', sans-serif; font-weight: 400; letter-spacing: 0.01em; text-transform: uppercase; }
+.lz--arde:has(.ad--feed) .lz-drop__title { font-size: 1.1rem; }
+
+@media (max-width: 560px) {
+  .ad--feed .ad-corners { font-size: 0.58rem; letter-spacing: 0.24em; }
+  .ad--feed .ad-h2 .ad-script { font-size: 0.66em; }
+}

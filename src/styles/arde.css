@@ -180,10 +180,6 @@
   color: #fff;
 }
 .ad-cta__inner { display: grid; justify-items: center; gap: 24px; }
-.ad-next { display: grid; gap: 4px; margin-top: 28px; color: #fff; text-decoration: none; }
-.ad-next span { font-size: 0.9rem; opacity: 0.85; }
-.ad-next strong { font-family: 'Bungee', 'Inter Tight', sans-serif; font-size: clamp(1.4rem, 2.6vw, 2rem); text-transform: uppercase; }
-.ad-next:hover strong { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 6px; }
 
 /* ── Responsive ─────────────────────────────────────────────────────────── */
 @media (max-width: 900px) {

@@ -7,7 +7,7 @@
  * que traiga la API (cacheado y con las fotos guardadas en el servidor) y
  * esto queda sólo como respaldo.
  *
- * Los @ son provisorios: confirmar los usuarios reales de cada cuenta.
+ * @cdfarde es la cuenta real de Arde; el @ de Kids es provisorio.
  */
 export interface IgAccount {
   username: string;
@@ -29,13 +29,13 @@ type Slug = 'arde' | 'kids';
 
 const muestra: Record<Slug, { account: IgAccount; post: IgPost }> = {
   arde: {
-    account: { username: 'arde.cdf', avatar: '/ministries/arde/arde.png', url: 'https://www.instagram.com/arde.cdf/' },
+    account: { username: 'cdfarde', avatar: '/ministries/arde/arde.png', url: 'https://www.instagram.com/cdfarde/' },
     post: {
       type: 'carousel',
       media: ['/ministries/arde/arde1.png', '/ministries/arde/ardehero.png', '/ministries/arde/campaarde.jpg'],
       caption: '¡Así vivimos el Campa Arde 2026! 🔥\nGracias a cada uno de los que hicieron posible estos días. Deslizá para ver más fotos 👉',
       date: '2026-10-05T18:00:00Z',
-      permalink: 'https://www.instagram.com/arde.cdf/',
+      permalink: 'https://www.instagram.com/cdfarde/',
     },
   },
   kids: {

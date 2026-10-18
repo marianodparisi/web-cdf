@@ -174,10 +174,6 @@
   text-align: center;
 }
 .kd-cta__inner { display: grid; justify-items: center; gap: 22px; }
-.kd-next { display: grid; gap: 4px; margin-top: 32px; color: var(--ink); text-decoration: none; }
-.kd-next span { font-size: 0.9rem; font-weight: 500; opacity: 0.75; }
-.kd-next strong { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 700; }
-.kd-next:hover strong { text-decoration: underline; text-decoration-thickness: 3px; text-underline-offset: 6px; }
 
 /* ── Responsive ─────────────────────────────────────────────────────────── */
 @media (max-width: 900px) {

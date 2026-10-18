@@ -21,12 +21,12 @@ import {
   whatsappHref,
 } from '../../lib/content/ministry-details';
 import '../../styles/arde.css';
+import '../../styles/arde-feed.css';
 
 const ministries = await getMinistries();
 const index = ministries.findIndex((m) => m.slug === 'arde');
 if (index === -1) return Astro.redirect('/');
 const arde = ministries[index];
-const next = ministries[(index + 1) % ministries.length];
 const ig = await latestInstagram('arde');
 
 const whatsapp = whatsappHref(arde.whatsapp);
@@ -38,9 +38,9 @@ const mapsUrl = 'https://maps.app.goo.gl/mEVMgoTXbV3BULVq8';
 ---
 
 <NocheLayout title="Arde · Iglesia Corazón de Fuego" solidNav theme="arde">
-  <link slot="head" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" />
+  <link slot="head" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Yellowtail&display=swap" />
 
-  <div class="ad">
+  <div class="ad ad--feed">
     <!-- ══════════ PORTADA ══════════ -->
     <header class="ad-hero">
       <div class="ad-wrap ad-hero__grid">
@@ -94,7 +94,7 @@ const mapsUrl = 'https://maps.app.goo.gl/mEVMgoTXbV3BULVq8';
     <section class="ad-section" id="sumate">
       <div class="ad-wrap ad-split">
         <div data-r>
-          <h2 class="ad-h2">¿Qué es Arde?</h2>
+          <h2 class="ad-h2"><span class="ad-script">¿Qué es</span> Arde?</h2>
           <p class="ad-text ad-text--lg">{arde.description}</p>
         </div>
         <div class="ad-stack">
@@ -162,7 +162,8 @@ const mapsUrl = 'https://maps.app.goo.gl/mEVMgoTXbV3BULVq8';
     <!-- ══════════ CIERRE ══════════ -->
     <section class="ad-cta">
       <div class="ad-wrap ad-cta__inner">
-        <h2 class="ad-title ad-title--cta" data-r>Te esperamos</h2>
+        <div class="ad-corners" aria-hidden="true"><span>No apaguen</span><span>el fuego</span></div>
+        <h2 class="ad-title ad-title--cta" data-r><span class="ad-script">vení,</span>Te esperamos</h2>
         <p class="ad-text" data-r>Vení a conocernos o escribinos y te contamos cómo empezar.</p>
         <div class="ad-actions ad-actions--center" data-r>
           <a class="ad-btn ad-btn--dark" href={contacto} target={whatsapp ? '_blank' : undefined} rel="noopener noreferrer">Escribinos</a>
@@ -171,10 +172,7 @@ const mapsUrl = 'https://maps.app.goo.gl/mEVMgoTXbV3BULVq8';
             <a class="ad-btn ad-btn--ghost" href={instagram} target="_blank" rel="noopener noreferrer">Instagram ↗</a>
           )}
         </div>
-        <a class="ad-next" href={`/ministerios/${next.slug}`}>
-          <span>Siguiente ministerio</span>
-          <strong>{next.name} →</strong>
-        </a>
+        <div class="ad-corners ad-corners--foot" aria-hidden="true"><span>Sábados</span><span>1 Tes 5:19</span></div>
       </div>
     </section>
   </div>

@@ -19,7 +19,6 @@ const ministries = await getMinistries();
 const index = ministries.findIndex((m) => m.slug === 'kids');
 if (index === -1) return Astro.redirect('/');
 const kids = ministries[index];
-const next = ministries[(index + 1) % ministries.length];
 const ig = await latestInstagram('kids');
 
 const whatsapp = whatsappHref(kids.whatsapp);
@@ -152,10 +151,6 @@ const tarjetas = [
             <a class="kd-btn kd-btn--ghost" href={instagram} target="_blank" rel="noopener noreferrer">Instagram ↗</a>
           )}
         </div>
-        <a class="kd-next" href={`/ministerios/${next.slug}`}>
-          <span>Siguiente ministerio</span>
-          <strong>{next.name} →</strong>
-        </a>
       </div>
     </section>
   </div>
