@@ -25,6 +25,8 @@ Sitio web de Iglesia Corazón de Fuego. La experiencia debe comunicar presencia,
 
 ## Deploy
 
+- **`dev` también publica** (dev.corazondefuego.com), no sólo `main`: un push a
+  `dev` ya sale al servidor. Confirmado por el usuario el 18 de octubre de 2026.
 - **Hostinger compila en el servidor.** No se sube `dist/` por FTP: el servidor
   hace `npm install` y `npm run build`. Verificado el 25 de julio de 2026.
 - Consecuencias comprobadas de eso:
