@@ -1,6 +1,6 @@
 import { defineConfig } from 'astro/config';
 import node from '@astrojs/node';
-import tailwind from '@astrojs/tailwind';
+import tailwindcss from '@tailwindcss/vite';
 
 // https://astro.build/config
 export default defineConfig({
@@ -19,5 +19,9 @@ export default defineConfig({
       }
     ]
   },
-  integrations: [tailwind()]
+  // Tailwind 4 va como plugin de Vite; las hojas que lo usan lo importan
+  // (styles/tailwind.css y global.css).
+  vite: {
+    plugins: [tailwindcss()]
+  }
 });

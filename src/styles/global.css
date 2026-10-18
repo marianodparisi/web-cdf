@@ -1,6 +1,12 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Como en Tailwind 3: el reset y el tema van en capas, pero las utilidades
+   quedan sin capa para competir por orden con el CSS propio (admin.css,
+   noche.css) igual que antes. En Tailwind 4 por defecto las utilidades van en
+   @layer utilities y pierden contra cualquier regla sin capa. */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/preflight.css" layer(base);
+@import "tailwindcss/utilities.css";
+@config "../../tailwind.config.mjs";
 
 @layer base {
   html,

@@ -51,9 +51,19 @@ Sitio web de Iglesia Corazón de Fuego. La experiencia debe comunicar presencia,
 
 ## Stack
 
-- Astro `^7.0.6`.
+- Astro `^7.4.0` (al 18 de octubre de 2026, `npm audit` en 0).
 - Salida SSR/server con `@astrojs/node` en modo standalone.
-- Tailwind CSS 3 mediante `@astrojs/tailwind`.
+- Tailwind CSS 4 como plugin de Vite (`@tailwindcss/vite`), con el
+  `tailwind.config.mjs` de siempre vía `@config`. Se migró desde Tailwind 3 +
+  `@astrojs/tailwind` porque su cadena (braces, micromatch,
+  postcss-selector-parser) tenía vulnerabilidades sin parche. Ya no hay
+  inyección automática: `styles/tailwind.css` lo importan NocheLayout y
+  `admin/login.astro`, y el panel lo trae por `global.css`. Las utilidades
+  se importan **sin capa** a propósito, para que compitan con admin.css y
+  noche.css por orden como en Tailwind 3 (en capa perderían siempre).
+- TypeScript se queda en 6: `astro check` todavía no soporta TypeScript 7.
+- `allowScripts` quedó vacío: ninguna dependencia actual necesita scripts
+  de instalación (sharp 0.35 trae binarios precompilados).
 - Panel de administración propio. TinaCMS fue eliminado del repo (ver más abajo).
 - MySQL sólo para usuarios y permisos del panel. El contenido no vive ahí.
 - `sharp` para comprimir las imágenes que se suben desde el panel.
@@ -642,7 +652,7 @@ se descartó: el usuario dijo que con esas imágenes nos fuimos para otro lado.
 
 - `src/layouts/NocheLayout.astro`: nav con los mismos desplegables que
   `MaquetaLayout`, menú mobile, footer, pestañas `[data-tabs]` y mapa `[data-mapa]`. **No pasa por
-  BaseLayout**: no carga global.css, Tailwind ni GSAP.
+  BaseLayout**: no carga global.css ni GSAP (Tailwind sí, por styles/tailwind.css).
 - **Movimiento** (`src/scripts/motion.ts` + sección "Movimiento" de
   noche.css), pedido del usuario porque todas las páginas entraban con el
   mismo fade. Cada `[data-r]` recibe un tipo (`data-m`) según lo que es:

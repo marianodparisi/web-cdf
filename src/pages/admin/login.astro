@@ -4,6 +4,9 @@
  * los que devuelve `/api/admin/login`; distinguen credenciales malas de
  * problemas de conexión con la base.
  */
+// Sin layout: trae el reset de Tailwind a mano (antes lo inyectaba la
+// integración en todas las páginas).
+import '../../styles/tailwind.css';
 const error = Astro.url.searchParams.get('error');
 const errorMessages: Record<string, string> = {
   '1': 'El usuario o la contraseña no coinciden. Revisalos e intentá de nuevo.',
