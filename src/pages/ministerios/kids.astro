@@ -25,7 +25,6 @@ const whatsapp = whatsappHref(kids.whatsapp);
 const instagram = instagramHref(kids.instagram);
 const contacto = whatsapp || '/contact';
 const lugar = placeLines(kids.place);
-const mapsUrl = 'https://maps.app.goo.gl/mEVMgoTXbV3BULVq8';
 
 /* Las tarjetas se arman con lo que haya cargado y se esconde la que venga
    vacía. Cada una lleva un color del logo. */
@@ -146,7 +145,6 @@ const tarjetas = [
         <p class="kd-text" data-r>Vení a conocernos o escribinos y te contamos cómo empezar.</p>
         <div class="kd-actions kd-actions--center" data-r>
           <a class="kd-btn" href={contacto} target={whatsapp ? '_blank' : undefined} rel="noopener noreferrer">Escribinos</a>
-          <a class="kd-btn kd-btn--ghost" href={mapsUrl} target="_blank" rel="noopener noreferrer">Visitanos</a>
           {instagram && (
             <a class="kd-btn kd-btn--ghost" href={instagram} target="_blank" rel="noopener noreferrer">Instagram ↗</a>
           )}

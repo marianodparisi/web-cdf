@@ -221,7 +221,8 @@
 .lz--arde .lz-burger { border: 3px solid #1c110b; border-radius: 12px; background: #ffc93c; }
 .lz--arde .lz-burger span { background: #1c110b; }
 .lz--arde .lz-drop { border: 3px solid #1c110b; border-radius: 14px; background: #fff3e6; color: #1c110b; box-shadow: 6px 6px 0 #1c110b; backdrop-filter: none; }
-.lz--arde .lz-drop__link:hover { background: #ffc93c; }
+.lz--arde .lz-drop__link:hover,
+.lz--arde .lz-drop__link.is-active { background: #ffc93c; }
 .lz--arde .lz-drop__link .lz-spaced { color: #c2410c; }
 .lz--arde .lz-drop__title { font-family: 'Bungee', sans-serif; font-weight: 400; font-size: 0.9rem; letter-spacing: 0; }
 .lz--arde .lz-mobile { background: #ff6b1a; color: #1c110b; }
@@ -243,3 +244,8 @@
   .ad-logo-title { width: min(240px, 66%); justify-self: center; }
   .ad-logo-title img { filter: brightness(0) invert(1) drop-shadow(4px 4px 0 var(--deep)) drop-shadow(4px 4px 0 var(--ink)); }
 }
+
+/* Menú colgante: ajustes del tema. */
+.lz--arde .lz-visit__pin { --visit-icon: #1c110b; }
+.lz--arde .lz-drop__all { color: #c2410c; }
+.lz--arde .lz-nav__group.is-open > .lz-nav__item { background: rgba(28, 17, 11, 0.12); color: #1c110b; }

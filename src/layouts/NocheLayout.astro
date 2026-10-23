@@ -13,6 +13,10 @@
 import '../styles/tailwind.css';
 import '../styles/noche.css';
 import { getMinistries } from '../lib/content/collections';
+import DropCard, { type DropCardData } from '../components/noche/DropCard.astro';
+import { maquetaAnexos } from '../data/maqueta-anexos';
+import { educativos } from '../data/educativos';
+import { ministryColors } from '../data/ministry-colors';
 
 interface Props {
   title?: string;
@@ -30,35 +34,114 @@ const ministries = await getMinistries();
 const mapsUrl = 'https://maps.app.goo.gl/mEVMgoTXbV3BULVq8';
 
 const sedes = [
-  { name: 'Sede Central', href: '/anexos' },
-  { name: 'Ramos Mejía', href: '/anexos/ramos-mejia' },
-  { name: 'Rojas', href: '/anexos/rojas' },
-  { name: 'Santos Vega', href: '/anexos/santos-vega' },
-  { name: 'Villa Minetti', href: '/anexos/villa-minetti' },
-  { name: 'El Palito', href: '/anexos/palito' },
+  { name: 'Sede Central', href: '/anexos', where: '' },
+  { name: 'Ramos Mejía', href: '/anexos/ramos-mejia', where: 'Buenos Aires' },
+  { name: 'Rojas', href: '/anexos/rojas', where: 'Buenos Aires' },
+  { name: 'Santos Vega', href: '/anexos/santos-vega', where: 'Santa Fe' },
+  { name: 'Villa Minetti', href: '/anexos/villa-minetti', where: 'Santa Fe' },
+  { name: 'El Palito', href: '/anexos/palito', where: 'Santa Fe' },
 ];
 
-/* Mismos nombres y destinos que tenía el menú del sitio anterior. */
-const menu = [
+interface MenuItem {
+  title: string;
+  sub?: string;
+  href: string;
+  /** Su tarjeta: se muestra a la derecha al pasar el mouse por el ítem. */
+  card?: DropCardData;
+}
+interface MenuGroup {
+  label: string;
+  href?: string;
+  items?: MenuItem[];
+  /** Columnas de la lista dentro del panel. */
+  cols?: number;
+  all?: { label: string; href: string };
+  /** Tarjeta general del menú, la que se ve al abrirlo. */
+  feature?: DropCardData;
+  /** O, en lugar de una general, la de un ítem (Sedes: Ramos Mejía). */
+  defaultItem?: number;
+}
+
+const HORARIO_CENTRAL = 'Vie y Sáb 20 hs · Dom 9:30 y 11 hs';
+const sedeCard = (sede: (typeof sedes)[number]): DropCardData => {
+  const slug = sede.href.split('/').pop();
+  const anexo = maquetaAnexos.find((a) => a.slug === slug);
+  if (slug === 'ramos-mejia') {
+    return { kicker: 'Sede central', title: sede.name, text: HORARIO_CENTRAL, cta: 'Cómo llegar', href: mapsUrl, external: true, color: anexo?.color };
+  }
+  return {
+    kicker: `Anexo · ${sede.where}`,
+    title: sede.name,
+    text: anexo?.meetingsLines[0] ?? sede.where,
+    cta: 'Conocé la sede',
+    href: sede.href,
+    color: anexo?.color,
+  };
+};
+
+/* Mismos nombres y destinos que tenía el menú del sitio anterior. Cada
+   desplegable es un panel que cuelga de su ítem (con la puntita apuntándolo):
+   lista a la izquierda y una tarjeta destacada a la derecha. */
+const menu: MenuGroup[] = [
   { label: 'Nosotros', href: '/nosotros' },
   { label: 'Misiones', href: '/misiones' },
   { label: 'Evangelismo', href: '/evangelismo' },
   {
     label: 'Nuestras Sedes',
-    items: sedes.slice(1).map((sede) => ({ kicker: 'Anexo', title: sede.name, href: sede.href })),
+    items: sedes.slice(1).map((sede) => ({ title: sede.name, sub: sede.where, href: sede.href, card: sedeCard(sede) })),
+    all: { label: 'Ver todas las sedes', href: '/anexos' },
+    defaultItem: 0,
   },
   {
     label: 'Educativos',
     items: [
-      { kicker: 'Formación', title: 'IETE', href: '/institucional/iete' },
-      { kicker: 'Formación', title: 'Discipulados', href: '/institucional/discipulados' },
+      {
+        title: 'IETE',
+        sub: 'Instituto de formación ministerial',
+        href: '/institucional/iete',
+        card: { kicker: 'Formación ministerial', title: 'IETE', text: educativos.iete.lead, cta: 'Conocé IETE', href: '/institucional/iete', color: educativos.iete.color },
+      },
+      {
+        title: 'Discipulados',
+        sub: 'Tus primeros pasos en la fe',
+        href: '/institucional/discipulados',
+        card: { kicker: 'Formación inicial', title: 'Discipulados', text: educativos.discipulados.lead, cta: 'Conocé Discipulados', href: '/institucional/discipulados', color: educativos.discipulados.color },
+      },
     ],
+    feature: {
+      kicker: '¿Por dónde empiezo?',
+      title: 'Discipulados',
+      text: 'El primer paso para crecer en la fe, cerca y en grupo.',
+      cta: 'Conocé más',
+      href: '/institucional/discipulados',
+    },
   },
   {
     label: 'Ministerios',
     items: ministries
       .filter((ministry) => ministry.slug !== 'evangelismo')
-      .map((ministry) => ({ kicker: ministry.area, title: ministry.name, href: `/ministerios/${ministry.slug}` })),
+      .map((ministry) => ({
+        title: ministry.name,
+        sub: ministry.area,
+        href: `/ministerios/${ministry.slug}`,
+        card: {
+          kicker: ministry.area,
+          title: ministry.name,
+          text: ministry.excerpt,
+          cta: 'Ver ministerio',
+          href: `/ministerios/${ministry.slug}`,
+          color: ministryColors[ministry.slug],
+        },
+      })),
+    cols: 2,
+    all: { label: 'Ver todos los ministerios', href: '/ministerios' },
+    feature: {
+      kicker: 'Ministerios',
+      title: 'Encontrá tu lugar',
+      text: 'Hay un espacio para cada etapa: niños, adolescentes, parejas y más.',
+      cta: 'Ver todos',
+      href: '/ministerios',
+    },
   },
 ];
 
@@ -121,18 +204,34 @@ const footerColumns = [
       <nav class="lz-nav__links" aria-label="Principal">
         {menu.map((group) =>
           group.items ? (
-            <div class="lz-nav__group">
-              <button type="button" class="lz-nav__item" aria-haspopup="true">
+            <div class="lz-nav__group" data-drop>
+              <button type="button" class="lz-nav__item" aria-haspopup="true" aria-expanded="false">
                 {group.label}
                 <span class="lz-nav__caret" aria-hidden="true"></span>
               </button>
-              <div class="lz-drop" style={`--cols: ${group.items.length > 6 ? 3 : 2}`}>
-                {group.items.map((item) => (
-                  <a class="lz-drop__link" href={item.href}>
-                    <span class="lz-spaced">{item.kicker}</span>
-                    <span class="lz-drop__title">{item.title}</span>
-                  </a>
-                ))}
+              <div class={`lz-drop${group.feature || group.defaultItem !== undefined ? ' lz-drop--feature' : ''}`}>
+                <span class="lz-drop__tip" aria-hidden="true"></span>
+                <div class="lz-drop__list">
+                  <p class="lz-spaced lz-drop__head">{group.label}</p>
+                  <div class="lz-drop__rows" style={`--cols: ${group.cols ?? 1}`}>
+                    {group.items.map((item, i) => (
+                      <a class={`lz-drop__link${i === group.defaultItem ? ' is-active' : ''}`} href={item.href} data-show={item.card ? String(i) : undefined}>
+                        <span class="lz-drop__txt">
+                          <span class="lz-drop__title">{item.title}</span>
+                          {item.sub && <span class="lz-drop__sub">{item.sub}</span>}
+                        </span>
+                        <svg class="lz-drop__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+                      </a>
+                    ))}
+                  </div>
+                  {group.all && <a class="lz-drop__all" href={group.all.href}>{group.all.label} →</a>}
+                </div>
+                {(group.feature || group.defaultItem !== undefined) && (
+                  <div class="lz-drop__cards" data-cards data-default={group.defaultItem !== undefined ? String(group.defaultItem) : 'default'}>
+                    {group.feature && <DropCard card={group.feature} cardKey="default" on={group.defaultItem === undefined} />}
+                    {group.items.map((item, i) => item.card && <DropCard card={item.card} cardKey={String(i)} on={i === group.defaultItem} />)}
+                  </div>
+                )}
               </div>
             </div>
           ) : (
@@ -142,12 +241,20 @@ const footerColumns = [
       </nav>
 
       <div class="lz-nav__utils">
-        <a class="lz-btn lz-btn--small lz-btn--ghost" href={mapsUrl} target="_blank" rel="noopener noreferrer">Visitanos</a>
+        <a class="lz-btn lz-visit" href={mapsUrl} target="_blank" rel="noopener noreferrer">
+          <span class="lz-visit__pin" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" /><circle cx="12" cy="9.5" r="2.5" /></svg>
+          </span>
+          <span class="lz-visit__txt"><strong>Visitanos</strong><small>Dom 9:30 y 11 hs</small></span>
+        </a>
         <button class="lz-burger" type="button" aria-label="Menú" aria-expanded="false" data-burger>
           <span></span><span></span>
         </button>
       </div>
     </header>
+
+    <!-- Velo: con un desplegable abierto, la página queda tapada detrás. -->
+    <div class="lz-scrim" aria-hidden="true"></div>
 
     <div class="lz-mobile" data-mobile>
       {menu.map((group) =>
@@ -203,6 +310,113 @@ const footerColumns = [
       };
       onScroll();
       window.addEventListener('scroll', onScroll, { passive: true });
+
+      /* Desplegables: hover en escritorio, y además clic/teclado (y tap en
+         tablets). El panel se centra bajo su ítem; si se sale de la pantalla
+         se corre, y la puntita se corre al revés para seguir apuntando. */
+      const groups = [...document.querySelectorAll<HTMLElement>('[data-drop]')];
+      const place = (group: HTMLElement) => {
+        const drop = group.querySelector<HTMLElement>('.lz-drop');
+        if (!drop) return;
+        drop.style.setProperty('--shift', '0px');
+        const rect = drop.getBoundingClientRect();
+        const margin = 16;
+        let shift = 0;
+        if (rect.right > innerWidth - margin) shift = innerWidth - margin - rect.right;
+        if (rect.left + shift < margin) shift = margin - rect.left;
+        drop.style.setProperty('--shift', `${Math.round(shift)}px`);
+      };
+      /* Al pasar de un menú a otro, el panel nuevo entra desde el lado hacia
+         el que se movió el mouse y el anterior sale hacia el otro lado. Se
+         detecta porque el anterior se cerró hace un instante. */
+      let lastClosed: { group: HTMLElement; at: number } | null = null;
+      const clearSlide = (g: HTMLElement) => g.classList.remove('from-left', 'from-right', 'to-left', 'to-right');
+      /* Tarjeta de la derecha: al pasar por un ítem entra la suya con un
+         barrido diagonal; la anterior queda debajo hasta que termina. Al
+         cerrar el menú vuelve la predeterminada, sin animación. */
+      const cardTimers = new WeakMap<HTMLElement, number>();
+      const showCard = (group: HTMLElement, key: string, instant = false) => {
+        const box = group.querySelector<HTMLElement>('[data-cards]');
+        if (!box) return;
+        const cards = [...box.querySelectorAll<HTMLElement>('[data-card]')];
+        const next = cards.find((c) => c.dataset.card === key);
+        const cur = cards.find((c) => c.classList.contains('is-on'));
+        group.querySelectorAll<HTMLElement>('[data-show]').forEach((l) => l.classList.toggle('is-active', l.dataset.show === key));
+        if (!next || next === cur) return;
+        window.clearTimeout(cardTimers.get(box));
+        cards.forEach((c) => c.classList.remove('is-prev', 'no-anim'));
+        if (instant) {
+          cur?.classList.remove('is-on');
+          next.classList.add('no-anim', 'is-on');
+        } else {
+          cur?.classList.replace('is-on', 'is-prev');
+          void next.offsetWidth;
+          next.classList.add('is-on');
+          cardTimers.set(box, window.setTimeout(() => cur?.classList.remove('is-prev'), 700));
+        }
+        cards.forEach((c) => c.setAttribute('tabindex', c === next ? '0' : '-1'));
+      };
+      groups.forEach((group) => {
+        group.querySelectorAll<HTMLElement>('[data-show]').forEach((link) => {
+          const go = () => showCard(group, link.dataset.show!);
+          link.addEventListener('mouseenter', go);
+          link.addEventListener('focus', go);
+        });
+      });
+
+      const setOpen = (group: HTMLElement, open: boolean) => {
+        if (!open && group.classList.contains('is-open')) {
+          const box = group.querySelector<HTMLElement>('[data-cards]');
+          if (box) window.setTimeout(() => !group.classList.contains('is-open') && showCard(group, box.dataset.default!, true), 300);
+        }
+        if (open && !group.classList.contains('is-open')) {
+          const prev = lastClosed && performance.now() - lastClosed.at < 250 ? lastClosed.group : groups.find((g) => g !== group && g.classList.contains('is-open'));
+          groups.forEach(clearSlide);
+          if (prev && prev !== group) {
+            const right = groups.indexOf(group) > groups.indexOf(prev);
+            group.classList.add(right ? 'from-right' : 'from-left');
+            prev.classList.add(right ? 'to-left' : 'to-right');
+            if (prev.classList.contains('is-open')) setOpen(prev, false);
+            setTimeout(() => groups.forEach(clearSlide), 450);
+          }
+        }
+        if (!open && group.classList.contains('is-open')) lastClosed = { group, at: performance.now() };
+        group.classList.toggle('is-open', open);
+        group.querySelector('.lz-nav__item')?.setAttribute('aria-expanded', String(open));
+        if (open) place(group);
+        const anyOpen = groups.some((g) => g.classList.contains('is-open'));
+        if (anyOpen) document.body.classList.add('lz-drop-open');
+        else setTimeout(() => {
+          if (!groups.some((g) => g.classList.contains('is-open'))) document.body.classList.remove('lz-drop-open');
+        }, 120);
+      };
+      groups.forEach((group) => {
+        group.addEventListener('mouseenter', () => setOpen(group, true));
+        group.addEventListener('mouseleave', () => setOpen(group, false));
+        group.addEventListener('focusin', () => setOpen(group, true));
+        group.addEventListener('focusout', (e) => {
+          if (!group.contains(e.relatedTarget as Node)) setOpen(group, false);
+        });
+        group.querySelector('.lz-nav__item')?.addEventListener('click', () => {
+          const open = !group.classList.contains('is-open');
+          groups.forEach((g) => g !== group && setOpen(g, false));
+          setOpen(group, open);
+        });
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') groups.forEach((g) => setOpen(g, false));
+      });
+      // Si la barra se esconde al bajar, el menú abierto (y el velo) se van con ella.
+      window.addEventListener(
+        'scroll',
+        () => {
+          if (nav?.classList.contains('is-hidden')) groups.forEach((g) => g.classList.contains('is-open') && setOpen(g, false));
+        },
+        { passive: true },
+      );
+      document.addEventListener('click', (e) => {
+        groups.forEach((g) => !g.contains(e.target as Node) && setOpen(g, false));
+      });
 
       const burger = document.querySelector<HTMLButtonElement>('[data-burger]');
       burger?.addEventListener('click', () => {

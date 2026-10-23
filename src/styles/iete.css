@@ -174,7 +174,8 @@
 .lz--iete .lz-burger { border-radius: 2px; border-color: #b08d57; }
 .lz--iete .lz-drop { border-radius: 2px; border: 1px solid #b08d57; background: #f7f2e8; color: #1f1a17; backdrop-filter: none; }
 .lz--iete .lz-drop__link { border-radius: 0; }
-.lz--iete .lz-drop__link:hover { background: #efe7d8; }
+.lz--iete .lz-drop__link:hover,
+.lz--iete .lz-drop__link.is-active { background: #efe7d8; }
 .lz--iete .lz-drop__link .lz-spaced { color: #8e253f; }
 .lz--iete .lz-drop__title { font-family: 'Fraunces', Georgia, serif; font-weight: 600; letter-spacing: 0; }
 .lz--iete .lz-mobile { background: #6d1a2f; }
@@ -203,3 +204,6 @@
   .ie-form__row { grid-template-columns: 1fr; }
   .ie-book p { text-align: left; }
 }
+
+/* Menú colgante: ajustes del tema. */
+.lz--iete .lz-drop__all { color: #8e253f; }

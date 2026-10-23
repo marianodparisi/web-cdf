@@ -217,10 +217,16 @@
 .lz--kids .lz-burger { border: 3px solid #2b1747; background: #fff; }
 .lz--kids .lz-burger span { background: #2b1747; }
 .lz--kids .lz-drop { border: 3px solid #2b1747; border-radius: 20px; background: #fff7e8; color: #2b1747; box-shadow: 6px 6px 0 #2b1747; backdrop-filter: none; }
-.lz--kids .lz-drop__link:hover { background: #ffd23f; }
+.lz--kids .lz-drop__link:hover,
+.lz--kids .lz-drop__link.is-active { background: #ffd23f; }
 .lz--kids .lz-drop__link .lz-spaced { color: #6a2ca0; }
 .lz--kids .lz-drop__title { font-family: 'Fredoka', sans-serif; font-weight: 600; letter-spacing: 0; }
 .lz--kids .lz-mobile { background: #6a2ca0; font-family: 'Fredoka', sans-serif; }
 .lz--kids .lz-mobile__top { font-weight: 700; letter-spacing: 0; }
 .lz--kids .lz-mobile__group a { font-weight: 600; letter-spacing: 0; }
 .lz--kids .lz-mobile__group .lz-spaced { color: #ffd23f; }
+
+/* Menú colgante: ajustes del tema. */
+.lz--kids .lz-nav__group.is-open > .lz-nav__item { background: rgba(255, 255, 255, 0.18); }
+.lz--kids .lz-drop__link:hover .lz-drop__sub { opacity: 0.75; }
+.lz--kids .lz-drop__all { color: #6a2ca0; }

@@ -4,20 +4,13 @@
  * inicio, en grilla: acá es lo único que hay, así que se ven todos de una.
  */
 import NocheLayout from '../../layouts/NocheLayout.astro';
+import { ministryColors } from '../../data/ministry-colors';
 import NocheHero from '../../components/noche/NocheHero.astro';
 import { getMinistries } from '../../lib/content/collections';
 
 const ministries = await getMinistries();
 
 /** Mismo mapa de color que el inicio y la página de cada ministerio. */
-const ministryColors: Record<string, string> = {
-  life: '#48c2c5',
-  gold: '#c5a059',
-  kids: '#e31b48',
-  arde: '#e8642b',
-  carcelario: '#487a7c',
-  'firmes-y-adelante': '#c43b46',
-};
 const logoSlugs = new Set(['life', 'gold', 'kids', 'arde']);
 ---
 

@@ -22,6 +22,7 @@
  * El inicio anterior (estilo austinstone) quedó en el historial de git.
  */
 import NocheLayout from '../layouts/NocheLayout.astro';
+import { ministryColors } from '../data/ministry-colors';
 import { seriesPlaylistUrl } from '../data/series';
 import { getAnnouncements, getDevotionals, getMinistries, getSeries } from '../lib/content/collections';
 import { getEstadoVivos } from '../lib/youtube';
@@ -75,16 +76,7 @@ function splitTitle(title: string): [string, string] {
 }
 
 const heroWords =['iglesia', 'familia', 'casa'];
-const mapsUrl = 'https://maps.app.goo.gl/mEVMgoTXbV3BULVq8';
 
-const ministryColors: Record<string, string> = {
-  life: '#48c2c5',
-  gold: '#c5a059',
-  kids: '#e31b48',
-  arde: '#e8642b',
-  carcelario: '#487a7c',
-  'firmes-y-adelante': '#c43b46',
-};
 const logoSlugs = new Set(['life', 'gold', 'kids', 'arde']);
 ---
 
@@ -112,8 +104,7 @@ const logoSlugs = new Set(['life', 'gold', 'kids', 'arde']);
           </span>
         </h1>
         <div class="lz-actions lz-actions--center" data-r>
-          <a class="lz-btn" href={mapsUrl} target="_blank" rel="noopener noreferrer">Visitanos</a>
-          <a class="lz-btn lz-btn--ghost" href={mensajeHref} target="_blank" rel="noopener noreferrer">
+          <a class="lz-btn" href={mensajeHref} target="_blank" rel="noopener noreferrer">
             {mensajeLabel}
           </a>
         </div>
@@ -137,8 +128,7 @@ const logoSlugs = new Set(['life', 'gold', 'kids', 'arde']);
         <div class="lz-welcome__foot" data-r>
           <p class="lz-lead">Una comunidad para encontrarte con Dios, crecer y servir.</p>
           <div class="lz-actions">
-            <a class="lz-btn" href={mapsUrl} target="_blank" rel="noopener noreferrer">Visitanos</a>
-            <a class="lz-btn lz-btn--ghost" href="/nosotros">Sobre nosotros</a>
+            <a class="lz-btn" href="/nosotros">Sobre nosotros</a>
           </div>
         </div>
       </div>

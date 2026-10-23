@@ -1,0 +1,48 @@
+---
+/**
+ * Tarjeta de la derecha de un desplegable del menú. Hay una por ítem (y una
+ * general por menú): al pasar el mouse por un ítem se muestra la suya, con
+ * su color, entrando con un barrido diagonal. Sin `color` usa el degradé de
+ * la casa.
+ */
+export interface DropCardData {
+  kicker: string;
+  title: string;
+  text: string;
+  cta: string;
+  href: string;
+  external?: boolean;
+  color?: string;
+}
+
+interface Props {
+  card: DropCardData;
+  /** Clave que la une con su ítem (`data-show` en el link), o `default`. */
+  cardKey: string;
+  on?: boolean;
+}
+
+const { card, cardKey, on = false }: Props = Astro.props;
+---
+
+<a
+  class={`lz-drop__feature${on ? ' is-on' : ''}`}
+  href={card.href}
+  target={card.external ? '_blank' : undefined}
+  rel={card.external ? 'noopener noreferrer' : undefined}
+  data-card={cardKey}
+  style={card.color ? `--c: ${card.color}` : undefined}
+  tabindex={on ? undefined : -1}
+>
+  <span class="lz-drop__mesh" aria-hidden="true"></span>
+  <img class="lz-drop__brand" src="/brand/logowhite.png" alt="" />
+  <span class="lz-drop__fcopy">
+    <span class="lz-spaced">{card.kicker}</span>
+    <strong>{card.title}</strong>
+    <small>{card.text}</small>
+    <span class="lz-pill">
+      {card.cta}
+      <i><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8" /></svg></i>
+    </span>
+  </span>
+</a>

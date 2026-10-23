@@ -34,7 +34,6 @@ const instagram = instagramHref(arde.instagram);
 const contacto = whatsapp || '/contact';
 const lugar = placeLines(arde.place);
 const mapa = externalHref(arde.mapUrl);
-const mapsUrl = 'https://maps.app.goo.gl/mEVMgoTXbV3BULVq8';
 ---
 
 <NocheLayout title="Arde · Iglesia Corazón de Fuego" solidNav theme="arde">
@@ -167,7 +166,6 @@ const mapsUrl = 'https://maps.app.goo.gl/mEVMgoTXbV3BULVq8';
         <p class="ad-text" data-r>Vení a conocernos o escribinos y te contamos cómo empezar.</p>
         <div class="ad-actions ad-actions--center" data-r>
           <a class="ad-btn ad-btn--dark" href={contacto} target={whatsapp ? '_blank' : undefined} rel="noopener noreferrer">Escribinos</a>
-          <a class="ad-btn ad-btn--ghost" href={mapsUrl} target="_blank" rel="noopener noreferrer">Visitanos</a>
           {instagram && (
             <a class="ad-btn ad-btn--ghost" href={instagram} target="_blank" rel="noopener noreferrer">Instagram ↗</a>
           )}

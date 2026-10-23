@@ -348,31 +348,145 @@
 .lz-nav__item:hover,
 .lz-nav__group:hover .lz-nav__item,
 .lz-nav__group:focus-within .lz-nav__item { opacity: 1; }
-.lz-nav__caret { width: 6px; height: 6px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: translateY(-2px) rotate(45deg); }
+.lz-nav__caret { width: 6px; height: 6px; border-right: 1.5px solid currentColor; border-bottom: 1.5px solid currentColor; transform: translateY(-2px) rotate(45deg); transition: transform 0.35s var(--ease); }
 .lz-nav__group { position: relative; }
+/* Ítem abierto: queda marcado como una pestaña y la flecha se da vuelta, así
+   se sabe de qué menú sale el panel. */
+.lz-nav__group > .lz-nav__item { border-radius: 999px; transition: opacity 0.2s, background-color 0.25s; }
+.lz-nav__group.is-open > .lz-nav__item { opacity: 1; background: rgba(255, 255, 255, 0.12); }
+.lz-nav__group.is-open .lz-nav__caret { transform: translateY(1px) rotate(225deg); }
+
+/* ── Desplegable: panel que cuelga de su ítem ───────────────────────────────
+   Se centra bajo el ítem; si se sale de la pantalla, el JS lo corre con
+   --shift y la puntita (.lz-drop__tip) se corre al revés para seguir
+   apuntando al ítem. Lista a la izquierda, tarjeta destacada a la derecha. */
 .lz-drop {
+  --shift: 0px;
   position: absolute;
-  top: 100%;
+  top: calc(100% + 24px);
   left: 50%;
   display: grid;
-  grid-template-columns: repeat(var(--cols, 2), minmax(150px, 1fr));
-  gap: 2px;
-  padding: 10px;
-  border-radius: 14px;
-  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  gap: 18px;
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  padding: 16px;
+  border-radius: 20px;
+  background: var(--bg);
   border: 1px solid var(--faint);
-  backdrop-filter: blur(18px);
+  box-shadow: 0 40px 80px -30px rgba(0, 0, 0, 0.75);
   opacity: 0;
   visibility: hidden;
-  transform: translate(-50%, 8px);
-  transition: opacity 0.25s, transform 0.25s var(--ease), visibility 0.25s;
+  transform: translate(calc(-50% + var(--shift)), 10px) scale(0.98);
+  transform-origin: calc(50% - var(--shift)) 0;
+  transition: opacity 0.25s, transform 0.35s var(--ease), visibility 0.25s;
 }
-.lz-nav__group:hover .lz-drop,
-.lz-nav__group:focus-within .lz-drop { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
-.lz-drop__link { display: grid; gap: 6px; padding: 12px 14px; border-radius: 10px; transition: background-color 0.2s; }
-.lz-drop__link:hover { background: rgba(255, 255, 255, 0.07); }
-.lz-drop__link .lz-spaced { font-size: 0.55rem; color: var(--soft); letter-spacing: 0.24em; }
-.lz-drop__title { font-size: 1rem; font-weight: 800; letter-spacing: -0.03em; }
+.lz-drop--feature { grid-template-columns: minmax(0, 1fr) 250px; }
+/* Puente invisible entre el ítem y el panel: el mouse no lo pierde al bajar. */
+.lz-drop::before { content: ''; position: absolute; top: -30px; left: 0; right: 0; height: 30px; }
+.lz-drop__tip {
+  position: absolute;
+  top: -8px;
+  left: calc(50% - var(--shift));
+  width: 14px;
+  height: 14px;
+  background: inherit;
+  border: inherit;
+  border-right: 0;
+  border-bottom: 0;
+  border-radius: 3px 0 0 0;
+  transform: translateX(-50%) rotate(45deg);
+}
+
+/* Velo de página: oscurece y desenfoca todo lo de atrás mientras hay un
+   desplegable abierto. Va debajo de la barra (z-index 40). */
+.lz-scrim { position: fixed; inset: 0; z-index: 39; background: rgba(5, 6, 10, 0.55); backdrop-filter: blur(8px); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.35s, visibility 0.35s; }
+.lz-drop-open .lz-scrim { opacity: 1; visibility: visible; }
+
+.lz-nav__group.is-open .lz-drop { opacity: 1; visibility: visible; transform: translate(calc(-50% + var(--shift)), 0) scale(1); }
+
+/* Cambio de menú: el nuevo entra de costado y el anterior sale para el otro
+   lado (sin la caída vertical de cuando se abre desde cero). */
+.lz-nav__group.from-right.is-open .lz-drop { animation: lz-drop-from-right 0.42s var(--ease); }
+.lz-nav__group.from-left.is-open .lz-drop { animation: lz-drop-from-left 0.42s var(--ease); }
+.lz-nav__group.to-left .lz-drop { transform: translate(calc(-50% + var(--shift) - 70px), 0); transition: opacity 0.22s, transform 0.35s var(--ease), visibility 0.22s; }
+.lz-nav__group.to-right .lz-drop { transform: translate(calc(-50% + var(--shift) + 70px), 0); transition: opacity 0.22s, transform 0.35s var(--ease), visibility 0.22s; }
+@keyframes lz-drop-from-right { from { opacity: 0; transform: translate(calc(-50% + var(--shift) + 70px), 0); } }
+@keyframes lz-drop-from-left { from { opacity: 0; transform: translate(calc(-50% + var(--shift) - 70px), 0); } }
+
+.lz-drop__list { display: grid; align-content: start; min-width: 250px; }
+.lz-drop__head { margin: 2px 12px 8px; font-size: 0.56rem; letter-spacing: 0.26em; opacity: 0.55; }
+.lz-drop__rows { display: grid; grid-template-columns: repeat(var(--cols, 1), minmax(220px, 1fr)); gap: 2px; }
+.lz-drop__link { display: flex; align-items: center; gap: 12px; padding: 11px 12px; border-radius: 12px; transition: background-color 0.25s; }
+.lz-drop__link:hover, .lz-drop__link:focus-visible { background: rgba(255, 255, 255, 0.08); }
+.lz-drop__txt { display: grid; gap: 2px; flex: 1; min-width: 0; }
+.lz-drop__title { font-size: 1.02rem; font-weight: 800; letter-spacing: -0.025em; }
+.lz-drop__sub { font-size: 0.76rem; opacity: 0.55; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lz-drop__arrow { flex: none; width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; opacity: 0; transform: translateX(-6px); transition: opacity 0.25s, transform 0.3s var(--ease); }
+.lz-drop__link:hover .lz-drop__arrow, .lz-drop__link:focus-visible .lz-drop__arrow { opacity: 1; transform: none; }
+.lz-drop__all { margin: 10px 12px 2px; font-size: 0.8rem; font-weight: 700; color: var(--accent, #e8b46a); }
+.lz-drop__all:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+/* Tarjeta destacada: el degradé de la casa, siempre oscuro (también dentro de
+   los paneles claros de Kids, Arde y los educativos). */
+.lz-drop__cards { position: relative; min-height: 236px; border-radius: 14px; overflow: hidden; background: #0b0c11; }
+/* Cada tarjeta ocupa la caja entera; la activa (.is-on) entra con un barrido
+   diagonal desde arriba a la izquierda y la anterior (.is-prev) queda debajo,
+   entera, hasta que termina. */
+.lz-drop__feature {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  overflow: hidden;
+  color: #f6f1e7;
+  isolation: isolate;
+  clip-path: polygon(0 0, 0 0, 0 0);
+  transition: clip-path 0.75s cubic-bezier(0.65, 0, 0.35, 1);
+}
+.lz-drop__feature.is-prev { z-index: 1; clip-path: polygon(0 0, 220% 0, 0 220%); transition: none; }
+.lz-drop__feature.is-on { z-index: 2; clip-path: polygon(0 0, 220% 0, 0 220%); }
+.lz-drop__feature.no-anim { transition: none; }
+.lz-drop__feature.is-on:not(.no-anim) .lz-drop__fcopy { animation: lz-card-copy 0.55s var(--ease) 0.12s backwards; }
+@keyframes lz-card-copy { from { opacity: 0; transform: translate(-10px, -8px); } }
+/* Con color propio (sede, programa, ministerio) el degradé toma ese color. */
+.lz-drop__feature[style*='--c'] .lz-drop__mesh {
+  background:
+    radial-gradient(42% 48% at 72% 28%, var(--c), transparent 70%),
+    radial-gradient(45% 50% at 18% 88%, color-mix(in srgb, var(--c) 45%, #050608), transparent 70%),
+    radial-gradient(30% 35% at 42% 46%, color-mix(in srgb, var(--c) 70%, #fff 8%), transparent 70%),
+    #0b0c11;
+}
+.lz-drop__feature[style*='--c'] .lz-drop__fcopy .lz-spaced { color: color-mix(in srgb, var(--c) 55%, #fff); }
+/* Ítem cuya tarjeta se está mostrando. */
+.lz-drop__link.is-active { background: rgba(255, 255, 255, 0.08); }
+.lz-drop__link.is-active .lz-drop__arrow { opacity: 1; transform: none; }
+.lz-drop__mesh { position: absolute; inset: -25%; z-index: -1; background: radial-gradient(40% 45% at 70% 30%, #c77a32, transparent 70%), radial-gradient(45% 50% at 20% 85%, #1d3a6b, transparent 70%), radial-gradient(30% 35% at 40% 45%, #7a2f12, transparent 70%), #0b0c11; filter: blur(26px); transition: transform 1.2s var(--ease); }
+.lz-drop__feature:hover .lz-drop__mesh { transform: scale(1.12) rotate(5deg); }
+.lz-drop__brand { position: absolute; top: 14px; right: 14px; width: 92px; height: 42px; object-fit: cover; object-position: 50% 42%; opacity: 0.85; }
+.lz-drop__fcopy { position: absolute; left: 18px; right: 18px; bottom: 16px; display: grid; gap: 4px; justify-items: start; }
+.lz-drop__fcopy .lz-spaced { font-size: 0.54rem; letter-spacing: 0.24em; color: #e8b46a; }
+.lz-drop__fcopy strong { font-size: 1.6rem; font-weight: 900; letter-spacing: -0.04em; line-height: 1; }
+.lz-drop__fcopy small { font-size: 0.8rem; line-height: 1.35; opacity: 0.8; margin-bottom: 8px; }
+
+/* Píldora con flecha en círculo (gira al pasar). */
+.lz-pill { display: inline-flex; align-items: center; gap: 10px; padding: 4px 4px 4px 16px; border-radius: 999px; background: #f6f1e7; color: #111; font-size: 0.78rem; font-weight: 800; }
+.lz-pill i { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: #111; color: #f6f1e7; transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.lz-pill svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+.lz-drop__feature:hover .lz-pill i { transform: rotate(45deg); }
+
+/* Visitanos: pin y el horario debajo. Sigue siendo .lz-btn, así los temas
+   (Kids, Arde, educativos) le siguen dando su color. */
+.lz-btn.lz-visit { gap: 9px; padding: 4px 16px 4px 4px; }
+.lz-visit__pin { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: currentColor; }
+.lz-visit__pin svg { width: 16px; height: 16px; fill: none; stroke: var(--visit-icon, #f6f1e7); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.lz-visit__txt { display: grid; line-height: 1.05; text-align: left; }
+.lz-visit__txt strong { font-size: 0.8rem; font-weight: 800; }
+.lz-visit__txt small { font-size: 0.62rem; font-weight: 600; opacity: 0.65; letter-spacing: 0; }
+@media (max-width: 560px) {
+  .lz-visit__txt small { display: none; }
+  .lz-btn.lz-visit { padding-right: 14px; }
+  .lz-visit__pin { width: 28px; height: 28px; }
+}
 .lz-nav__utils { display: flex; align-items: center; gap: 10px; }
 
 .lz-burger { display: none; width: 42px; height: 42px; border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 50%; background: rgba(255, 255, 255, 0.06); cursor: pointer; place-content: center; gap: 5px; }

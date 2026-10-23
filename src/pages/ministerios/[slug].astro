@@ -11,6 +11,7 @@
  * `getStaticPaths`.
  */
 import NocheLayout from '../../layouts/NocheLayout.astro';
+import { ministryColors } from '../../data/ministry-colors';
 import NocheHero from '../../components/noche/NocheHero.astro';
 import NocheCta from '../../components/noche/NocheCta.astro';
 import { getMinistries } from '../../lib/content/collections';
@@ -25,14 +26,6 @@ if (!ministry) return Astro.redirect('/');
 
 
 /** Mismo mapa de color que el inicio y el listado. */
-const ministryColors: Record<string, string> = {
-  life: '#48c2c5',
-  gold: '#c5a059',
-  kids: '#e31b48',
-  arde: '#e8642b',
-  carcelario: '#487a7c',
-  'firmes-y-adelante': '#c43b46',
-};
 const color = ministryColors[ministry.slug] ?? '#b07a40';
 const esLogo = ['life', 'gold'].includes(ministry.slug);
 
@@ -59,7 +52,6 @@ const datos = [
 const whatsappHref = ministry.whatsapp
   ? `https://wa.me/${ministry.whatsapp.replace(/\D/g, '')}`
   : '/contact';
-const mapsUrl = 'https://maps.app.goo.gl/mEVMgoTXbV3BULVq8';
 
 const nameWords = ministry.name.toLowerCase().split(' ');
 const lines = nameWords.length > 1 ? [nameWords.slice(0, -1).join(' '), nameWords[nameWords.length - 1]] : nameWords;
@@ -168,7 +160,6 @@ const lines = nameWords.length > 1 ? [nameWords.slice(0, -1).join(' '), nameWord
         text="Vení a conocernos o escribinos y te contamos cómo empezar."
       >
         <a class="lz-btn" href={whatsappHref} target="_blank" rel="noopener noreferrer">Escribinos</a>
-        <a class="lz-btn lz-btn--ghost" href={mapsUrl} target="_blank" rel="noopener noreferrer">Visitanos</a>
         {ministry.instagram && (
           <a class="lz-btn lz-btn--ghost" href={ministry.instagram} target="_blank" rel="noopener noreferrer">Instagram ↗</a>
         )}
