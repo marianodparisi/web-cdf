@@ -284,15 +284,11 @@
 [data-m='group']:not(.is-in) > * { opacity: 0; }
 [data-m='group'].is-in > * { animation: m-rise var(--m-dur) var(--m-ease) calc(var(--d, 0s) + var(--ci, 0) * 0.08s) backwards; }
 
-/* Hero: el video se hunde y el título se va mientras bajás. Sólo donde el
+/* Hero: el título se va mientras bajás (el video queda quieto: escalarlo con
+   el scroll lo recompone en cada cuadro). Sólo donde el
    navegador tiene animaciones ligadas al scroll; si no, queda quieto. */
 @supports (animation-timeline: scroll()) {
   @media (prefers-reduced-motion: no-preference) {
-    .lz-hero__video, .lz-phero__media {
-      animation: m-sink linear both;
-      animation-timeline: scroll(root);
-      animation-range: 0 100svh;
-    }
     .lz-hero__center, .lz-phero__center {
       animation: m-lift linear both;
       animation-timeline: scroll(root);
@@ -300,7 +296,6 @@
     }
   }
 }
-@keyframes m-sink { to { transform: translateY(24%) scale(1.08); } }
 @keyframes m-lift { to { transform: translateY(-14vh); opacity: 0.15; } }
 
 /* Entre páginas: la actual se aleja y la nueva sube como una cortina. El
@@ -337,7 +332,9 @@
 /* Los desplegables cuelgan de la barra: si quedó uno abierto, se va con ella. */
 .lz-nav.is-hidden .lz-drop { visibility: hidden; opacity: 0; }
 /* Al bajar, la barra toma fondo: si no, queda encima de los títulos. */
-.lz-nav.is-scrolled { background-color: color-mix(in srgb, var(--bg) 78%, transparent); backdrop-filter: blur(14px); }
+/* Sin backdrop-filter: sobre el video del hero el desenfoque se rehacía en
+   cada cuadro del video y trababa la página. Fondo casi opaco en su lugar. */
+.lz-nav.is-scrolled { background-color: color-mix(in srgb, var(--bg) 92%, transparent); }
 .lz-nav__links { display: flex; align-items: center; gap: 4px; }
 .lz-nav__item {
   display: inline-flex;
@@ -407,7 +404,9 @@
 
 /* Velo de página: oscurece y desenfoca todo lo de atrás mientras hay un
    desplegable abierto. Va debajo de la barra (z-index 40). */
-.lz-scrim { position: fixed; inset: 0; z-index: 39; background: rgba(5, 6, 10, 0.55); backdrop-filter: blur(8px); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.35s, visibility 0.35s; }
+/* Sin backdrop-filter: con el video del hero detrás, desenfocar la pantalla
+   entera en cada cuadro trababa el menú. Más oscuro en su lugar. */
+.lz-scrim { position: fixed; inset: 0; z-index: 39; background: rgba(5, 6, 10, 0.72); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.35s, visibility 0.35s; }
 .lz-drop-open .lz-scrim { opacity: 1; visibility: visible; }
 
 /* Antes de que cargue el JS (o si falla), el panel igual abre con hover. */
@@ -561,11 +560,11 @@ html:not(.lz-js) .lz-nav__group:focus-within .lz-drop,
 .lz-rotator__word {
   grid-area: 1 / 1;
   opacity: 0;
-  filter: blur(14px);
-  transform: translateY(0.08em);
-  transition: opacity 0.9s var(--ease), filter 0.9s var(--ease), transform 1.2s var(--ease);
+  /* Sin filter blur: animarlo sobre el video costaba un cuadro tras otro. */
+  transform: translateY(0.18em);
+  transition: opacity 0.9s var(--ease), transform 1.2s var(--ease);
 }
-.lz-rotator__word.is-on { opacity: 1; filter: none; transform: none; }
+.lz-rotator__word.is-on { opacity: 1; transform: none; }
 
 /* ── BIENVENIDA ─────────────────────────────────────────────────────────── */
 .lz-plate--full { min-height: 100svh; display: flex; align-items: stretch; }
@@ -941,7 +940,7 @@ p.lz-body { font-size: clamp(1.05rem, 1.3vw, 1.2rem); line-height: 1.55; color: 
   .lz-hero { padding-top: 92px; padding-bottom: 88px; }
   .lz-lockup--xl { font-size: 16vw; }
   .lz-lockup__shift { margin-left: 0.55em; }
-  .lz-nav { background: color-mix(in srgb, var(--bg) 72%, transparent); backdrop-filter: blur(12px); }
+  .lz-nav { background: color-mix(in srgb, var(--bg) 90%, transparent); }
   .lz-lockup--lg { font-size: 15vw; }
   .lz-lockup--md { font-size: 13vw; }
   .lz-lockup--tile { font-size: 15vw; }
