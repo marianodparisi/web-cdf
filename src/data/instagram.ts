@@ -7,7 +7,7 @@
  * que traiga la API (cacheado y con las fotos guardadas en el servidor) y
  * esto queda sólo como respaldo.
  *
- * @cdfarde es la cuenta real de Arde; el @ de Kids es provisorio.
+ * Cuentas reales: @cdfarde (Arde) y @cdf.kids (Kids).
  */
 export interface IgAccount {
   username: string;
@@ -39,13 +39,13 @@ const muestra: Record<Slug, { account: IgAccount; post: IgPost }> = {
     },
   },
   kids: {
-    account: { username: 'kids.cdf', avatar: '/ministries/kids/kids.png', url: 'https://www.instagram.com/kids.cdf/' },
+    account: { username: 'cdf.kids', avatar: '/ministries/kids/kids.png', url: 'https://www.instagram.com/cdf.kids/' },
     post: {
       type: 'carousel',
       media: ['/ministries/kids/campakids.jpg', '/sanadosvertical.jpg', '/gozovertical.jpg'],
       caption: '¡Campa Kids: Escuela de Superhéroes! 🦸‍♀️🦸\nMirá todo lo que vivimos este fin de semana 👉',
       date: '2026-10-06T18:00:00Z',
-      permalink: 'https://www.instagram.com/kids.cdf/',
+      permalink: 'https://www.instagram.com/cdf.kids/',
     },
   },
 };

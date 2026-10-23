@@ -700,7 +700,7 @@ se descartó: el usuario dijo que con esas imágenes nos fuimos para otro lado.
   grilla de perfil). Componente `components/ig/IgLatest.astro` + `styles/ig.css`
   (variantes `.ig--arde` polaroid y `.ig--kids` sticker); los datos salen de
   `latestInstagram()` en `src/data/instagram.ts`. **Hoy es contenido de
-  muestra** (fotos del sitio, @arde.cdf / @kids.cdf provisorios) para que no
+  muestra** (fotos del sitio; cuentas reales @cdfarde y @cdf.kids) para que no
   quede vacío. Pendiente: conectar la API de Instagram con inicio de sesión de
   Instagram (cuentas profesionales, app de Meta en modo desarrollo con las
   cuentas como probadoras, token largo de 60 días que se renueva solo),
