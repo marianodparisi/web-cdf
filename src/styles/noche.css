@@ -45,14 +45,17 @@
 :where(.lz) a { color: inherit; text-decoration: none; }
 :where(.lz) img { display: block; max-width: 100%; }
 
-/* ── Grano: el del feed es fuerte ───────────────────────────────────────── */
+/* ── Grano: el del feed es fuerte ───────────────────────────────────────────
+   Sin mix-blend-mode a propósito: con "overlay" el navegador volvía a mezclar
+   la pantalla entera en cada cuadro del scroll y la página se trababa. Con
+   opacidad baja y en su propia capa se ve casi igual y no cuesta nada. */
 .lz-grain {
   position: fixed;
   inset: 0;
   z-index: 50;
   pointer-events: none;
-  opacity: 0.2;
-  mix-blend-mode: overlay;
+  opacity: 0.06;
+  transform: translateZ(0);
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
@@ -159,13 +162,18 @@
   filter: blur(48px) saturate(1.1);
   animation: lz-mesh 22s ease-in-out infinite alternate;
   transition: background 0.8s var(--ease);
+  /* Capa propia: el desenfoque se calcula una vez y después sólo se mueve. */
+  will-change: transform;
 }
+/* Fuera de pantalla no se anima (lo marca scripts/motion.ts). */
+.lz-mesh.is-paused, .lz-mesh.is-paused::after { animation-play-state: paused; }
 .lz-mesh::after {
   content: '';
   position: absolute;
   inset: 0;
   background: radial-gradient(28% 30% at 40% 55%, color-mix(in srgb, var(--c3) 55%, transparent), transparent 70%);
-  animation: lz-mesh-2 16s ease-in-out infinite alternate;
+  /* Quieto: si se mueve adentro del padre desenfocado, el blur de 48 px se
+     recalcula en cada cuadro. El movimiento lo da el padre. */
 }
 @keyframes lz-mesh {
   from { transform: translate3d(-3%, 2%, 0) rotate(0deg) scale(1); }
@@ -529,15 +537,17 @@ html:not(.lz-js) .lz-nav__group:focus-within .lz-drop,
   isolation: isolate;
   background: var(--bg);
 }
-.lz-hero__video { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; object-fit: cover; filter: saturate(0.85) contrast(1.05) brightness(0.8); }
+/* Sin filter: aplicado a un video se recalcula en cada cuadro. El
+   oscurecido que daba brightness(0.8) lo pone el velo. */
+.lz-hero__video { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; object-fit: cover; }
 .lz-hero__veil {
   position: absolute;
   inset: 0;
   z-index: 1;
   background:
     radial-gradient(90% 80% at 50% 45%, transparent 30%, rgba(0, 0, 0, 0.6) 100%),
-    linear-gradient(180deg, color-mix(in srgb, var(--c2) 30%, transparent), color-mix(in srgb, var(--c1) 22%, transparent) 60%, color-mix(in srgb, var(--bg) 90%, transparent));
-  mix-blend-mode: normal;
+    linear-gradient(180deg, color-mix(in srgb, var(--c2) 30%, transparent), color-mix(in srgb, var(--c1) 22%, transparent) 60%, color-mix(in srgb, var(--bg) 90%, transparent)),
+    rgba(8, 8, 12, 0.22);
   transition: background 0.8s var(--ease);
 }
 .lz-hero > :not(video):not(.lz-hero__veil) { position: relative; z-index: 2; }
@@ -705,14 +715,15 @@ html:not(.lz-js) .lz-nav__group:focus-within .lz-drop,
   isolation: isolate;
   background: var(--c0);
 }
-.lz-phero__media { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; object-fit: cover; filter: saturate(0.85) brightness(0.75); }
+.lz-phero__media { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; object-fit: cover; }
 .lz-phero__veil {
   position: absolute;
   inset: 0;
   z-index: 1;
   background:
     radial-gradient(90% 80% at 50% 45%, transparent 25%, rgba(0, 0, 0, 0.65) 100%),
-    linear-gradient(180deg, color-mix(in srgb, var(--c2) 35%, transparent), color-mix(in srgb, var(--c1) 25%, transparent) 60%, color-mix(in srgb, var(--bg) 92%, transparent));
+    linear-gradient(180deg, color-mix(in srgb, var(--c2) 35%, transparent), color-mix(in srgb, var(--c1) 25%, transparent) 60%, color-mix(in srgb, var(--bg) 92%, transparent)),
+    rgba(8, 8, 12, 0.26);
 }
 .lz-phero > :not(.lz-phero__media):not(.lz-phero__veil):not(.lz-mesh) { position: relative; z-index: 2; }
 .lz-phero__center { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 28px; }

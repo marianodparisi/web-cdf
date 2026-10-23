@@ -72,7 +72,19 @@ function kindOf(el: HTMLElement): string {
   return 'rise';
 }
 
+/** Los degradés animados (.lz-mesh) se pausan cuando no están a la vista:
+ * son capas grandes y desenfocadas, y animarlas sin que nadie las vea gasta
+ * GPU y traba el scroll en máquinas modestas. */
+function pauseOffscreenMeshes() {
+  if (!('IntersectionObserver' in window)) return;
+  const io = new IntersectionObserver((entries) =>
+    entries.forEach((e) => e.target.classList.toggle('is-paused', !e.isIntersecting)),
+  );
+  document.querySelectorAll('.lz-mesh').forEach((mesh) => io.observe(mesh));
+}
+
 export function initMotion() {
+  pauseOffscreenMeshes();
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   document.querySelectorAll<HTMLElement>(FRAMES).forEach((frame) => {
     if (!frame.closest('[data-r]')) frame.setAttribute('data-r', '');

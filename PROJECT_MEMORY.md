@@ -659,6 +659,7 @@ se descartó: el usuario dijo que con esas imágenes nos fuimos para otro lado.
 - `src/layouts/NocheLayout.astro`: nav con los mismos desplegables que
   `MaquetaLayout`, menú mobile, footer, pestañas `[data-tabs]` y mapa `[data-mapa]`. **No pasa por
   BaseLayout**: no carga global.css ni GSAP (Tailwind sí, por styles/tailwind.css).
+- **Rendimiento** (el usuario notó la página trabada): nada de `mix-blend-mode` en capas fijas de pantalla completa (el grano va con opacidad baja), nada de `filter` sobre `<video>` (el oscurecido va en el velo), y los `.lz-mesh` tienen `will-change: transform`, su `::after` quieto y se pausan fuera de pantalla (`is-paused`, desde motion.ts).
 - **Movimiento** (`src/scripts/motion.ts` + sección "Movimiento" de
   noche.css), pedido del usuario porque todas las páginas entraban con el
   mismo fade. Cada `[data-r]` recibe un tipo (`data-m`) según lo que es:
