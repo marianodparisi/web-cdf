@@ -8,9 +8,14 @@ import { ministrySectionKey } from '../../../lib/content/sections';
 
 const readText = (form: FormData, field: string) => String(form.get(field) ?? '').trim();
 
-/** Los textarea mandan saltos de línea con \r\n; el sitio los renderiza como \n. */
-const readLines = (form: FormData, field: string) => readText(form, field).replace(/\r\n/g, '\n');
-
+/**
+ * Guarda lo único que se edita de un ministerio desde el panel: la novedad
+ * (título, texto, imagen y "Mostrar hasta") y la foto de la última actividad.
+ *
+ * Nombre, área, resumen, logo, textos, horarios, lugar y contactos se cambian
+ * sólo por código (pedido del usuario), para todos los roles. Este endpoint
+ * no los lee aunque vengan en el POST: siempre conserva los que están.
+ */
 export const POST: APIRoute = async (context) => {
   const session = getSession(context.locals);
   const form = await context.request.formData();
@@ -29,30 +34,6 @@ export const POST: APIRoute = async (context) => {
     return backTo('/admin', { error: `No tenés acceso a ${current.name}.` });
   }
 
-  // Un editor (quien lidera el ministerio) maneja sólo la novedad y las
-  // imágenes. La ficha, los textos, horarios, lugar y contactos los toca un
-  // admin. El chequeo va acá y no sólo en el formulario: un editor puede
-  // mandar un POST a mano con los campos que quiera.
-  const isAdmin = session.role === 'admin';
-  const adminText = (field: string, fallback?: string) => (isAdmin ? readText(form, field) : fallback ?? '');
-  const adminLines = (field: string, fallback?: string) => (isAdmin ? readLines(form, field) : fallback ?? '');
-
-  const description = adminText('description', current.description);
-  const participation = adminText('participation', current.participation);
-  const schedule = adminText('schedule', current.schedule);
-
-  if (isAdmin && (!description || !participation || !schedule)) {
-    return backTo(path, { error: 'Faltan datos. Los textos de la página son obligatorios.' });
-  }
-
-  const name = isAdmin ? readText(form, 'name') : current.name;
-  const area = isAdmin ? readText(form, 'area') : current.area;
-  const excerpt = isAdmin ? readText(form, 'excerpt') : current.excerpt;
-
-  if (!name || !area || !excerpt) {
-    return backTo(path, { error: 'Faltan datos. El nombre, el área y el resumen son obligatorios.' });
-  }
-
   const noticeTitle = readText(form, 'noticeTitle');
 
   const uploadImage = async (field: string, fallback?: string) => {
@@ -61,13 +42,10 @@ export const POST: APIRoute = async (context) => {
     return saveUploadedImage(uploaded);
   };
 
-  let image = current.image;
   let photo = current.photo;
   let noticeImage = current.noticeImage;
 
   try {
-    // El logo es parte de la ficha: si no es admin ni se mira el archivo.
-    if (isAdmin) image = (await uploadImage('image', current.image)) ?? current.image;
     photo = await uploadImage('photo', current.photo);
     noticeImage = await uploadImage('noticeImage', current.noticeImage);
   } catch (error) {
@@ -81,26 +59,13 @@ export const POST: APIRoute = async (context) => {
         item.slug === slug
           ? {
               ...item,
-              name,
-              area,
-              excerpt,
-              description,
-              participation,
-              schedule,
-              image,
               photo,
-              meetingDay: adminText('meetingDay', current.meetingDay),
-              meetingHours: adminText('meetingHours', current.meetingHours),
-              place: adminLines('place', current.place),
-              mapUrl: adminText('mapUrl', current.mapUrl),
               noticeTitle,
               noticeText: readText(form, 'noticeText'),
               // Vaciar el título borra el aviso entero: si no, la imagen vieja
               // reaparecería sola en el próximo aviso que se cargue.
               noticeImage: noticeTitle ? noticeImage : undefined,
               noticeEndDate: noticeTitle ? readEndDate(form.get('noticeEndDate')) : undefined,
-              whatsapp: adminText('whatsapp', current.whatsapp),
-              instagram: adminText('instagram', current.instagram),
             }
           : item
       ),

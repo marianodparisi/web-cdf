@@ -173,6 +173,8 @@ Criterios de UX que conviene no romper:
 
 ### Ministerios: la ficha y los datos de cada uno
 
+**Vigente desde el 23 de octubre de 2026: desde el panel sólo se edita la novedad (título, texto, imagen, "Mostrar hasta") y la foto de la última actividad, para todos los roles, también admin.** Ficha, logo, textos, horarios, lugar y contactos se cambian por código (pedido del usuario); `api/admin/ministerios.ts` ni los lee. Lo que sigue es el historial.
+
 Separación hecha el 26 de julio de 2026. `Ministry` tiene dos mitades y hay que
 mantenerlas separadas:
 

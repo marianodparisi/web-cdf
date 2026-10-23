@@ -437,6 +437,8 @@ details[open] > .adm-row { border-bottom: 1px solid var(--line); }
 /* ═══════════════════ Modales ═══════════════════════════════════════════ */
 .adm-modal {
   width: min(680px, calc(100vw - 32px));
+  /* Tailwind 4 resetea el margen de todo; el `<dialog>` se centra con margin:auto. */
+  margin: auto;
   max-height: calc(100dvh - 48px);
   padding: 0;
   border: 0;
