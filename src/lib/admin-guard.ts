@@ -25,6 +25,7 @@ export const backTo = (path: string, feedback: { ok?: string; error?: string }) 
   const query = params.toString();
   return new Response(null, {
     status: 303,
-    headers: { Location: query ? `${path}?${query}` : path },
+    // El #pestaña va al final: si no, la query quedaría dentro del hash.
+    headers: { Location: query ? `${path.split('#')[0]}?${query}${path.includes('#') ? '#' + path.split('#')[1] : ''}` : path },
   });
 };

@@ -34,6 +34,10 @@ const contenido = [
   { section: 'anuncios', href: '/admin/anuncios', icon: 'campaign', label: 'Anuncios' },
   { section: 'series', href: '/admin/series', icon: 'video_library', label: 'Series' },
 ].filter((item) => canEdit(session, item.section));
+// Novedades: la ve quien tenga al menos un ministerio.
+if (ministries.length > 0) {
+  contenido.splice(2, 0, { section: 'novedades', href: '/admin/novedades', icon: 'newspaper', label: 'Novedades' });
+}
 
 const isActive = (href: string) => (href === '/admin' ? path === '/admin' || path === '/admin/' : path.startsWith(href));
 

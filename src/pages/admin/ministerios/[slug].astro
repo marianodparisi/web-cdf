@@ -1,9 +1,15 @@
 ---
-import Field from '../../../components/admin/Field.astro';
-import { formatEndDate, isActive } from '../../../lib/content/expiry';
+/**
+ * Un ministerio en el panel: sus novedades (varias, cada una en su modal) y
+ * la foto de la página. Es todo lo que se edita desde acá, para todos los
+ * roles; nombre, logo, textos, horarios y contactos se cambian por código.
+ */
 import ImageField from '../../../components/admin/ImageField.astro';
+import NoticeModal from '../../../components/admin/NoticeModal.astro';
+import NoticeRows from '../../../components/admin/NoticeRows.astro';
 import AdminLayout from '../../../layouts/AdminLayout.astro';
 import { getMinistryBySlug } from '../../../lib/content/collections';
+import { isNoticeLive, noticesOf } from '../../../lib/content/notices';
 import { canEdit, denyRedirect, getSession } from '../../../lib/admin-guard';
 import { ministrySectionKey } from '../../../lib/content/sections';
 
@@ -19,27 +25,24 @@ if (!canEdit(session, ministrySectionKey(ministry.slug))) {
   return denyRedirect(`No tenés acceso a ${ministry.name}.`);
 }
 
-// Desde el panel se edita sólo la novedad y la foto, para todos los roles.
-// Nombre, logo, textos, horarios y contactos se cambian por código.
+const notices = noticesOf(ministry);
+const live = notices.filter(isNoticeLive).length;
+const volver = `/admin/ministerios/${ministry.slug}#novedad`;
+const info = { slug: ministry.slug, name: ministry.name, image: ministry.image };
 ---
 
 <AdminLayout title={ministry.name} backHref="/admin" backLabel="Volver al panel" session={session}>
-  <!-- Resumen: qué ministerio es y si tiene un aviso publicado ahora. -->
+  <!-- Resumen: qué ministerio es y cuántas novedades se ven ahora. -->
   <div class="adm-card adm-entity">
     <img class="adm-entity__logo" src={ministry.image} alt="" />
     <div class="adm-entity__text">
       <p class="adm-entity__area">{ministry.area}</p>
       <p class="adm-entity__status">
-        {ministry.noticeTitle && !isActive(ministry.noticeEndDate) ? (
-          <span class="adm-badge adm-badge--off"><span class="material-symbols-outlined">event_busy</span>Aviso vencido (no se ve): {ministry.noticeTitle}</span>
-        ) : ministry.noticeTitle ? (
-          <span class="adm-badge adm-badge--ok"><span class="material-symbols-outlined">campaign</span>Aviso publicado: {ministry.noticeTitle}{ministry.noticeEndDate && ` · hasta el ${formatEndDate(ministry.noticeEndDate)}`}</span>
+        {live > 0 ? (
+          <span class="adm-badge adm-badge--ok"><span class="material-symbols-outlined">campaign</span>{live} {live === 1 ? 'novedad publicada' : 'novedades publicadas'}</span>
         ) : (
-          <span class="adm-badge adm-badge--editor">Sin aviso publicado</span>
+          <span class="adm-badge adm-badge--editor">Sin novedades publicadas</span>
         )}
-      </p>
-      <p class="adm-help" style="margin: 6px 0 0">
-        Desde acá cargás la novedad y las imágenes de la página.
       </p>
     </div>
     <a class="adm-btn adm-btn--ghost adm-btn--sm" href={`/ministerios/${ministry.slug}`} target="_blank" rel="noopener noreferrer">
@@ -47,55 +50,56 @@ if (!canEdit(session, ministrySectionKey(ministry.slug))) {
     </a>
   </div>
 
-  <form
-    method="POST"
-    action="/api/admin/ministerios"
-    enctype="multipart/form-data"
-    data-warn-unsaved
-    class="adm-card adm-tabs"
-    data-admin-tabs
-  >
-    <input type="hidden" name="slug" value={ministry.slug} />
-
-    {/* Las pestañas sólo muestran u ocultan partes del mismo formulario:
-        "Guardar" manda todo junto, como antes. */}
+  <div class="adm-card adm-tabs" data-admin-tabs>
     <nav class="adm-tabs__nav" role="tablist" aria-label="Partes de la página">
-      <button type="button" role="tab" data-tab-btn="novedad"><span class="material-symbols-outlined">campaign</span>Novedad</button>
+      <button type="button" role="tab" data-tab-btn="novedad"><span class="material-symbols-outlined">campaign</span>Novedades</button>
       <button type="button" role="tab" data-tab-btn="imagenes"><span class="material-symbols-outlined">image</span>Imágenes</button>
     </nav>
-    <div class="adm-tabs__body">
 
-    <fieldset class="adm-tabs__panel" data-tab-panel="novedad">
-      <legend class="mb-1 font-display text-lg font-semibold">La novedad</legend>
-      <p class="mb-6 text-sm text-charcoal/60">
-        Para la próxima actividad o algo puntual. Aparece en la página del ministerio y en el inicio, en "Qué está pasando". Si borrás el título, desaparece de los dos lados junto con su imagen.
-      </p>
+    <section class="adm-tabs__panel" data-tab-panel="novedad">
+      <div class="adm-tabs__body">
+        <div class="adm-toolbar">
+          <p class="adm-help" style="margin: 0; flex: 1">
+            Para actividades o cosas puntuales. Cada una elige si se ve en el inicio, en la página del ministerio o en los dos.
+          </p>
+          <button type="button" class="adm-btn adm-btn--gold" data-modal-open="nueva-novedad">
+            <span class="material-symbols-outlined">add</span> Agregar novedad
+          </button>
+        </div>
+        {notices.length > 0 ? (
+          <NoticeRows rows={notices.map((notice, index) => ({ notice, ministry: info, index }))} volver={volver} />
+        ) : (
+          <div class="adm-empty">
+            <span class="material-symbols-outlined">campaign</span>
+            <p>Todavía no hay novedades. Cuando cargues una, aparece acá.</p>
+          </div>
+        )}
+      </div>
+    </section>
 
-      <Field
-        name="noticeTitle"
-        label="Título del aviso"
-        value={ministry.noticeTitle}
-        placeholder="Se viene el campamento"
-      />
-      <Field name="noticeText" label="Texto del aviso" value={ministry.noticeText} rows={3} />
-      <Field name="noticeEndDate" type="date" label="Mostrar hasta" value={ministry.noticeEndDate} hint="Pasado ese día el aviso deja de verse solo, acá y en el inicio. Vacío: queda hasta que borres el título." />
-      <ImageField name="noticeImage" label="Imagen del aviso (el flyer)" currentImage={ministry.noticeImage} />
-    </fieldset>
+    <form
+      method="POST"
+      action="/api/admin/ministerios"
+      enctype="multipart/form-data"
+      data-warn-unsaved
+      class="adm-tabs__panel"
+      data-tab-panel="imagenes"
+    >
+      <input type="hidden" name="slug" value={ministry.slug} />
+      <div class="adm-tabs__body">
+        <p class="adm-help" style="margin-bottom: 20px">La foto que se muestra dentro de la página del ministerio.</p>
+        <ImageField name="photo" label="Foto de la última actividad" currentImage={ministry.photo} />
+      </div>
+      <div class="adm-savebar adm-tabs__foot">
+        <button type="submit" class="adm-btn adm-btn--gold">
+          <span class="material-symbols-outlined">check</span> Guardar la foto
+        </button>
+      </div>
+    </form>
+  </div>
 
-    <fieldset class="adm-tabs__panel" data-tab-panel="imagenes">
-      <legend class="mb-1 font-display text-lg font-semibold">Imágenes de la página</legend>
-      <p class="mb-6 text-sm text-charcoal/60">La foto que se muestra dentro de la página del ministerio.</p>
-      <ImageField name="photo" label="Foto de la última actividad" currentImage={ministry.photo} />
-    </fieldset>
-
-
-    </div>
-
-    <div class="adm-savebar adm-tabs__foot">
-      <a href="/admin" class="adm-btn adm-btn--ghost">Cancelar</a>
-      <button type="submit" class="adm-btn adm-btn--gold">
-        <span class="material-symbols-outlined">check</span> Guardar
-      </button>
-    </div>
-  </form>
+  <NoticeModal id="nueva-novedad" volver={volver} ministry={info} />
+  {notices.map((notice) => (
+    <NoticeModal id={`novedad-${ministry.slug}-${notice.id}`} volver={volver} ministry={info} notice={notice} />
+  ))}
 </AdminLayout>

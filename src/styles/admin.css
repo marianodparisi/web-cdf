@@ -724,3 +724,11 @@ a.adm-kpi:hover { border-color: rgba(197, 160, 89, 0.5); transform: translateY(-
 .adm-chip .material-symbols-outlined { font-size: 14px; vertical-align: -2px; margin-right: 3px; }
 .adm-chip--off { background: #f3f0ea; color: #8a8378; }
 .adm-badge--off { background: #f3f0ea; color: #8a8378; }
+
+/* Novedades: las dos casillas de "Dónde se ve" lado a lado; filas apagadas
+   cuando la novedad no se ve en ningún lado o ya venció. */
+.adm-notice-where { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.adm-notice-where .adm-check-line { margin: 4px 0 18px; }
+.adm-table__row.is-dim { opacity: 0.6; }
+.adm-table__row.is-dim:hover { opacity: 1; }
+@media (max-width: 700px) { .adm-notice-where { grid-template-columns: 1fr; gap: 0; } }

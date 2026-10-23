@@ -1,0 +1,92 @@
+---
+/**
+ * Modal para crear o editar una novedad de ministerio. Lo usan la pestaña
+ * Novedad de cada ministerio y la pantalla Novedades del panel; manda a
+ * `/api/admin/novedades` y vuelve a `volver`.
+ *
+ * Al crear desde Novedades se elige el ministerio (`ministries` con más de
+ * uno); desde un ministerio va fijo (`ministry`).
+ */
+import type { MinistryNotice } from '../../data/ministries';
+import Modal from './Modal.astro';
+import Field from './Field.astro';
+import ImageField from './ImageField.astro';
+
+interface Props {
+  id: string;
+  volver: string;
+  /** Editar esta novedad; sin ella, es una nueva. */
+  notice?: MinistryNotice;
+  /** Ministerio fijo (slug) o lista para elegir. */
+  ministry?: { slug: string; name: string };
+  ministries?: { slug: string; name: string }[];
+}
+
+const { id, volver, notice, ministry, ministries = [] }: Props = Astro.props;
+const editing = Boolean(notice);
+const fixed = ministry ?? (ministries.length === 1 ? ministries[0] : undefined);
+const p = id; // prefijo único de ids dentro de la pantalla
+---
+
+<Modal
+  id={id}
+  title={editing ? 'Editar novedad' : 'Nueva novedad'}
+  subtitle={editing ? `${fixed?.name ?? ''}${fixed ? ' · ' : ''}${notice!.title}` : fixed ? `Para ${fixed.name}` : 'Elegí de qué ministerio es.'}
+>
+  <form method="POST" action="/api/admin/novedades" enctype="multipart/form-data" class="adm-modal__form">
+    <input type="hidden" name="accion" value={editing ? 'guardar' : 'crear'} />
+    <input type="hidden" name="volver" value={volver} />
+    {editing && <input type="hidden" name="id" value={notice!.id} />}
+    {fixed && <input type="hidden" name="ministerio" value={fixed.slug} />}
+
+    <div class="adm-modal__body">
+      {!fixed && (
+        <div class="adm-field">
+          <label class="adm-label" for={`${p}-ministerio`}>Ministerio</label>
+          <select id={`${p}-ministerio`} name="ministerio" class="adm-input" required>
+            <option value="">Elegí uno…</option>
+            {ministries.map((m) => <option value={m.slug}>{m.name}</option>)}
+          </select>
+        </div>
+      )}
+
+      <Field id={`${p}-title`} name="title" label="Título" value={notice?.title} placeholder="Se viene el campamento" required />
+      <Field id={`${p}-text`} name="text" label="Texto" value={notice?.text} rows={3} />
+
+      <p class="adm-label">Dónde se ve</p>
+      <div class="adm-notice-where">
+        <label class="adm-check-line">
+          <input type="checkbox" name="showHome" value="si" checked={notice ? notice.showHome : true} />
+          <span><strong>En el inicio</strong>En "Qué está pasando", junto a los anuncios.</span>
+        </label>
+        <label class="adm-check-line">
+          <input type="checkbox" name="showPage" value="si" checked={notice ? notice.showPage : true} />
+          <span><strong>En la página del ministerio</strong>En la sección de novedades de su página.</span>
+        </label>
+      </div>
+
+      <Field
+        id={`${p}-endDate`}
+        name="endDate"
+        type="date"
+        label="Mostrar hasta"
+        value={notice?.endDate}
+        hint="Pasado ese día deja de verse sola. Vacío: queda hasta que la borres."
+      />
+      <ImageField id={`${p}-image`} name="image" label="Flyer o foto" currentImage={notice?.image} hint="Opcional. Se muestra entero, sin recortar." />
+      {notice?.image && (
+        <label class="adm-check-line" style="margin-top: -10px">
+          <input type="checkbox" name="quitarImagen" value="si" />
+          <span><strong>Quitar la imagen</strong>La novedad queda sólo con texto.</span>
+        </label>
+      )}
+    </div>
+
+    <footer class="adm-modal__foot">
+      <button type="button" class="adm-btn adm-btn--ghost" data-modal-close>Cancelar</button>
+      <button type="submit" class="adm-btn adm-btn--gold">
+        <span class="material-symbols-outlined">check</span> {editing ? 'Guardar' : 'Publicar la novedad'}
+      </button>
+    </footer>
+  </form>
+</Modal>

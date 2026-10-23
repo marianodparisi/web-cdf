@@ -1,6 +1,5 @@
 import type { APIRoute } from 'astro';
 import { ministriesCollection } from '../../../lib/content/collections';
-import { readEndDate } from '../../../lib/content/expiry';
 import { UploadError, saveUploadedImage } from '../../../lib/content/uploads';
 import { scheduleOrphanSweep } from '../../../lib/content/orphans';
 import { backTo, canEdit, getSession } from '../../../lib/admin-guard';
@@ -9,8 +8,8 @@ import { ministrySectionKey } from '../../../lib/content/sections';
 const readText = (form: FormData, field: string) => String(form.get(field) ?? '').trim();
 
 /**
- * Guarda lo único que se edita de un ministerio desde el panel: la novedad
- * (título, texto, imagen y "Mostrar hasta") y la foto de la última actividad.
+ * Guarda la foto de la última actividad de un ministerio. Las novedades van
+ * por `/api/admin/novedades`.
  *
  * Nombre, área, resumen, logo, textos, horarios, lugar y contactos se cambian
  * sólo por código (pedido del usuario), para todos los roles. Este endpoint
@@ -34,8 +33,6 @@ export const POST: APIRoute = async (context) => {
     return backTo('/admin', { error: `No tenés acceso a ${current.name}.` });
   }
 
-  const noticeTitle = readText(form, 'noticeTitle');
-
   const uploadImage = async (field: string, fallback?: string) => {
     const uploaded = form.get(field);
     if (!(uploaded instanceof File) || uploaded.size === 0) return fallback;
@@ -43,11 +40,9 @@ export const POST: APIRoute = async (context) => {
   };
 
   let photo = current.photo;
-  let noticeImage = current.noticeImage;
 
   try {
     photo = await uploadImage('photo', current.photo);
-    noticeImage = await uploadImage('noticeImage', current.noticeImage);
   } catch (error) {
     const message = error instanceof UploadError ? error.message : 'No se pudo guardar la imagen.';
     return backTo(path, { error: message });
@@ -60,12 +55,6 @@ export const POST: APIRoute = async (context) => {
           ? {
               ...item,
               photo,
-              noticeTitle,
-              noticeText: readText(form, 'noticeText'),
-              // Vaciar el título borra el aviso entero: si no, la imagen vieja
-              // reaparecería sola en el próximo aviso que se cargue.
-              noticeImage: noticeTitle ? noticeImage : undefined,
-              noticeEndDate: noticeTitle ? readEndDate(form.get('noticeEndDate')) : undefined,
             }
           : item
       ),
@@ -73,5 +62,5 @@ export const POST: APIRoute = async (context) => {
   );
 
   scheduleOrphanSweep();
-  return backTo(path, { ok: 'Se guardó. Ya se ve en el sitio.' });
+  return backTo(`${path}#imagenes`, { ok: 'Se guardó la foto. Ya se ve en el sitio.' });
 };

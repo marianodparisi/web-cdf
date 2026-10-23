@@ -1,5 +1,4 @@
 import type { Ministry } from '../../data/ministries';
-import { isActive } from './expiry';
 
 /**
  * Los datos prácticos de cada ministerio (día, lugar, contacto) los carga quien
@@ -50,10 +49,7 @@ export const placeLines = (value?: string) =>
     .map((line) => line.trim())
     .filter(Boolean);
 
-/** El aviso se muestra sólo si tiene título y no pasó su fecha de fin; el
-    texto es opcional. */
-export const hasNotice = (ministry: Pick<Ministry, 'noticeTitle' | 'noticeEndDate'>) =>
-  Boolean(clean(ministry.noticeTitle)) && isActive(ministry.noticeEndDate);
+/* Las novedades viven en lib/content/notices.ts (varias por ministerio). */
 
 /**
  * Un bloque de horario necesita al menos uno de los dos campos: hay ministerios

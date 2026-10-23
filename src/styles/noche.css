@@ -785,6 +785,8 @@ p.lz-body { font-size: clamp(1.05rem, 1.3vw, 1.2rem); line-height: 1.55; color: 
 .lz-notice { margin-top: 28px; padding: 22px 24px; border-left: 2px solid var(--accent); background: rgba(255, 255, 255, 0.04); }
 .lz-notice__title { font-weight: 800; font-size: 1.15rem; letter-spacing: -0.02em; margin-bottom: 6px; }
 .lz-notice p:not(.lz-notice__title) { color: var(--soft); }
+.lz-notice + .lz-notice { margin-top: 14px; }
+.lz-notice__img { display: block; width: min(320px, 100%); margin-bottom: 14px; border-radius: 6px; }
 
 /* ── Formularios ────────────────────────────────────────────────────────── */
 .lz-form { display: grid; gap: 18px; margin-top: 32px; }

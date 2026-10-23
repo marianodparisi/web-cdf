@@ -1,0 +1,91 @@
+---
+/**
+ * Filas de novedades (tabla del panel): flyer, título, dónde se ve, fecha y
+ * acciones. Cada fila abre su modal de edición (`novedad-{slug}-{id}`), que
+ * la pantalla renderiza aparte con NoticeModal.
+ */
+import type { MinistryNotice } from '../../data/ministries';
+import { formatEndDate, isActive } from '../../lib/content/expiry';
+
+interface Row {
+  notice: MinistryNotice;
+  ministry: { slug: string; name: string; image?: string };
+  /** Posición dentro de su ministerio (para "subir"). */
+  index: number;
+}
+
+interface Props {
+  rows: Row[];
+  volver: string;
+  /** En la pantalla Novedades se ve de qué ministerio es cada una. */
+  showMinistry?: boolean;
+}
+
+const { rows, volver, showMinistry = false }: Props = Astro.props;
+---
+
+<div class="adm-card adm-table">
+  <div class="adm-table__head">
+    <span>Novedad</span>
+    <span class="adm-hide-sm">Dónde se ve</span>
+    <span></span>
+  </div>
+  {rows.map(({ notice, ministry, index }) => {
+    const expired = !isActive(notice.endDate);
+    const hidden = !notice.showHome && !notice.showPage;
+    return (
+      <div class:list={['adm-table__row', (expired || hidden) && 'is-dim']}>
+        <div class="adm-table__main">
+          <span class="adm-row__thumb adm-row__thumb--flyer">
+            {notice.image ? <img src={notice.image} alt="" loading="lazy" /> : <span class="material-symbols-outlined">campaign</span>}
+          </span>
+          <span class="adm-row__text">
+            <span class="adm-row__chips">
+              {showMinistry && <span class="adm-chip adm-chip--gold">{ministry.name}</span>}
+              {notice.endDate && (expired ? (
+                <span class="adm-chip adm-chip--off"><span class="material-symbols-outlined">event_busy</span>Vencida · no se ve</span>
+              ) : (
+                <span class="adm-chip"><span class="material-symbols-outlined">event</span>Hasta el {formatEndDate(notice.endDate)}</span>
+              ))}
+            </span>
+            <span class="adm-row__title">{notice.title}</span>
+            {notice.text && <span class="adm-row__sub">{notice.text}</span>}
+          </span>
+        </div>
+        <span class="adm-table__chips adm-hide-sm">
+          {notice.showHome && <span class="adm-chip"><span class="material-symbols-outlined">home</span>Inicio</span>}
+          {notice.showPage && <span class="adm-chip"><span class="material-symbols-outlined">web</span>Su página</span>}
+          {hidden && <span class="adm-muted">En ningún lado</span>}
+        </span>
+        <div class="adm-row__actions">
+          {!showMinistry && index > 0 && (
+            <form method="POST" action="/api/admin/novedades">
+              <input type="hidden" name="accion" value="subir" />
+              <input type="hidden" name="ministerio" value={ministry.slug} />
+              <input type="hidden" name="id" value={notice.id} />
+              <input type="hidden" name="volver" value={volver} />
+              <button type="submit" class="adm-icon-btn" title="Subir" aria-label="Subir"><span class="material-symbols-outlined">arrow_upward</span></button>
+            </form>
+          )}
+          <button type="button" class="adm-btn adm-btn--ghost adm-btn--sm" data-modal-open={`novedad-${ministry.slug}-${notice.id}`}>
+            <span class="material-symbols-outlined">edit</span><span class="adm-hide-sm">Editar</span>
+          </button>
+          <form method="POST" action="/api/admin/novedades">
+            <input type="hidden" name="accion" value="borrar" />
+            <input type="hidden" name="ministerio" value={ministry.slug} />
+            <input type="hidden" name="id" value={notice.id} />
+            <input type="hidden" name="volver" value={volver} />
+            <button
+              type="submit"
+              class="adm-icon-btn adm-icon-btn--danger"
+              title="Borrar"
+              aria-label="Borrar"
+              data-confirm={`¿Borrar la novedad "${notice.title}"?`}
+              onclick="return confirm(this.dataset.confirm)"
+            ><span class="material-symbols-outlined">delete</span></button>
+          </form>
+        </div>
+      </div>
+    );
+  })}
+</div>

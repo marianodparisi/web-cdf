@@ -9,12 +9,12 @@
  * contacto salen del panel; si alguno está vacío, su bloque no se muestra.
  */
 import NocheLayout from '../../layouts/NocheLayout.astro';
+import { visibleNotices } from '../../lib/content/notices';
 import IgLatest from '../../components/ig/IgLatest.astro';
 import { latestInstagram } from '../../data/instagram';
 import { getMinistries } from '../../lib/content/collections';
 import {
   externalHref,
-  hasNotice,
   hasSchedule,
   instagramHref,
   placeLines,
@@ -28,6 +28,7 @@ const index = ministries.findIndex((m) => m.slug === 'arde');
 if (index === -1) return Astro.redirect('/');
 const arde = ministries[index];
 const ig = await latestInstagram('arde');
+const novedades = visibleNotices(arde, 'page');
 
 const whatsapp = whatsappHref(arde.whatsapp);
 const instagram = instagramHref(arde.instagram);
@@ -113,23 +114,21 @@ const mapa = externalHref(arde.mapUrl);
       </div>
     </section>
 
-    <!-- ══════════ NOVEDAD ══════════ Todo sale del aviso del panel: título,
-         texto e imagen. Sin título cargado la sección no existe; sin imagen,
-         va sólo el texto. -->
-    {hasNotice(arde) && (
+    <!-- ══════════ NOVEDADES ══════════ Una banda por novedad marcada para la
+         página (panel → Novedades). Sin novedades la sección no existe; sin
+         imagen, va sólo el texto. -->
+    {novedades.map((n) => (
       <section class="ad-notice">
-        <div class={`ad-wrap${arde.noticeImage ? ' ad-notice__grid' : ''}`}>
-          {arde.noticeImage && (
-            <img class="ad-flyer" src={arde.noticeImage} alt={arde.noticeTitle} loading="lazy" data-r />
-          )}
+        <div class={`ad-wrap${n.image ? ' ad-notice__grid' : ''}`}>
+          {n.image && <img class="ad-flyer" src={n.image} alt={n.title} loading="lazy" data-r />}
           <div class="ad-notice__copy" data-r>
             <span class="ad-tag">Novedad</span>
-            <h2 class="ad-h2 ad-h2--light">{arde.noticeTitle}</h2>
-            {arde.noticeText && <p class="ad-text">{arde.noticeText}</p>}
+            <h2 class="ad-h2 ad-h2--light">{n.title}</h2>
+            {n.text && <p class="ad-text">{n.text}</p>}
           </div>
         </div>
       </section>
-    )}
+    ))}
 
     <!-- ══════════ INSTAGRAM ══════════ La última publicación de la cuenta
          (src/data/instagram.ts: muestra hasta que se conecte la API). -->

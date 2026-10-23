@@ -173,6 +173,8 @@ Criterios de UX que conviene no romper:
 
 ### Ministerios: la ficha y los datos de cada uno
 
+**Novedades (23 de octubre de 2026): varias por ministerio** en `notices[]` (`id`, `title`, `text`, `image`, `endDate`, `showHome`, `showPage`). Lógica en `lib/content/notices.ts`: `noticesOf` lee también el formato viejo de una sola novedad (`noticeTitle`…) como la primera, y el primer guardado lo pasa al nuevo. Se editan en la pestaña Novedades de cada ministerio y en la pantalla **Novedades** del panel (menú Contenido, la ve quien tenga algún ministerio), siempre en modales (`NoticeModal`, `NoticeRows`) contra `/api/admin/novedades`. El home muestra las `showHome` vigentes; cada página de ministerio, las `showPage` vigentes, apiladas.
+
 **Vigente desde el 23 de octubre de 2026: desde el panel sólo se edita la novedad (título, texto, imagen, "Mostrar hasta") y la foto de la última actividad, para todos los roles, también admin.** Ficha, logo, textos, horarios, lugar y contactos se cambian por código (pedido del usuario); `api/admin/ministerios.ts` ni los lee. Lo que sigue es el historial.
 
 Separación hecha el 26 de julio de 2026. `Ministry` tiene dos mitades y hay que

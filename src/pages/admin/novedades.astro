@@ -1,0 +1,57 @@
+---
+/**
+ * Novedades de todos los ministerios que la persona puede editar, en una
+ * sola tabla, con "Agregar novedad" (se elige el ministerio). Cada fila se
+ * edita en su modal. El orden dentro de cada ministerio se cambia desde la
+ * pantalla del ministerio.
+ */
+import AdminLayout from '../../layouts/AdminLayout.astro';
+import NoticeModal from '../../components/admin/NoticeModal.astro';
+import NoticeRows from '../../components/admin/NoticeRows.astro';
+import { getMinistries } from '../../lib/content/collections';
+import { isNoticeLive, noticesOf } from '../../lib/content/notices';
+import { canEdit, denyRedirect, getSession } from '../../lib/admin-guard';
+import { ministrySectionKey } from '../../lib/content/sections';
+
+const session = getSession(Astro.locals);
+const ministries = (await getMinistries()).filter((m) => canEdit(session, ministrySectionKey(m.slug)));
+if (ministries.length === 0) {
+  return denyRedirect('No tenés ningún ministerio asignado.');
+}
+
+const rows = ministries.flatMap((m) =>
+  noticesOf(m).map((notice, index) => ({ notice, ministry: { slug: m.slug, name: m.name, image: m.image }, index })),
+);
+const live = rows.filter((row) => isNoticeLive(row.notice)).length;
+const options = ministries.map((m) => ({ slug: m.slug, name: m.name }));
+const volver = '/admin/novedades';
+---
+
+<AdminLayout title="Novedades" backHref="/admin" backLabel="Volver al panel" session={session}>
+  <p class="adm-lead">
+    Las novedades de cada ministerio. Cada una elige si se ve en el inicio, en la página del ministerio o en los dos.
+  </p>
+
+  <div class="adm-toolbar">
+    <h2 class="adm-h2" style="margin: 0">
+      {live} {live === 1 ? 'publicada' : 'publicadas'} <span class="adm-muted">· {rows.length} en total</span>
+    </h2>
+    <button type="button" class="adm-btn adm-btn--gold" data-modal-open="nueva-novedad">
+      <span class="material-symbols-outlined">add</span> Agregar novedad
+    </button>
+  </div>
+
+  {rows.length > 0 ? (
+    <NoticeRows rows={rows} volver={volver} showMinistry />
+  ) : (
+    <div class="adm-card adm-empty">
+      <span class="material-symbols-outlined">campaign</span>
+      <p>Todavía no hay novedades. Tocá "Agregar novedad" para cargar la primera.</p>
+    </div>
+  )}
+
+  <NoticeModal id="nueva-novedad" volver={volver} ministries={options} />
+  {rows.map(({ notice, ministry }) => (
+    <NoticeModal id={`novedad-${ministry.slug}-${notice.id}`} volver={volver} ministry={ministry} notice={notice} />
+  ))}
+</AdminLayout>

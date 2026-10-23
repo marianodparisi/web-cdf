@@ -9,10 +9,11 @@
  * cargado en el panel, así que quien lidera puede editarlos sin tocar esto.
  */
 import NocheLayout from '../../layouts/NocheLayout.astro';
+import { visibleNotices } from '../../lib/content/notices';
 import IgLatest from '../../components/ig/IgLatest.astro';
 import { latestInstagram } from '../../data/instagram';
 import { getMinistries } from '../../lib/content/collections';
-import { hasNotice, hasSchedule, instagramHref, placeLines, whatsappHref } from '../../lib/content/ministry-details';
+import { hasSchedule, instagramHref, placeLines, whatsappHref } from '../../lib/content/ministry-details';
 import '../../styles/kids.css';
 
 const ministries = await getMinistries();
@@ -20,6 +21,7 @@ const index = ministries.findIndex((m) => m.slug === 'kids');
 if (index === -1) return Astro.redirect('/');
 const kids = ministries[index];
 const ig = await latestInstagram('kids');
+const novedades = visibleNotices(kids, 'page');
 
 const whatsapp = whatsappHref(kids.whatsapp);
 const instagram = instagramHref(kids.instagram);
@@ -66,23 +68,21 @@ const tarjetas = [
       </div>
     </header>
 
-    <!-- ══════════ NOVEDAD ══════════ Banda de historieta. Todo sale del aviso
-         del panel: título, texto e imagen. Sin título la sección no existe;
-         sin imagen, va sólo el texto. -->
-    {hasNotice(kids) && (
+    <!-- ══════════ NOVEDADES ══════════ Banda de historieta, una por novedad
+         marcada para la página (panel → Novedades). Sin novedades la sección
+         no existe; sin imagen, va sólo el texto. -->
+    {novedades.map((n) => (
       <section class="kd-notice">
-        <div class={`kd-wrap${kids.noticeImage ? ' kd-notice__grid' : ''}`}>
+        <div class={`kd-wrap${n.image ? ' kd-notice__grid' : ''}`}>
           <div class="kd-notice__copy" data-r>
             <span class="kd-burst">¡Nuevo!</span>
-            <h2 class="kd-h2">{kids.noticeTitle}</h2>
-            {kids.noticeText && <p class="kd-text">{kids.noticeText}</p>}
+            <h2 class="kd-h2">{n.title}</h2>
+            {n.text && <p class="kd-text">{n.text}</p>}
           </div>
-          {kids.noticeImage && (
-            <img class="kd-flyer" src={kids.noticeImage} alt={kids.noticeTitle} loading="lazy" data-r />
-          )}
+          {n.image && <img class="kd-flyer" src={n.image} alt={n.title} loading="lazy" data-r />}
         </div>
       </section>
-    )}
+    ))}
 
     <!-- ══════════ QUÉ ES ══════════ -->
     <section class="kd-section" id="participar">

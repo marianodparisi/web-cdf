@@ -1,3 +1,17 @@
+export interface MinistryNotice {
+  /** Estable: sirve para editarla o borrarla sin depender del orden. */
+  id: string;
+  title: string;
+  text?: string;
+  /** Flyer. */
+  image?: string;
+  /** "Mostrar hasta" (YYYY-MM-DD). Pasado ese día deja de verse sola. */
+  endDate?: string;
+  /** Dónde se muestra: en "Qué está pasando" del inicio y/o en la página del ministerio. */
+  showHome: boolean;
+  showPage: boolean;
+}
+
 export interface Ministry {
   // --- Ficha: sólo la edita un administrador. Se ve en el navbar, en la home y
   // en el listado de /ministerios, así que no es del ministerio solo.
@@ -21,11 +35,13 @@ export interface Ministry {
   meetingHours?: string;
   place?: string;
   mapUrl?: string;
+  /** Novedades del ministerio (varias). Ver lib/content/notices.ts. */
+  notices?: MinistryNotice[];
+  /** Formato viejo, de una sola novedad: se lee como la primera de `notices`
+      y se borra la primera vez que se guarda la lista. */
   noticeTitle?: string;
   noticeText?: string;
-  /** Imagen del aviso (flyer). Se borra junto con el aviso al vaciar el título. */
   noticeImage?: string;
-  /** "Mostrar hasta" de la novedad (YYYY-MM-DD). Pasado ese día deja de verse. */
   noticeEndDate?: string;
   whatsapp?: string;
   instagram?: string;

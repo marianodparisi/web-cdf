@@ -5,7 +5,7 @@
  * cada sección. Todo filtrado por lo que esa persona puede editar.
  */
 import AdminLayout from '../../layouts/AdminLayout.astro';
-import { hasNotice } from '../../lib/content/ministry-details';
+import { isNoticeLive, noticesOf } from '../../lib/content/notices';
 import { getAnnouncements, getDevotionals, getMinistries, getSeries } from '../../lib/content/collections';
 import { canEdit, getSession } from '../../lib/admin-guard';
 import { ministrySectionKey } from '../../lib/content/sections';
@@ -19,7 +19,8 @@ const [ministries, devotionals, series, announcements] = await Promise.all([
 ]);
 
 const editableMinistries = ministries.filter((ministry) => canEdit(session, ministrySectionKey(ministry.slug)));
-const avisos = editableMinistries.filter((m) => hasNotice(m));
+const liveCount = (m: (typeof editableMinistries)[number]) => noticesOf(m).filter(isNoticeLive).length;
+const avisosCount = editableMinistries.reduce((sum, m) => sum + liveCount(m), 0);
 
 const stats = [
   canEdit(session, 'devocionales') && {
@@ -45,10 +46,10 @@ const stats = [
   },
   editableMinistries.length > 0 && {
     icon: 'diversity_3',
-    value: avisos.length,
-    label: avisos.length === 1 ? 'aviso de ministerio activo' : 'avisos de ministerios activos',
+    value: avisosCount,
+    label: avisosCount === 1 ? 'novedad de ministerio publicada' : 'novedades de ministerios publicadas',
     detail: `${editableMinistries.length} ${editableMinistries.length === 1 ? 'ministerio' : 'ministerios'} a tu cargo`,
-    href: undefined,
+    href: '/admin/novedades',
   },
 ].filter(Boolean) as { icon: string; value: number; label: string; detail: string; href?: string }[];
 
@@ -56,6 +57,7 @@ const quick = [
   canEdit(session, 'devocionales') && { href: '/admin/devocionales#nuevo-devocional', icon: 'edit_note', label: 'Publicar devocional' },
   canEdit(session, 'series') && { href: '/admin/series#nueva-serie', icon: 'add_photo_alternate', label: 'Agregar serie' },
   canEdit(session, 'anuncios') && { href: '/admin/anuncios#nuevo', icon: 'campaign', label: 'Nuevo anuncio' },
+  editableMinistries.length > 0 && { href: '/admin/novedades#nueva-novedad', icon: 'newspaper', label: 'Nueva novedad' },
   session.role === 'admin' && { href: '/admin/usuarios#nueva-persona', icon: 'person_add', label: 'Dar acceso' },
 ].filter(Boolean) as { href: string; icon: string; label: string }[];
 
@@ -125,10 +127,10 @@ const hasNothing = stats.length === 0;
               </span>
             </div>
             <span>
-              {hasNotice(ministry) ? (
-                <span class="adm-badge adm-badge--ok"><span class="material-symbols-outlined">campaign</span><span class="adm-hide-sm">{ministry.noticeTitle}</span></span>
+              {liveCount(ministry) > 0 ? (
+                <span class="adm-badge adm-badge--ok"><span class="material-symbols-outlined">campaign</span><span class="adm-hide-sm">{liveCount(ministry)} {liveCount(ministry) === 1 ? 'novedad' : 'novedades'}</span></span>
               ) : (
-                <span class="adm-muted adm-hide-sm">Sin aviso</span>
+                <span class="adm-muted adm-hide-sm">Sin novedades</span>
               )}
             </span>
             <span class="material-symbols-outlined adm-table__chev">chevron_right</span>
