@@ -670,6 +670,8 @@ se descartó: el usuario dijo que con esas imágenes nos fuimos para otro lado.
   transición entre páginas con `@view-transition` (cortina; el panel no
   opta) y scroll suave con Lenis sólo con mouse. Red de seguridad de 4 s y
   todo apagado con movimiento reducido.
+- **"Mostrar hasta"** en anuncios (`endDate`) y novedades de ministerio (`noticeEndDate`): fecha opcional YYYY-MM-DD. Se ve hasta ese día inclusive en hora de Argentina (`src/lib/content/expiry.ts`) y después se oculta sola del home y de la página del ministerio (`hasNotice` ya lo contempla). No se borra: el panel la marca "Vencido".
+- El JS del menú va en su **propio `<script>` sin imports** (y con hover por CSS mientras no carga, `html:not(.lz-js)`): si va junto al de movimiento, espera a Lenis y el menú tarda en responder tras recargar.
 - **Menú** (elegido por el usuario entre 3 propuestas): cada desplegable es un panel compacto que cuelga de su ítem con una puntita (`.lz-drop__tip`); el ítem abierto queda como pestaña. Lista a la izquierda y tarjeta destacada a la derecha (`feature` en el array `menu`). Si el panel se sale de la pantalla se corre con `--shift` y la puntita compensa. Al pasar de un menú a otro, el nuevo entra de costado (`from-left/right`) y el viejo sale al revés. Velo `.lz-scrim` detrás. Ministerios va sin logos (pedido). **"Visitanos" vive sólo en la barra** (píldora con pin y horario): se sacó de los heroes y los cierres.
 - `src/styles/noche.css`: todo prefijado `.lz`. `.lz-tint` con `--m` tiñe el
   degradé y los acentos con el color de la página (ministerio, sede, programa).

@@ -25,6 +25,8 @@ export interface Ministry {
   noticeText?: string;
   /** Imagen del aviso (flyer). Se borra junto con el aviso al vaciar el título. */
   noticeImage?: string;
+  /** "Mostrar hasta" de la novedad (YYYY-MM-DD). Pasado ese día deja de verse. */
+  noticeEndDate?: string;
   whatsapp?: string;
   instagram?: string;
   photo?: string;

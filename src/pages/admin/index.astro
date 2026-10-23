@@ -5,6 +5,7 @@
  * cada sección. Todo filtrado por lo que esa persona puede editar.
  */
 import AdminLayout from '../../layouts/AdminLayout.astro';
+import { hasNotice } from '../../lib/content/ministry-details';
 import { getAnnouncements, getDevotionals, getMinistries, getSeries } from '../../lib/content/collections';
 import { canEdit, getSession } from '../../lib/admin-guard';
 import { ministrySectionKey } from '../../lib/content/sections';
@@ -18,7 +19,7 @@ const [ministries, devotionals, series, announcements] = await Promise.all([
 ]);
 
 const editableMinistries = ministries.filter((ministry) => canEdit(session, ministrySectionKey(ministry.slug)));
-const avisos = editableMinistries.filter((m) => m.noticeTitle?.trim());
+const avisos = editableMinistries.filter((m) => hasNotice(m));
 
 const stats = [
   canEdit(session, 'devocionales') && {
@@ -124,7 +125,7 @@ const hasNothing = stats.length === 0;
               </span>
             </div>
             <span>
-              {ministry.noticeTitle ? (
+              {hasNotice(ministry) ? (
                 <span class="adm-badge adm-badge--ok"><span class="material-symbols-outlined">campaign</span><span class="adm-hide-sm">{ministry.noticeTitle}</span></span>
               ) : (
                 <span class="adm-muted adm-hide-sm">Sin aviso</span>

@@ -4,6 +4,7 @@
  * y crear van en modales; borrar y subir de lugar, en la misma fila.
  */
 import Field from '../../components/admin/Field.astro';
+import { formatEndDate, isActive } from '../../lib/content/expiry';
 import ImageField from '../../components/admin/ImageField.astro';
 import Modal from '../../components/admin/Modal.astro';
 import AdminLayout from '../../layouts/AdminLayout.astro';
@@ -48,7 +49,14 @@ const announcements = await getAnnouncements();
               {item.image ? <img src={item.image} alt="" loading="lazy" /> : <span class="material-symbols-outlined">image</span>}
             </span>
             <span class="adm-row__text">
-              <span class="adm-chip adm-chip--gold">{item.eyebrow}</span>
+              <span class="adm-row__chips">
+                <span class="adm-chip adm-chip--gold">{item.eyebrow}</span>
+                {item.endDate && (isActive(item.endDate) ? (
+                  <span class="adm-chip"><span class="material-symbols-outlined">event</span>Hasta el {formatEndDate(item.endDate)}</span>
+                ) : (
+                  <span class="adm-chip adm-chip--off"><span class="material-symbols-outlined">event_busy</span>Vencido · no se ve</span>
+                ))}
+              </span>
               <span class="adm-row__title">{item.title}</span>
               <span class="adm-row__sub">{item.description}</span>
             </span>
@@ -91,6 +99,7 @@ const announcements = await getAnnouncements();
         </div>
         <Field id="n-description" name="description" label="Descripción" rows={3} required />
         <Field id="n-href" name="href" label="A dónde lleva" hint="Una página del sitio, como /ministerios/kids, o un link completo." required />
+        <Field id="n-endDate" name="endDate" type="date" label="Mostrar hasta" hint="Pasado ese día deja de verse solo. Vacío: queda hasta que lo borres." />
         <ImageField id="n-image" name="image" label="Flyer o foto" hint="Se muestra entero, sin recortar." />
       </div>
       <footer class="adm-modal__foot">
@@ -112,6 +121,7 @@ const announcements = await getAnnouncements();
           </div>
           <Field id={`a${index}-description`} name="description" label="Descripción" value={item.description} rows={3} required />
           <Field id={`a${index}-href`} name="href" label="A dónde lleva" value={item.href} required />
+          <Field id={`a${index}-endDate`} name="endDate" type="date" label="Mostrar hasta" value={item.endDate} hint="Pasado ese día deja de verse solo. Vacío: queda hasta que lo borres." />
           <ImageField id={`a${index}-image`} name="image" label="Flyer o foto" currentImage={item.image} hint="Se muestra entero, sin recortar." />
         </div>
         <footer class="adm-modal__foot">

@@ -5,6 +5,8 @@ export interface Announcement {
   description: string;
   image: string;
   alt: string;
+  /** "Mostrar hasta" (YYYY-MM-DD). Pasado ese día deja de verse solo. */
+  endDate?: string;
 }
 
 export const announcements: Announcement[] = [

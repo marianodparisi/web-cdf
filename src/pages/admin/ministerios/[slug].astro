@@ -1,5 +1,6 @@
 ---
 import Field from '../../../components/admin/Field.astro';
+import { formatEndDate, isActive } from '../../../lib/content/expiry';
 import ImageField from '../../../components/admin/ImageField.astro';
 import AdminLayout from '../../../layouts/AdminLayout.astro';
 import { getMinistryBySlug } from '../../../lib/content/collections';
@@ -31,8 +32,10 @@ const isAdmin = session.role === 'admin';
     <div class="adm-entity__text">
       <p class="adm-entity__area">{ministry.area}</p>
       <p class="adm-entity__status">
-        {ministry.noticeTitle ? (
-          <span class="adm-badge adm-badge--ok"><span class="material-symbols-outlined">campaign</span>Aviso publicado: {ministry.noticeTitle}</span>
+        {ministry.noticeTitle && !isActive(ministry.noticeEndDate) ? (
+          <span class="adm-badge adm-badge--off"><span class="material-symbols-outlined">event_busy</span>Aviso vencido (no se ve): {ministry.noticeTitle}</span>
+        ) : ministry.noticeTitle ? (
+          <span class="adm-badge adm-badge--ok"><span class="material-symbols-outlined">campaign</span>Aviso publicado: {ministry.noticeTitle}{ministry.noticeEndDate && ` · hasta el ${formatEndDate(ministry.noticeEndDate)}`}</span>
         ) : (
           <span class="adm-badge adm-badge--editor">Sin aviso publicado</span>
         )}
@@ -112,6 +115,7 @@ const isAdmin = session.role === 'admin';
         placeholder="Se viene el campamento"
       />
       <Field name="noticeText" label="Texto del aviso" value={ministry.noticeText} rows={3} />
+      <Field name="noticeEndDate" type="date" label="Mostrar hasta" value={ministry.noticeEndDate} hint="Pasado ese día el aviso deja de verse solo, acá y en el inicio. Vacío: queda hasta que borres el título." />
       <ImageField name="noticeImage" label="Imagen del aviso (el flyer)" currentImage={ministry.noticeImage} />
     </fieldset>
 

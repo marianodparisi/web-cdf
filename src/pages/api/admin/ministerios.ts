@@ -1,5 +1,6 @@
 import type { APIRoute } from 'astro';
 import { ministriesCollection } from '../../../lib/content/collections';
+import { readEndDate } from '../../../lib/content/expiry';
 import { UploadError, saveUploadedImage } from '../../../lib/content/uploads';
 import { scheduleOrphanSweep } from '../../../lib/content/orphans';
 import { backTo, canEdit, getSession } from '../../../lib/admin-guard';
@@ -97,6 +98,7 @@ export const POST: APIRoute = async (context) => {
               // Vaciar el título borra el aviso entero: si no, la imagen vieja
               // reaparecería sola en el próximo aviso que se cargue.
               noticeImage: noticeTitle ? noticeImage : undefined,
+              noticeEndDate: noticeTitle ? readEndDate(form.get('noticeEndDate')) : undefined,
               whatsapp: adminText('whatsapp', current.whatsapp),
               instagram: adminText('instagram', current.instagram),
             }

@@ -402,6 +402,9 @@
 .lz-scrim { position: fixed; inset: 0; z-index: 39; background: rgba(5, 6, 10, 0.55); backdrop-filter: blur(8px); opacity: 0; visibility: hidden; pointer-events: none; transition: opacity 0.35s, visibility 0.35s; }
 .lz-drop-open .lz-scrim { opacity: 1; visibility: visible; }
 
+/* Antes de que cargue el JS (o si falla), el panel igual abre con hover. */
+html:not(.lz-js) .lz-nav__group:hover .lz-drop,
+html:not(.lz-js) .lz-nav__group:focus-within .lz-drop,
 .lz-nav__group.is-open .lz-drop { opacity: 1; visibility: visible; transform: translate(calc(-50% + var(--shift)), 0) scale(1); }
 
 /* Cambio de menú: el nuevo entra de costado y el anterior sale para el otro

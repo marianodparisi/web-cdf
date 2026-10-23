@@ -3,6 +3,7 @@ import { announcementsCollection } from '../../../lib/content/collections';
 import { UploadError, saveUploadedImage } from '../../../lib/content/uploads';
 import { scheduleOrphanSweep } from '../../../lib/content/orphans';
 import { backTo, canEdit, getSession } from '../../../lib/admin-guard';
+import { readEndDate } from '../../../lib/content/expiry';
 
 const PATH = '/admin/anuncios';
 
@@ -23,6 +24,7 @@ export const POST: APIRoute = async (context) => {
   const title = readText(form, 'title');
   const description = readText(form, 'description');
   const href = readText(form, 'href');
+  const endDate = readEndDate(form.get('endDate'));
 
   const readImage = async () => {
     const uploaded = form.get('image');
@@ -45,7 +47,7 @@ export const POST: APIRoute = async (context) => {
     if (!image) return backTo(PATH, { error: 'Falta el flyer o la foto del anuncio.' });
 
     await announcementsCollection.update(
-      (items) => [{ eyebrow, title, description, href, image, alt: title }, ...items],
+      (items) => [{ eyebrow, title, description, href, image, alt: title, endDate }, ...items],
       session.username
     );
     return backTo(PATH, { ok: 'Se publicó el anuncio. Ya se ve en el inicio.' });
@@ -98,7 +100,7 @@ export const POST: APIRoute = async (context) => {
   await announcementsCollection.update(
     (items) =>
       items.map((item, itemIndex) =>
-        itemIndex === index ? { ...item, eyebrow, title, description, href, image, alt: title } : item
+        itemIndex === index ? { ...item, eyebrow, title, description, href, image, alt: title, endDate } : item
       ),
     session.username
   );

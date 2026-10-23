@@ -716,3 +716,9 @@ a.adm-kpi:hover { border-color: rgba(197, 160, 89, 0.5); transform: translateY(-
   .adm-tabs__nav button { padding: 12px 10px 13px; font-size: 0.85rem; }
   .adm-tabs__foot.adm-savebar { margin: 0 !important; border-radius: 0 0 var(--radius) var(--radius); }
 }
+
+/* Fecha de fin de anuncios y novedades. */
+.adm-row__chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.adm-chip .material-symbols-outlined { font-size: 14px; vertical-align: -2px; margin-right: 3px; }
+.adm-chip--off { background: #f3f0ea; color: #8a8378; }
+.adm-badge--off { background: #f3f0ea; color: #8a8378; }

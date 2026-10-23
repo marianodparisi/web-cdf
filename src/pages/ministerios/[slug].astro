@@ -11,6 +11,7 @@
  * `getStaticPaths`.
  */
 import NocheLayout from '../../layouts/NocheLayout.astro';
+import { hasNotice } from '../../lib/content/ministry-details';
 import { ministryColors } from '../../data/ministry-colors';
 import NocheHero from '../../components/noche/NocheHero.astro';
 import NocheCta from '../../components/noche/NocheCta.astro';
@@ -76,7 +77,7 @@ const lines = nameWords.length > 1 ? [nameWords.slice(0, -1).join(' '), nameWord
               <img src={ministry.image} alt={`Logo ${ministry.name}`} style="width: 160px; margin-bottom: 8px" />
             )}
             <p class="lz-body" style="color: var(--white)">{ministry.description}</p>
-            {ministry.noticeTitle && (
+            {hasNotice(ministry) && (
               <div class="lz-notice">
                 <p class="lz-notice__title">{ministry.noticeTitle}</p>
                 {ministry.noticeText && <p>{ministry.noticeText}</p>}

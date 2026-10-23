@@ -22,6 +22,8 @@
  * El inicio anterior (estilo austinstone) quedó en el historial de git.
  */
 import NocheLayout from '../layouts/NocheLayout.astro';
+import { isActive } from '../lib/content/expiry';
+import { hasNotice } from '../lib/content/ministry-details';
 import { ministryColors } from '../data/ministry-colors';
 import { seriesPlaylistUrl, streamsUrl } from '../data/series';
 import { getAnnouncements, getDevotionals, getMinistries, getSeries } from '../lib/content/collections';
@@ -54,7 +56,7 @@ const mensajeLabel = ultimoVivo?.isLive ? 'Ver la transmisión' : 'Ver el últim
    va con el degradé del color del ministerio y su logo. */
 const agenda = [
   ...ministries
-    .filter((m) => m.noticeTitle?.trim())
+    .filter((m) => hasNotice(m))
     .map((m) => ({
       href: `/ministerios/${m.slug}`,
       eyebrow: m.name,
@@ -64,7 +66,7 @@ const agenda = [
       logo: m.image,
       slug: m.slug,
     })),
-  ...announcements.map((a) => ({ ...a, logo: undefined, slug: undefined })),
+  ...announcements.filter((a) => isActive(a.endDate)).map((a) => ({ ...a, logo: undefined, slug: undefined })),
 ];
 
 /** "Encuentro GOLD" → ["Encuentro", "GOLD"]: liviano arriba, pesado abajo,

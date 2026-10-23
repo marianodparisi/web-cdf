@@ -293,23 +293,10 @@ const footerColumns = [
     </footer>
 
     <script>
-      import { initMotion } from '../scripts/motion';
-
-      // Al bajar el menú se esconde y al subir vuelve: el contenido ocupa la
-      // pantalla entera y la navegación sigue a un gesto de distancia. Arriba
-      // de todo y con el menú mobile abierto queda siempre visible.
-      const nav = document.querySelector('.lz-nav');
-      let lastY = window.scrollY;
-      const onScroll = () => {
-        const y = window.scrollY;
-        nav?.classList.toggle('is-scrolled', y > 40);
-        if (!document.body.classList.contains('lz-menu-open') && Math.abs(y - lastY) > 6) {
-          nav?.classList.toggle('is-hidden', y > lastY && y > 120);
-          lastY = y;
-        }
-      };
-      onScroll();
-      window.addEventListener('scroll', onScroll, { passive: true });
+      /* El menú va en su propio script, sin imports: así funciona apenas carga
+         la página, sin esperar al de movimiento (Lenis y las entradas). */
+      document.documentElement.classList.add('lz-js');
+      const menuNav = document.querySelector('.lz-nav');
 
       /* Desplegables: hover en escritorio, y además clic/teclado (y tap en
          tablets). El panel se centra bajo su ítem; si se sale de la pantalla
@@ -410,13 +397,34 @@ const footerColumns = [
       window.addEventListener(
         'scroll',
         () => {
-          if (nav?.classList.contains('is-hidden')) groups.forEach((g) => g.classList.contains('is-open') && setOpen(g, false));
+          if (menuNav?.classList.contains('is-hidden')) groups.forEach((g) => g.classList.contains('is-open') && setOpen(g, false));
         },
         { passive: true },
       );
       document.addEventListener('click', (e) => {
         groups.forEach((g) => !g.contains(e.target as Node) && setOpen(g, false));
       });
+
+    </script>
+
+    <script>
+      import { initMotion } from '../scripts/motion';
+
+      // Al bajar el menú se esconde y al subir vuelve: el contenido ocupa la
+      // pantalla entera y la navegación sigue a un gesto de distancia. Arriba
+      // de todo y con el menú mobile abierto queda siempre visible.
+      const nav = document.querySelector('.lz-nav');
+      let lastY = window.scrollY;
+      const onScroll = () => {
+        const y = window.scrollY;
+        nav?.classList.toggle('is-scrolled', y > 40);
+        if (!document.body.classList.contains('lz-menu-open') && Math.abs(y - lastY) > 6) {
+          nav?.classList.toggle('is-hidden', y > lastY && y > 120);
+          lastY = y;
+        }
+      };
+      onScroll();
+      window.addEventListener('scroll', onScroll, { passive: true });
 
       const burger = document.querySelector<HTMLButtonElement>('[data-burger]');
       burger?.addEventListener('click', () => {
