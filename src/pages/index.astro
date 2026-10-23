@@ -23,7 +23,7 @@
  */
 import NocheLayout from '../layouts/NocheLayout.astro';
 import { ministryColors } from '../data/ministry-colors';
-import { seriesPlaylistUrl } from '../data/series';
+import { seriesPlaylistUrl, streamsUrl } from '../data/series';
 import { getAnnouncements, getDevotionals, getMinistries, getSeries } from '../lib/content/collections';
 import { getEstadoVivos } from '../lib/youtube';
 
@@ -42,10 +42,10 @@ const [currentSeries] = visibleSeries;
 const pastSeries = visibleSeries.slice(1, 4);
 const [devotional] = devotionalPosts;
 
-/* El botón del hero lleva al último vivo de YouTube; si YouTube no responde,
-   a la serie actual, y si tampoco hay serie, a las playlists. */
+/* El botón del hero lleva a las transmisiones del canal (pedido del usuario).
+   Si en este momento hay un vivo, va directo a esa transmisión. */
 const ultimoVivo = vivos?.ultima;
-const mensajeHref = ultimoVivo?.url ?? currentSeries?.href ?? seriesPlaylistUrl;
+const mensajeHref = ultimoVivo?.isLive ? ultimoVivo.url : streamsUrl;
 const mensajeLabel = ultimoVivo?.isLive ? 'Ver la transmisión' : 'Ver el último mensaje';
 
 /* "Qué está pasando": primero los avisos que cada ministerio carga en su

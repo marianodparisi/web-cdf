@@ -9,6 +9,8 @@ export interface SermonSeries {
 }
 
 export const seriesPlaylistUrl = 'https://www.youtube.com/@Coraz%C3%B3ndeFuego/playlists';
+/** Transmisiones del canal: adonde lleva "Ver el último mensaje". */
+export const streamsUrl = 'https://www.youtube.com/@Coraz%C3%B3ndeFuego/streams';
 
 export const sermonSeries: SermonSeries[] = [
   {
