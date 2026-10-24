@@ -228,7 +228,10 @@
 
 /* Bloques de texto: suben y se enfocan. */
 [data-m='rise'].is-in { animation: m-rise var(--m-dur) var(--m-ease) var(--d, 0s) backwards; }
-@keyframes m-rise { from { opacity: 0; transform: translateY(30px); filter: blur(6px); } }
+/* Sólo opacidad y movimiento: un blur animado sobre bloques grandes (la
+   placa del devocional, con su degradé desenfocado adentro) se redibuja en
+   cada cuadro y trababa el scroll. */
+@keyframes m-rise { from { opacity: 0; transform: translateY(30px); } }
 
 /* Títulos: cada palabra sale de su propia máscara. El padding/margen negativo
    le da aire a tildes y descendentes sin mover el texto. */
@@ -261,7 +264,7 @@
 [data-m='frame'].is-in { animation: m-frame calc(var(--m-dur) + 0.2s) var(--m-ease) var(--d, 0s) backwards; }
 [data-m='frame'].is-in > * { animation: m-settle calc(var(--m-dur) + 0.9s) var(--m-ease) var(--d, 0s) backwards; }
 @keyframes m-frame { from { clip-path: var(--m-clip-from); } to { clip-path: inset(0); } }
-@keyframes m-settle { from { transform: scale(1.28); filter: brightness(0.6); } }
+@keyframes m-settle { from { transform: scale(1.28); opacity: 0.55; } }
 .lz--kids [data-m='frame'].is-in { animation-name: m-media-kids; animation-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1); }
 
 /* Tarjeta con foto: sube sin desenfoque y la foto se abre con ella. */
