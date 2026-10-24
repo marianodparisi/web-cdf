@@ -132,7 +132,9 @@
   transition: background-color 0.3s, color 0.3s, border-color 0.3s, transform 0.3s var(--ease);
 }
 .lz-btn:hover { transform: translateY(-2px); }
-.lz-btn--ghost { background: rgba(255, 255, 255, 0.06); color: var(--white); border-color: rgba(255, 255, 255, 0.35); backdrop-filter: blur(10px); }
+/* Sin backdrop-filter: detrás suele haber un degradé que se mueve y el
+   desenfoque se recalculaba en cada cuadro. */
+.lz-btn--ghost { background: rgba(255, 255, 255, 0.09); color: var(--white); border-color: rgba(255, 255, 255, 0.35); }
 .lz-btn--ghost:hover { border-color: var(--white); }
 .lz-btn--small { padding: 0.75em 1.3em; font-size: 0.72rem; }
 .lz-actions { display: flex; flex-wrap: wrap; gap: 10px; }
@@ -154,15 +156,16 @@
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(38% 42% at 78% 62%, var(--c1), transparent 70%),
-    radial-gradient(30% 34% at 64% 30%, var(--c3), transparent 70%),
-    radial-gradient(44% 46% at 18% 28%, var(--c2), transparent 72%),
-    radial-gradient(40% 40% at 26% 86%, var(--c4), transparent 72%),
+    radial-gradient(42% 46% at 78% 62%, var(--c1), transparent 78%),
+    radial-gradient(34% 38% at 64% 30%, var(--c3), transparent 78%),
+    radial-gradient(48% 50% at 18% 28%, var(--c2), transparent 80%),
+    radial-gradient(44% 44% at 26% 86%, var(--c4), transparent 80%),
     var(--c0);
-  filter: blur(48px) saturate(1.1);
+  /* Sin filter: blur. El desenfoque de 48 px lo recalculaba la placa de video
+     en cada cuadro de la animación y trababa todas las páginas. Los
+     gradientes, con el borde más abierto, ya dan el difuminado. */
   animation: lz-mesh 22s ease-in-out infinite alternate;
   transition: background 0.8s var(--ease);
-  /* Capa propia: el desenfoque se calcula una vez y después sólo se mueve. */
   will-change: transform;
 }
 /* Fuera de pantalla no se anima (lo marca scripts/motion.ts). */
@@ -464,16 +467,16 @@ html:not(.lz-js) .lz-nav__group:focus-within .lz-drop,
 /* Con color propio (sede, programa, ministerio) el degradé toma ese color. */
 .lz-drop__feature[style*='--c'] .lz-drop__mesh {
   background:
-    radial-gradient(42% 48% at 72% 28%, var(--c), transparent 70%),
-    radial-gradient(45% 50% at 18% 88%, color-mix(in srgb, var(--c) 45%, #050608), transparent 70%),
-    radial-gradient(30% 35% at 42% 46%, color-mix(in srgb, var(--c) 70%, #fff 8%), transparent 70%),
+    radial-gradient(46% 52% at 72% 28%, var(--c), transparent 78%),
+    radial-gradient(48% 54% at 18% 88%, color-mix(in srgb, var(--c) 45%, #050608), transparent 78%),
+    radial-gradient(34% 40% at 42% 46%, color-mix(in srgb, var(--c) 70%, #fff 8%), transparent 78%),
     #0b0c11;
 }
 .lz-drop__feature[style*='--c'] .lz-drop__fcopy .lz-spaced { color: color-mix(in srgb, var(--c) 55%, #fff); }
 /* Ítem cuya tarjeta se está mostrando. */
 .lz-drop__link.is-active { background: rgba(255, 255, 255, 0.08); }
 .lz-drop__link.is-active .lz-drop__arrow { opacity: 1; transform: none; }
-.lz-drop__mesh { position: absolute; inset: -25%; z-index: -1; background: radial-gradient(40% 45% at 70% 30%, #c77a32, transparent 70%), radial-gradient(45% 50% at 20% 85%, #1d3a6b, transparent 70%), radial-gradient(30% 35% at 40% 45%, #7a2f12, transparent 70%), #0b0c11; filter: blur(26px); transition: transform 1.2s var(--ease); }
+.lz-drop__mesh { position: absolute; inset: -25%; z-index: -1; background: radial-gradient(40% 45% at 70% 30%, #c77a32, transparent 70%), radial-gradient(45% 50% at 20% 85%, #1d3a6b, transparent 70%), radial-gradient(30% 35% at 40% 45%, #7a2f12, transparent 78%), #0b0c11; transition: transform 1.2s var(--ease); }
 .lz-drop__feature:hover .lz-drop__mesh { transform: scale(1.12) rotate(5deg); }
 .lz-drop__brand { position: absolute; top: 14px; right: 14px; width: 92px; height: 42px; object-fit: cover; object-position: 50% 42%; opacity: 0.85; }
 .lz-drop__fcopy { position: absolute; left: 18px; right: 18px; bottom: 16px; display: grid; gap: 4px; justify-items: start; }
