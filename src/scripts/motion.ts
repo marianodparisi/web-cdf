@@ -18,7 +18,6 @@
  *
  * Con movimiento reducido no se arma nada: todo queda visible desde el inicio.
  */
-import Lenis from 'lenis';
 
 const GROUPS =
   '.lz-actions, .lz-photos, .lz-stats, .lz-times, .lz-data, .lz-tiles, .ie-toc, .dc-checks, .lz-welcome__foot';
@@ -123,24 +122,4 @@ export function initMotion() {
   items.forEach((el) => io.observe(el));
   // Red de seguridad: nada queda invisible si el observer falla.
   setTimeout(() => items.forEach(show), 4000);
-
-  initSmoothScroll();
-}
-
-/** Scroll con inercia en escritorio. En pantallas táctiles queda el nativo,
- * que ya es suave y es lo que la gente espera del teléfono. */
-function initSmoothScroll() {
-  if (window.matchMedia('(pointer: coarse)').matches) return;
-  const lenis = new Lenis({ lerp: 0.1, wheelMultiplier: 0.95, anchors: true });
-  const raf = (time: number) => {
-    lenis.raf(time);
-    requestAnimationFrame(raf);
-  };
-  requestAnimationFrame(raf);
-
-  // Con el menú abierto el fondo no se mueve.
-  new MutationObserver(() => {
-    if (document.body.classList.contains('lz-menu-open')) lenis.stop();
-    else lenis.start();
-  }).observe(document.body, { attributes: true, attributeFilter: ['class'] });
 }

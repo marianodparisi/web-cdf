@@ -42,6 +42,11 @@
 .lz *::after { box-sizing: border-box; }
 :where(.lz) :is(h1, h2, h3, p, ol, ul) { margin: 0; padding: 0; }
 :where(.lz) :is(ol, ul) { list-style: none; }
+/* Scroll nativo (sin Lenis: con el mouse trababa los efectos ligados al
+   scroll). Los saltos a secciones de la misma página, suaves. */
+@media (prefers-reduced-motion: no-preference) {
+  html:has(.lz) { scroll-behavior: smooth; }
+}
 :where(.lz) a { color: inherit; text-decoration: none; }
 :where(.lz) img { display: block; max-width: 100%; }
 

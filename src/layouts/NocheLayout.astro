@@ -7,7 +7,7 @@
  * sitio público. Kids y Arde lo usan con `solidNav` y un cuerpo propio.
  *
  * No pasa por BaseLayout: no carga global.css ni GSAP. El movimiento (entradas
- * por tipo, scroll suave y transición entre páginas) vive en scripts/motion.ts
+ * por tipo y transición entre páginas) vive en scripts/motion.ts
  * y en la sección "Movimiento" de noche.css.
  */
 import '../styles/tailwind.css';
@@ -294,7 +294,7 @@ const footerColumns = [
 
     <script>
       /* El menú va en su propio script, sin imports: así funciona apenas carga
-         la página, sin esperar al de movimiento (Lenis y las entradas). */
+         la página, sin esperar al de movimiento (las entradas). */
       document.documentElement.classList.add('lz-js');
       const menuNav = document.querySelector('.lz-nav');
 
