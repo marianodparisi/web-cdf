@@ -559,7 +559,10 @@ details[open] > :not(summary) { animation: adm-reveal 0.32s cubic-bezier(0.2, 0.
 }
 
 /* ═══════════════════ Ajustes de celular ════════════════════════════════ */
-/* Con un modal abierto la página de atrás no scrollea ni muestra su barra */
+/* Con un modal abierto la página de atrás no scrollea. El espacio de la barra
+   queda siempre reservado (scrollbar-gutter): si no, al sacarla la página se
+   ensanchaba de golpe, el fondo se corría de costado y el modal saltaba. */
+html:has(body.adm) { scrollbar-gutter: stable; }
 html:has(.adm-modal[open]) { overflow: hidden; }
 
 @media (max-width: 600px) {
@@ -732,3 +735,9 @@ a.adm-kpi:hover { border-color: rgba(197, 160, 89, 0.5); transform: translateY(-
 .adm-table__row.is-dim { opacity: 0.6; }
 .adm-table__row.is-dim:hover { opacity: 1; }
 @media (max-width: 700px) { .adm-notice-where { grid-template-columns: 1fr; gap: 0; } }
+
+/* Flechas para ordenar (series). La primera fila es la que va al inicio. */
+.adm-order { display: inline-flex; gap: 4px; }
+.adm-order form { display: contents; }
+.adm-icon-btn:disabled { opacity: 0.3; cursor: default; pointer-events: none; }
+.adm-table__row.is-current { background: #fbf8f0; }

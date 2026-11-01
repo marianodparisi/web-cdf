@@ -314,7 +314,9 @@ const hue = [...session.username].reduce((sum, c) => sum + c.charCodeAt(0), 0) %
           const dialog = document.getElementById(button.dataset.modalOpen!) as HTMLDialogElement | null;
           if (!dialog) return;
           dialog.showModal();
-          dialog.querySelector<HTMLElement>('input:not([type=hidden]), textarea')?.focus();
+          // preventScroll: sin esto el foco movía el contenido mientras el
+          // modal todavía estaba animando la entrada.
+          dialog.querySelector<HTMLElement>('input:not([type=hidden]), textarea')?.focus({ preventScroll: true });
         });
       });
       document.querySelectorAll<HTMLDialogElement>('dialog.adm-modal').forEach((dialog) => {

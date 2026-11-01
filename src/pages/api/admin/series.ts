@@ -9,6 +9,10 @@ const PATH = '/admin/series';
 
 const readText = (form: FormData, field: string) => String(form.get(field) ?? '').trim();
 
+/** La etiqueta va atada a la posición: la primera es la actual. */
+const relabel = (items: SermonSeries[]) =>
+  items.map((item, i) => ({ ...item, label: i === 0 ? 'Serie actual' : 'Serie anterior' }));
+
 export const POST: APIRoute = async (context) => {
   const session = getSession(context.locals);
   if (!canEdit(session, 'series')) {
@@ -26,7 +30,6 @@ export const POST: APIRoute = async (context) => {
     const subtitle = readText(form, 'subtitle');
     const description = readText(form, 'description');
     const href = readText(form, 'href');
-    const asCurrent = form.get('actual') === 'si';
 
     if (!title || !subtitle || !description || !href) {
       return backTo(PATH, { error: 'Faltan datos. Completá nombre, bajada, descripción y link.' });
@@ -47,19 +50,11 @@ export const POST: APIRoute = async (context) => {
 
     const nueva: SermonSeries = { title, subtitle, description, href, image, label: 'Serie anterior' };
 
-    await seriesCollection.update((items) => {
-      if (!asCurrent) {
-        // Como anterior va justo después de la actual: es la más reciente.
-        const [first, ...rest] = items;
-        return first ? [first, nueva, ...rest] : [{ ...nueva, label: 'Serie actual' }];
-      }
-      // La etiqueta va atada a la posición: la primera es la actual.
-      return [{ ...nueva, label: 'Serie actual' }, ...items.map((item) => ({ ...item, label: 'Serie anterior' }))];
-    }, session.username);
+    // La nueva va primera (es la más reciente); el orden se ajusta después
+    // con las flechas.
+    await seriesCollection.update((items) => relabel([nueva, ...items]), session.username);
 
-    return backTo(PATH, {
-      ok: asCurrent ? `${title} ya es la serie actual del inicio.` : `Se agregó ${title} a las series anteriores.`,
-    });
+    return backTo(PATH, { ok: `Se agregó ${title}. Es la primera, la que se ve en el inicio.` });
   }
 
   const index = Number(readText(form, 'indice'));
@@ -71,7 +66,7 @@ export const POST: APIRoute = async (context) => {
 
   if (action === 'borrar') {
     await seriesCollection.update(
-      (items) => items.filter((_, itemIndex) => itemIndex !== index),
+      (items) => relabel(items.filter((_, itemIndex) => itemIndex !== index)),
       session.username
     );
 
@@ -79,19 +74,16 @@ export const POST: APIRoute = async (context) => {
     return backTo(PATH, { ok: 'Se borró.' });
   }
 
-  if (action === 'destacar') {
+  // Flechas: sube o baja un lugar. La primera es la que se ve en el inicio.
+  if (action === 'mover') {
+    const target = readText(form, 'direccion') === 'arriba' ? index - 1 : index + 1;
+    if (target < 0 || target >= current.length) return backTo(PATH, {});
     await seriesCollection.update((items) => {
-      const promoted = items[index];
-      const rest = items.filter((_, itemIndex) => itemIndex !== index);
-
-      // La etiqueta va atada a la posición: la primera es la actual.
-      return [
-        { ...promoted, label: 'Serie actual' },
-        ...rest.map((item) => ({ ...item, label: 'Serie anterior' })),
-      ];
+      const next = [...items];
+      [next[index], next[target]] = [next[target], next[index]];
+      return relabel(next);
     }, session.username);
-
-    return backTo(PATH, { ok: 'Ya es la serie actual.' });
+    return backTo(PATH, { ok: target === 0 ? 'Listo: ahora es la que se ve en el inicio.' : 'Se cambió el orden.' });
   }
 
   if (action !== 'guardar') {
