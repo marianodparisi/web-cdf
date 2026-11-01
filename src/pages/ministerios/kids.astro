@@ -62,9 +62,18 @@ const tarjetas = [
             <a class="kd-btn kd-btn--ghost" href={contacto} target={whatsapp ? '_blank' : undefined} rel="noopener noreferrer">Escribinos</a>
           </div>
         </div>
-        <div class="kd-hero__logo" data-r>
-          <img src={kids.image} alt="Logo de Kids" />
-        </div>
+        {/* El círculo muestra la foto que se carga en el panel (Imágenes), con
+            tramado de historieta. Sin foto, el logo de siempre. */}
+        {kids.photo ? (
+          <div class="kd-hero__logo kd-hero__logo--photo" data-r>
+            <img src={kids.photo} alt="Kids en Corazón de Fuego" />
+            <span class="kd-hero__dots" aria-hidden="true"></span>
+          </div>
+        ) : (
+          <div class="kd-hero__logo" data-r>
+            <img src={kids.image} alt="Logo de Kids" />
+          </div>
+        )}
       </div>
     </header>
 

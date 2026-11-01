@@ -750,7 +750,7 @@ html:not(.lz-js) .lz-nav__group:focus-within .lz-drop,
   background:
     radial-gradient(90% 80% at 50% 45%, transparent 25%, rgba(0, 0, 0, 0.65) 100%),
     linear-gradient(180deg, color-mix(in srgb, var(--c2) 35%, transparent), color-mix(in srgb, var(--c1) 25%, transparent) 60%, color-mix(in srgb, var(--bg) 92%, transparent)),
-    rgba(8, 8, 12, 0.26);
+    rgba(8, 8, 12, 0.42);
 }
 .lz-phero > :not(.lz-phero__media):not(.lz-phero__veil):not(.lz-mesh) { position: relative; z-index: 2; }
 .lz-phero__center { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 28px; }

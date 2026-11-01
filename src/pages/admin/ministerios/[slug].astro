@@ -29,6 +29,12 @@ const notices = noticesOf(ministry);
 const live = notices.filter(isNoticeLive).length;
 const volver = `/admin/ministerios/${ministry.slug}#novedad`;
 const info = { slug: ministry.slug, name: ministry.name, image: ministry.image };
+/** Dónde se ve la foto en la página de cada ministerio. */
+const dondeFoto: Record<string, string> = {
+  kids: 'Se muestra dentro del círculo de la portada, con tramado de historieta. Sin foto, va el logo.',
+  arde: 'Reemplaza la polaroid de la portada. Sin foto, queda la del campamento.',
+};
+const fotoHelp = dondeFoto[ministry.slug] ?? 'Va de fondo en la portada de la página, debajo del nombre. Sin foto, queda el degradé.';
 ---
 
 <AdminLayout title={ministry.name} backHref="/admin" backLabel="Volver al panel" session={session}>
@@ -87,7 +93,7 @@ const info = { slug: ministry.slug, name: ministry.name, image: ministry.image }
     >
       <input type="hidden" name="slug" value={ministry.slug} />
       <div class="adm-tabs__body">
-        <p class="adm-help" style="margin-bottom: 20px">La foto que se muestra dentro de la página del ministerio.</p>
+        <p class="adm-help" style="margin-bottom: 20px">{fotoHelp}</p>
         <ImageField name="photo" label="Foto de la última actividad" currentImage={ministry.photo} />
       </div>
       <div class="adm-savebar adm-tabs__foot">

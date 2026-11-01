@@ -57,7 +57,8 @@ const mapa = externalHref(arde.mapUrl);
         <div class="ad-hero__media" data-r>
           <figure class="ad-polaroid">
             <span class="ad-tape" aria-hidden="true"></span>
-            <img src="/ministries/arde/arde1.png" alt="Los chicos de Arde en el campamento" />
+            {/* La foto que se carga en el panel (Imágenes); sin foto, la del campa. */}
+            <img src={arde.photo || '/ministries/arde/arde1.png'} alt="Los chicos de Arde" />
           </figure>
           <img class="ad-sticker" src={arde.image} alt="Logo de Arde" />
         </div>

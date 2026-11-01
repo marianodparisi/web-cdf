@@ -60,7 +60,7 @@ const lines = nameWords.length > 1 ? [nameWords.slice(0, -1).join(' '), nameWord
 
 <NocheLayout title={`${ministry.name} · Iglesia Corazón de Fuego`}>
     <div class="lz-tint" style={`--m: ${color}`}>
-      <NocheHero lines={lines} kicker={ministry.area} image={!esLogo ? ministry.photo || undefined : undefined}>
+      <NocheHero lines={lines} kicker={ministry.area} image={ministry.photo || undefined}>
         <Fragment slot="quote">{ministry.excerpt}</Fragment>
         <a class="lz-btn" href="#participar">Quiero participar</a>
       </NocheHero>

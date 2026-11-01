@@ -94,6 +94,19 @@
   rotate: -4deg;
 }
 .kd-hero__logo img { width: 74%; animation: kd-bob 4s ease-in-out infinite; }
+/* Con foto: llena el círculo, colores un poco más vivos y un tramado de
+   puntos encima, como impresión de historieta. Nada animado. */
+.kd-hero__logo--photo { position: relative; overflow: hidden; background: var(--purple); }
+.kd-hero__logo--photo img { width: 100%; height: 100%; object-fit: cover; animation: none; filter: saturate(1.25) contrast(1.06); }
+.kd-hero__dots {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle, rgba(43, 23, 71, 0.28) 1.4px, transparent 1.7px) 0 0 / 9px 9px,
+    linear-gradient(160deg, rgba(255, 210, 63, 0.18), transparent 45%, rgba(255, 46, 147, 0.22));
+  box-shadow: inset 0 0 0 10px rgba(255, 255, 255, 0.9);
+}
 
 .kd-shape { position: absolute; z-index: 1; pointer-events: none; }
 .kd-shape--star {
