@@ -40,7 +40,9 @@ const hue = [...session.username].reduce((sum, c) => sum + c.charCodeAt(0), 0) %
               <li>
                 {section.image ? (
                   <img src={section.image} alt="" />
-                ) : (
+                ) : section.color ? (
+                  <span class="adm-logo-fade" style={`--m: ${section.color}`} aria-hidden="true"></span>
+                  ) : (
                   <span class="material-symbols-outlined">{section.icon ?? 'edit_note'}</span>
                 )}
                 {section.label}

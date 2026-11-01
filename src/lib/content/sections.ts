@@ -1,4 +1,5 @@
 import { getMinistries } from './collections';
+import { ministryColors } from '../../data/ministry-colors';
 
 /**
  * Catálogo de permisos del panel.
@@ -14,8 +15,10 @@ export interface Section {
   group: 'Contenido' | 'Ministerios';
   /** Ícono de Material Symbols, para las secciones fijas. */
   icon?: string;
-  /** Logo o foto, para los ministerios. */
+  /** Logo propio, para los ministerios (sólo si es un archivo del sitio). */
   image?: string;
+  /** Color del ministerio: sin logo propio, el panel muestra un esfumado. */
+  color?: string;
 }
 
 export const FIXED_SECTIONS: Section[] = [
@@ -35,7 +38,8 @@ export const getSectionCatalog = async (): Promise<Section[]> => {
       key: ministrySectionKey(ministry.slug),
       label: ministry.name,
       group: 'Ministerios' as const,
-      image: ministry.image,
+      image: ministry.image?.startsWith('/') ? ministry.image : undefined,
+      color: ministryColors[ministry.slug] ?? '#c5a059',
     })),
   ];
 };

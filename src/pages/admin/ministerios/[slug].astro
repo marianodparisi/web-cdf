@@ -5,6 +5,7 @@
  * roles; nombre, logo, textos, horarios y contactos se cambian por código.
  */
 import ImageField from '../../../components/admin/ImageField.astro';
+import MinistryLogo from '../../../components/admin/MinistryLogo.astro';
 import NoticeModal from '../../../components/admin/NoticeModal.astro';
 import NoticeRows from '../../../components/admin/NoticeRows.astro';
 import AdminLayout from '../../../layouts/AdminLayout.astro';
@@ -40,7 +41,7 @@ const fotoHelp = dondeFoto[ministry.slug] ?? 'Va de fondo en la portada de la p�
 <AdminLayout title={ministry.name} backHref="/admin" backLabel="Volver al panel" session={session}>
   <!-- Resumen: qué ministerio es y cuántas novedades se ven ahora. -->
   <div class="adm-card adm-entity">
-    <img class="adm-entity__logo" src={ministry.image} alt="" />
+    <MinistryLogo class="adm-entity__logo" slug={ministry.slug} image={ministry.image} />
     <div class="adm-entity__text">
       <p class="adm-entity__area">{ministry.area}</p>
       <p class="adm-entity__status">

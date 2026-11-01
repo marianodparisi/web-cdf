@@ -1,0 +1,24 @@
+---
+/**
+ * Logo de un ministerio en el panel. Si el ministerio no tiene logo propio
+ * (Carcelario y Firmes y Adelante traían fotos externas de relleno, que el
+ * sitio ya no muestra), va un esfumado con su color, igual que en el sitio.
+ */
+import { ministryColors } from '../../data/ministry-colors';
+
+interface Props {
+  slug: string;
+  image?: string;
+  /** Clase de tamaño: adm-nav__logo, adm-entity__logo, adm-table__logo… */
+  class: string;
+}
+
+const { slug, image, class: className } = Astro.props;
+const own = image?.startsWith('/') ? image : undefined;
+---
+
+{own ? (
+  <img class={className} src={own} alt="" />
+) : (
+  <span class={`${className} adm-logo-fade`} style={`--m: ${ministryColors[slug] ?? '#c5a059'}`} aria-hidden="true"></span>
+)}

@@ -741,3 +741,17 @@ a.adm-kpi:hover { border-color: rgba(197, 160, 89, 0.5); transform: translateY(-
 .adm-order form { display: contents; }
 .adm-icon-btn:disabled { opacity: 0.3; cursor: default; pointer-events: none; }
 .adm-table__row.is-current { background: #fbf8f0; }
+
+/* Ministerio sin logo propio: esfumado de su color (como en el sitio). Se
+   apoya en las clases de tamaño de cada lugar (nav, tabla, ficha). */
+.adm-logo-fade {
+  display: inline-block;
+  flex: none;
+  border-radius: 8px;
+  background:
+    radial-gradient(70% 65% at 70% 75%, color-mix(in srgb, var(--m) 85%, transparent), transparent 75%),
+    radial-gradient(60% 55% at 20% 20%, color-mix(in srgb, var(--m) 40%, #000), transparent 80%),
+    #111;
+}
+.adm-opt .adm-logo-fade, .adm-account__list .adm-logo-fade { width: 24px; height: 24px; border-radius: 6px; }
+.adm-nav__logo.adm-logo-fade, .adm-table__logo.adm-logo-fade, .adm-entity__logo.adm-logo-fade { padding: 0; }

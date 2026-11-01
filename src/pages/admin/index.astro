@@ -5,6 +5,7 @@
  * cada sección. Todo filtrado por lo que esa persona puede editar.
  */
 import AdminLayout from '../../layouts/AdminLayout.astro';
+import MinistryLogo from '../../components/admin/MinistryLogo.astro';
 import { isNoticeLive, noticesOf } from '../../lib/content/notices';
 import { getAnnouncements, getDevotionals, getMinistries, getSeries } from '../../lib/content/collections';
 import { canEdit, getSession } from '../../lib/admin-guard';
@@ -120,7 +121,7 @@ const hasNothing = stats.length === 0;
         {editableMinistries.map((ministry) => (
           <a class="adm-table__row adm-table__row--link" href={`/admin/ministerios/${ministry.slug}`}>
             <div class="adm-table__main">
-              <img class="adm-table__logo" src={ministry.image} alt="" />
+              <MinistryLogo class="adm-table__logo" slug={ministry.slug} image={ministry.image} />
               <span class="adm-row__text">
                 <span class="adm-row__title">{ministry.name}</span>
                 <span class="adm-row__sub">{ministry.area}</span>

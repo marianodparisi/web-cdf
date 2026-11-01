@@ -54,7 +54,9 @@ const groups = ['Contenido', 'Ministerios'] as const;
             <input type="checkbox" name="sections" value={section.key} checked={selected.includes(section.key)} />
             {section.image ? (
               <img src={section.image} alt="" loading="lazy" />
-            ) : (
+            ) : section.color ? (
+              <span class="adm-logo-fade" style={`--m: ${section.color}`} aria-hidden="true"></span>
+              ) : (
               <span class="material-symbols-outlined">{section.icon ?? 'edit_note'}</span>
             )}
             <span>{section.label}</span>

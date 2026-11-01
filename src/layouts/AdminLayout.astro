@@ -8,6 +8,7 @@
  * para su contenido; la estructura vive en `admin.css`.
  */
 import '../styles/global.css';
+import MinistryLogo from '../components/admin/MinistryLogo.astro';
 import '../styles/admin.css';
 import type { AdminSession } from '../lib/admin-auth';
 import { canEdit } from '../lib/admin-guard';
@@ -106,7 +107,7 @@ const hue = [...session.username].reduce((sum, c) => sum + c.charCodeAt(0), 0) %
               </summary>
               {ministries.map((m) => (
                 <a class:list={['adm-nav__link', isActive(`/admin/ministerios/${m.slug}`) && 'is-active']} href={`/admin/ministerios/${m.slug}`}>
-                  <img class="adm-nav__logo" src={m.image} alt="" /> {m.name}
+                  <MinistryLogo class="adm-nav__logo" slug={m.slug} image={m.image} /> {m.name}
                 </a>
               ))}
             </details>
