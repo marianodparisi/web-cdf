@@ -1,11 +1,13 @@
 ---
 /**
- * Filas de novedades (tabla del panel): flyer, título, dónde se ve, fecha y
- * acciones. Cada fila abre su modal de edición (`novedad-{slug}-{id}`), que
- * la pantalla renderiza aparte con NoticeModal.
+ * Novedades como tarjetas: flyer (o el esfumado del ministerio), estado,
+ * vencimiento, dónde se ve y acciones. Cada tarjeta abre su modal de edición
+ * (`novedad-{slug}-{id}`), que la pantalla renderiza aparte con NoticeModal.
+ * `data-state` (publicada / vencida / oculta) lo usan los filtros de arriba.
  */
 import type { MinistryNotice } from '../../data/ministries';
 import { formatEndDate, isActive } from '../../lib/content/expiry';
+import { ministryColors } from '../../data/ministry-colors';
 
 interface Row {
   notice: MinistryNotice;
@@ -22,42 +24,46 @@ interface Props {
 }
 
 const { rows, volver, showMinistry = false }: Props = Astro.props;
+
+const daysLeft = (d?: string) => (d ? Math.ceil((new Date(`${d}T23:59:59-03:00`).getTime() - Date.now()) / 86400000) : null);
+const soonClass = (d: number | null) => (d !== null && d <= 3 ? 'adm-pill adm-pill--warn' : 'adm-pill');
 ---
 
-<div class="adm-card adm-table">
-  <div class="adm-table__head">
-    <span>Novedad</span>
-    <span class="adm-hide-sm">Dónde se ve</span>
-    <span></span>
-  </div>
+<div class="adm-ncards">
   {rows.map(({ notice, ministry, index }) => {
     const expired = !isActive(notice.endDate);
     const hidden = !notice.showHome && !notice.showPage;
+    const state = expired ? 'vencida' : hidden ? 'oculta' : 'publicada';
+    const d = daysLeft(notice.endDate);
     return (
-      <div class:list={['adm-table__row', (expired || hidden) && 'is-dim']}>
-        <div class="adm-table__main">
-          <span class="adm-row__thumb adm-row__thumb--flyer">
-            {notice.image ? <img src={notice.image} alt="" loading="lazy" /> : <span class="material-symbols-outlined">campaign</span>}
-          </span>
-          <span class="adm-row__text">
-            <span class="adm-row__chips">
-              {showMinistry && <span class="adm-chip adm-chip--gold">{ministry.name}</span>}
-              {notice.endDate && (expired ? (
-                <span class="adm-chip adm-chip--off"><span class="material-symbols-outlined">event_busy</span>Vencida · no se ve</span>
-              ) : (
-                <span class="adm-chip"><span class="material-symbols-outlined">event</span>Hasta el {formatEndDate(notice.endDate)}</span>
-              ))}
-            </span>
-            <span class="adm-row__title">{notice.title}</span>
-            {notice.text && <span class="adm-row__sub">{notice.text}</span>}
-          </span>
+      <article class:list={['adm-ncard', state !== 'publicada' && 'is-off']} data-state={state}>
+        <button
+          type="button"
+          class="adm-ncard__img"
+          style={`--m: ${ministryColors[ministry.slug] ?? '#c5a059'}`}
+          data-modal-open={`novedad-${ministry.slug}-${notice.id}`}
+          aria-label={`Editar ${notice.title}`}
+        >
+          {notice.image ? <img src={notice.image} alt="" loading="lazy" /> : <span class="material-symbols-outlined">newspaper</span>}
+          {showMinistry && <span class="adm-ncard__min">{ministry.name}</span>}
+        </button>
+        <div class="adm-ncard__body">
+          <div class="adm-ncard__chips">
+            {state === 'publicada' && <span class="adm-pill adm-pill--ok"><i></i>Publicada</span>}
+            {state === 'vencida' && <span class="adm-pill">Vencida · no se ve</span>}
+            {state === 'oculta' && <span class="adm-pill">No se ve en ningún lado</span>}
+            {notice.endDate && !expired && (
+              <span class={soonClass(d)}><span class="material-symbols-outlined">event</span>Hasta el {formatEndDate(notice.endDate)}</span>
+            )}
+          </div>
+          <h3>{notice.title}</h3>
+          {notice.text && <p>{notice.text}</p>}
+          <div class="adm-ncard__where">
+            <span class:list={['adm-where', notice.showHome && 'is-on']}><span class="material-symbols-outlined">home</span>Inicio</span>
+            <span class:list={['adm-where', notice.showPage && 'is-on']}><span class="material-symbols-outlined">web</span>Su página</span>
+          </div>
         </div>
-        <span class="adm-table__chips adm-hide-sm">
-          {notice.showHome && <span class="adm-chip"><span class="material-symbols-outlined">home</span>Inicio</span>}
-          {notice.showPage && <span class="adm-chip"><span class="material-symbols-outlined">web</span>Su página</span>}
-          {hidden && <span class="adm-muted">En ningún lado</span>}
-        </span>
-        <div class="adm-row__actions">
+        <div class="adm-ncard__acts">
           {!showMinistry && index > 0 && (
             <form method="POST" action="/api/admin/novedades">
               <input type="hidden" name="accion" value="subir" />
@@ -67,8 +73,8 @@ const { rows, volver, showMinistry = false }: Props = Astro.props;
               <button type="submit" class="adm-icon-btn" title="Subir" aria-label="Subir"><span class="material-symbols-outlined">arrow_upward</span></button>
             </form>
           )}
-          <button type="button" class="adm-btn adm-btn--ghost adm-btn--sm" data-modal-open={`novedad-${ministry.slug}-${notice.id}`}>
-            <span class="material-symbols-outlined">edit</span><span class="adm-hide-sm">Editar</span>
+          <button type="button" class="adm-icon-btn" title="Editar" aria-label="Editar" data-modal-open={`novedad-${ministry.slug}-${notice.id}`}>
+            <span class="material-symbols-outlined">edit</span>
           </button>
           <form method="POST" action="/api/admin/novedades">
             <input type="hidden" name="accion" value="borrar" />
@@ -85,7 +91,8 @@ const { rows, volver, showMinistry = false }: Props = Astro.props;
             ><span class="material-symbols-outlined">delete</span></button>
           </form>
         </div>
-      </div>
+      </article>
     );
   })}
+  <p class="adm-ncards__empty adm-muted" hidden>No hay novedades en este filtro.</p>
 </div>

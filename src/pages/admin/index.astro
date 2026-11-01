@@ -1,143 +1,233 @@
 ---
 /**
- * Inicio del panel: el estado del sitio en números, acciones rápidas que
- * abren directo el modal de alta (`/admin/series#nueva-serie`) y accesos a
- * cada sección. Todo filtrado por lo que esa persona puede editar.
+ * Inicio del panel, como tablero:
+ * - "Así se ve la portada hoy": serie actual, devocional y cuántas piezas
+ *   hay en "Qué está pasando".
+ * - "Para revisar": lo que necesita acción (novedades y anuncios vencidos,
+ *   series incompletas, personas que nunca entraron).
+ * - Crear, "Qué está pasando" con su vencimiento, últimos cambios (sale del
+ *   historial de guardados) y los ministerios.
+ * Todo filtrado por lo que esa persona puede editar.
  */
 import AdminLayout from '../../layouts/AdminLayout.astro';
 import MinistryLogo from '../../components/admin/MinistryLogo.astro';
-import { isNoticeLive, noticesOf } from '../../lib/content/notices';
 import { getAnnouncements, getDevotionals, getMinistries, getSeries } from '../../lib/content/collections';
 import { canEdit, getSession } from '../../lib/admin-guard';
 import { ministrySectionKey } from '../../lib/content/sections';
+import { isActive } from '../../lib/content/expiry';
+import { isNoticeLive, noticesOf } from '../../lib/content/notices';
+import { collectionLabel, recentActivity, timeAgo } from '../../lib/content/activity';
+import { listAdminUsers } from '../../lib/admin-auth';
+import { ministryColors } from '../../data/ministry-colors';
 
 const session = getSession(Astro.locals);
-const [ministries, devotionals, series, announcements] = await Promise.all([
+const isAdmin = session.role === 'admin';
+const [ministries, devotionals, series, announcements, activity] = await Promise.all([
   getMinistries(),
   getDevotionals(),
   getSeries(),
   getAnnouncements(),
+  isAdmin ? recentActivity(6) : Promise.resolve([]),
 ]);
 
-const editableMinistries = ministries.filter((ministry) => canEdit(session, ministrySectionKey(ministry.slug)));
-const liveCount = (m: (typeof editableMinistries)[number]) => noticesOf(m).filter(isNoticeLive).length;
-const avisosCount = editableMinistries.reduce((sum, m) => sum + liveCount(m), 0);
+const mine = ministries.filter((m) => canEdit(session, ministrySectionKey(m.slug)));
+const canSeries = canEdit(session, 'series');
+const canDevos = canEdit(session, 'devocionales');
+const canAnuncios = canEdit(session, 'anuncios');
 
-const stats = [
-  canEdit(session, 'devocionales') && {
-    icon: 'menu_book',
-    value: devotionals.length,
-    label: devotionals.length === 1 ? 'devocional publicado' : 'devocionales publicados',
-    detail: devotionals[0] ? `Esta semana: ${devotionals[0].title}` : 'Ninguno todavía',
-    href: '/admin/devocionales',
-  },
-  canEdit(session, 'series') && {
-    icon: 'video_library',
-    value: series.length,
-    label: series.length === 1 ? 'serie' : 'series',
-    detail: series[0] ? `Actual: ${series[0].title}` : 'Ninguna todavía',
-    href: '/admin/series',
-  },
-  canEdit(session, 'anuncios') && {
-    icon: 'campaign',
-    value: announcements.length,
-    label: announcements.length === 1 ? 'anuncio en el inicio' : 'anuncios en el inicio',
-    detail: announcements[0] ? `Primero: ${announcements[0].title}` : 'Ninguno',
-    href: '/admin/anuncios',
-  },
-  editableMinistries.length > 0 && {
-    icon: 'diversity_3',
-    value: avisosCount,
-    label: avisosCount === 1 ? 'novedad de ministerio publicada' : 'novedades de ministerios publicadas',
-    detail: `${editableMinistries.length} ${editableMinistries.length === 1 ? 'ministerio' : 'ministerios'} a tu cargo`,
-    href: '/admin/novedades',
-  },
-].filter(Boolean) as { icon: string; value: number; label: string; detail: string; href?: string }[];
+const actual = series.find((s) => s.image && s.href);
+const devo = devotionals[0];
 
-const quick = [
-  canEdit(session, 'devocionales') && { href: '/admin/devocionales#nuevo-devocional', icon: 'edit_note', label: 'Publicar devocional' },
-  canEdit(session, 'series') && { href: '/admin/series#nueva-serie', icon: 'add_photo_alternate', label: 'Agregar serie' },
-  canEdit(session, 'anuncios') && { href: '/admin/anuncios#nuevo', icon: 'campaign', label: 'Nuevo anuncio' },
-  editableMinistries.length > 0 && { href: '/admin/novedades#nueva-novedad', icon: 'newspaper', label: 'Nueva novedad' },
-  session.role === 'admin' && { href: '/admin/usuarios#nueva-persona', icon: 'person_add', label: 'Dar acceso' },
-].filter(Boolean) as { href: string; icon: string; label: string }[];
+/* "Qué está pasando": lo que se ve hoy en el inicio. */
+const notices = mine.flatMap((m) => noticesOf(m).map((n) => ({ ...n, ministry: m })));
+const homeNotices = ministries.flatMap((m) => noticesOf(m).filter((n) => n.showHome && isNoticeLive(n)).map((n) => ({ ...n, ministry: m })));
+const liveAnnouncements = announcements.filter((a) => isActive(a.endDate));
+const pasando = [
+  ...homeNotices.map((n) => ({ title: n.title, image: n.image, who: n.ministry.name, end: n.endDate, color: ministryColors[n.ministry.slug] ?? '#c5a059', logo: n.ministry.image })),
+  ...liveAnnouncements.map((a) => ({ title: a.title, image: a.image, who: 'Anuncio', end: a.endDate, color: '#c5a059', logo: undefined })),
+];
 
-const hasNothing = stats.length === 0;
+/** Texto y color del vencimiento (fuera del template: un "<" en una expresión
+    de atributo confunde al parser de Astro). */
+const venceLabel = (d: number) => (d <= 0 ? 'Vence hoy' : d === 1 ? 'Vence mañana' : `Vence en ${d} días`);
+const venceClass = (d: number) => (d <= 3 ? 'adm-pill adm-pill--warn' : 'adm-pill');
+
+const daysLeft = (d?: string) => {
+  if (!d) return null;
+  return Math.ceil((new Date(`${d}T23:59:59-03:00`).getTime() - Date.now()) / 86400000);
+};
+
+/* "Para revisar" */
+let neverIn = 0;
+if (isAdmin) {
+  try {
+    neverIn = (await listAdminUsers()).filter((u) => !u.lastLoginAt).length;
+  } catch {
+    neverIn = 0;
+  }
+}
+const expiredNotices = notices.filter((n) => n.endDate && !isActive(n.endDate)).length;
+const expiredAnnouncements = canAnuncios ? announcements.filter((a) => a.endDate && !isActive(a.endDate)).length : 0;
+const incomplete = canSeries ? series.filter((s) => !s.image || !s.href).length : 0;
+const soon = notices.filter((n) => isNoticeLive(n) && (daysLeft(n.endDate) ?? 99) <= 3).length;
+const review = [
+  expiredNotices > 0 && { icon: 'event_busy', tone: 'warn', title: `${expiredNotices} ${expiredNotices === 1 ? 'novedad vencida' : 'novedades vencidas'}`, text: 'Ya no se ven. Borralas o cambiales la fecha.', href: '/admin/novedades', cta: 'Ver' },
+  expiredAnnouncements > 0 && { icon: 'event_busy', tone: 'warn', title: `${expiredAnnouncements} ${expiredAnnouncements === 1 ? 'anuncio vencido' : 'anuncios vencidos'}`, text: 'Ya no se ven en el inicio.', href: '/admin/anuncios', cta: 'Ver' },
+  incomplete > 0 && { icon: 'image_not_supported', tone: 'warn', title: `${incomplete} ${incomplete === 1 ? 'serie incompleta' : 'series incompletas'}`, text: 'Sin portada o sin link: no aparecen en el sitio.', href: '/admin/series', cta: 'Completar' },
+  soon > 0 && { icon: 'schedule', tone: 'info', title: `${soon} ${soon === 1 ? 'novedad vence' : 'novedades vencen'} en 3 días o menos`, text: 'Si siguen vigentes, extendé la fecha.', href: '/admin/novedades', cta: 'Ver' },
+  neverIn > 0 && { icon: 'person_alert', tone: 'info', title: `${neverIn} ${neverIn === 1 ? 'persona nunca entró' : 'personas nunca entraron'}`, text: 'Quizás no recibieron su contraseña.', href: '/admin/usuarios', cta: 'Ver' },
+].filter(Boolean) as { icon: string; tone: string; title: string; text: string; href: string; cta: string }[];
+
+const crear = [
+  canDevos && { href: '/admin/devocionales#nuevo-devocional', icon: 'edit_note', title: 'Nuevo devocional', sub: 'El de la semana', color: '#c5a059' },
+  mine.length > 0 && { href: '/admin/novedades#nueva-novedad', icon: 'newspaper', title: 'Nueva novedad', sub: 'De un ministerio', color: '#e8642b' },
+  canAnuncios && { href: '/admin/anuncios#nuevo', icon: 'campaign', title: 'Nuevo anuncio', sub: 'Para el inicio', color: '#48a9ad' },
+  canSeries && { href: '/admin/series#nueva-serie', icon: 'add_photo_alternate', title: 'Nueva serie', sub: 'De predicación', color: '#c43b46' },
+].filter(Boolean) as { href: string; icon: string; title: string; sub: string; color: string }[];
+
+const hour = Number(new Intl.DateTimeFormat('es-AR', { hour: 'numeric', hour12: false, timeZone: 'America/Argentina/Buenos_Aires' }).format(new Date()));
+const greeting = hour < 12 ? 'Buen día' : hour < 20 ? 'Buenas tardes' : 'Buenas noches';
+const hue = (name: string) => [...name].reduce((sum, c) => sum + c.charCodeAt(0), 0) % 360;
+const nothing = !canSeries && !canDevos && !canAnuncios && mine.length === 0;
 ---
 
-<AdminLayout title={`Hola, ${session.username}`} session={session}>
-  <p class="adm-lead">Así está el sitio hoy.</p>
-
-  {hasNothing && (
+<AdminLayout title={`${greeting}, ${session.username}`} session={session}>
+  {nothing ? (
     <div class="adm-card adm-empty">
       <span class="material-symbols-outlined">lock</span>
-      <p>
-        Todavía no tenés ninguna sección asignada. Pedile a la persona que administra el panel que te dé
-        acceso.
-      </p>
+      <p>Todavía no tenés ninguna sección asignada. Pedile a la persona que administra el panel que te dé acceso.</p>
     </div>
-  )}
-
-  {stats.length > 0 && (
-    <div class="adm-kpis">
-      {stats.map((s) =>
-        s.href ? (
-          <a class="adm-card adm-kpi" href={s.href}>
-            <span class="adm-kpi__icon material-symbols-outlined">{s.icon}</span>
-            <strong>{s.value}</strong>
-            <span class="adm-kpi__label">{s.label}</span>
-            <span class="adm-kpi__detail">{s.detail}</span>
+  ) : (
+    <div class="adm-dash">
+      {/* ══════════ ASÍ SE VE HOY ══════════ */}
+      <section class="adm-dash__status">
+        <div>
+          <span class="adm-live"><i></i>En el sitio ahora</span>
+          <h2>Así se ve la portada hoy</h2>
+          <p>Lo que está viendo la gente que entra al sitio en este momento.</p>
+        </div>
+        <div class="adm-now">
+          {actual && (
+            <a class="adm-now__item" href={canSeries ? '/admin/series' : '/#series'} target={canSeries ? undefined : '_blank'}>
+              <img src={actual.image} alt="" />
+              <span><small>Serie actual</small><strong>{actual.title}</strong><em>{actual.subtitle}</em></span>
+            </a>
+          )}
+          {devo && (
+            <a class="adm-now__item" href={canDevos ? `/admin/devocionales/${devo.slug}` : `/devocional/${devo.slug}`} target={canDevos ? undefined : '_blank'}>
+              {devo.image ? <img src={devo.image} alt="" /> : <b><span class="material-symbols-outlined">menu_book</span></b>}
+              <span><small>Devocional de la semana</small><strong>{devo.title}</strong><em>{devo.weekLabel}</em></span>
+            </a>
+          )}
+          <a class="adm-now__item" href="/#agenda" target="_blank" rel="noopener">
+            <b>{pasando.length}</b>
+            <span><small>En "Qué está pasando"</small><strong>{liveAnnouncements.length} {liveAnnouncements.length === 1 ? 'anuncio' : 'anuncios'} · {homeNotices.length} {homeNotices.length === 1 ? 'novedad' : 'novedades'}</strong><em>Vigentes hoy</em></span>
           </a>
+        </div>
+      </section>
+
+      {/* ══════════ PARA REVISAR ══════════ */}
+      <section class="adm-card adm-dash__review">
+        <header class="adm-dash__head">
+          <h3><span class="material-symbols-outlined">notifications</span>Para revisar</h3>
+          {review.length > 0 && <span class="adm-dash__badge">{review.length}</span>}
+        </header>
+        {review.length > 0 ? (
+          <ul class="adm-review">
+            {review.map((r) => (
+              <li>
+                <span class={`material-symbols-outlined adm-review__icon adm-review__icon--${r.tone}`}>{r.icon}</span>
+                <span class="adm-review__text"><strong>{r.title}</strong>{r.text}</span>
+                <a href={r.href}>{r.cta}</a>
+              </li>
+            ))}
+          </ul>
         ) : (
-          <div class="adm-card adm-kpi">
-            <span class="adm-kpi__icon material-symbols-outlined">{s.icon}</span>
-            <strong>{s.value}</strong>
-            <span class="adm-kpi__label">{s.label}</span>
-            <span class="adm-kpi__detail">{s.detail}</span>
+          <div class="adm-review__ok">
+            <span class="material-symbols-outlined">task_alt</span>
+            <p><strong>Todo en orden</strong>No hay nada vencido ni incompleto.</p>
           </div>
-        ),
+        )}
+      </section>
+
+      {/* ══════════ CREAR ══════════ */}
+      {crear.length > 0 && (
+        <section class="adm-dash__quick">
+          {crear.map((q) => (
+            <a class="adm-qa" href={q.href} style={`--q: ${q.color}`}>
+              <span class="material-symbols-outlined adm-qa__icon">{q.icon}</span>
+              <span class="adm-qa__text"><strong>{q.title}</strong><small>{q.sub}</small></span>
+              <span class="material-symbols-outlined adm-qa__arrow">arrow_forward</span>
+            </a>
+          ))}
+        </section>
+      )}
+
+      {/* ══════════ QUÉ ESTÁ PASANDO ══════════ */}
+      <section class:list={['adm-card adm-dash__feed', !isAdmin && 'is-wide']}>
+        <header class="adm-dash__head">
+          <h3><span class="material-symbols-outlined">bolt</span>Qué está pasando</h3>
+          <a href="/#agenda" target="_blank" rel="noopener">Ver en el sitio</a>
+        </header>
+        {pasando.length > 0 ? (
+          <div class="adm-pasando">
+            {pasando.slice(0, 4).map((it) => {
+              const d = daysLeft(it.end);
+              return (
+                <div class="adm-pasando__item">
+                  <span class="adm-pasando__img" style={`--m: ${it.color}`}>
+                    {it.image ? <img src={it.image} alt="" loading="lazy" /> : it.logo?.startsWith('/') ? <img class="is-logo" src={it.logo} alt="" /> : null}
+                  </span>
+                  <small>{it.who}</small>
+                  <strong>{it.title}</strong>
+                  {d !== null && <span class={venceClass(d)}>{venceLabel(d)}</span>}
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          <p class="adm-muted">No hay anuncios ni novedades en el inicio.</p>
+        )}
+      </section>
+
+      {/* ══════════ ÚLTIMOS CAMBIOS ══════════ */}
+      {isAdmin && (
+        <section class="adm-card adm-dash__activity">
+          <header class="adm-dash__head"><h3><span class="material-symbols-outlined">history</span>Últimos cambios</h3></header>
+          {activity.length > 0 ? (
+            <ol class="adm-activity">
+              {activity.map((a) => (
+                <li>
+                  <span class="adm-avatar adm-avatar--sm" style={`--h: ${hue(a.author)}`}>{a.author.slice(0, 2).toUpperCase()}</span>
+                  <span><strong>{a.author}</strong> guardó cambios en <b>{collectionLabel(a.collection)}</b></span>
+                  <time>{timeAgo(a.at)}</time>
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <p class="adm-muted">Todavía no hay cambios registrados.</p>
+          )}
+        </section>
+      )}
+
+      {/* ══════════ MINISTERIOS ══════════ */}
+      {mine.length > 0 && (
+        <section class="adm-card adm-dash__mins">
+          <header class="adm-dash__head"><h3><span class="material-symbols-outlined">diversity_3</span>Ministerios</h3></header>
+          <div class="adm-mins">
+            {mine.map((m) => {
+              const live = noticesOf(m).filter(isNoticeLive).length;
+              return (
+                <a class="adm-min" href={`/admin/ministerios/${m.slug}`} style={`--m: ${ministryColors[m.slug] ?? '#c5a059'}`}>
+                  <MinistryLogo class="adm-min__logo" slug={m.slug} image={m.image} />
+                  <span class="adm-min__text"><strong>{m.name}</strong><small>{m.area}</small></span>
+                  <span class:list={['adm-pill', live > 0 && 'adm-pill--ok']}>{live > 0 ? `${live} ${live === 1 ? 'novedad' : 'novedades'}` : 'Sin novedades'}</span>
+                </a>
+              );
+            })}
+          </div>
+        </section>
       )}
     </div>
-  )}
-
-  {quick.length > 0 && (
-    <section class="adm-section">
-      <p class="adm-eyebrow">Acciones rápidas</p>
-      <div class="adm-quick">
-        {quick.map((q) => (
-          <a class="adm-quick__btn" href={q.href}>
-            <span class="material-symbols-outlined">{q.icon}</span>
-            {q.label}
-          </a>
-        ))}
-      </div>
-    </section>
-  )}
-
-  {editableMinistries.length > 0 && (
-    <section class="adm-section">
-      <p class="adm-eyebrow">Ministerios</p>
-      <div class="adm-card adm-table">
-        {editableMinistries.map((ministry) => (
-          <a class="adm-table__row adm-table__row--link" href={`/admin/ministerios/${ministry.slug}`}>
-            <div class="adm-table__main">
-              <MinistryLogo class="adm-table__logo" slug={ministry.slug} image={ministry.image} />
-              <span class="adm-row__text">
-                <span class="adm-row__title">{ministry.name}</span>
-                <span class="adm-row__sub">{ministry.area}</span>
-              </span>
-            </div>
-            <span>
-              {liveCount(ministry) > 0 ? (
-                <span class="adm-badge adm-badge--ok"><span class="material-symbols-outlined">campaign</span><span class="adm-hide-sm">{liveCount(ministry)} {liveCount(ministry) === 1 ? 'novedad' : 'novedades'}</span></span>
-              ) : (
-                <span class="adm-muted adm-hide-sm">Sin novedades</span>
-              )}
-            </span>
-            <span class="material-symbols-outlined adm-table__chev">chevron_right</span>
-          </a>
-        ))}
-      </div>
-    </section>
   )}
 </AdminLayout>

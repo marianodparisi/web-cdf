@@ -1,18 +1,21 @@
 ---
 /**
- * Cascarón del panel: menú lateral con lo que esa persona puede editar,
- * avisos de guardado y los comportamientos compartidos de los formularios.
+ * Cascarón del panel: menú lateral oscuro con "Crear", lo que esa persona
+ * puede editar (con cuántas cosas hay publicadas), barra superior con el
+ * título y, en celular, barra de abajo con el botón "+". Más los avisos de
+ * guardado y los comportamientos compartidos de los formularios.
  *
  * El menú sale de los mismos permisos que protegen cada endpoint: un editor
- * de Kids ve sólo Kids. Tailwind sigue cargado porque las pantallas lo usan
- * para su contenido; la estructura vive en `admin.css`.
+ * de Kids ve sólo Kids. La estructura vive en `admin.css`.
  */
 import '../styles/global.css';
 import MinistryLogo from '../components/admin/MinistryLogo.astro';
 import '../styles/admin.css';
 import type { AdminSession } from '../lib/admin-auth';
 import { canEdit } from '../lib/admin-guard';
-import { getMinistries } from '../lib/content/collections';
+import { getAnnouncements, getMinistries } from '../lib/content/collections';
+import { isActive as isLive } from '../lib/content/expiry';
+import { isNoticeLive, noticesOf } from '../lib/content/notices';
 import { ministrySectionKey } from '../lib/content/sections';
 
 interface Props {
@@ -29,16 +32,38 @@ const feedback = Astro.url.searchParams.get('ok');
 const errorMessage = Astro.url.searchParams.get('error');
 const path = Astro.url.pathname;
 
-const ministries = (await getMinistries()).filter((m) => canEdit(session, ministrySectionKey(m.slug)));
-const contenido = [
+const [allMinistries, announcements] = await Promise.all([getMinistries(), getAnnouncements()]);
+const ministries = allMinistries.filter((m) => canEdit(session, ministrySectionKey(m.slug)));
+const liveNotices = (m: (typeof ministries)[number]) => noticesOf(m).filter(isNoticeLive).length;
+
+/* Cada sección muestra cuántas cosas tiene publicadas ahora. */
+const contenido: { section: string; href: string; icon: string; label: string; count?: number }[] = [
   { section: 'devocionales', href: '/admin/devocionales', icon: 'menu_book', label: 'Devocionales' },
-  { section: 'anuncios', href: '/admin/anuncios', icon: 'campaign', label: 'Anuncios' },
+  { section: 'anuncios', href: '/admin/anuncios', icon: 'campaign', label: 'Anuncios', count: announcements.filter((a) => isLive(a.endDate)).length },
   { section: 'series', href: '/admin/series', icon: 'video_library', label: 'Series' },
 ].filter((item) => canEdit(session, item.section));
 // Novedades: la ve quien tenga al menos un ministerio.
 if (ministries.length > 0) {
-  contenido.splice(2, 0, { section: 'novedades', href: '/admin/novedades', icon: 'newspaper', label: 'Novedades' });
+  contenido.splice(Math.min(2, contenido.length), 0, {
+    section: 'novedades',
+    href: '/admin/novedades',
+    icon: 'newspaper',
+    label: 'Novedades',
+    count: ministries.reduce((sum, m) => sum + liveNotices(m), 0),
+  });
 }
+
+/* "Crear": abre directo el modal de alta de cada pantalla. */
+const crear = [
+  canEdit(session, 'devocionales') && { href: '/admin/devocionales#nuevo-devocional', icon: 'edit_note', label: 'Devocional', color: '#c5a059' },
+  ministries.length > 0 && { href: '/admin/novedades#nueva-novedad', icon: 'newspaper', label: 'Novedad', color: '#e8642b' },
+  canEdit(session, 'anuncios') && { href: '/admin/anuncios#nuevo', icon: 'campaign', label: 'Anuncio', color: '#48a9ad' },
+  canEdit(session, 'series') && { href: '/admin/series#nueva-serie', icon: 'add_photo_alternate', label: 'Serie', color: '#c43b46' },
+  session.role === 'admin' && { href: '/admin/usuarios#nueva-persona', icon: 'person_add', label: 'Persona con acceso', color: '#5b6fb5' },
+].filter(Boolean) as { href: string; icon: string; label: string; color: string }[];
+
+/* Celular: barra de abajo con Inicio, las dos primeras secciones, "+" y "Más". */
+const tabbar = contenido.slice(0, 2);
 
 const isActive = (href: string) => (href === '/admin' ? path === '/admin' || path === '/admin/' : path.startsWith(href));
 
@@ -47,9 +72,6 @@ const isActive = (href: string) => (href === '/admin' ? path === '/admin' || pat
 const isHome = path === '/admin' || path === '/admin/';
 const tabTitle = isHome ? 'Panel · CDF' : `${title} · Panel CDF`;
 
-/* Los grupos del menú se pliegan para que no haga falta scroll. Arranca
-   abierto el que tiene la pantalla actual; Contenido, además, siempre. */
-const ministriesOpen = ministries.some((m) => isActive(`/admin/ministerios/${m.slug}`));
 
 /** Iniciales y un tono estable por nombre, para el avatar. */
 const initials = session.username.slice(0, 2).toUpperCase();
@@ -83,43 +105,47 @@ const hue = [...session.username].reduce((sum, c) => sum + c.charCodeAt(0), 0) %
           <span class="adm-brand__tag">Panel</span>
         </a>
 
+        {crear.length > 0 && (
+          <details class="adm-create">
+            <summary class="adm-create__btn"><span class="material-symbols-outlined">add</span> Crear <span class="material-symbols-outlined adm-create__chev">expand_more</span></summary>
+            <div class="adm-create__menu">
+              {crear.map((item) => (
+                <a href={item.href} style={`--q: ${item.color}`}>
+                  <span class="material-symbols-outlined">{item.icon}</span>{item.label}
+                </a>
+              ))}
+            </div>
+          </details>
+        )}
+
         <nav class="adm-nav" aria-label="Secciones del panel">
           <a class:list={['adm-nav__link', isActive('/admin') && 'is-active']} href="/admin">
             <span class="material-symbols-outlined">space_dashboard</span> Inicio
           </a>
 
-          {contenido.length > 0 && (
-            <details class="adm-group" open>
-              <summary class="adm-nav__label">Contenido <span class="material-symbols-outlined">expand_more</span></summary>
-              {contenido.map((item) => (
-                <a class:list={['adm-nav__link', isActive(item.href) && 'is-active']} href={item.href}>
-                  <span class="material-symbols-outlined">{item.icon}</span> {item.label}
-                </a>
-              ))}
-            </details>
-          )}
+          {contenido.length > 0 && <p class="adm-nav__label">Contenido</p>}
+          {contenido.map((item) => (
+            <a class:list={['adm-nav__link', isActive(item.href) && 'is-active']} href={item.href}>
+              <span class="material-symbols-outlined">{item.icon}</span> {item.label}
+              {item.count ? <em class="adm-nav__count">{item.count}</em> : null}
+            </a>
+          ))}
 
-          {ministries.length > 0 && (
-            <details class="adm-group" open={ministriesOpen || ministries.length <= 3}>
-              <summary class="adm-nav__label">
-                Ministerios <span class="adm-group__count">{ministries.length}</span>
-                <span class="material-symbols-outlined">expand_more</span>
-              </summary>
-              {ministries.map((m) => (
-                <a class:list={['adm-nav__link', isActive(`/admin/ministerios/${m.slug}`) && 'is-active']} href={`/admin/ministerios/${m.slug}`}>
-                  <MinistryLogo class="adm-nav__logo" slug={m.slug} image={m.image} /> {m.name}
-                </a>
-              ))}
-            </details>
-          )}
+          {ministries.length > 0 && <p class="adm-nav__label">Ministerios</p>}
+          {ministries.map((m) => (
+            <a class:list={['adm-nav__link', isActive(`/admin/ministerios/${m.slug}`) && 'is-active']} href={`/admin/ministerios/${m.slug}`}>
+              <MinistryLogo class="adm-nav__logo" slug={m.slug} image={m.image} /> {m.name}
+              {liveNotices(m) > 0 && <em class="adm-nav__dot" title="Tiene novedades publicadas"></em>}
+            </a>
+          ))}
 
           {session.role === 'admin' && (
-            <details class="adm-group" open>
-              <summary class="adm-nav__label">Administración <span class="material-symbols-outlined">expand_more</span></summary>
+            <>
+              <p class="adm-nav__label">Administración</p>
               <a class:list={['adm-nav__link', isActive('/admin/usuarios') && 'is-active']} href="/admin/usuarios">
                 <span class="material-symbols-outlined">group</span> Personas con acceso
               </a>
-            </details>
+            </>
           )}
         </nav>
 
@@ -139,23 +165,26 @@ const hue = [...session.username].reduce((sum, c) => sum + c.charCodeAt(0), 0) %
       </aside>
 
       <div class="adm-main">
+        <!-- Celular: marca y avatar arriba; la navegación va en la barra de abajo. -->
         <header class="adm-top">
-          <button class="adm-top__menu" type="button" aria-label="Abrir el menú" aria-controls="adm-side" aria-expanded="false" data-adm-menu>
-            <span class="material-symbols-outlined">menu</span>
-          </button>
           <a class="adm-brand__logo" href="/admin" aria-label="Inicio del panel"><img src="/brand/logowhite.png" alt="" /></a>
           <a href="/admin/mi-cuenta" aria-label="Mi cuenta"><span class="adm-avatar" style={`--h: ${hue}`}>{initials}</span></a>
         </header>
 
         <main class="adm-content">
-          {backHref && (
-            <a href={backHref} class="adm-back">
-              <span class="material-symbols-outlined">arrow_back</span>
-              {backLabel}
+          <header class="adm-head">
+            <div class="adm-head__text">
+              {backHref ? (
+                <a href={backHref} class="adm-back"><span class="material-symbols-outlined">arrow_back</span>{backLabel}</a>
+              ) : (
+                <p class="adm-crumb">Panel</p>
+              )}
+              <h1 class="adm-title">{title}</h1>
+            </div>
+            <a class="adm-btn adm-btn--ghost adm-head__site" href="/" target="_blank" rel="noopener">
+              <span class="material-symbols-outlined">open_in_new</span> Ver el sitio
             </a>
-          )}
-
-          <h1 class="adm-title">{title}</h1>
+          </header>
 
           <div class="adm-body">
             <slot />
@@ -163,6 +192,34 @@ const hue = [...session.username].reduce((sum, c) => sum + c.charCodeAt(0), 0) %
         </main>
       </div>
     </div>
+
+    <nav class="adm-tabbar" aria-label="Navegación">
+      <a class:list={[isActive('/admin') && 'is-on']} href="/admin"><span class="material-symbols-outlined">space_dashboard</span>Inicio</a>
+      {tabbar.map((item) => (
+        <a class:list={[isActive(item.href) && 'is-on']} href={item.href}><span class="material-symbols-outlined">{item.icon}</span>{item.label}</a>
+      ))}
+      {crear.length > 0 && (
+        <button type="button" class="adm-tabbar__add" aria-label="Crear" data-modal-open="adm-crear"><span class="material-symbols-outlined">add</span></button>
+      )}
+      <button type="button" data-adm-menu aria-controls="adm-side" aria-expanded="false"><span class="material-symbols-outlined">menu</span>Más</button>
+    </nav>
+
+    {/* "Crear" en celular: hoja con las mismas opciones que el menú. */}
+    {crear.length > 0 && (
+      <dialog class="adm-modal adm-sheet-create" id="adm-crear" aria-label="Crear">
+        <div class="adm-modal__panel">
+          <header class="adm-modal__head">
+            <div><h2>Crear</h2><p>Elegí qué querés cargar.</p></div>
+            <button type="button" class="adm-modal__x" data-modal-close aria-label="Cerrar"><span class="material-symbols-outlined">close</span></button>
+          </header>
+          <div class="adm-modal__body adm-create-grid">
+            {crear.map((item) => (
+              <a href={item.href} style={`--q: ${item.color}`}><span class="material-symbols-outlined">{item.icon}</span>{item.label}</a>
+            ))}
+          </div>
+        </div>
+      </dialog>
+    )}
 
     {feedback && (
       <p role="status" class="adm-toast adm-toast--ok" data-adm-toast>
@@ -342,14 +399,24 @@ const hue = [...session.username].reduce((sum, c) => sum + c.charCodeAt(0), 0) %
       );
       window.addEventListener('pageshow', () => progress.classList.remove('is-on'));
 
-      // Abrir un modal desde un link (acciones rápidas del inicio: #nueva-serie).
-      if (location.hash) {
-        const target = document.getElementById(location.hash.slice(1));
-        if (target instanceof HTMLDialogElement) {
-          target.showModal();
-          history.replaceState(null, '', location.pathname);
-        }
-      }
+      // Abrir un modal desde un link ("Crear" y acciones rápidas: #nueva-serie).
+      // También cuando ya estás en esa pantalla y sólo cambia el #.
+      const openFromHash = () => {
+        const target = location.hash ? document.getElementById(location.hash.slice(1)) : null;
+        if (!(target instanceof HTMLDialogElement)) return;
+        document.querySelectorAll<HTMLDialogElement>('dialog[open]').forEach((d) => d !== target && d.close());
+        if (!target.open) target.showModal();
+        history.replaceState(null, '', location.pathname);
+      };
+      openFromHash();
+      window.addEventListener('hashchange', openFromHash);
+
+      // El menú "Crear" se cierra al tocar afuera o elegir una opción.
+      const create = document.querySelector<HTMLDetailsElement>('.adm-create');
+      document.addEventListener('click', (event) => {
+        if (create?.open && !create.contains(event.target as Node)) create.open = false;
+      });
+      create?.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => (create.open = false)));
 
       // Pestañas dentro de un formulario: sólo muestran u ocultan partes; el
       // formulario se manda entero. La pestaña elegida queda en el hash para

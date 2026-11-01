@@ -171,6 +171,10 @@ Criterios de UX que conviene no romper:
   filtra las series sin portada ni link, y `currentSeries` va detrás de una
   guarda porque borrar todas las series rompía la home.
 
+### Panel: rediseño de noviembre de 2026
+
+Pedido del usuario ("el inicio se ve pobre"), aprobado sobre una maqueta. Menú lateral oscuro con botón **Crear** (abre el modal de alta de cada pantalla vía `#id`; el layout abre el modal también con `hashchange`), contadores de publicados por sección y punto en los ministerios con novedades; barra superior con título y "Ver el sitio"; en celular, barra de abajo con Inicio, dos secciones, "+" (hoja `#adm-crear`) y "Más" (abre el menú). Inicio como tablero: "Así se ve la portada hoy", "Para revisar" (novedades/anuncios vencidos, series incompletas, novedades que vencen en ≤3 días, personas que nunca entraron), Crear, "Qué está pasando" con vencimiento, "Últimos cambios" (sólo admin; `lib/content/activity.ts` lee los nombres de archivo de `history/`) y Ministerios. Novedades en tarjetas (`NoticeRows`) con filtros Todas/Publicadas/Vencidas.
+
 ### Ministerios: la ficha y los datos de cada uno
 
 **Foto del ministerio (panel → Imágenes, campo `photo`)**: en Kids llena el círculo de la portada con tramado; en Arde reemplaza la polaroid; en Life, Gold, Carcelario y Firmes va de fondo de la portada. Sin foto: logo en Kids, la polaroid del campa en Arde y el degradé en los demás.
