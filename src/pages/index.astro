@@ -242,8 +242,17 @@ const logoSlugs = new Set(['life', 'gold', 'kids', 'arde']);
             <a class="lz-btn" href="/devocional" data-r>Ver todos los devocionales</a>
           </div>
 
-          <a class="lz-plate lz-plate--tile" href="/devocional" data-r>
-            <div class="lz-mesh" aria-hidden="true"></div>
+          {/* Con imagen cargada, la placa muestra la foto del devocional bajo un
+              velo oscuro; sin imagen, el degradé de siempre. */}
+          <a class={`lz-plate lz-plate--tile${devotional.image ? ' lz-plate--photo' : ''}`} href="/devocional" data-r>
+            {devotional.image ? (
+              <>
+                <img class="lz-plate__photo" src={devotional.image} alt="" loading="lazy" />
+                <span class="lz-plate__veil" aria-hidden="true"></span>
+              </>
+            ) : (
+              <div class="lz-mesh" aria-hidden="true"></div>
+            )}
             <p class="lz-quote">{devotional.excerpt}</p>
             <span class="lz-lockup lz-lockup--tile">
               <span>devocional</span>

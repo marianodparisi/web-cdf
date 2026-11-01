@@ -682,6 +682,23 @@ html:not(.lz-js) .lz-nav__group:focus-within .lz-drop,
 .lz-plate--tile .lz-lockup { align-self: center; justify-self: center; }
 .lz-plate--tile .lz-logo { justify-self: center; }
 .lz-plate--tile .lz-mesh { transition: transform 1.4s var(--ease); }
+/* Placa con la foto del devocional: la imagen a sangre, apenas agrandada, y
+   un velo que la funde con el fondo (oscuro arriba y abajo para la cita y el
+   logo, viñeta en los bordes y un toque del dorado de la casa). Sin filter:
+   todo el difuminado lo dan los degradés del velo, que no cuestan nada. */
+.lz-plate--photo { background: #0b0c11; }
+.lz-plate > .lz-plate__photo { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(1.04); transition: transform 1.4s var(--ease); }
+.lz-plate--photo:hover > .lz-plate__photo { transform: scale(1.09); }
+.lz-plate > .lz-plate__veil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    radial-gradient(110% 85% at 50% 50%, transparent 20%, rgba(6, 7, 10, 0.85) 100%),
+    linear-gradient(180deg, rgba(8, 9, 13, 0.85) 0%, rgba(8, 9, 13, 0.55) 30%, rgba(8, 9, 13, 0.6) 65%, rgba(8, 9, 13, 0.92) 100%),
+    linear-gradient(135deg, color-mix(in srgb, var(--c1) 45%, transparent), transparent 55%),
+    linear-gradient(315deg, color-mix(in srgb, var(--c2) 40%, transparent), transparent 55%);
+}
 
 /* ── RADIO ──────────────────────────────────────────────────────────────── */
 .lz-radio { min-height: 90svh; }
