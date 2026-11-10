@@ -455,17 +455,53 @@ const footerColumns = [
         });
       });
 
-      // Mapa de destinos: un solo destino activo; hover, foco y tap.
-      document.querySelectorAll('[data-mapa]').forEach((mapa) => {
-        const puntos = [...mapa.querySelectorAll<HTMLElement>('[data-destino]')];
+      // Mapa de destinos. Una salida activa a la vez (fila + ficha + punto de su
+      // lugar). El filtro por año muestra sus salidas en la lista y apaga los
+      // puntos que no tienen ninguna en ese año.
+      document.querySelectorAll<HTMLElement>('[data-mapa]').forEach((mapa) => {
+        const filas = [...mapa.querySelectorAll<HTMLElement>('[data-salida]')];
         const fichas = [...mapa.querySelectorAll<HTMLElement>('[data-ficha]')];
+        const puntos = [...mapa.querySelectorAll<HTMLElement>('[data-punto]')];
+        const botones = [...mapa.querySelectorAll<HTMLElement>('[data-filtro]')];
+        let filtro = mapa.dataset.filtroInicial ?? '';
+        const entra = (fila: HTMLElement) => (fila.dataset.filtros ?? '').split(' ').includes(filtro);
+
         const activar = (slug?: string) => {
-          puntos.forEach((p) => p.classList.toggle('is-active', p.dataset.destino === slug));
+          const fila = filas.find((f) => f.dataset.salida === slug);
+          filas.forEach((f) => f.classList.toggle('is-active', f === fila));
           fichas.forEach((f) => f.classList.toggle('is-active', f.dataset.ficha === slug));
+          puntos.forEach((p) => p.classList.toggle('is-active', p.dataset.punto === fila?.dataset.lugar));
         };
+
+        const filtrar = (valor: string) => {
+          filtro = valor;
+          botones.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.filtro === valor)));
+          const visibles = filas.filter(entra);
+          filas.forEach((f) => {
+            if (f.parentElement) f.parentElement.hidden = !entra(f);
+          });
+          const lugares = new Set(visibles.map((f) => f.dataset.lugar));
+          puntos.forEach((p) => p.classList.toggle('is-dim', !lugares.has(p.dataset.punto)));
+          activar(visibles[0]?.dataset.salida);
+        };
+
+        botones.forEach((b) => b.addEventListener('click', () => filtrar(b.dataset.filtro ?? '')));
+        filas.forEach((fila) =>
+          ['mouseenter', 'focus', 'click'].forEach((evt) =>
+            fila.addEventListener(evt, () => activar(fila.dataset.salida)),
+          ),
+        );
+        // Un punto apagado no reacciona al hover; al tocarlo salta a su año.
         puntos.forEach((punto) =>
           ['mouseenter', 'focus', 'click'].forEach((evt) =>
-            punto.addEventListener(evt, () => activar(punto.dataset.destino)),
+            punto.addEventListener(evt, () => {
+              const delLugar = filas.filter((f) => f.dataset.lugar === punto.dataset.punto);
+              const enFiltro = delLugar.find(entra);
+              if (enFiltro) return activar(enFiltro.dataset.salida);
+              if (evt !== 'click' || !delLugar[0]) return;
+              filtrar(delLugar[0].dataset.anio ?? '');
+              activar(delLugar[0].dataset.salida);
+            }),
           ),
         );
       });

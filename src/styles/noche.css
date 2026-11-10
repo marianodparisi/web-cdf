@@ -883,8 +883,99 @@ p.lz-body { font-size: clamp(1.05rem, 1.3vw, 1.2rem); line-height: 1.55; color: 
 .lz-card h3 { font-size: clamp(1.3rem, 2vw, 1.8rem); font-weight: 800; letter-spacing: -0.025em; line-height: 1.02; }
 
 /* ── Mapa de destinos (misiones) ────────────────────────────────────────── */
-.lz-mapa { position: relative; margin-top: 48px; }
+/* Escritorio: costado con título, lista y datos; el mapa a la derecha */
+.lz-destinos {
+  display: grid;
+  grid-template-columns: minmax(260px, 340px) minmax(0, 1fr);
+  gap: clamp(32px, 4vw, 72px);
+  align-items: center;
+}
+.lz-destinos__lado { display: grid; gap: 28px; align-content: center; }
+.lz-destinos__intro { color: var(--soft); font-size: 1.05rem; line-height: 1.5; max-width: 34ch; }
+/* Filtro por año: pastillas que se deslizan de costado si hay muchos años */
+.lz-destinos__filtro { display: grid; gap: 18px; }
+.lz-destinos__anios {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  margin: 0 calc(var(--pad) * -1);
+  padding: 2px var(--pad);
+  mask-image: linear-gradient(90deg, transparent, #000 var(--pad), #000 calc(100% - var(--pad)), transparent);
+}
+.lz-destinos__anios::-webkit-scrollbar { display: none; }
+.lz-destinos__anio {
+  flex: none;
+  padding: 9px 16px;
+  border: 1px solid var(--faint);
+  border-radius: 999px;
+  background: none;
+  color: var(--soft);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+.lz-destinos__anio:hover { border-color: var(--soft); color: var(--white); }
+.lz-destinos__anio[aria-pressed='true'] { background: var(--white); border-color: var(--white); color: #121212; }
+.lz-destinos__lista { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--faint); }
+.lz-destinos__lista li { border-bottom: 1px solid var(--faint); animation: lz-fila 0.45s var(--ease) both; }
+.lz-destinos__lista li:nth-child(2) { animation-delay: 0.05s; }
+.lz-destinos__lista li:nth-child(3) { animation-delay: 0.1s; }
+@keyframes lz-fila {
+  from { opacity: 0; transform: translateY(8px); }
+}
+.lz-destinos__item {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+  padding: 20px 4px;
+  background: none;
+  border: 0;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.25s ease, padding 0.35s var(--ease);
+}
+.lz-destinos__item:hover,
+.lz-destinos__item:focus-visible,
+.lz-destinos__item.is-active { opacity: 1; }
+.lz-destinos__item.is-active { padding-left: 14px; }
+.lz-destinos__txt { display: grid; gap: 4px; }
+.lz-destinos__lugar { font-size: clamp(1.4rem, 1.9vw, 1.9rem); font-weight: 900; letter-spacing: -0.025em; line-height: 1; }
+.lz-destinos__meta { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--soft); }
+.lz-destinos__estado {
+  padding: 6px 10px;
+  border: 1px solid var(--faint);
+  border-radius: 999px;
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--soft);
+}
+.lz-destinos__estado.is-proxima { border-color: color-mix(in srgb, var(--accent) 60%, transparent); color: var(--accent); }
+.lz-destinos__datos { display: flex; gap: 40px; margin: 0; }
+.lz-destinos__datos div { display: grid; gap: 6px; }
+.lz-destinos__datos dt { font-size: 0.58rem; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: var(--soft); }
+.lz-destinos__datos dd { margin: 0; font-size: clamp(2.2rem, 3.4vw, 3.2rem); font-weight: 900; letter-spacing: -0.04em; line-height: 1; }
+
+.lz-mapa { position: relative; }
 .lz-mapa__lienzo { position: relative; }
+
+@media (max-width: 1080px) {
+  .lz-destinos { grid-template-columns: 1fr; gap: 48px; }
+  .lz-destinos__lado { grid-template-columns: 1fr 1fr; column-gap: 48px; align-items: end; }
+  .lz-destinos__lado > .lz-lockup, .lz-destinos__intro { grid-column: 1 / -1; }
+}
+@media (max-width: 767px) {
+  .lz-destinos__lado { grid-template-columns: 1fr; }
+}
 .lz-mapa__svg { display: block; width: 100%; height: auto; }
 .lz-mapa__svg path { fill: rgba(251, 248, 243, 0.1); stroke: rgba(251, 248, 243, 0.16); stroke-width: 0.5; }
 .lz-mapa__punto { position: absolute; transform: translate(-50%, -50%); display: grid; place-items: center; width: 34px; height: 34px; background: none; border: 0; cursor: pointer; }
@@ -901,12 +992,20 @@ p.lz-body { font-size: clamp(1.05rem, 1.3vw, 1.2rem); line-height: 1.55; color: 
 .lz-mapa__punto:hover .lz-mapa__rotulo,
 .lz-mapa__punto:focus-visible .lz-mapa__rotulo,
 .lz-mapa__punto.is-active .lz-mapa__rotulo { opacity: 1; }
+.lz-mapa__viajes { color: var(--soft); }
+/* Lugar con varios viajes: el punto un poco más grande */
+.lz-mapa__punto.is-varios .lz-mapa__pulso { width: 15px; height: 15px; }
+/* Lugar sin salidas en el año elegido: queda tenue, sin latido ni rótulo */
+.lz-mapa__punto { transition: opacity 0.3s ease; }
+.lz-mapa__punto.is-dim { opacity: 0.28; }
+.lz-mapa__punto.is-dim .lz-mapa__pulso { background: var(--white); }
+.lz-mapa__punto.is-dim:not(:focus-visible) .lz-mapa__rotulo { opacity: 0; }
 .lz-mapa__ficha {
   position: absolute;
-  left: clamp(140px, var(--x), calc(100% - 140px));
+  left: clamp(124px, var(--x), calc(100% - 124px));
   top: var(--y);
   z-index: 3;
-  width: 268px;
+  width: 236px;
   transform: translate(-50%, calc(-100% - 26px)) scale(0.96);
   transform-origin: bottom center;
   background: color-mix(in srgb, var(--bg) 92%, #fff 4%);

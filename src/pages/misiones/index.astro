@@ -2,6 +2,10 @@
 /**
  * Misiones, en el lenguaje noche. Los destinos salen de `src/data/missions.ts`
  * y el mapa es el SVG estático de `maqueta-mapa.ts` (sin librería ni tiles).
+ *
+ * Una misión es una salida (lugar + fecha); un lugar puede repetirse en otro
+ * año o mes. El mapa muestra un punto por lugar y la lista se filtra por año
+ * para que entren todas sin importar cuántas se acumulen.
  */
 import NocheLayout from '../../layouts/NocheLayout.astro';
 import NocheHero from '../../components/noche/NocheHero.astro';
@@ -9,14 +13,49 @@ import NocheCta from '../../components/noche/NocheCta.astro';
 import { missions } from '../../data/missions';
 import { mapaMundi, coordenadas, proyectar } from '../../data/maqueta-mapa';
 
-/* Sólo las misiones con coordenada cargada entran al mapa. */
-const destinos = missions
-  .filter((m) => coordenadas[m.slug])
-  .map((m) => ({
-    ...m,
-    ...proyectar(coordenadas[m.slug][0], coordenadas[m.slug][1]),
-    year: new Date(m.startDate).getFullYear(),
-  }));
+/* Mediodía UTC: con medianoche, en Argentina el 1° de mes caía en el mes anterior. */
+const fecha = (iso: string) => new Date(`${iso.slice(0, 10)}T12:00:00Z`);
+const nombreMes = new Intl.DateTimeFormat('es-AR', { month: 'long', timeZone: 'UTC' });
+
+/* Sólo las salidas cuyo lugar tiene coordenada cargada entran al mapa. */
+const salidas = missions
+  .map((m) => ({ ...m, lugar: m.lugar ?? m.slug }))
+  .filter((m) => coordenadas[m.lugar])
+  .map((m) => {
+    const f = fecha(m.startDate);
+    const mes = nombreMes.format(f);
+    return {
+      ...m,
+      year: f.getUTCFullYear(),
+      mes: mes.charAt(0).toUpperCase() + mes.slice(1),
+      time: f.getTime(),
+      proxima: m.stage === 'Proxima',
+    };
+  })
+  .sort((a, b) => b.time - a.time);
+
+/* Un punto por lugar, con la cantidad de viajes que tuvo. */
+const lugares = [
+  ...salidas
+    .reduce((acc, s) => {
+      const previo = acc.get(s.lugar);
+      if (previo) previo.viajes += 1;
+      else acc.set(s.lugar, { lugar: s.lugar, place: s.place, viajes: 1, ...proyectar(...coordenadas[s.lugar]) });
+      return acc;
+    }, new Map<string, { lugar: string; place: string; viajes: number; x: number; y: number }>())
+    .values(),
+];
+
+const anios = [...new Set(salidas.map((s) => s.year))];
+const hayProximas = salidas.some((s) => s.proxima);
+const filtros = [
+  ...(hayProximas ? [{ valor: 'proximas', label: 'Próximas' }] : []),
+  ...anios.map((a) => ({ valor: String(a), label: String(a) })),
+];
+const filtroInicial = filtros[0]?.valor ?? '';
+const filtrosDe = (s: (typeof salidas)[number]) => [s.proxima ? 'proximas' : '', String(s.year)].filter(Boolean);
+const visibles = salidas.filter((s) => filtrosDe(s).includes(filtroInicial));
+const activaInicial = visibles[0];
 
 const columnas = [
   { n: '01', title: 'Ir', text: 'Salidas cortas para servir junto a iglesias locales que ya están sembrando en la región.' },
@@ -77,49 +116,113 @@ const destacada = missions[0];
 
     <section class="lz-section lz-dark lz-dark--2" id="destinos">
       <div class="lz-wrap">
-        <h2 class="lz-lockup lz-lockup--md" data-r><span>destinos</span></h2>
+        {salidas.length > 0 && (
+          <div class="lz-destinos" data-mapa data-filtro-inicial={filtroInicial}>
+            {/* En escritorio el mapa solo dejaba media pantalla vacía: el costado
+                lleva el título, el filtro por año y la lista, que comparte
+                estado con los puntos del mapa. */}
+            <aside class="lz-destinos__lado">
+              <h2 class="lz-lockup lz-lockup--md" data-r><span>destinos</span></h2>
+              <p class="lz-destinos__intro" data-r>
+                Donde ya estuvimos y hacia dónde vamos. Elegí un año y un destino para verlo en el mapa.
+              </p>
 
-        {destinos.length > 0 && (
-          <div class="lz-mapa" data-mapa data-r>
-            <div class="lz-mapa__lienzo">
-              <svg
-                class="lz-mapa__svg"
-                viewBox={`0 0 ${mapaMundi.width} ${mapaMundi.height}`}
-                role="img"
-                aria-label="Mapa con los destinos de misiones"
-              >
-                <path d={mapaMundi.path} />
-              </svg>
-              {destinos.map((d, i) => (
-                <button
-                  type="button"
-                  class={`lz-mapa__punto${i === 0 ? ' is-active' : ''}`}
-                  style={`left: ${d.x}%; top: ${d.y}%`}
-                  data-destino={d.slug}
-                  aria-label={`${d.place}, ${d.country}, ${d.year}`}
-                >
-                  <span class="lz-mapa__pulso"></span>
-                  <span class="lz-mapa__rotulo">{d.place}</span>
-                </button>
-              ))}
-            </div>
-
-            {/* Las fichas son hermanas del lienzo, no hijas: si entraran en su
-                flujo lo estirarían y los puntos, en %, saldrían del mapa. */}
-            {destinos.map((d, i) => (
-              <article
-                class={`lz-mapa__ficha${i === 0 ? ' is-active' : ''}`}
-                style={`--x: ${d.x}%; --y: ${d.y}%`}
-                data-ficha={d.slug}
-              >
-                <img src={d.image} alt={d.place} loading="lazy" />
-                <div class="lz-mapa__cuerpo">
-                  <span class="lz-spaced">{d.country} · {d.year} · {d.stage}</span>
-                  <h3 class="lz-mapa__lugar">{d.place}</h3>
-                  <p class="lz-mapa__foco">{d.focus}</p>
+              <div class="lz-destinos__filtro" data-r>
+                <div class="lz-destinos__anios" role="group" aria-label="Filtrar salidas por año">
+                  {filtros.map((f) => (
+                    <button
+                      type="button"
+                      class="lz-destinos__anio"
+                      data-filtro={f.valor}
+                      aria-pressed={f.valor === filtroInicial ? 'true' : 'false'}
+                    >
+                      {f.label}
+                    </button>
+                  ))}
                 </div>
-              </article>
-            ))}
+
+                <ol class="lz-destinos__lista">
+                  {salidas.map((s) => (
+                    <li hidden={!filtrosDe(s).includes(filtroInicial)}>
+                      <button
+                        type="button"
+                        class={`lz-destinos__item${s === activaInicial ? ' is-active' : ''}`}
+                        data-salida={s.slug}
+                        data-lugar={s.lugar}
+                        data-anio={String(s.year)}
+                        data-filtros={filtrosDe(s).join(' ')}
+                      >
+                        <span class="lz-destinos__txt">
+                          <span class="lz-destinos__lugar">{s.place}</span>
+                          <span class="lz-destinos__meta">{s.country} · {s.mes} {s.year}</span>
+                        </span>
+                        <span class={`lz-destinos__estado${s.proxima ? ' is-proxima' : ''}`}>
+                          {s.proxima ? 'Próxima' : 'Realizada'}
+                        </span>
+                      </button>
+                    </li>
+                  ))}
+                </ol>
+              </div>
+
+              <dl class="lz-destinos__datos" data-r>
+                <div><dt>Salidas</dt><dd>{String(salidas.length).padStart(2, '0')}</dd></div>
+                <div><dt>Destinos</dt><dd>{String(lugares.length).padStart(2, '0')}</dd></div>
+                {anios.length > 1 && (
+                  <div><dt>Desde</dt><dd>{anios[anios.length - 1]}</dd></div>
+                )}
+              </dl>
+            </aside>
+
+            <div class="lz-mapa" data-r>
+              <div class="lz-mapa__lienzo">
+                <svg
+                  class="lz-mapa__svg"
+                  viewBox={`0 0 ${mapaMundi.width} ${mapaMundi.height}`}
+                  role="img"
+                  aria-label="Mapa con los destinos de misiones"
+                >
+                  <path d={mapaMundi.path} />
+                </svg>
+                {lugares.map((l) => {
+                  const enFiltro = visibles.some((s) => s.lugar === l.lugar);
+                  return (
+                    <button
+                      type="button"
+                      class={`lz-mapa__punto${activaInicial?.lugar === l.lugar ? ' is-active' : ''}${enFiltro ? '' : ' is-dim'}${l.viajes > 1 ? ' is-varios' : ''}`}
+                      style={`left: ${l.x}%; top: ${l.y}%`}
+                      data-punto={l.lugar}
+                      aria-label={`${l.place}, ${l.viajes} ${l.viajes === 1 ? 'viaje' : 'viajes'}`}
+                    >
+                      <span class="lz-mapa__pulso"></span>
+                      <span class="lz-mapa__rotulo">
+                        {l.place}{l.viajes > 1 && <span class="lz-mapa__viajes"> · {l.viajes} viajes</span>}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Las fichas son hermanas del lienzo, no hijas: si entraran en su
+                  flujo lo estirarían y los puntos, en %, saldrían del mapa. */}
+              {salidas.map((s) => {
+                const l = lugares.find((x) => x.lugar === s.lugar)!;
+                return (
+                  <article
+                    class={`lz-mapa__ficha${s === activaInicial ? ' is-active' : ''}`}
+                    style={`--x: ${l.x}%; --y: ${l.y}%`}
+                    data-ficha={s.slug}
+                  >
+                    <img src={s.image} alt={s.place} loading="lazy" />
+                    <div class="lz-mapa__cuerpo">
+                      <span class="lz-spaced">{s.country} · {s.mes} {s.year} · {s.proxima ? 'Próxima' : 'Realizada'}</span>
+                      <h3 class="lz-mapa__lugar">{s.place}</h3>
+                      <p class="lz-mapa__foco">{s.focus}</p>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
           </div>
         )}
       </div>
