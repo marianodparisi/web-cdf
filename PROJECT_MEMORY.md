@@ -422,6 +422,8 @@ compartidas. `src/styles/global.css` ya tiene bloques casi repetidos por página
 
 ## Pendiente
 
+La lista viva de lo que falta (seguridad, producción y contenido) está en **`PENDIENTES.md`**. La auditoría de seguridad del 15/11/2026 está resumida ahí.
+
 ### Deploy del panel — hecho
 
 El 26 de julio de 2026 el panel quedó funcionando en producción: variables
