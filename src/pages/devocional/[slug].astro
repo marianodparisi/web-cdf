@@ -30,7 +30,7 @@ const getYouTubeEmbedUrl = (videoUrl?: string) => {
 const embed = getYouTubeEmbedUrl(post.videoUrl);
 ---
 
-<NocheLayout title={`${post.title} · Iglesia Corazón de Fuego`}>
+<NocheLayout title={`${post.title} · Iglesia Corazón de Fuego`} description={post.excerpt} image={post.image || undefined}>
   <header class="lz-plate lz-phero lz-phero--short">
     <div class="lz-mesh" aria-hidden="true"></div>
     <div>

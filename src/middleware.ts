@@ -1,5 +1,6 @@
 import { defineMiddleware } from 'astro/middleware';
 import { getAdminSessionCookie, loadAdminSession } from './lib/admin-auth';
+import { KNOWN_HOSTS } from './lib/site';
 
 const isProtectedAdminPath = (pathname: string) =>
   pathname.startsWith('/admin') && pathname !== '/admin/login';
@@ -11,6 +12,26 @@ const isProtectedAdminApiPath = (pathname: string) =>
 
 export const onRequest = defineMiddleware(async (context, next) => {
   const { pathname } = context.url;
+
+  // Formularios del panel: sólo se aceptan si vienen de un dominio de la
+  // iglesia (login incluido). Reemplaza al checkOrigin de Astro, que detrás del proxy de
+  // Hostinger rompía el login (ver astro.config.mjs). Sin cabecera Origin se
+  // deja pasar: la cookie SameSite=Lax ya no viaja desde otros sitios.
+  if (context.request.method === 'POST' && pathname.startsWith('/api/admin')) {
+    const origin = context.request.headers.get('origin');
+    if (origin && origin !== 'null') {
+      let host = '';
+      try {
+        host = new URL(origin).hostname;
+      } catch {
+        host = '';
+      }
+      if (!KNOWN_HOSTS.includes(host)) {
+        return new Response('Origen no permitido', { status: 403 });
+      }
+    }
+  }
+
   if (!isProtectedAdminPath(pathname) && !isProtectedAdminApiPath(pathname)) {
     return next();
   }

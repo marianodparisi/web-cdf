@@ -1,5 +1,5 @@
 /**
- * MAQUETA — Mapamundi de la sección Destinos de /maqueta/misiones.
+ * Mapamundi de la sección Destinos de /misiones.
  *
  * El trazado sale de Natural Earth 110m (dominio público), vía el paquete
  * `world-atlas`. Se convirtió una sola vez de TopoJSON a paths SVG con

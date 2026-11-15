@@ -1,7 +1,7 @@
 export interface Mission {
   slug: string;
   /**
-   * Clave del lugar en `coordenadas` (maqueta-mapa.ts). Sólo hace falta cuando
+   * Clave del lugar en `coordenadas` (mapa.ts). Sólo hace falta cuando
    * se repite un destino: `{ slug: 'salta-2026', lugar: 'salta', ... }`.
    */
   lugar?: string;

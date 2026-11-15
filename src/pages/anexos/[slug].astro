@@ -1,18 +1,18 @@
 ---
 /**
  * Página de sede, en el lenguaje noche. El contenido sale de
- * `src/data/maqueta-anexos.ts` y cada sede tiñe la página con su color.
+ * `src/data/anexos.ts` y cada sede tiñe la página con su color.
  */
 import NocheLayout from '../../layouts/NocheLayout.astro';
 import NocheHero from '../../components/noche/NocheHero.astro';
 import NocheCta from '../../components/noche/NocheCta.astro';
-import { maquetaAnexos } from '../../data/maqueta-anexos';
+import { anexos } from '../../data/anexos';
 import { getMinistries } from '../../lib/content/collections';
 
 const { slug } = Astro.params;
 
-const index = maquetaAnexos.findIndex((a) => a.slug === slug);
-const anexo = maquetaAnexos[index];
+const index = anexos.findIndex((a) => a.slug === slug);
+const anexo = anexos[index];
 if (!anexo) return Astro.redirect('/');
 
 const ministries = await getMinistries();
@@ -21,7 +21,7 @@ const fotos = ['/sedes/nosotros1.JPG', '/sedes/nosotros2.JPG', '/sedes/nosotros3
 const mapsHref = `https://www.google.com/maps/search/${encodeURIComponent(anexo.addressLines.join(' '))}`;
 ---
 
-<NocheLayout title={`Sede ${anexo.name} · Iglesia Corazón de Fuego`}>
+<NocheLayout title={`Sede ${anexo.name} · Iglesia Corazón de Fuego`} description={`Sede ${anexo.name} de Corazón de Fuego: ${anexo.subtitle}`} image={anexo.heroImage}>
   <div class="lz-tint" style={`--m: ${anexo.color}`}>
     <NocheHero lines={[anexo.name.toLowerCase()]} kicker="Nuestras sedes" lead={anexo.subtitle} image={anexo.heroImage}>
       <a class="lz-btn" href="#llegar">Cómo llegar</a>

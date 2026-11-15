@@ -51,6 +51,22 @@ Sitio web de Iglesia Corazón de Fuego. La experiencia debe comunicar presencia,
 - El usuario de Hostinger (`u857415758`) se dedujo del nombre de la base
   `u857415758_cdfweb`.
 
+### Dominio (15 de noviembre de 2026)
+
+- Principal: **https://www.corazondefuego.com**. El apex `corazondefuego.com`
+  redirige a www desde Hostinger (no desde el código).
+- Cada servidor declara el suyo con **`SITE_URL`** en el entorno de ejecución:
+  producción `https://www.corazondefuego.com`, dev
+  `https://dev.corazondefuego.com`. Lo lee `src/lib/site.ts` en cada pedido;
+  sin la variable usa el origen del pedido.
+- De eso salen canonical, `og:url`/`og:image` absolutos, `/sitemap.xml` y
+  `/robots.txt`. Sólo www/apex son indexables: dev y local mandan
+  `noindex, nofollow` y un robots que bloquea todo, para no competir con www.
+  La 404 tampoco se indexa.
+- SEO: `NocheLayout` recibe `description` e `image` (default
+  `/brand/og.jpg`, 1200×630 generada con el logo). Cada página pública pasa
+  la suya; ministerios, devocionales y sedes usan su excerpt/subtítulo y foto.
+
 ## Stack
 
 - Astro `^7.4.0` (al 18 de octubre de 2026, `npm audit` en 0).
@@ -244,6 +260,14 @@ Detalles que conviene no repisar:
   se puede leer (si no, borraría todas las fotos del sitio). Busca en todos los
   strings, no en una lista de campos, para que un campo nuevo quede cubierto
   solo.
+- Las imágenes fijas de `public/` se recomprimieron el 15 de noviembre de
+  2026 (de ~18 MB a ~3 MB): JPG mozjpeg 80 a 2000–2400 px con el mismo
+  nombre (series y sedes están referenciadas desde el JSON de contenido, no
+  cambiar sus rutas), las PNG opacas de Arde pasaron a WebP. El video de
+  Mozambique se re-codificó (x264 CRF 31, faststart, sin audio): 9,6 → 6,1 MB;
+  el original ya venía comprimido y no da para menos sin perder calidad. No
+  hay ffmpeg en la máquina: se usó `ffmpeg-static` desde el scratchpad.
+  Fotos nuevas en `public/`: pasarlas por sharp antes de commitear.
 
 ### Seguridad
 
@@ -260,6 +284,14 @@ Detalles que conviene no repisar:
   Para cortar el acceso al instante hay que sacarle el acceso desde el panel:
   el usuario se busca en la base en cada request y si no está, la sesión muere.
 - No se puede borrar ni bajar a editor al último administrador.
+- **`checkOrigin` de Astro queda apagado**: detrás del proxy de Hostinger
+  rompía el login (commit cf828c5, julio de 2026). Lo reemplaza el middleware:
+  todo POST a `/api/admin/*` (login incluido) con cabecera `Origin` de un host
+  fuera de `KNOWN_HOSTS` (`src/lib/site.ts`: www, apex, dev, localhost) recibe
+  403. Compara contra una lista fija, no contra el host del pedido, por eso no
+  le afecta que el proxy lo reescriba. Sin `Origin` pasa: la cookie es
+  SameSite=Lax. Si se suma un dominio, agregarlo a `KNOWN_HOSTS` y a
+  `allowedDomains` en `astro.config.mjs`.
 
 ## Archivos centrales
 
@@ -458,7 +490,7 @@ va prefijado con `.as`. Se borra sin dejar rastro si no convence.
 - `src/layouts/MaquetaLayout.astro` — nav, footer y datos compartidos.
 - `src/styles/maqueta.css` — el sistema de diseño entero.
 - `src/scripts/maqueta-ui.js` — reveals, rotador, pestañas, nav y menú mobile.
-- `src/data/maqueta-anexos.ts` — datos de sedes extraídos de `src/pages/anexos/*.astro`,
+- `src/data/anexos.ts` — datos de sedes extraídos de `src/pages/anexos/*.astro`,
   donde hoy viven como props sueltas de `AnexoTemplate`.
 
 ### Tokens, medidos y no estimados
@@ -569,7 +601,7 @@ devocional, radio.
 
 ### Mapa de destinos de `/maqueta/misiones`
 
-`src/data/maqueta-mapa.ts`. Natural Earth 110m (dominio público, vía
+`src/data/mapa.ts`. Natural Earth 110m (dominio público, vía
 `world-atlas`) convertido **una sola vez** de TopoJSON a paths SVG con
 proyección equirectangular. No hay librería de mapas ni tiles: un mapa con
 tiles depende de un servidor externo en cada carga. Son 33 KB estáticos.

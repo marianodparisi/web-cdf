@@ -37,7 +37,7 @@ const lugar = placeLines(arde.place);
 const mapa = externalHref(arde.mapUrl);
 ---
 
-<NocheLayout title="Arde · Iglesia Corazón de Fuego" solidNav theme="arde">
+<NocheLayout title="Arde · Iglesia Corazón de Fuego" description="Arde: el ministerio de adolescentes de Corazón de Fuego. Una comunidad para descubrir tu identidad y vivir la fe con pasión." solidNav theme="arde">
   <link slot="head" rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Yellowtail&display=swap" />
 
   <div class="ad ad--feed">
@@ -58,7 +58,7 @@ const mapa = externalHref(arde.mapUrl);
           <figure class="ad-polaroid">
             <span class="ad-tape" aria-hidden="true"></span>
             {/* La foto que se carga en el panel (Imágenes); sin foto, la del campa. */}
-            <img src={arde.photo || '/ministries/arde/arde1.png'} alt="Los chicos de Arde" />
+            <img src={arde.photo || '/ministries/arde/arde1.webp'} alt="Los chicos de Arde" />
           </figure>
           <img class="ad-sticker" src={arde.image} alt="Logo de Arde" />
         </div>
@@ -153,7 +153,7 @@ const mapa = externalHref(arde.mapUrl);
     <section class="ad-section ad-section--collage">
       <div class="ad-wrap">
         <figure class="ad-collage" data-r>
-          <img src="/ministries/arde/ardehero.png" alt="Collage de fotos de Arde" loading="lazy" />
+          <img src="/ministries/arde/ardehero.webp" alt="Collage de fotos de Arde" loading="lazy" />
         </figure>
       </div>
     </section>

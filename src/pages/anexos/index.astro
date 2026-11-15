@@ -6,16 +6,16 @@
 import NocheLayout from '../../layouts/NocheLayout.astro';
 import NocheHero from '../../components/noche/NocheHero.astro';
 import NocheCta from '../../components/noche/NocheCta.astro';
-import { maquetaAnexos } from '../../data/maqueta-anexos';
+import { anexos } from '../../data/anexos';
 ---
 
-<NocheLayout title="Nuestras Sedes · Iglesia Corazón de Fuego">
+<NocheLayout title="Nuestras Sedes · Iglesia Corazón de Fuego" description="Las sedes de Corazón de Fuego: encontrá la más cercana, con dirección y horarios de reunión.">
   <NocheHero lines={['nuestras', 'sedes']} lead="Una iglesia en varias ciudades." image="/sedes/nosotros3.JPG" short />
 
   <section class="lz-section lz-dark">
     <div class="lz-wrap">
       <div class="lz-tiles">
-        {maquetaAnexos.map((a) => (
+        {anexos.map((a) => (
           <a class="lz-tile" href={`/anexos/${a.slug}`} data-r>
             <span class="lz-tile__name">{a.name}</span>
             <span class="lz-spaced">{a.addressLines[0] ?? a.yearsLabel}</span>

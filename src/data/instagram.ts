@@ -32,7 +32,7 @@ const muestra: Record<Slug, { account: IgAccount; post: IgPost }> = {
     account: { username: 'cdfarde', avatar: '/ministries/arde/arde.png', url: 'https://www.instagram.com/cdfarde/' },
     post: {
       type: 'carousel',
-      media: ['/ministries/arde/arde1.png', '/ministries/arde/ardehero.png', '/ministries/arde/campaarde.jpg'],
+      media: ['/ministries/arde/arde1.webp', '/ministries/arde/ardehero.webp', '/ministries/arde/campaarde.jpg'],
       caption: '¡Así vivimos el Campa Arde 2026! 🔥\nGracias a cada uno de los que hicieron posible estos días. Deslizá para ver más fotos 👉',
       date: '2026-10-05T18:00:00Z',
       permalink: 'https://www.instagram.com/cdfarde/',

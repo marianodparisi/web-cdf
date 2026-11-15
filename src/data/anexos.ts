@@ -1,14 +1,11 @@
 /**
- * Datos de las sedes para la MAQUETA.
+ * Datos de las sedes: fuente única de la ruta dinámica `anexos/[slug].astro`,
+ * del menú Visitanos, de contacto, nosotros, ministerios y el sitemap.
  *
- * Extraídos de las páginas reales de `src/pages/anexos/*.astro`, donde hoy
- * viven como props sueltas de `AnexoTemplate`. Acá quedan como datos para que
- * la maqueta pueda recorrerlos con una sola ruta dinámica.
- *
- * Es un archivo de la maqueta: si el rediseño avanza, esto reemplaza a las
- * cinco páginas y pasa a ser la fuente única.
+ * Sólo Ramos Mejía tiene datos reales; el resto de las sedes todavía lleva
+ * dirección, horarios y fotos de ejemplo hasta que la iglesia los pase.
  */
-export interface MaquetaAnexo {
+export interface Anexo {
   slug: string;
   name: string;
   subtitle: string;
@@ -28,7 +25,7 @@ export interface MaquetaAnexo {
   color: string;
 }
 
-export const maquetaAnexos: MaquetaAnexo[] = [
+export const anexos: Anexo[] = [
   {
     slug: 'palito',
     name: 'Palito',

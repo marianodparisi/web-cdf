@@ -16,7 +16,7 @@ import { ministryColors } from '../../data/ministry-colors';
 import NocheHero from '../../components/noche/NocheHero.astro';
 import NocheCta from '../../components/noche/NocheCta.astro';
 import { getMinistries } from '../../lib/content/collections';
-import { maquetaAnexos } from '../../data/maqueta-anexos';
+import { anexos } from '../../data/anexos';
 
 const { slug } = Astro.params;
 const ministries = await getMinistries();
@@ -58,7 +58,7 @@ const nameWords = ministry.name.toLowerCase().split(' ');
 const lines = nameWords.length > 1 ? [nameWords.slice(0, -1).join(' '), nameWords[nameWords.length - 1]] : nameWords;
 ---
 
-<NocheLayout title={`${ministry.name} · Iglesia Corazón de Fuego`}>
+<NocheLayout title={`${ministry.name} · Iglesia Corazón de Fuego`} description={ministry.excerpt} image={ministry.photo || undefined}>
     <div class="lz-tint" style={`--m: ${color}`}>
       <NocheHero lines={lines} kicker={ministry.area} image={ministry.photo || undefined}>
         <Fragment slot="quote">{ministry.excerpt}</Fragment>
@@ -146,7 +146,7 @@ const lines = nameWords.length > 1 ? [nameWords.slice(0, -1).join(' '), nameWord
             </div>
           </div>
           <div class="lz-tiles">
-            {maquetaAnexos.map((a) => (
+            {anexos.map((a) => (
               <a class="lz-tile" href={`/anexos/${a.slug}`} data-r>
                 <span class="lz-tile__name">{a.name}</span>
                 <span class="lz-spaced">{a.addressLines[0] ?? a.yearsLabel}</span>

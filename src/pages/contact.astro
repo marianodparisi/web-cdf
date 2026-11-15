@@ -6,7 +6,7 @@
 import NocheLayout from '../layouts/NocheLayout.astro';
 import NocheHero from '../components/noche/NocheHero.astro';
 import NocheCta from '../components/noche/NocheCta.astro';
-import { maquetaAnexos } from '../data/maqueta-anexos';
+import { anexos } from '../data/anexos';
 
 const direccion = ['Leandro N. Alem 467', 'Ramos Mejía, Buenos Aires'];
 const email = 'info@corazondefuego.com';
@@ -20,7 +20,7 @@ const horarios = [
 const mapsHref = `https://www.google.com/maps/search/${encodeURIComponent(direccion.join(' '))}`;
 ---
 
-<NocheLayout title="Contacto · Iglesia Corazón de Fuego">
+<NocheLayout title="Contacto · Iglesia Corazón de Fuego" description="Escribinos o visitanos: dirección, horarios de reunión y formas de contacto de la Iglesia Corazón de Fuego.">
   <NocheHero lines={['hablemos']} kicker="Contacto" short>
     <Fragment slot="quote">
       Escribinos por lo que necesites: una consulta, un pedido de oración o
@@ -91,7 +91,7 @@ const mapsHref = `https://www.google.com/maps/search/${encodeURIComponent(direcc
         </h2>
       </div>
       <div class="lz-tiles">
-        {maquetaAnexos.map((a) => (
+        {anexos.map((a) => (
           <a class="lz-tile" href={`/anexos/${a.slug}`} data-r>
             <span class="lz-tile__name">{a.name}</span>
             <span class="lz-spaced">{a.addressLines[0] ?? a.yearsLabel}</span>

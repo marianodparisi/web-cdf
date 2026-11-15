@@ -1,7 +1,7 @@
 ---
 /**
  * Misiones, en el lenguaje noche. Los destinos salen de `src/data/missions.ts`
- * y el mapa es el SVG estático de `maqueta-mapa.ts` (sin librería ni tiles).
+ * y el mapa es el SVG estático de `mapa.ts` (sin librería ni tiles).
  *
  * Una misión es una salida (lugar + fecha); un lugar puede repetirse en otro
  * año o mes. El mapa muestra un punto por lugar y la lista se filtra por año
@@ -11,7 +11,7 @@ import NocheLayout from '../../layouts/NocheLayout.astro';
 import NocheHero from '../../components/noche/NocheHero.astro';
 import NocheCta from '../../components/noche/NocheCta.astro';
 import { missions } from '../../data/missions';
-import { mapaMundi, coordenadas, proyectar } from '../../data/maqueta-mapa';
+import { mapaMundi, coordenadas, proyectar } from '../../data/mapa';
 
 /* Mediodía UTC: con medianoche, en Argentina el 1° de mes caía en el mes anterior. */
 const fecha = (iso: string) => new Date(`${iso.slice(0, 10)}T12:00:00Z`);
@@ -66,7 +66,7 @@ const columnas = [
 const destacada = missions[0];
 ---
 
-<NocheLayout title="Misiones · Iglesia Corazón de Fuego">
+<NocheLayout title="Misiones · Iglesia Corazón de Fuego" description="Misiones de Corazón de Fuego: llevar el evangelio a otras ciudades y naciones, y cómo podés sumarte.">
   <div class="lz-tint" style="--m: #35b887">
     <NocheHero
       lines={['misiones']}

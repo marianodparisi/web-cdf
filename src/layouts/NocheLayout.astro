@@ -14,9 +14,10 @@ import '../styles/tailwind.css';
 import '../styles/noche.css';
 import { getMinistries } from '../lib/content/collections';
 import DropCard, { type DropCardData } from '../components/noche/DropCard.astro';
-import { maquetaAnexos } from '../data/maqueta-anexos';
+import { anexos } from '../data/anexos';
 import { educativos } from '../data/educativos';
 import { ministryColors } from '../data/ministry-colors';
+import { siteUrl, isIndexable } from '../lib/site';
 
 interface Props {
   title?: string;
@@ -28,9 +29,27 @@ interface Props {
   /** Tema de la página: agrega `lz--{theme}` al body para que su hoja propia
       tiña el menú, el panel mobile y la letra (Kids, Arde). */
   theme?: string;
+  /** Resumen para Google y para la vista previa al compartir el link. */
+  description?: string;
+  /** Imagen de la vista previa al compartir (ruta local o URL). */
+  image?: string;
 }
 
-const { title = 'Iglesia Corazón de Fuego', solidNav = false, hideNav = false, theme }: Props = Astro.props;
+const {
+  title = 'Iglesia Corazón de Fuego',
+  solidNav = false,
+  hideNav = false,
+  theme,
+  description = 'Iglesia Corazón de Fuego: una familia que vive y comparte el evangelio. Reuniones, ministerios, sedes y devocionales.',
+  image = '/brand/og.jpg',
+}: Props = Astro.props;
+
+// SEO: el dominio sale de SITE_URL (www en producción, dev en dev) y fuera
+// de producción se pide no indexar, para que dev no compita en Google.
+const base = siteUrl(Astro.url);
+const canonical = base + Astro.url.pathname;
+const ogImage = /^https?:/.test(image) ? image : base + image;
+const indexable = isIndexable(Astro.url) && Astro.response.status !== 404;
 
 const ministries = await getMinistries();
 const mapsUrl = 'https://maps.app.goo.gl/mEVMgoTXbV3BULVq8';
@@ -67,7 +86,7 @@ interface MenuGroup {
 const HORARIO_CENTRAL = 'Vie y Sáb 20 hs · Dom 9:30 y 11 hs';
 const sedeCard = (sede: (typeof sedes)[number]): DropCardData => {
   const slug = sede.href.split('/').pop();
-  const anexo = maquetaAnexos.find((a) => a.slug === slug);
+  const anexo = anexos.find((a) => a.slug === slug);
   if (slug === 'ramos-mejia') {
     return { kicker: 'Sede central', title: sede.name, text: HORARIO_CENTRAL, cta: 'Cómo llegar', href: mapsUrl, external: true, color: anexo?.color };
   }
@@ -185,6 +204,16 @@ const footerColumns = [
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
+    <meta name="description" content={description} />
+    {indexable ? <link rel="canonical" href={canonical} /> : <meta name="robots" content="noindex, nofollow" />}
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_AR" />
+    <meta property="og:site_name" content="Iglesia Corazón de Fuego" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" type="image/png" href="/brand/favico.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

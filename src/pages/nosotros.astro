@@ -6,7 +6,7 @@
 import NocheLayout from '../layouts/NocheLayout.astro';
 import NocheHero from '../components/noche/NocheHero.astro';
 import NocheCta from '../components/noche/NocheCta.astro';
-import { maquetaAnexos } from '../data/maqueta-anexos';
+import { anexos } from '../data/anexos';
 import { getMinistries } from '../lib/content/collections';
 
 const ministries = await getMinistries();
@@ -33,7 +33,7 @@ const pilares = [
 const fotos = ['/sedes/nosotros1.JPG', '/sedes/nosotros2.JPG', '/sedes/nosotros3.JPG'];
 ---
 
-<NocheLayout title="Nosotros · Iglesia Corazón de Fuego">
+<NocheLayout title="Nosotros · Iglesia Corazón de Fuego" description="Quiénes somos: la historia, la visión y las personas detrás de la Iglesia Corazón de Fuego.">
   <NocheHero
     lines={['nosotros']}
     kicker="Iglesia Corazón de Fuego · Ramos Mejía"
@@ -113,7 +113,7 @@ const fotos = ['/sedes/nosotros1.JPG', '/sedes/nosotros2.JPG', '/sedes/nosotros3
         <p class="lz-quote lz-quote--side" data-r>Sedes. <strong>Una iglesia en varias ciudades.</strong></p>
       </div>
       <div class="lz-tiles">
-        {maquetaAnexos.map((a) => (
+        {anexos.map((a) => (
           <a class="lz-tile" href={`/anexos/${a.slug}`} data-r>
             <span class="lz-tile__name">{a.name}</span>
             <span class="lz-spaced">{a.yearsValue} · {a.yearsLabel}</span>
