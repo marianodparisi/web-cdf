@@ -1,0 +1,43 @@
+---
+/**
+ * Página no encontrada, con el lenguaje noche del sitio: el hero de siempre
+ * (cita, lockup, logo) y accesos a lo que la gente suele buscar. Astro la
+ * sirve con estado 404 para cualquier ruta que no exista.
+ */
+import NocheLayout from '../layouts/NocheLayout.astro';
+import NocheHero from '../components/noche/NocheHero.astro';
+
+Astro.response.status = 404;
+
+const atajos = [
+  { kicker: 'Inicio', title: 'Volver a casa', href: '/' },
+  { kicker: 'Esta semana', title: 'Devocional', href: '/devocional' },
+  { kicker: 'Encontrá tu lugar', title: 'Ministerios', href: '/ministerios' },
+  { kicker: 'Cerca tuyo', title: 'Nuestras sedes', href: '/anexos' },
+  { kicker: 'Escribinos', title: 'Contacto', href: '/contact' },
+];
+---
+
+<NocheLayout title="Página no encontrada · Iglesia Corazón de Fuego">
+  <NocheHero lines={['te perdiste', 'un poco']} kicker="Error 404" lead="La página que buscás no existe o cambió de lugar.">
+    <Fragment slot="quote">
+      Todos nos perdemos alguna vez. {' '}<strong>Lo importante es volver a casa.</strong>
+    </Fragment>
+    <a class="lz-btn" href="/">Volver al inicio</a>
+    <a class="lz-btn lz-btn--ghost" href="/contact">Escribinos</a>
+  </NocheHero>
+
+  <section class="lz-section lz-dark">
+    <div class="lz-wrap">
+      <p class="lz-spaced lz-kicker" data-r>Quizás buscabas</p>
+      <div class="lz-tiles">
+        {atajos.map((a) => (
+          <a class="lz-tile" href={a.href} data-r>
+            <span class="lz-tile__name">{a.title}</span>
+            <span class="lz-spaced">{a.kicker}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</NocheLayout>
