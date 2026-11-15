@@ -760,6 +760,8 @@ html:not(.lz-js) .lz-nav__group:focus-within .lz-drop,
 .lz-phero--short { min-height: 72svh; }
 .lz-phero--centered .lz-lockup { align-items: center; text-align: center; }
 .lz-phero--centered .lz-lockup__shift { margin-left: 0; }
+/* Sin barra arriba (la 404) no hace falta dejarle lugar: menos aire. */
+.lz-phero.lz-phero--centered { padding-top: 40px; }
 
 /* ── Cabecera de sección ───────────────────────────────────────────────── */
 .lz-kicker { display: block; margin-bottom: 18px; color: var(--accent); }
