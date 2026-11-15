@@ -762,6 +762,11 @@ html:not(.lz-js) .lz-nav__group:focus-within .lz-drop,
 .lz-phero--centered .lz-lockup__shift { margin-left: 0; }
 /* Sin barra arriba (la 404) no hace falta dejarle lugar: menos aire. */
 .lz-phero.lz-phero--centered { padding-top: 40px; }
+/* La 404 va directo al footer: el degradé se funde en su negro (sin escalón
+   de color ni línea), y queda un solo logo, el del footer. */
+.lz-phero--centered::after { content: ''; position: absolute; inset: auto 0 0; z-index: 1; height: 45%; background: linear-gradient(180deg, transparent, var(--bg)); pointer-events: none; }
+.lz-phero--centered .lz-logo--foot { visibility: hidden; }
+.lz-phero--centered + .lz-footer { border-top: 0; padding-top: 24px; }
 
 /* ── Cabecera de sección ───────────────────────────────────────────────── */
 .lz-kicker { display: block; margin-bottom: 18px; color: var(--accent); }
