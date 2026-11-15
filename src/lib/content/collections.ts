@@ -34,7 +34,33 @@ export const ministriesCollection = createCollection<Ministry>({
 export const getDevotionals = () => devotionalsCollection.read();
 export const getAnnouncements = () => announcementsCollection.read();
 export const getSeries = () => seriesCollection.read();
-export const getMinistries = () => ministriesCollection.read();
+
+/**
+ * Textos y datos de cada ministerio que se cambian sólo por código (pedido del
+ * usuario): el panel ya no los edita. El JSON del servidor guarda una copia de
+ * cuando se sembró, así que se toman siempre de src/data/ministries.ts; si
+ * no, una corrección en el código nunca llegaría al sitio. Del disco quedan la
+ * foto y las novedades, que sí se cargan desde el panel.
+ */
+const CODE_OWNED_MINISTRY_FIELDS = [
+  'name', 'area', 'image', 'excerpt', 'description', 'participation', 'schedule',
+  'meetingDay', 'meetingHours', 'place', 'mapUrl', 'whatsapp', 'instagram',
+] as const satisfies readonly (keyof Ministry)[];
+
+const withCodeOwnedFields = (stored: Ministry): Ministry => {
+  const fromCode = ministries.find((m) => m.slug === stored.slug);
+  if (!fromCode) return stored;
+  const merged: Ministry = { ...stored };
+  for (const field of CODE_OWNED_MINISTRY_FIELDS) {
+    // Un dato opcional vacío en el código no pisa uno que ya esté guardado
+    // (por ejemplo un WhatsApp cargado antes de que el panel dejara de editarlo).
+    const value = fromCode[field];
+    if (value !== undefined && value !== '') (merged as Record<string, unknown>)[field] = value;
+  }
+  return merged;
+};
+
+export const getMinistries = async () => (await ministriesCollection.read()).map(withCodeOwnedFields);
 
 export const getDevotionalBySlug = async (slug?: string) =>
   (await getDevotionals()).find((post) => post.slug === slug) ?? null;

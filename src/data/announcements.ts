@@ -22,7 +22,7 @@ export const announcements: Announcement[] = [
     href: '/ministerios/arde',
     eyebrow: 'Campa ARDE',
     title: 'Campamento ARDE',
-    description: 'Una experiencia para adolescentes con amigos, palabra y dias que no se olvidan facil.',
+    description: 'Una experiencia para adolescentes con amigos, palabra y días que no se olvidan fácil.',
     image: '/ministries/arde/campaarde.jpg',
     alt: 'Campamento ARDE',
   },

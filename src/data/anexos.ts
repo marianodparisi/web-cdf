@@ -48,11 +48,11 @@ export const anexos: Anexo[] = [
   {
     slug: 'ramos-mejia',
     name: 'Ramos Mejía',
-    subtitle: 'Nuestra sede principal, un lugar de encuentro, adoracion y formacion para toda la familia.',
+    subtitle: 'Nuestra sede principal, un lugar de encuentro, adoración y formación para toda la familia.',
     heroImage: '/sedes/nosotros1.JPG',
     storyImage: '/sedes/nosotros2.JPG',
     storyTitle: 'Una casa para adorar, crecer y servir juntos.',
-    storyParagraphs: ['En Ramos Mejía nos reunimos como familia para buscar a Dios, recibir palabra, adorar y caminar procesos de formacion espiritual.', 'Desde esta sede se acompanan ministerios, equipos de servicio, espacios de discipulado y acciones que bendicen a la ciudad y a otras localidades.'],
+    storyParagraphs: ['En Ramos Mejía nos reunimos como familia para buscar a Dios, recibir palabra, adorar y caminar procesos de formación espiritual.', 'Desde esta sede se acompañan ministerios, equipos de servicio, espacios de discipulado y acciones que bendicen a la ciudad y a otras localidades.'],
     yearsValue: 'Casa',
     yearsLabel: 'Sede principal',
     localValue: 'CDF',

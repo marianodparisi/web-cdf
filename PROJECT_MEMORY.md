@@ -193,6 +193,14 @@ Pedido del usuario ("el inicio se ve pobre"), aprobado sobre una maqueta. Menú 
 
 ### Ministerios: la ficha y los datos de cada uno
 
+- **Los textos de cada ministerio salen siempre de `src/data/ministries.ts`**
+  (`getMinistries` en `lib/content/collections.ts`, desde el 15 de noviembre
+  de 2026). El panel sólo edita foto y novedades; el JSON del servidor guarda
+  una copia vieja de los textos de cuando se sembró y sin esto una corrección
+  en el código nunca llegaba al sitio. Un opcional vacío en el código no pisa
+  uno guardado. Devocionales, anuncios y series sí viven en el JSON: corregir
+  su semilla no cambia lo que ya está en el servidor.
+
 **Foto del ministerio (panel → Imágenes, campo `photo`)**: en Kids llena el círculo de la portada con tramado; en Arde reemplaza la polaroid; en Life, Gold, Carcelario y Firmes va de fondo de la portada. Sin foto: logo en Kids, la polaroid del campa en Arde y el degradé en los demás.
 
 **Novedades (23 de octubre de 2026): varias por ministerio** en `notices[]` (`id`, `title`, `text`, `image`, `endDate`, `showHome`, `showPage`). Lógica en `lib/content/notices.ts`: `noticesOf` lee también el formato viejo de una sola novedad (`noticeTitle`…) como la primera, y el primer guardado lo pasa al nuevo. Se editan en la pestaña Novedades de cada ministerio y en la pantalla **Novedades** del panel (menú Contenido, la ve quien tenga algún ministerio), siempre en modales (`NoticeModal`, `NoticeRows`) contra `/api/admin/novedades`. El home muestra las `showHome` vigentes; cada página de ministerio, las `showPage` vigentes, apiladas.

@@ -62,7 +62,7 @@ export const ministries: Ministry[] = [
     schedule: 'Las reuniones son el corazón de LIFE: un ambiente relajado donde la conexión es lo primero.',
     meetingDay: 'Cada viernes',
     meetingHours: '19:30',
-    place: 'A veces en el salon, a veces en el hogar de una pareja anfitriona.',
+    place: 'A veces en el salón, a veces en el hogar de una pareja anfitriona.',
     instagram: 'https://www.instagram.com/corazondefuegoiglesia/',
   },
   {
@@ -101,23 +101,23 @@ export const ministries: Ministry[] = [
     participation:
       'Es para adolescentes de 11 a 18 años. No importa de dónde vengas ni en qué creas: acá siempre hay un lugar para vos.',
     schedule: 'Encuentros de adolescentes en Sede Gaona, con eventos y salidas especiales.',
-    meetingDay: 'Sabados',
+    meetingDay: 'Sábados',
     meetingHours: '18:00 a 20:00 hs',
-    place: 'Av. Pres. Peron 251\nB1706 Villa Sarmiento, Provincia de Buenos Aires',
+    place: 'Av. Pres. Perón 251\nB1706 Villa Sarmiento, Provincia de Buenos Aires',
     mapUrl: 'https://maps.app.goo.gl/nbkxbz89Rt92Aqx78',
   },
   {
     slug: 'carcelario',
     name: 'Ministerio Carcelario',
-    area: 'Restauracion',
+    area: 'Restauración',
     image:
       'https://lh3.googleusercontent.com/aida-public/AB6AXuAHZ33zm0Bs_C_OrpCQi9xRm6PBscs-Wxps3Cv0_KQGUbVgy52G5MRZgfOhN4zgt44-ml47ou4i38rhzMxJ9EM1UWlT3BkNdxAC6Mstlc1c5U51Vd1L7SuLtCeZyZL4jjoHhT2OpAA-Ag0I_gEq3OKNwDfPFf7HJ0nOx9rfFnZ06j1HL1Os7abB6JPzmwRsTbpsaDAA1G7u-hbg2mkmStCVpQ4rps5UcsaOszL1yQrbw70xavRVpTiqSajlJ8W5EI7zQaufTPS5mYI',
-    excerpt: 'Esperanza, palabra y acompanamiento en contextos de encierro.',
+    excerpt: 'Esperanza, palabra y acompañamiento en contextos de encierro.',
     description:
-      'El Ministerio Carcelario visita unidades penitenciarias para compartir la Palabra, orar y acompanar procesos de restauracion espiritual.',
+      'El Ministerio Carcelario visita unidades penitenciarias para compartir la Palabra, orar y acompañar procesos de restauración espiritual.',
     participation:
-      'Pueden sumarse personas con corazon pastoral, disposicion para servir y compromiso con el acompanamiento responsable.',
-    schedule: 'Visitas programadas, preparacion previa y seguimiento pastoral durante el mes.',
+      'Pueden sumarse personas con corazón pastoral, disposición para servir y compromiso con el acompañamiento responsable.',
+    schedule: 'Visitas programadas, preparación previa y seguimiento pastoral durante el mes.',
   },
   {
     slug: 'firmes-y-adelante',
@@ -129,7 +129,7 @@ export const ministries: Ministry[] = [
     description:
       'Firmes y Adelante acompana procesos de crecimiento para hombres y matrimonios, promoviendo unidad, madurez espiritual y liderazgo saludable en el hogar.',
     participation:
-      'Pueden sumarse varones y matrimonios de la casa. Hay espacios de mentoreo, consejeria y comunion para caminar cada etapa.',
-    schedule: 'Reuniones periodicas, grupos de discipulado y jornadas especiales.',
+      'Pueden sumarse varones y matrimonios de la casa. Hay espacios de mentoreo, consejería y comunión para caminar cada etapa.',
+    schedule: 'Reuniones periódicas, grupos de discipulado y jornadas especiales.',
   },
 ];
