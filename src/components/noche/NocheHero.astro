@@ -16,16 +16,18 @@ interface Props {
   image?: string;
   video?: string;
   short?: boolean;
+  /** Las dos líneas centradas, sin el corrimiento de la segunda (la 404). */
+  centered?: boolean;
 }
 
-const { lines, kicker, lead, image, video, short = false }: Props = Astro.props;
+const { lines, kicker, lead, image, video, short = false, centered = false }: Props = Astro.props;
 const [first, ...rest] = lines;
 /* Con nombres largos ("ministerio carcelario") el tamaño máximo tapa media
    pantalla: baja un escalón. */
 const size = Math.max(...lines.map((line) => line.length)) > 9 ? 'lg' : 'xl';
 ---
 
-<header class={`lz-phero${short ? ' lz-phero--short' : ''}`}>
+<header class={`lz-phero${short ? ' lz-phero--short' : ''}${centered ? ' lz-phero--centered' : ''}`}>
   {video ? (
     <video class="lz-phero__media" autoplay muted loop playsinline preload="metadata" poster={image}>
       <source src={video} type="video/mp4" />

@@ -758,6 +758,8 @@ html:not(.lz-js) .lz-nav__group:focus-within .lz-drop,
 .lz-phero__lead { max-width: 30ch; font-size: clamp(1.25rem, 2.2vw, 1.9rem); font-weight: 700; letter-spacing: -0.035em; line-height: 1.1; }
 .lz-phero .lz-logo--foot { justify-self: center; }
 .lz-phero--short { min-height: 72svh; }
+.lz-phero--centered .lz-lockup { align-items: center; text-align: center; }
+.lz-phero--centered .lz-lockup__shift { margin-left: 0; }
 
 /* ── Cabecera de sección ───────────────────────────────────────────────── */
 .lz-kicker { display: block; margin-bottom: 18px; color: var(--accent); }
