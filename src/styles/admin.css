@@ -49,8 +49,8 @@
   color: #e9e4da;
 }
 .adm-brand { display: flex; align-items: center; gap: 10px; padding: 4px 8px 4px; text-decoration: none; color: inherit; }
-.adm-brand__logo { position: relative; width: 92px; aspect-ratio: 2.22; overflow: hidden; }
-.adm-brand__logo img { position: absolute; width: 128%; max-width: none; left: -13%; top: -90%; }
+.adm-brand__logo { position: relative; width: 92px; aspect-ratio: 2.08; overflow: hidden; }
+.adm-brand__logo img { position: absolute; width: 128%; max-width: none; left: -13%; top: -86.3%; }
 .adm-brand__tag { padding: 3px 8px; border-radius: 6px; background: rgba(197, 160, 89, 0.18); font-size: 0.64rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--gold); }
 
 /* Crear */
