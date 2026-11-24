@@ -10,7 +10,7 @@ El informe completo (fuera del repo) está en `C:\Users\Streaming\security-audit
 
 ### Prioridad alta
 
-- [ ] **Secretos dentro del build.**
+- [x] **Secretos dentro del build.** Arreglado en código (`src/lib/env.ts`): verificado con un build con secretos de prueba, ya no queda ninguno en `dist`. **Falta en Hostinger:** ver si las variables se pasan al build y, si es así, rotar los secretos.
   - **Dónde:** `readEnv` en `src/lib/admin-auth.ts:39-40` lee `import.meta.env` con una clave calculada (`metaEnv?.[name]`).
   - **Por qué:** con eso, el build copia `AUTH_SECRET`, `ADMIN_PASSWORD` y `MYSQL_*` dentro de `dist/server/chunks/admin-auth_*.mjs`. Ya pasa en el `dist` local.
   - **Consecuencia:** esa copia gana sobre `process.env`, así que rotar un secreto en Hostinger no tiene efecto hasta recompilar.
@@ -18,14 +18,14 @@ El informe completo (fuera del repo) está en `C:\Users\Streaming\security-audit
   - **Después de deployar el arreglo:** recompilar y verificar que no quede `AUTH_SECRET:` en `dist/server`.
   - **Chequear en Hostinger:** si esas variables están cargadas también para el **build**. Si lo están, **rotar `AUTH_SECRET`, la contraseña de admin y la de MySQL** después del arreglo.
   - `src/lib/site.ts` y `src/lib/youtube.ts` usan el mismo patrón. Hoy no exponen nada secreto, pero conviene unificar.
-- [ ] **XSS por el link de video del devocional.**
+- [x] **XSS por el link de video del devocional.**
   - **Dónde:** `getYouTubeEmbedUrl` en `src/pages/devocional/[slug].astro:19-29` y `src/pages/devocional/index.astro:25-35`. Cuando no encuentra un id de YouTube, devuelve la URL tal cual y termina en `<iframe src>`.
   - **Riesgo:** un editor que sólo tiene devocionales puede guardar `javascript:...` (`src/pages/api/admin/devocionales.ts:57`). Si un admin abre la página, el script corre en el mismo origen que `/admin` y puede crear un admin.
   - **Arreglo:**
     - Aceptar sólo un id de YouTube de 11 caracteres (`[A-Za-z0-9_-]{11}`).
     - Armar siempre `https://www.youtube.com/embed/<id>`.
     - Rechazar cualquier otra cosa al guardar y al renderizar.
-- [ ] **XSS por el `href` de anuncios y series.**
+- [x] **XSS por el `href` de anuncios y series.**
   - **Dónde:** `src/pages/api/admin/anuncios.ts:26` y `src/pages/api/admin/series.ts:32,96` aceptan cualquier texto. `src/pages/index.astro:208` (flyer) y `:177` (series pasadas) lo usan como `href`.
   - **Arreglo:** al guardar, aceptar sólo rutas que empiecen con `/` o URLs `http(s)://`. Al renderizar, ignorar valores inválidos ya guardados.
   - Revisar los JSON ya cargados en dev y prod por si hay alguno raro.

@@ -4,6 +4,7 @@ import { UploadError, saveUploadedImage } from '../../../lib/content/uploads';
 import { scheduleOrphanSweep } from '../../../lib/content/orphans';
 import { backTo, canEdit, getSession } from '../../../lib/admin-guard';
 import { readEndDate } from '../../../lib/content/expiry';
+import { HREF_INVALIDO, safeHref } from '../../../lib/safe-url';
 
 const PATH = '/admin/anuncios';
 
@@ -24,6 +25,8 @@ export const POST: APIRoute = async (context) => {
   const title = readText(form, 'title');
   const description = readText(form, 'description');
   const href = readText(form, 'href');
+  // Sólo se valida si vino: borrar y reordenar no mandan link.
+  if (href && !safeHref(href)) return backTo(PATH, { error: HREF_INVALIDO });
   const endDate = readEndDate(form.get('endDate'));
 
   const readImage = async () => {

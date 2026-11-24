@@ -31,6 +31,8 @@
  * Nada de esto lee texto en español: los carteles tipo "Transmitido hace 6
  * dias" cambian con el idioma del servidor.
  */
+import { readEnv } from './env';
+
 
 /** El estado de "en vivo" tiene que llegar rapido: no sirve enterarse a la media hora. */
 const TTL_MS = 90 * 1000;
@@ -68,11 +70,6 @@ export interface EstadoVivos {
   /** Fecha de la proxima programada, si hay una. En ISO. */
   proximaProgramada: string | null;
 }
-
-const readEnv = (name: string) => {
-  const metaEnv = (import.meta as ImportMeta & { env?: Record<string, string | undefined> }).env;
-  return metaEnv?.[name] ?? process.env[name];
-};
 
 let cache: { at: number; ttl: number; estado: EstadoVivos } | null = null;
 

@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import crypto from 'node:crypto';
 import mysql from 'mysql2/promise';
+import { readEnv } from './env';
 
 const SESSION_COOKIE = 'cdf_admin_session';
 const SESSION_MAX_AGE = 60 * 60 * 8;
@@ -35,11 +36,6 @@ const toDate = (value: unknown): Date | null => {
   return null;
 };
 
-const readEnv = (name: string) => {
-  const metaEnv = (import.meta as ImportMeta & { env?: Record<string, string | undefined> }).env;
-  return metaEnv?.[name] ?? process.env[name];
-};
-
 const requiredEnv = (name: string) => {
   const value = readEnv(name);
   if (!value) throw new Error(`Missing required env var: ${name}`);
@@ -50,7 +46,7 @@ const getPool = () => {
   if (!pool) {
     pool = mysql.createPool({
       host: requiredEnv('MYSQL_HOST'),
-      port: Number(process.env.MYSQL_PORT || '3306'),
+      port: Number(readEnv('MYSQL_PORT') || '3306'),
       database: requiredEnv('MYSQL_DATABASE'),
       user: requiredEnv('MYSQL_USER'),
       password: requiredEnv('MYSQL_PASSWORD'),

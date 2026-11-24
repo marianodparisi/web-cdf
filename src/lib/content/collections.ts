@@ -2,6 +2,7 @@ import { announcements, type Announcement } from '../../data/announcements';
 import { devotionalPosts, type DevotionalPost } from '../../data/devotionals';
 import { ministries, type Ministry } from '../../data/ministries';
 import { sermonSeries, type SermonSeries } from '../../data/series';
+import { safeHref } from '../safe-url';
 import { createCollection } from './store';
 
 /**
@@ -32,8 +33,15 @@ export const ministriesCollection = createCollection<Ministry>({
 });
 
 export const getDevotionals = () => devotionalsCollection.read();
-export const getAnnouncements = () => announcementsCollection.read();
-export const getSeries = () => seriesCollection.read();
+/*
+ * El href se vuelve a validar al leer: cubre lo que se guardó antes de que la
+ * API lo controlara. Uno inválido queda vacío (en el panel aparece para
+ * corregir, en el sitio no lleva a ningún lado).
+ */
+export const getAnnouncements = async () =>
+  (await announcementsCollection.read()).map((item) => ({ ...item, href: safeHref(item.href) ?? '' }));
+export const getSeries = async () =>
+  (await seriesCollection.read()).map((item) => ({ ...item, href: safeHref(item.href) ?? '' }));
 
 /**
  * Textos y datos de cada ministerio que se cambian sólo por código (pedido del

@@ -4,6 +4,7 @@ import { seriesCollection } from '../../../lib/content/collections';
 import { UploadError, saveUploadedImage } from '../../../lib/content/uploads';
 import { scheduleOrphanSweep } from '../../../lib/content/orphans';
 import { backTo, canEdit, getSession } from '../../../lib/admin-guard';
+import { HREF_INVALIDO, safeHref } from '../../../lib/safe-url';
 
 const PATH = '/admin/series';
 
@@ -34,6 +35,7 @@ export const POST: APIRoute = async (context) => {
     if (!title || !subtitle || !description || !href) {
       return backTo(PATH, { error: 'Faltan datos. Completá nombre, bajada, descripción y link.' });
     }
+    if (!safeHref(href)) return backTo(PATH, { error: HREF_INVALIDO });
 
     let image: string | undefined;
     try {
@@ -98,6 +100,7 @@ export const POST: APIRoute = async (context) => {
   if (!title || !subtitle || !description || !href) {
     return backTo(PATH, { error: 'Faltan datos. Todos los campos de texto son obligatorios.' });
   }
+  if (!safeHref(href)) return backTo(PATH, { error: HREF_INVALIDO });
 
   const saveImage = async (field: string, fallback?: string) => {
     const uploaded = form.get(field);

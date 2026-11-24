@@ -1,4 +1,5 @@
 ---
+import { youtubeEmbedUrl } from '../../lib/safe-url';
 /**
  * Listado de devocional, en el lenguaje noche. Arriba la placa de la semana,
  * como la del feed; abajo los anteriores con pestañas por tipo.
@@ -22,18 +23,7 @@ const tabs = [
   })),
 ];
 
-const getYouTubeEmbedUrl = (videoUrl?: string) => {
-  if (!videoUrl) return null;
-  try {
-    const url = new URL(videoUrl);
-    const idFromPath = url.pathname.startsWith('/live/') ? url.pathname.split('/live/')[1] : null;
-    const videoId = url.searchParams.get('v') || idFromPath;
-    return videoId ? `https://www.youtube.com/embed/${videoId}` : videoUrl;
-  } catch {
-    return videoUrl;
-  }
-};
-const embed = getYouTubeEmbedUrl(destacado?.videoUrl);
+const embed = youtubeEmbedUrl(destacado?.videoUrl);
 ---
 
 <NocheLayout title="Devocional · Iglesia Corazón de Fuego" description="Devocionales semanales de Corazón de Fuego: una palabra para acompañar tu semana.">

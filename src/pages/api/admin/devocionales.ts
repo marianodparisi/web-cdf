@@ -8,6 +8,7 @@ import {
 import { UploadError, saveUploadedImage } from '../../../lib/content/uploads';
 import { scheduleOrphanSweep } from '../../../lib/content/orphans';
 import { backTo, canEdit, getSession } from '../../../lib/admin-guard';
+import { youtubeId } from '../../../lib/safe-url';
 
 const LIST_PATH = '/admin/devocionales';
 
@@ -60,6 +61,13 @@ export const POST: APIRoute = async (context) => {
   if (!title || !weekLabel || !excerpt || content.length === 0) {
     return backTo(slug ? `${LIST_PATH}/${slug}` : `${LIST_PATH}/nuevo`, {
       error: 'Faltan datos: título, referencia, resumen y texto son obligatorios.',
+    });
+  }
+
+  // Sólo links de YouTube: el embed se arma con el id, nunca con el texto cargado.
+  if (videoUrl && !youtubeId(videoUrl)) {
+    return backTo(slug ? `${LIST_PATH}/${slug}` : `${LIST_PATH}/nuevo`, {
+      error: 'El video tiene que ser un link de YouTube (youtube.com/watch?v=… o youtu.be/…).',
     });
   }
 

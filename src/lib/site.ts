@@ -9,15 +9,12 @@
  * Se lee en cada pedido (SSR), no al compilar: no importa si Hostinger pasa o
  * no las variables al build.
  */
+import { readEnv } from './env';
+
 export const PRODUCTION_URL = 'https://www.corazondefuego.com';
 
 /** Dominios desde donde se aceptan formularios del panel. */
 export const KNOWN_HOSTS = ['www.corazondefuego.com', 'corazondefuego.com', 'dev.corazondefuego.com', 'localhost', '127.0.0.1'];
-
-const readEnv = (name: string) => {
-  const metaEnv = (import.meta as ImportMeta & { env?: Record<string, string | undefined> }).env;
-  return metaEnv?.[name] ?? process.env[name];
-};
 
 /** URL base del sitio sin barra final. Sin SITE_URL, la del pedido. */
 export const siteUrl = (requestUrl: URL) => (readEnv('SITE_URL') || requestUrl.origin).replace(/\/+$/, '');

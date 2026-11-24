@@ -1,4 +1,5 @@
 ---
+import { youtubeEmbedUrl } from '../../lib/safe-url';
 /**
  * Artículo de devocional, en el lenguaje noche: encabezado sobre el degradé,
  * cuerpo en columna angosta y relacionados al pie.
@@ -16,18 +17,7 @@ if (!post) return Astro.redirect('/devocional');
 
 const relacionados = posts.filter((p) => p.slug !== slug).slice(0, 3);
 
-const getYouTubeEmbedUrl = (videoUrl?: string) => {
-  if (!videoUrl) return null;
-  try {
-    const url = new URL(videoUrl);
-    const idFromPath = url.pathname.startsWith('/live/') ? url.pathname.split('/live/')[1] : null;
-    const videoId = url.searchParams.get('v') || idFromPath;
-    return videoId ? `https://www.youtube.com/embed/${videoId}` : videoUrl;
-  } catch {
-    return videoUrl;
-  }
-};
-const embed = getYouTubeEmbedUrl(post.videoUrl);
+const embed = youtubeEmbedUrl(post.videoUrl);
 ---
 
 <NocheLayout title={`${post.title} · Iglesia Corazón de Fuego`} description={post.excerpt} image={post.image || undefined}>
