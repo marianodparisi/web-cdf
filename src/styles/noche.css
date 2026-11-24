@@ -806,6 +806,9 @@ p.lz-body { font-size: clamp(1.05rem, 1.3vw, 1.2rem); line-height: 1.55; color: 
 .lz-photos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; }
 .lz-photos img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; filter: saturate(0.9) brightness(0.88); }
 .lz-photos img:nth-child(3n + 2) { aspect-ratio: 4 / 5; }
+/* Fotos de grupo apaisadas: dos por fila y sin recorte vertical */
+.lz-photos--wide { grid-template-columns: repeat(2, 1fr); }
+.lz-photos--wide img, .lz-photos--wide img:nth-child(3n + 2) { aspect-ratio: 3 / 2; }
 .lz-wide { width: 100%; aspect-ratio: 21 / 9; object-fit: cover; filter: saturate(0.9) brightness(0.88); }
 
 /* ── Escenas alternadas (evangelismo) ───────────────────────────────────── */

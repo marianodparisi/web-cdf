@@ -44,6 +44,8 @@ export interface Ministry {
   noticeImage?: string;
   noticeEndDate?: string;
   whatsapp?: string;
+  /** Si no hay WhatsApp, el botón Escribinos abre un mail a esta dirección. */
+  email?: string;
   instagram?: string;
   photo?: string;
 }
@@ -70,13 +72,14 @@ export const ministries: Ministry[] = [
     name: 'Gold',
     area: 'Parejas',
     image: '/ministries/gold/gold.png',
-    excerpt: 'Un legado de luz fundado en el pacto eterno.',
+    excerpt: 'Comunidad de fe, amor y propósito, guiada por la luz de Dios.',
     description:
-      'GOLD Team no es solo un grupo, es un santuario para el crecimiento conyugal, donde cada pareja es una joya siendo pulida por el Creador.',
+      'Gold Team no es solo un grupo, es un espacio para matrimonios que desean seguir fortaleciendo su relación y para personas que, cualquiera sea su historia o situación sentimental, buscan compartir, crecer y descubrir nuevos propósitos en esta etapa de la vida.',
     participation:
-      'Para parejas en crecimiento, recién casados que quieren establecer cimientos sólidos desde el primer día, y matrimonios veteranos que vienen a mentorear a nuevas generaciones mientras siguen nutriendo su propio pacto.',
-    schedule: 'Cenas de Pacto, Retiros de Vida y Talleres de Forja: encuentros de renovación, desconexión y herramientas prácticas.',
-    instagram: 'https://www.instagram.com/corazondefuegoiglesia/',
+      'Escribinos a matrimonioscdfgold@gmail.com o seguinos en Instagram: @goldteamcdf.',
+    schedule: 'Los segundos domingos de cada mes.',
+    instagram: 'https://www.instagram.com/goldteamcdf/',
+    email: 'matrimonioscdfgold@gmail.com',
   },
   {
     slug: 'kids',

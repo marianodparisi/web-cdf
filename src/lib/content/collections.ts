@@ -52,7 +52,7 @@ export const getSeries = async () =>
  */
 const CODE_OWNED_MINISTRY_FIELDS = [
   'name', 'area', 'image', 'excerpt', 'description', 'participation', 'schedule',
-  'meetingDay', 'meetingHours', 'place', 'mapUrl', 'whatsapp', 'instagram',
+  'meetingDay', 'meetingHours', 'place', 'mapUrl', 'whatsapp', 'instagram', 'email',
 ] as const satisfies readonly (keyof Ministry)[];
 
 const withCodeOwnedFields = (stored: Ministry): Ministry => {

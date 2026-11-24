@@ -34,9 +34,23 @@ const esLogo = ['life', 'gold'].includes(ministry.slug);
    propio la grilla no se muestra: un hueco es más honesto que fotos ajenas. */
 const fotosPorMinisterio: Record<string, string[]> = {
   life: ['/ministries/life/life1.jpg', '/ministries/life/life3.jpg', '/ministries/life/life4.jpeg'],
-  gold: ['/ministries/gold/goldanuncio.jpg'],
+  gold: [
+    '/ministries/gold/gold-1.webp',
+    '/ministries/gold/gold-2.webp',
+    '/ministries/gold/gold-3.webp',
+    '/ministries/gold/gold-4.webp',
+  ],
 };
 const fotos = fotosPorMinisterio[ministry.slug] ?? [];
+/* Fotos de grupo (apaisadas): en la grilla vertical 4:5 se cortaban personas. */
+const fotosApaisadas = ['gold'].includes(ministry.slug);
+
+/* Foto de portada desde el código. La "última actividad" del panel, si está
+   cargada, tiene prioridad: es la más nueva. */
+const portadaPorMinisterio: Record<string, string> = {
+  gold: '/ministries/gold/gold-hero.webp',
+};
+const portada = ministry.photo || portadaPorMinisterio[ministry.slug];
 
 const columnas = [
   ministry.schedule && { n: '01', title: 'Cuándo nos reunimos', text: ministry.schedule },
@@ -52,15 +66,17 @@ const datos = [
 
 const whatsappHref = ministry.whatsapp
   ? `https://wa.me/${ministry.whatsapp.replace(/\D/g, '')}`
-  : '/contact';
+  : ministry.email
+    ? `mailto:${ministry.email}`
+    : '/contact';
 
 const nameWords = ministry.name.toLowerCase().split(' ');
 const lines = nameWords.length > 1 ? [nameWords.slice(0, -1).join(' '), nameWords[nameWords.length - 1]] : nameWords;
 ---
 
-<NocheLayout title={`${ministry.name} · Iglesia Corazón de Fuego`} description={ministry.excerpt} image={ministry.photo || undefined}>
+<NocheLayout title={`${ministry.name} · Iglesia Corazón de Fuego`} description={ministry.excerpt} image={portada || undefined}>
     <div class="lz-tint" style={`--m: ${color}`}>
-      <NocheHero lines={lines} kicker={ministry.area} image={ministry.photo || undefined}>
+      <NocheHero lines={lines} kicker={ministry.area} image={portada || undefined}>
         <Fragment slot="quote">{ministry.excerpt}</Fragment>
         <a class="lz-btn" href="#participar">Quiero participar</a>
       </NocheHero>
@@ -127,7 +143,7 @@ const lines = nameWords.length > 1 ? [nameWords.slice(0, -1).join(' '), nameWord
       {fotos.length > 0 && (
         <section class="lz-section lz-dark lz-dark--2">
           <div class="lz-wrap">
-            <div class="lz-photos" data-r>
+            <div class={`lz-photos${fotosApaisadas ? ' lz-photos--wide' : ''}`} data-r>
               {fotos.map((src) => <img src={src} alt={ministry.name} loading="lazy" />)}
             </div>
           </div>
